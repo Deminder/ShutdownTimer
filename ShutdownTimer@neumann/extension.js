@@ -64,7 +64,8 @@ function _onToggle() {
 		_showTextbox('System will shutdown in ' + timer.timerValue.toString() + ' minutes');
 	} else {
 		timer.stopTimer();
-		_showTextbox('ShutdownTimer stopped');
+		_showTextbox('Shutdown Timer stopped');
+		submenu.label.text = 'Shutdown Timer';
 	}
 }
 
@@ -94,10 +95,11 @@ function init() {
 	switcher.label.text = timer.timerValue.toString() + ' min';
 	switcher.connect('toggled', _onToggle);
 	
-	submenu = new PopupMenu.PopupSubMenuMenuItem('ShutdownTimer', true);
+	submenu = new PopupMenu.PopupSubMenuMenuItem('Shutdown Timer', true);
 	submenu.icon.icon_name = 'system-shutdown-symbolic';
 	submenu.menu.addMenuItem(switcher);
 	submenu.menu.addMenuItem(sliderItem);
+	timer.setMenuLabel(submenu.label);
 
 	separator = new PopupMenu.PopupSeparatorMenuItem();
 }
