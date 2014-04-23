@@ -82,7 +82,9 @@ function init() {
 	// initialize timer and config
 	config = new Config.Config();
 	timer = new Timer.Timer(Math.floor(config.sliderDefaultValue * config.maxTimerValue), powerOff);
+}
 
+function enable() {
 	// submenu in status area menu with slider and toggle button
 	let sliderItem = new PopupMenu.PopupMenuItem('');
 	let sliderIcon = new St.Icon({ icon_name: 'preferences-system-time-symbolic', style_class: 'popup-menu-icon' });
@@ -102,9 +104,7 @@ function init() {
 	timer.setMenuLabel(submenu.label);
 
 	separator = new PopupMenu.PopupSeparatorMenuItem();
-}
 
-function enable() {
 	// add separator line and submenu in status area menu
 	let statusMenu = Main.panel.statusArea['aggregateMenu'];
 	statusMenu.menu.addMenuItem(separator);
@@ -115,5 +115,4 @@ function disable() {
 	timer.stopTimer(); // removes timer from Mainloop
 	submenu.destroy(); // destroys switcher and sliderItem as children too
 	separator.destroy();
-	init();
 }
