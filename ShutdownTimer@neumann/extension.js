@@ -27,6 +27,11 @@ const Timer = Extension.imports.timer;
 /* GLOBAL VARIABLES */
 let textbox, submenu, slider, switcher, separator, config, timer;
 
+const Gettext = imports.gettext.domain('ShutdownTimer');
+const _ = Gettext.gettext;
+
+const Convenience = Extension.imports.convenience;
+
 /* ACTION FUNCTIONS */
 // show textbox with message
 function _showTextbox(textmsg) {
@@ -61,11 +66,11 @@ function _onSliderChanged() {
 function _onToggle() {
 	if(switcher.state) {
 		timer.startTimer();
-		_showTextbox('System will shutdown in ' + timer.timerValue.toString() + ' minutes');
+		_showTextbox(_("System will shutdown in")+' ' + timer.timerValue.toString() + ' '+_("minutes"));
 	} else {
 		timer.stopTimer();
-		_showTextbox('Shutdown Timer stopped');
-		submenu.label.text = 'Shutdown Timer';
+		_showTextbox(_("Shutdown Timer stopped"));
+		submenu.label.text = _("Shutdown Timer");
 	}
 }
 
@@ -82,6 +87,7 @@ function init() {
 	// initialize timer and config
 	config = new Config.Config();
 	timer = new Timer.Timer(Math.floor(config.sliderDefaultValue * config.maxTimerValue), powerOff);
+	Convenience.initTranslations("ShutdownTimer");
 }
 
 function enable() {
@@ -97,7 +103,7 @@ function enable() {
 	switcher.label.text = timer.timerValue.toString() + ' min';
 	switcher.connect('toggled', _onToggle);
 	
-	submenu = new PopupMenu.PopupSubMenuMenuItem('Shutdown Timer', true);
+	submenu = new PopupMenu.PopupSubMenuMenuItem(_("Shutdown Timer"), true);
 	submenu.icon.icon_name = 'system-shutdown-symbolic';
 	submenu.menu.addMenuItem(switcher);
 	submenu.menu.addMenuItem(sliderItem);
@@ -116,3 +122,4 @@ function disable() {
 	submenu.destroy(); // destroys switcher and sliderItem as children too
 	separator.destroy();
 }
+
