@@ -5,6 +5,8 @@
 const Lang = imports.lang;
 const GLib = imports.gi.GLib;
 const Mainloop = imports.mainloop;
+const Gettext = imports.gettext.domain('ShutdownTimer');
+const _ = Gettext.gettext;
 
 /* TIMER */
 const Timer = new Lang.Class({
@@ -31,7 +33,7 @@ const Timer = new Lang.Class({
 			this._timerValue = this.timerValue;
 			this._startTime = GLib.get_monotonic_time();
 			this._timerId = Mainloop.timeout_add_seconds(1, Lang.bind(this, this._timerCallback));
-			this._menuLabel.text = this._timerValue.toString()+' min till shutdown';
+			this._menuLabel.text = this._timerValue.toString()+' '+_("min till shutdown");
 		}
 	},
 	
@@ -46,7 +48,7 @@ const Timer = new Lang.Class({
 		
 		secondsLeft = (this._timerValue*60) - secondsElapsed;
 		if (this._menuLabel && (secondsLeft%60 == 0)) {
-			this._menuLabel.text = Math.floor(secondsLeft/60).toString()+' min till shutdown';
+			this._menuLabel.text = Math.floor(secondsLeft/60).toString()+' '+_("min till shutdown");
 		}
 		if (secondsLeft > 0) {
 			return true;
