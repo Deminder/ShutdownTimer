@@ -22,12 +22,13 @@ const Util = imports.misc.util;
 // translations
 const Gettext = imports.gettext.domain('ShutdownTimer');
 const _ = Gettext.gettext;
-const Convenience = Extension.imports.convenience;
+
 
 // import own scripts
 const Extension = imports.misc.extensionUtils.getCurrentExtension();
 const Config = Extension.imports.config;
 const Timer = Extension.imports.timer;
+const Convenience = Extension.imports.convenience;
 
 
 /* GLOBAL VARIABLES */
