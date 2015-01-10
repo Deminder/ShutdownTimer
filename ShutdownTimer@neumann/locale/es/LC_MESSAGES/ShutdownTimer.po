@@ -15,21 +15,22 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: extension.js:69
-msgid "El sistema se apagará en"
-msgstr ""
+msgid "System will shutdown in"
+msgstr "El sistema se apagará en"
 
 #: extension.js:69
-msgid "minutos."
-msgstr ""
+msgid "minutes"
+msgstr "minutos."
 
 #: extension.js:72
-msgid "Temporizador apagado."
-msgstr ""
+msgid "Shutdown Timer stopped"
+msgstr "Temporizador apagado."
 
 #: extension.js:73 extension.js:106
-msgid "Apagar con temporizador."
-msgstr ""
+msgid "Shutdown Timer"
+msgstr "Apagar con temporizador."
 
 #: timer.js:34 timer.js:49
-msgid "minutos para el apagado."
-msgstr ""
+msgid "min till shutdown"
+msgstr "minutos para el apagado."
+
