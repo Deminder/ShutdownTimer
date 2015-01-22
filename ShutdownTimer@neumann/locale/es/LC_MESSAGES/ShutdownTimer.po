@@ -4,10 +4,10 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-19 21:18+0100\n"
-"PO-Revision-Date: 2015-01-09 13:05+0100\n"
+"PO-Revision-Date: 2015-01-22 12:50+0100\n"
 "Last-Translator: Jesús Ignacio García jesusignazio@gmail.com\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
