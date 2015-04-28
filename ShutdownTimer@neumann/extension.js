@@ -1,5 +1,6 @@
 /**
 	AUTHOR: Daniel Neumann
+	GJS SOURCES: https://github.com/GNOME/gnome-shell/
 **/
 
 /* IMPORTS */
@@ -26,13 +27,12 @@ const _ = Gettext.gettext;
 
 // import own scripts
 const Extension = imports.misc.extensionUtils.getCurrentExtension();
-const Config = Extension.imports.config;
 const Timer = Extension.imports.timer;
 const Convenience = Extension.imports.convenience;
 
 
 /* GLOBAL VARIABLES */
-let textbox, submenu, slider, switcher, separator, config, timer;
+let textbox, submenu, slider, switcher, separator, timer, settings;
 
 
 /* ACTION FUNCTIONS */
@@ -59,17 +59,28 @@ function _hideTextbox() {
 	textbox = null;
 }
 
+function _getTimerStartValue() {
+    let sliderValue = settings.get_int('slider-value') / 100.0;
+    return Math.floor(sliderValue * settings.get_int('max-timer-value'));
+}
+
 // update timer value if slider has changed
 function _onSliderChanged() {
-	timer.timerValue = Math.floor(slider.value * config.maxTimerValue);
-	switcher.label.text = timer.timerValue.toString() + ' min';
+	settings.set_int('slider-value', (slider.value * 100));
+	switcher.label.text = _getTimerStartValue().toString() + ' min';
+}
+
+function _onSettingsChanged() {
+    let sliderValue =  settings.get_int('slider-value') / 100.0;
+    slider.setValue(sliderValue);
+	switcher.label.text = _getTimerStartValue().toString() + ' min';
 }
 
 // toggle button starts/stops shutdown timer
 function _onToggle() {
 	if(switcher.state) {
 		timer.startTimer();
-		_showTextbox(_("System will shutdown in")+' ' + timer.timerValue.toString() + ' '+_("minutes"));
+		_showTextbox(_("System will shutdown in")+' ' + _getTimerStartValue().toString() + ' '+_("minutes"));
 	} else {
 		timer.stopTimer();
 		_showTextbox(_("Shutdown Timer stopped"));
@@ -87,23 +98,27 @@ function powerOff() {
 
 /* EXTENSION MAIN FUNCTIONS */
 function init() {
-	// initialize timer and config
-	config = new Config.Config();
-	timer = new Timer.Timer(Math.floor(config.sliderDefaultValue * config.maxTimerValue), powerOff);
-	Convenience.initTranslations("ShutdownTimer");
+    // initialize translations
+    Convenience.initTranslations();
+
+	// initialize timer and settings
+	settings = Convenience.getSettings();
+	timer = new Timer.Timer(powerOff);
 }
 
 function enable() {
+    let sliderValue =  settings.get_int('slider-value') / 100.0;
+
 	// submenu in status area menu with slider and toggle button
 	let sliderItem = new PopupMenu.PopupMenuItem('');
 	let sliderIcon = new St.Icon({ icon_name: 'preferences-system-time-symbolic', style_class: 'popup-menu-icon' });
 	sliderItem.actor.add(sliderIcon);
-	slider = new Slider.Slider(config.sliderDefaultValue);
+	slider = new Slider.Slider(sliderValue);
 	slider.connect('value-changed', _onSliderChanged);
 	sliderItem.actor.add(slider.actor, { expand: true });
 
 	switcher = new PopupMenu.PopupSwitchMenuItem('');
-	switcher.label.text = timer.timerValue.toString() + ' min';
+	switcher.label.text = _getTimerStartValue().toString() + ' min';
 	switcher.connect('toggled', _onToggle);
 	
 	submenu = new PopupMenu.PopupSubMenuMenuItem(_("Shutdown Timer"), true);
@@ -118,6 +133,10 @@ function enable() {
 	let statusMenu = Main.panel.statusArea['aggregateMenu'];
 	statusMenu.menu.addMenuItem(separator);
 	statusMenu.menu.addMenuItem(submenu);
+	
+	settings.connect('changed::max-timer-value', _onSettingsChanged);
+	settings.connect('changed::slider-value', _onSettingsChanged);
+
 }
 
 function disable() {

@@ -8,20 +8,24 @@ const Mainloop = imports.mainloop;
 const Gettext = imports.gettext.domain('ShutdownTimer');
 const _ = Gettext.gettext;
 
+const ExtensionUtils = imports.misc.extensionUtils;
+const Me = ExtensionUtils.getCurrentExtension();
+const Convenience = Me.imports.convenience;
+
 /* TIMER */
 const Timer = new Lang.Class({
 	Name: 'Timer',
 	
-	timerValue: 0,
 	_timerValue: 0,
 	_timerId: null,
 	_startTime: 0,
 	_powerOff: null,
 	_menuLabel: null,
+	_settings: null,
 	
-	_init: function(timerValue, powerOffFunction) {
-		this.timerValue = timerValue;
+	_init: function(powerOffFunction) {
 		this._powerOff = powerOffFunction;
+		this._settings = Convenience.getSettings();
 	},
 	
 	setMenuLabel: function(label) {
@@ -30,7 +34,8 @@ const Timer = new Lang.Class({
 	
 	startTimer: function() {
 		if (!this._timerId) {
-			this._timerValue = this.timerValue;
+		    let sliderValue = this._settings.get_int('slider-value') / 100.0;
+		    this._timerValue = Math.floor(sliderValue * this._settings.get_int('max-timer-value'));
 			this._startTime = GLib.get_monotonic_time();
 			this._timerId = Mainloop.timeout_add_seconds(1, Lang.bind(this, this._timerCallback));
 			this._menuLabel.text = this._timerValue.toString()+' '+_("min till shutdown");
