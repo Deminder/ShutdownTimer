@@ -80,12 +80,45 @@ function _onSettingsChanged() {
 function _onToggle() {
 	if(switcher.state) {
 		timer.startTimer();
-		_showTextbox(_("System will shutdown in")+' ' + _getTimerStartValue().toString() + ' '+_("minutes"));
+		_showTextbox(   _("System will shutdown in")+ ' ' 
+		                + _getTimerStartValue().toString() + ' '+_("minutes"));
 	} else {
 		timer.stopTimer();
 		_showTextbox(_("Shutdown Timer stopped"));
 		submenu.label.text = _("Shutdown Timer");
 	}
+}
+
+// menu items switcher and slider
+function _createSwitcherItem() {
+    let switchMenuItem = new PopupMenu.PopupSwitchMenuItem('');
+    switchMenuItem.label.text = _getTimerStartValue().toString() + ' min';
+	switchMenuItem.connect('toggled', _onToggle);
+	let switcherSettingsButton = new St.Button({reactive: true,
+                                                can_focus: true,
+                                                track_hover: true,
+                                                accessible_name: _("Settings"),
+                                                style_class: 'settings-button system-menu-action' });
+    switcherSettingsButton.child = new St.Icon({icon_name: 'emblem-system-symbolic', 
+                                                style_class: 'popup-menu-icon' });
+    switcherSettingsButton.connect('clicked', function () {
+            Util.spawn(["gnome-shell-extension-prefs", Extension.metadata.uuid]);
+    });
+    switchMenuItem.actor.add(switcherSettingsButton, { expand: false });
+    
+    return switchMenuItem;
+}
+
+function _createSliderItem() {
+    let sliderValue =  settings.get_int('slider-value') / 100.0;
+	let sliderItem = new PopupMenu.PopupMenuItem('');
+	let sliderIcon = new St.Icon({  icon_name: 'preferences-system-time-symbolic', 
+	                                style_class: 'popup-menu-icon' });
+	sliderItem.actor.add(sliderIcon);
+	slider = new Slider.Slider(sliderValue);
+	slider.connect('value-changed', _onSliderChanged);
+	sliderItem.actor.add(slider.actor, { expand: true });
+	return sliderItem;
 }
 
 // shutdown the device
@@ -107,19 +140,9 @@ function init() {
 }
 
 function enable() {
-    let sliderValue =  settings.get_int('slider-value') / 100.0;
-
 	// submenu in status area menu with slider and toggle button
-	let sliderItem = new PopupMenu.PopupMenuItem('');
-	let sliderIcon = new St.Icon({ icon_name: 'preferences-system-time-symbolic', style_class: 'popup-menu-icon' });
-	sliderItem.actor.add(sliderIcon);
-	slider = new Slider.Slider(sliderValue);
-	slider.connect('value-changed', _onSliderChanged);
-	sliderItem.actor.add(slider.actor, { expand: true });
-
-	switcher = new PopupMenu.PopupSwitchMenuItem('');
-	switcher.label.text = _getTimerStartValue().toString() + ' min';
-	switcher.connect('toggled', _onToggle);
+	let sliderItem = _createSliderItem();
+	switcher = _createSwitcherItem();
 	
 	submenu = new PopupMenu.PopupSubMenuMenuItem(_("Shutdown Timer"), true);
 	submenu.icon.icon_name = 'system-shutdown-symbolic';
@@ -127,16 +150,15 @@ function enable() {
 	submenu.menu.addMenuItem(sliderItem);
 	timer.setMenuLabel(submenu.label);
 
-	separator = new PopupMenu.PopupSeparatorMenuItem();
-
 	// add separator line and submenu in status area menu
+	separator = new PopupMenu.PopupSeparatorMenuItem();
 	let statusMenu = Main.panel.statusArea['aggregateMenu'];
 	statusMenu.menu.addMenuItem(separator);
 	statusMenu.menu.addMenuItem(submenu);
 	
+	// handlers for changed values in settings
 	settings.connect('changed::max-timer-value', _onSettingsChanged);
 	settings.connect('changed::slider-value', _onSettingsChanged);
-
 }
 
 function disable() {

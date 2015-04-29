@@ -11,3 +11,15 @@
 	padding: .5em;
 }
 
+.settings-button {
+    padding: 4px;
+    /* border-radius: 4px; */
+}
+
+.settings-button:hover, .settings-button:focus {
+    padding: 5px;
+}
+
+.settings-button > StIcon {
+    icon-size: 15px;
+}
