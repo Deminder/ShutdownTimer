@@ -31,7 +31,7 @@ const ShutdownTimerPrefsWidget = new GObject.Class({
         this.row_spacing = this.column_spacing = 6;
         this.set_orientation(Gtk.Orientation.VERTICAL);
 
-	    this.add(new Gtk.Label({ label: '<b>' + "Maximum timer value (in minutes)" + '</b>',
+	    this.add(new Gtk.Label({ label: '<b>' + _("Maximum timer value (in minutes)") + '</b>',
                                  use_markup: true,
                                  halign: Gtk.Align.START }));
                                     
@@ -48,7 +48,7 @@ const ShutdownTimerPrefsWidget = new GObject.Class({
         
 	    this.add(new Gtk.Label({ label: '', halign: Gtk.Align.START }));
         
-	    this.add(new Gtk.Label({ label: '<b>' + "Slider position (in % from 0 to 100)" + '</b>',
+	    this.add(new Gtk.Label({ label: '<b>' + _("Slider position (in % from 0 to 100)") + '</b>',
                          use_markup: true,
                          halign: Gtk.Align.START }));
                                  
@@ -67,7 +67,7 @@ const ShutdownTimerPrefsWidget = new GObject.Class({
 
         this.add(new Gtk.Label({ label: '', halign: Gtk.Align.START }));
         
-	    this.add(new Gtk.Label({ label: '<b>' + "Root mode (uses 'gksu' and 'shutdown' command,\n no interruption of timer, but needs root password)" + '</b>',
+	    this.add(new Gtk.Label({ label: '<b>' + _("Root mode (uses 'gksu' and 'shutdown' command,\nno interruption of timer, but needs root password)") + '</b>',
                          use_markup: true,
                          halign: Gtk.Align.START }));
         let rootMode = settings.get_boolean('root-mode-value');
