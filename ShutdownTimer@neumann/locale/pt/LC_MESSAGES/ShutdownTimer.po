@@ -26,10 +26,22 @@ msgstr "minutos."
 msgid "Shutdown Timer stopped"
 msgstr "Temporizador desativado."
 
-#: extension.js:73 extension.js:106
+#: extension.js:73 extension.js:106 extension.js:147
 msgid "Shutdown Timer"
 msgstr "Temporizador de desligamento."
+
+#: extension.js:100
+msgid "Settings"
+msgstr "Configurações"
 
 #: timer.js:34 timer.js:49
 msgid "min till shutdown"
 msgstr "minutos até o desligamento."
+
+#: prefs.js:34
+msgid "Maximum timer value (in minutes)"
+msgstr "Valor máximo do temporizador (em minutos)"
+
+#: prefs.js:51
+msgid "Slider position (in % from 0 to 100)"
+msgstr "Posição do seletor (em % de 0 a 100)"
