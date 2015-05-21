@@ -7,6 +7,7 @@ const GLib = imports.gi.GLib;
 const Mainloop = imports.mainloop;
 const Gettext = imports.gettext.domain('ShutdownTimer');
 const _ = Gettext.gettext;
+const Util = imports.misc.util;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -36,9 +37,14 @@ const Timer = new Lang.Class({
 		if (!this._timerId) {
 		    let sliderValue = this._settings.get_int('slider-value') / 100.0;
 		    this._timerValue = Math.floor(sliderValue * this._settings.get_int('max-timer-value'));
-			this._startTime = GLib.get_monotonic_time();
-			this._timerId = Mainloop.timeout_add_seconds(1, Lang.bind(this, this._timerCallback));
-			this._menuLabel.text = this._timerValue.toString()+' '+_("min till shutdown");
+		    
+		    if(!this._settings.get_boolean('root-mode-value')) {
+			    this._startTime = GLib.get_monotonic_time();
+			    this._timerId = Mainloop.timeout_add_seconds(1, Lang.bind(this, this._timerCallback));
+			    this._menuLabel.text = this._timerValue.toString() + ' ' + _("min till shutdown");
+			} else {
+			    Util.spawnCommandLine('gksu "shutdown -h ' + this._timerValue+ '"');
+			}
 		}
 	},
 	

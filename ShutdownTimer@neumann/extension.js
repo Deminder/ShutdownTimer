@@ -1,6 +1,8 @@
 /**
 	AUTHOR: Daniel Neumann
 	GJS SOURCES: https://github.com/GNOME/gnome-shell/
+	COMPILING SCHEMAS: glib-compile-schemas schemas/
+	COMPILING LOCALE: msgfmt ShutdownTimer.po -o ShutdownTimer.mo
 **/
 
 /* IMPORTS */
@@ -49,7 +51,7 @@ function _showTextbox(textmsg) {
 		              Math.floor(monitor.height / 2 - textbox.height / 2));
 	Tweener.addTween(textbox,
 		             { opacity: 0,
-		               time: 2,
+		               time: 4,
 		               transition: 'easeOutQuad',
 		               onComplete: _hideTextbox });
 }
@@ -68,12 +70,20 @@ function _getTimerStartValue() {
 function _onSliderChanged() {
 	settings.set_int('slider-value', (slider.value * 100));
 	switcher.label.text = _getTimerStartValue().toString() + ' min';
+	
+	if(settings.get_boolean('root-mode-value')) {
+	    switcher.label.text = _getTimerStartValue().toString() + ' min (root)'; 
+	}
 }
 
 function _onSettingsChanged() {
     let sliderValue =  settings.get_int('slider-value') / 100.0;
     slider.setValue(sliderValue);
 	switcher.label.text = _getTimerStartValue().toString() + ' min';
+	
+	if(settings.get_boolean('root-mode-value')) {
+	    switcher.label.text = _getTimerStartValue().toString() + ' min (root)'; 
+	}
 }
 
 // toggle button starts/stops shutdown timer
@@ -93,6 +103,10 @@ function _onToggle() {
 function _createSwitcherItem() {
     let switchMenuItem = new PopupMenu.PopupSwitchMenuItem('');
     switchMenuItem.label.text = _getTimerStartValue().toString() + ' min';
+    if(settings.get_boolean('root-mode-value')) {
+	    switchMenuItem.label.text = _getTimerStartValue().toString() + ' min (root)'; 
+	}
+    
 	switchMenuItem.connect('toggled', _onToggle);
 	let switcherSettingsButton = new St.Button({reactive: true,
                                                 can_focus: true,
@@ -159,6 +173,7 @@ function enable() {
 	// handlers for changed values in settings
 	settings.connect('changed::max-timer-value', _onSettingsChanged);
 	settings.connect('changed::slider-value', _onSettingsChanged);
+	settings.connect('changed::root-mode-value', _onSettingsChanged);
 }
 
 function disable() {

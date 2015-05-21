@@ -63,6 +63,19 @@ const ShutdownTimerPrefsWidget = new GObject.Class({
         }));
         sliderEntry.set_value(sliderDefault);
         this.add(sliderEntry);
+        
+
+        this.add(new Gtk.Label({ label: '', halign: Gtk.Align.START }));
+        
+	    this.add(new Gtk.Label({ label: '<b>' + "Root mode (uses 'gksu' and 'shutdown' command,\n no interruption of timer, but needs root password)" + '</b>',
+                         use_markup: true,
+                         halign: Gtk.Align.START }));
+        let rootMode = settings.get_boolean('root-mode-value');
+        let switchMenuItem = new Gtk.Switch({halign:Gtk.Align.START});
+	    switchMenuItem.connect('notify::active', Lang.bind(this, function(check){ 
+	        settings.set_boolean('root-mode-value', check.get_active());
+	    }));
+	    this.add(switchMenuItem);
     }
     
 });

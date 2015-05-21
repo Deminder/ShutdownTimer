@@ -14,5 +14,11 @@
       <description>Set slider position as percent of the maximum time. Must be in range 0 and 100</description>
     </key>
     
+    <key type="b" name="root-mode-value">
+      <default>false</default>
+      <summary>Root mode</summary>
+      <description>Set root mode on/off. In root mode powering off is done via 'gksu' and 'shutdown' commandline command.</description>
+    </key>
+    
   </schema>
 </schemalist>
