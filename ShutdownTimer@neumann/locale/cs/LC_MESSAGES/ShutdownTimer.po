@@ -1,5 +1,5 @@
 #
-# AUTHOR: Roberto Alegro "Kasama"
+# AUTHOR: Jiří Doubravský "ge0rgecz"
 #         Daniel Neumann
 #
 msgid ""
