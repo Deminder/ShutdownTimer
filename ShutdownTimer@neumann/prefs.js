@@ -75,6 +75,7 @@ const ShutdownTimerPrefsWidget = new GObject.Class({
 	    switchMenuItem.connect('notify::active', Lang.bind(this, function(check){ 
 	        settings.set_boolean('root-mode-value', check.get_active());
 	    }));
+	    switchMenuItem.set_active(rootMode);
 	    this.add(switchMenuItem);
     }
     
