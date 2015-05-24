@@ -49,6 +49,6 @@ msgid "Slider position (in % from 0 to 100)"
 msgstr "Schieberegler Position (in % von 0 bis 100)"
 
 #: prefs.js:70
-msgid "Root mode (uses 'gksu' and 'shutdown' command,\nno interruption of timer, but needs root password)"
-msgstr "Root Modus (verwendet den 'gksu' und 'shutdown' Befehl,\nkeine Unterbrechung der Ausschaltuhr möglich, aber benötigt das Root-Passwort)"
+msgid "Root mode (uses 'pkexec shutdown' command,\nno interruption of timer, but needs root password)"
+msgstr "Root Modus (verwendet den 'pkexec shutdown' Befehl,\nkeine Unterbrechung der Ausschaltuhr möglich, aber benötigt das Root-Passwort)"
 

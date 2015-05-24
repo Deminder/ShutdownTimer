@@ -67,7 +67,7 @@ const ShutdownTimerPrefsWidget = new GObject.Class({
 
         this.add(new Gtk.Label({ label: '', halign: Gtk.Align.START }));
         
-	    this.add(new Gtk.Label({ label: '<b>' + _("Root mode (uses 'gksu' and 'shutdown' command,\nno interruption of timer, but needs root password)") + '</b>',
+	    this.add(new Gtk.Label({ label: '<b>' + _("Root mode (uses 'pkexec shutdown' command,\nno interruption of timer, but needs root password)") + '</b>',
                          use_markup: true,
                          halign: Gtk.Align.START }));
         let rootMode = settings.get_boolean('root-mode-value');

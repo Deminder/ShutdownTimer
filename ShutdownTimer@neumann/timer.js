@@ -43,7 +43,9 @@ const Timer = new Lang.Class({
 			    this._timerId = Mainloop.timeout_add_seconds(1, Lang.bind(this, this._timerCallback));
 			    this._menuLabel.text = this._timerValue.toString() + ' ' + _("min till shutdown");
 			} else {
-			    Util.spawnCommandLine('gksu "shutdown -h ' + this._timerValue+ '"');
+			    let pkexec_path = GLib.find_program_in_path('pkexec');
+			    let shutdown_path = GLib.find_program_in_path('shutdown');
+                Util.spawnCommandLine(pkexec_path + " " + shutdown_path + " -h " + this._timerValue);
 			}
 		}
 	},

@@ -17,7 +17,7 @@
     <key type="b" name="root-mode-value">
       <default>false</default>
       <summary>Root mode</summary>
-      <description>Set root mode on/off. In root mode powering off is done via 'gksu' and 'shutdown' commandline command.</description>
+      <description>Set root mode on/off. In root mode powering off is done via 'pkexec' and 'shutdown' terminal command.</description>
     </key>
     
   </schema>
