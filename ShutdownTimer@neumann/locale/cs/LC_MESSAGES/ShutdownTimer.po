@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-19 16:46+0100\n"
-"PO-Revision-Date: 2015-05-21 20:02+0100\n"
+"PO-Revision-Date: 2015-05-26 19:52+0100\n"
 "Last-Translator: Jiří Doubravský <jiri.doubravsky@gmail.com>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
@@ -17,27 +17,27 @@ msgstr ""
 "X-Generator: Poedit 1.7.5\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
-#: extension.js:69
+#: extension.js:93
 msgid "System will shutdown in"
 msgstr "Bude vypnuto za"
 
-#: extension.js:69
+#: extension.js:94
 msgid "minutes"
 msgstr "minut."
 
-#: extension.js:72
+#: extension.js:97
 msgid "Shutdown Timer stopped"
 msgstr "Odpočítávání k vypnutí zastaveno"
 
-#: extension.js:73 extension.js:106 extension.js:147
+#: extension.js:98 extension.js:161
 msgid "Shutdown Timer"
 msgstr "Odpočet k vypnutí"
 
-#: extension.js:100
+#: extension.js:114
 msgid "Settings"
 msgstr "Možnosti"
 
-#: timer.js:34 timer.js:49
+#: timer.js:44 timer.js:62
 msgid "min till shutdown"
 msgstr "minut do vypnutí"
 
@@ -47,4 +47,12 @@ msgstr "Nejvýše minut do vypnutí"
 
 #: prefs.js:51
 msgid "Slider position (in % from 0 to 100)"
-msgstr "Přednastavený odpočet v minutách"
+msgstr "Výchozí poloha posuvníku (v %)"
+
+#: prefs.js:70
+msgid ""
+"Root mode (uses 'pkexec shutdown' command,\n"
+"no interruption of timer, but needs root password)"
+msgstr ""
+"Režim správce (použije 'pkexec shutdown',\n"
+"odpočet nepůjde snadno přerušit, vyžaduje heslo root)"
