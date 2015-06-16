@@ -112,7 +112,7 @@ function _createSwitcherItem() {
                                                 can_focus: true,
                                                 track_hover: true,
                                                 accessible_name: _("Settings"),
-                                                style_class: 'settings-button system-menu-action' });
+                                                style_class: 'system-menu-action settings-button' });
     switcherSettingsButton.child = new St.Icon({icon_name: 'emblem-system-symbolic', 
                                                 style_class: 'popup-menu-icon' });
     switcherSettingsButton.connect('clicked', function () {
