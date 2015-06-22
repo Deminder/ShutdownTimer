@@ -1,15 +1,16 @@
 #
-# 	AUTHOR: Daniel Neumann
+# AUTHOR: Roberto Alegro "Kasama"
+#         Daniel Neumann
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-27 00:46+0100\n"
-"PO-Revision-Date: 2015-05-27 00:46+0100\n"
+"POT-Creation-Date: 2015-05-27 00:47+0100\n"
+"PO-Revision-Date: 2015-05-27 00:58+0100\n"
 "Last-Translator: Daniel Neumann\n"
-"Language-Team: GERMAN Jonatan Zeidler <jonatan_zeidler@gmx.de>\n"
-"Language: de\n"
+"Language-Team: Roberto Alegro \"Kasama\"\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -21,42 +22,39 @@ msgstr ""
 
 #: extension.js:93
 msgid "System will shutdown in"
-msgstr "System wird herunterfahren in"
+msgstr "O sistema se desligará em"
 
 #: extension.js:94
 msgid "minutes"
-msgstr "Minuten"
+msgstr "minutos."
 
 #: extension.js:97
 msgid "Shutdown Timer stopped"
-msgstr "Ausschaltuhr gestoppt"
+msgstr "Temporizador desativado."
 
 #: extension.js:98 extension.js:161
 msgid "Shutdown Timer"
-msgstr "Ausschaltuhr"
+msgstr "Temporizador de desligamento."
 
 #: extension.js:114
 msgid "Settings"
-msgstr "Einstellungen"
+msgstr "Configurações"
 
 #: prefs.js:34
 msgid "Maximum timer value (in minutes)"
-msgstr "Maximaler Uhrenwert (in Minuten)"
+msgstr "Valor máximo do temporizador (em minutos)"
 
 #: prefs.js:51
 #, fuzzy, javascript-format
 msgid "Slider position (in % from 0 to 100)"
-msgstr "Schieberegler Position (in % von 0 bis 100)"
+msgstr "Posição do seletor (em % de 0 a 100)"
 
 #: prefs.js:70
 msgid ""
 "Root mode (uses 'pkexec shutdown' command,\n"
 "no interruption of timer, but needs root password)"
 msgstr ""
-"Root Modus (verwendet den 'pkexec shutdown' Befehl,\n"
-"keine Unterbrechung der Ausschaltuhr möglich, aber benötigt das Root-"
-"Passwort)"
 
 #: timer.js:44 timer.js:64
 msgid "min till shutdown"
-msgstr "min bis zum Herunterfahren"
+msgstr "minutos até o desligamento."

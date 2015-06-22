@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="ShutdownTimer">
+  <schema path="/org/gnome/shell/extensions/shutdowntimer-neumann/" id="org.gnome.shell.extensions.shutdowntimer-neumann">
+    
+    <key type="i" name="max-timer-value">
+      <default>180</default>
+      <summary>Maximum time (in minutes)</summary>
+      <description>Set maximum selectable time of the slider (in minutes). Use only values greater zero.</description>
+    </key>
+    
+    <key type="i" name="slider-value">
+      <default>70</default>
+      <summary>Slider position</summary>
+      <description>Set slider position as percent of the maximum time. Must be in range 0 and 100</description>
+    </key>
+    
+    <key type="b" name="root-mode-value">
+      <default>false</default>
+      <summary>Root mode</summary>
+      <description>Set root mode on/off. In root mode powering off is done via 'pkexec' and 'shutdown' terminal command.</description>
+    </key>
+    
+  </schema>
+</schemalist>
