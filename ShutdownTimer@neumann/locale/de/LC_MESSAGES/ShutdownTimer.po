@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-05-27 00:46+0100\n"
-"PO-Revision-Date: 2015-05-27 00:46+0100\n"
-"Last-Translator: Daniel Neumann\n"
+"PO-Revision-Date: 2015-06-22 17:42-0300\n"
+"Last-Translator: Jonatan Zeidler <jonatan_zeidler@gmx.de>\n"
 "Language-Team: GERMAN Jonatan Zeidler <jonatan_zeidler@gmx.de>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -17,6 +17,7 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _\n"
 "X-Poedit-Basepath: ../../../\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SearchPath-0: .\n"
 
 #: extension.js:93
@@ -44,9 +45,9 @@ msgid "Maximum timer value (in minutes)"
 msgstr "Maximaler Uhrenwert (in Minuten)"
 
 #: prefs.js:51
-#, fuzzy, javascript-format
+#, javascript-format
 msgid "Slider position (in % from 0 to 100)"
-msgstr "Schieberegler Position (in % von 0 bis 100)"
+msgstr "Standardposition des Schiebereglers (in % von 0 bis 100)"
 
 #: prefs.js:70
 msgid ""
