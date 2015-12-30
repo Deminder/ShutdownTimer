@@ -79,10 +79,10 @@ function _onSliderChanged() {
 function _onSettingsChanged() {
     let sliderValue =  settings.get_int('slider-value') / 100.0;
     slider.setValue(sliderValue);
-	switcher.label.text = _getTimerStartValue().toString() + ' min';
+	switcher.label.text = _getTimerStartValue().toString() + ' ' +_("min");
 	
 	if(settings.get_boolean('root-mode-value')) {
-	    switcher.label.text = _getTimerStartValue().toString() + ' min (root)'; 
+	    switcher.label.text = _getTimerStartValue().toString() + ' ' +_("min (root)");
 	}
 }
 
@@ -102,9 +102,9 @@ function _onToggle() {
 // menu items switcher and slider
 function _createSwitcherItem() {
     let switchMenuItem = new PopupMenu.PopupSwitchMenuItem('');
-    switchMenuItem.label.text = _getTimerStartValue().toString() + ' min';
+    switchMenuItem.label.text = _getTimerStartValue().toString() + ' ' +_("min");
     if(settings.get_boolean('root-mode-value')) {
-	    switchMenuItem.label.text = _getTimerStartValue().toString() + ' min (root)'; 
+	    switchMenuItem.label.text = _getTimerStartValue().toString() + ' ' +_("min (root)");
 	}
     
 	switchMenuItem.connect('toggled', _onToggle);
