@@ -1,65 +1,68 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# Chinese translations for Shutdown Timer GNOME Shell package.
+# Copyright (C) 2015 THE Shutdown Timer GNOME Shell'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the Shutdown Timer GNOME Shell Extension package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 绿色圣光 <lishaohui.qd@163.com>, 2015.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-29 23:29+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2015-12-30 21:30+0800\n"
+"Last-Translator: 绿色圣光 <lishaohui.qd@163.com>\n"
+"Language-Team: Chinese (Simplified) <>\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Gtranslator 2.91.7\n"
 
 #: extension.js:93
 msgid "System will shutdown in"
-msgstr ""
+msgstr "系统将在"
 
 #: extension.js:94
 msgid "minutes"
-msgstr ""
+msgstr "分钟之后关闭"
 
 #: extension.js:97
 msgid "Shutdown Timer stopped"
-msgstr ""
+msgstr "已取消定时关机"
 
 #: extension.js:98 extension.js:161
 msgid "Shutdown Timer"
-msgstr ""
+msgstr "定时关机"
 
 #: extension.js:105
 msgid "min"
-msgstr ""
+msgstr "分"
 
 #: extension.js:107
 msgid "min (root)"
-msgstr ""
+msgstr "分（root）"
 
 #: extension.js:114
 msgid "Settings"
-msgstr ""
+msgstr "设置"
 
 #: prefs.js:34
 msgid "Maximum timer value (in minutes)"
-msgstr ""
+msgstr "最大定时值（分钟）"
 
 #: prefs.js:51
 #, javascript-format
 msgid "Slider position (in % from 0 to 100)"
-msgstr ""
+msgstr "滑块位置（从 0 到 100 的百分比）"
 
 #: prefs.js:70
 msgid ""
 "Root mode (uses 'pkexec shutdown' command,\n"
 "no interruption of timer, but needs root password)"
 msgstr ""
+"root 模式（使用 pkexec shutdown 命令，\n"
+"没有定时器中断，但是需要 root 密码）"
 
 #: timer.js:44 timer.js:64
 msgid "min till shutdown"
-msgstr ""
+msgstr "分钟之后将关机"
