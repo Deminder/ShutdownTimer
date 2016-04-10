@@ -59,7 +59,7 @@ const Timer = new Lang.Class({
 		let currentTime = GLib.get_monotonic_time();
 		let secondsElapsed = Math.floor((currentTime - this._startTime) / 1000000);
 		
-		secondsLeft = (this._timerValue*60) - secondsElapsed;
+		let secondsLeft = (this._timerValue*60) - secondsElapsed;
 		if (this._menuLabel && (secondsLeft%60 == 0)) {
 			this._menuLabel.text = Math.floor(secondsLeft/60).toString()+' '+_("min till shutdown");
 		}
