@@ -1,0 +1,69 @@
+# French translation
+# Copyright (C) 2016
+# This file is distributed under the same license as the Shutdown Timer GNOME Shell Extension package.
+# Brendan Chabannes, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-03-21 22:25+0100\n"
+"PO-Revision-Date: 2016-03-21 22:37+0100\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.7\n"
+"Last-Translator: Brendan Chabannes <brendan.chabannes@gmail.com>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: fr\n"
+
+#: extension.js:93
+msgid "System will shutdown in"
+msgstr "Le système s’éteindra dans"
+
+#: extension.js:94
+msgid "minutes"
+msgstr "minutes"
+
+#: extension.js:97
+msgid "Shutdown Timer stopped"
+msgstr "Le décompte avant extinction s’est arrêté"
+
+#: extension.js:98 extension.js:161
+msgid "Shutdown Timer"
+msgstr "Arrêt planifié"
+
+#: extension.js:105
+msgid "min"
+msgstr "min"
+
+#: extension.js:107
+msgid "min (root)"
+msgstr "min (en tant que superutilisateur)"
+
+#: extension.js:114
+msgid "Settings"
+msgstr "Préférences"
+
+#: prefs.js:34
+msgid "Maximum timer value (in minutes)"
+msgstr "Valeur maximum de la minuterie (en minutes)"
+
+#: prefs.js:51
+#, javascript-format
+msgid "Slider position (in % from 0 to 100)"
+msgstr ""
+
+#: prefs.js:70
+msgid ""
+"Root mode (uses 'pkexec shutdown' command,\n"
+"no interruption of timer, but needs root password)"
+msgstr ""
+"Mode superutilisateur (lance 'pkexec shutdown',\n"
+"pas d’interruption de la minuterie, mais mot de\n"
+"passe root nécessaire)"
+
+#: timer.js:44 timer.js:64
+msgid "min till shutdown"
+msgstr "min avant arrêt"
