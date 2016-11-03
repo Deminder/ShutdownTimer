@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-21 22:25+0100\n"
-"PO-Revision-Date: 2016-03-21 22:37+0100\n"
+"POT-Creation-Date: 2015-05-27 00:46+0100\n"
+"PO-Revision-Date: 2016-10-14 20:34+0200\n"
+"Last-Translator: Brendan Chabannes <brendan.chabannes@gmail.com>\n"
 "Language-Team: \n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7\n"
-"Last-Translator: Brendan Chabannes <brendan.chabannes@gmail.com>\n"
+"X-Generator: Poedit 1.8.9\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"Language: fr\n"
 
 #: extension.js:93
 msgid "System will shutdown in"
@@ -34,14 +34,6 @@ msgstr "Le décompte avant extinction s’est arrêté"
 msgid "Shutdown Timer"
 msgstr "Arrêt planifié"
 
-#: extension.js:105
-msgid "min"
-msgstr "min"
-
-#: extension.js:107
-msgid "min (root)"
-msgstr "min (en tant que superutilisateur)"
-
 #: extension.js:114
 msgid "Settings"
 msgstr "Préférences"
@@ -53,7 +45,7 @@ msgstr "Valeur maximum de la minuterie (en minutes)"
 #: prefs.js:51
 #, javascript-format
 msgid "Slider position (in % from 0 to 100)"
-msgstr ""
+msgstr "Position du curseur (en % de 0 à 100)"
 
 #: prefs.js:70
 msgid ""
@@ -67,3 +59,9 @@ msgstr ""
 #: timer.js:44 timer.js:64
 msgid "min till shutdown"
 msgstr "min avant arrêt"
+
+#~ msgid "min"
+#~ msgstr "min"
+
+#~ msgid "min (root)"
+#~ msgstr "min (en tant que superutilisateur)"
