@@ -14,10 +14,12 @@
 .settings-button {
     padding: 4px;
     border-radius: 32px;
+    margin: 1px;
 }
 
 .settings-button:hover, .settings-button:focus {
     padding: 5px;
+    margin: 0px;
 }
 
 .settings-button > StIcon {
