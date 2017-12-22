@@ -1,0 +1,62 @@
+#
+# 	AUTHOR: Daniel Neumann
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-05-27 00:46+0100\n"
+"PO-Revision-Date: 2017-12-22 02:07+0200\n"
+"Last-Translator: Daniel Neumann\n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.0.4\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: _\n"
+"X-Poedit-Basepath: ../../..\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: extension.js:93
+msgid "System will shutdown in"
+msgstr "Ο υπολογιστής θα κλείσει σε"
+
+#: extension.js:94
+msgid "minutes"
+msgstr "λεπτά"
+
+#: extension.js:97
+msgid "Shutdown Timer stopped"
+msgstr "Η Αυτόματη Απενεργοποίηση σταμάτησε"
+
+#: extension.js:98 extension.js:161
+msgid "Shutdown Timer"
+msgstr "Αυτόματη Απενεργοποίηση "
+
+#: extension.js:114
+msgid "Settings"
+msgstr "Ρυθμίσεις"
+
+#: prefs.js:34
+msgid "Maximum timer value (in minutes)"
+msgstr "Μέγιστος χρόνος αναμονής (σε λεπτά)"
+
+#: prefs.js:51
+#, javascript-format
+msgid "Slider position (in % from 0 to 100)"
+msgstr "Θέση δείκτη (σε ποσοστό τοις εκατό, από 0 έως 100)"
+
+#: prefs.js:70
+msgid ""
+"Root mode (uses 'pkexec shutdown' command,\n"
+"no interruption of timer, but needs root password)"
+msgstr ""
+"Λειτουργία διαχειριστή (χρησιμποποιεί την 'pkexec shutdown' εντολή,\n"
+"η αντίστροφη μέτρηση δεν διακόπτεται, αλλά απαιτείται κωδικός διαχειριστή)"
+
+#: timer.js:44 timer.js:64
+msgid "min till shutdown"
+msgstr "λεπτά μέχρι την απενεργοποίηση"
