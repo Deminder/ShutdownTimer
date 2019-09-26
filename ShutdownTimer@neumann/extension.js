@@ -130,7 +130,7 @@ function _createSliderItem() {
 	                                style_class: 'popup-menu-icon' });
 	sliderItem.actor.add(sliderIcon);
 	slider = new Slider.Slider(sliderValue);
-	slider.connect('value-changed', _onSliderChanged);
+	slider.connect('notify::value', _onSliderChanged);
 	sliderItem.actor.add(slider.actor, { expand: true });
 	return sliderItem;
 }
