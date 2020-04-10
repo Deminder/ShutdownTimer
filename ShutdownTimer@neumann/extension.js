@@ -34,7 +34,7 @@ const Convenience = Extension.imports.convenience;
 
 
 /* GLOBAL VARIABLES */
-let textbox, submenu, slider, switcher, separator, timer, settings;
+let textbox, submenu, slider, switcher, separator, settings, timer;
 
 
 /* ACTION FUNCTIONS */
@@ -78,7 +78,7 @@ function _onSliderChanged() {
 
 function _onSettingsChanged() {
     let sliderValue =  settings.get_int('slider-value') / 100.0;
-    slider.setValue(sliderValue);
+    slider.value = sliderValue;
 	switcher.label.text = _getTimerStartValue().toString() + ' ' +_("min");
 	
 	if(settings.get_boolean('root-mode-value')) {
@@ -101,7 +101,7 @@ function _onToggle() {
 
 // menu items switcher and slider
 function _createSwitcherItem() {
-    let switchMenuItem = new PopupMenu.PopupSwitchMenuItem('');
+    let switchMenuItem = new PopupMenu.PopupSwitchMenuItem('', false);
     switchMenuItem.label.text = _getTimerStartValue().toString() + ' ' +_("min");
     if(settings.get_boolean('root-mode-value')) {
 	    switchMenuItem.label.text = _getTimerStartValue().toString() + ' ' +_("min (root)");
@@ -118,7 +118,8 @@ function _createSwitcherItem() {
     switcherSettingsButton.connect('clicked', function () {
             Util.spawn(["gnome-shell-extension-prefs", Extension.metadata.uuid]);
     });
-    switchMenuItem.actor.add(switcherSettingsButton, { expand: false });
+    // switchMenuItem.actor.add(switcherSettingsButton, { expand: false });
+    switchMenuItem.add_actor(switcherSettingsButton);
     
     return switchMenuItem;
 }
@@ -131,7 +132,8 @@ function _createSliderItem() {
 	sliderItem.actor.add(sliderIcon);
 	slider = new Slider.Slider(sliderValue);
 	slider.connect('notify::value', _onSliderChanged);
-	sliderItem.actor.add(slider.actor, { expand: true });
+	// sliderItem.actor.add(slider.actor, { expand: true });
+	sliderItem.add_actor(slider);
 	return sliderItem;
 }
 

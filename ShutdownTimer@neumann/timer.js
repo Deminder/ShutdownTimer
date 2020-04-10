@@ -14,7 +14,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 const Convenience = Me.imports.convenience;
 
 /* TIMER */
-const Timer = new Lang.Class({
+var Timer = new Lang.Class({
 	Name: 'Timer',
 	
 	_timerValue: 0,
