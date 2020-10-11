@@ -31,3 +31,12 @@ Open GNOME tweak tool and enable `Shutdowntimer` in extensions menu.
 ```
 $ gnome-tweaks
 ```
+
+## Development
+
+### Restart GNOME-Shell
+Press `ALT+F2`, type `r` and press `Enter`
+
+### See Errors and Logs
+Press `ALT+F2`, type `lg` and press `Enter`
+
