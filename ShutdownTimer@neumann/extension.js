@@ -54,7 +54,8 @@ function _showTextbox(textmsg) {
 		opacity: 0,
 		duration: 4000,
 		mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-		onComplete:  () => { _hideTextbox; }
+		onComplete: _hideTextbox
+	});
 }
 
 function _hideTextbox() {
