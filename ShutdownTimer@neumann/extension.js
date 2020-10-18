@@ -11,7 +11,8 @@ const St = imports.gi.St;
 
 // screen and main functionality
 const Main = imports.ui.main;
-const Tweener = imports.ui.tweener;
+const Clutter = imports.gi.Clutter;
+
 
 // menu items
 const PopupMenu = imports.ui.popupMenu;
@@ -49,11 +50,12 @@ function _showTextbox(textmsg) {
 	let monitor = Main.layoutManager.primaryMonitor;
 	textbox.set_position(Math.floor(monitor.width / 2 - textbox.width / 2),
 		              Math.floor(monitor.height / 2 - textbox.height / 2));
-	Tweener.addTween(textbox,
-		             { opacity: 0,
-		               time: 4,
-		               transition: 'easeOutQuad',
-		               onComplete: _hideTextbox });
+	textbox.ease ({
+		opacity: 0,
+		duration: 4000,
+		mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+		onComplete: _hideTextbox
+	});
 }
 
 function _hideTextbox() {
