@@ -20,7 +20,7 @@ Visit [https://extensions.gnome.org/extension/792/shutdowntimer/](https://extens
 
 Copy `ShutdownTimer@neumann` directory to `~/.local/share/gnome-shell/extensions`
 ```
-$ cp -r ShutdownTimer@neumann/ ~/.local/share/gnome-shell/extensions
+$ cp -r ShutdownTimer@neumann ~/.local/share/gnome-shell/extensions
 ```
 
 
@@ -34,9 +34,21 @@ Open GNOME tweak tool and enable `Shutdowntimer` in extensions menu.
 $ gnome-tweaks
 ```
 
+### For GNOME 40+
+Install `org.gnome.Extensions` via flatpak
+```
+$ flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+$ flatpak install flathub org.gnome.Extensions
+```
+
+Open GNOME shell extension tool
+```
+$ flatpak run org.gnome.Extensions
+```
+
 ## Development
 
-### Restart GNOME-Shell
+### Restart GNOME-Shell (Xorg only)
 Press `ALT+F2`, type `r` and press `Enter`
 
 ### See Errors and Logs

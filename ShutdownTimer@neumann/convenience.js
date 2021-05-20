@@ -1,5 +1,5 @@
 /**
-	AUTHOR: Daniel Neumann
+    AUTHOR: Daniel Neumann
 **/
 const Gettext = imports.gettext;
 const Gio = imports.gi.Gio;
