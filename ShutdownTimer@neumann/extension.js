@@ -29,7 +29,8 @@ const _ = Gettext.gettext;
 
 
 // import own scripts
-const Extension = imports.misc.extensionUtils.getCurrentExtension();
+const ExtensionUtils = imports.misc.extensionUtils;
+const Extension = ExtensionUtils.getCurrentExtension();
 const Timer = Extension.imports.timer;
 const Convenience = Extension.imports.convenience;
 
@@ -118,7 +119,7 @@ function _createSwitcherItem() {
     switcherSettingsButton.child = new St.Icon({icon_name: 'emblem-system-symbolic', 
                                                 style_class: 'popup-menu-icon' });
     switcherSettingsButton.connect('clicked', function () {
-            Util.spawn(["gnome-shell-extension-prefs", Extension.metadata.uuid]);
+            ExtensionUtils.openPrefs();
     });
     switchMenuItem.add_actor(switcherSettingsButton);
     
@@ -150,12 +151,14 @@ function init() {
     // initialize translations
     Convenience.initTranslations();
 
-    // initialize timer and settings
+    // initialize settings
     settings = Convenience.getSettings();
-    timer = new Timer.Timer(powerOff);
 }
 
 function enable() {
+    // initialize timer
+    timer = new Timer.Timer(powerOff);
+
     // submenu in status area menu with slider and toggle button
     let sliderItem = _createSliderItem();
     switcher = _createSwitcherItem();
@@ -183,4 +186,3 @@ function disable() {
     submenu.destroy(); // destroys switcher and sliderItem as children too
     separator.destroy();
 }
-

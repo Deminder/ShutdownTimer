@@ -78,7 +78,6 @@ const ShutdownTimerPrefsWidget = new GObject.Class({
         switchMenuItem.set_active(rootMode);
         this.attach(switchMenuItem, 0, 7, 1, 1);
     }
-    
 });
 
 function buildPrefsWidget() {
@@ -88,7 +87,6 @@ function buildPrefsWidget() {
     } else {
         widget.show();
     }
-    
 
     return widget;
 }
