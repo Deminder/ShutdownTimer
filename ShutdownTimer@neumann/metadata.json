@@ -4,6 +4,6 @@
     "name": "ShutdownTimer", 
     "gettext-domain": "ShutdownTimer", 
     "settings-schema": "org.gnome.shell.extensions.shutdowntimer-neumann", 
-    "description": "Shutdown the device after a specific time.\n\nMaximum timer value und slider position can be modified in the settings.", 
+    "description": "Shutdown/suspend the device after a specific time.\n\nMaximum timer value und default slider position can be modified in the settings.", 
     "url": "https://github.com/neumann-d/ShutdownTimer"
 }
