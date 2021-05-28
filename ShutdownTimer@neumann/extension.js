@@ -2,6 +2,7 @@
     AUTHOR: Daniel Neumann
     GJS SOURCES: https://github.com/GNOME/gnome-shell/
     COMPILING SCHEMAS: glib-compile-schemas schemas/
+    EDIT LOCALE: e.g. use Poedit and open ShutdownTimer.po files
     COMPILING LOCALE: msgfmt ShutdownTimer.po -o ShutdownTimer.mo
 **/
 
@@ -18,10 +19,6 @@ const Clutter = imports.gi.Clutter;
 const PopupMenu = imports.ui.popupMenu;
 const Slider = imports.ui.slider;
 const Switcher = imports.ui.switcherPopup;
-
-// shutdown functionality
-const GnomeSession = imports.misc.gnomeSession;
-const Util = imports.misc.util;
 
 // translations
 const Gettext = imports.gettext.domain('ShutdownTimer');
@@ -74,7 +71,7 @@ function _onSliderChanged() {
     settings.set_int('slider-value', (slider.value * 100));
     switcher.label.text = _getTimerStartValue().toString() + ' min';
     
-    if(settings.get_boolean('root-mode-value')) {
+    if (settings.get_boolean('root-mode-value')) {
         switcher.label.text = _getTimerStartValue().toString() + ' min (root)'; 
     }
 }
@@ -84,9 +81,15 @@ function _onSettingsChanged() {
     slider.value = sliderValue;
     switcher.label.text = _getTimerStartValue().toString() + ' ' +_("min");
     
-    if(settings.get_boolean('root-mode-value')) {
+    if (settings.get_boolean('root-mode-value')) {
         switcher.label.text = _getTimerStartValue().toString() + ' ' +_("min (root)");
     }
+}
+
+function _onShowSettingsButtonChanged() {
+    submenu.destroy();
+    separator.destroy();
+    render();
 }
 
 // toggle button starts/stops shutdown timer
@@ -111,17 +114,20 @@ function _createSwitcherItem() {
     }
     
     switchMenuItem.connect('toggled', _onToggle);
-    let switcherSettingsButton = new St.Button({reactive: true,
-                                                can_focus: true,
-                                                track_hover: true,
-                                                accessible_name: _("Settings"),
-                                                style_class: 'system-menu-action settings-button' });
-    switcherSettingsButton.child = new St.Icon({icon_name: 'emblem-system-symbolic', 
-                                                style_class: 'popup-menu-icon' });
-    switcherSettingsButton.connect('clicked', function () {
-            ExtensionUtils.openPrefs();
-    });
-    switchMenuItem.add_actor(switcherSettingsButton);
+
+    if(settings.get_boolean('show-settings-value')) {
+        let switcherSettingsButton = new St.Button({reactive: true,
+                                                    can_focus: true,
+                                                    track_hover: true,
+                                                    accessible_name: _("Settings"),
+                                                    style_class: 'system-menu-action settings-button' });
+        switcherSettingsButton.child = new St.Icon({icon_name: 'emblem-system-symbolic', 
+                                                    style_class: 'popup-menu-icon' });
+        switcherSettingsButton.connect('clicked', function () {
+                ExtensionUtils.openPrefs();
+        });
+        switchMenuItem.add_actor(switcherSettingsButton);
+    }
     
     return switchMenuItem;
 }
@@ -138,27 +144,37 @@ function _createSliderItem() {
     return sliderItem;
 }
 
+// timer action (shutdown/suspend)
+function timerAction() {
+    if(settings.get_boolean('use-suspend-value')) {
+        suspend();
+    } else {
+        powerOff();
+    }
+}
+
 // shutdown the device
 function powerOff() {
     Main.overview.hide();
+
+    const GnomeSession = imports.misc.gnomeSession;
     let session = new GnomeSession.SessionManager();
     session.ShutdownRemote(0);	// shutdown after 60s
+
+    // const Util = imports.misc.util;
     //Util.spawnCommandLine('poweroff');	// shutdown immediately
 }
 
-/* EXTENSION MAIN FUNCTIONS */
-function init() {
-    // initialize translations
-    Convenience.initTranslations();
+// suspend the device
+function suspend() {
+    Main.overview.hide();
 
-    // initialize settings
-    settings = Convenience.getSettings();
+    const LoginManager = imports.misc.loginManager;
+    let loginManager = LoginManager.getLoginManager();
+    loginManager.suspend();
 }
 
-function enable() {
-    // initialize timer
-    timer = new Timer.Timer(powerOff);
-
+function render() {
     // submenu in status area menu with slider and toggle button
     let sliderItem = _createSliderItem();
     switcher = _createSwitcherItem();
@@ -174,11 +190,29 @@ function enable() {
     let statusMenu = Main.panel.statusArea['aggregateMenu'];
     statusMenu.menu.addMenuItem(separator);
     statusMenu.menu.addMenuItem(submenu);
+}
+
+/* EXTENSION MAIN FUNCTIONS */
+function init() {
+    // initialize translations
+    Convenience.initTranslations();
+
+    // initialize settings
+    settings = Convenience.getSettings();
+}
+
+function enable() {
+    // initialize timer
+    timer = new Timer.Timer(timerAction);
+
+    // render menu widget
+    render()
     
     // handlers for changed values in settings
     settings.connect('changed::max-timer-value', _onSettingsChanged);
     settings.connect('changed::slider-value', _onSettingsChanged);
     settings.connect('changed::root-mode-value', _onSettingsChanged);
+    settings.connect('changed::show-settings-value', _onShowSettingsButtonChanged);
 }
 
 function disable() {

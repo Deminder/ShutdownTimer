@@ -20,12 +20,12 @@ var Timer = new Lang.Class({
     _timerValue: 0,
     _timerId: null,
     _startTime: 0,
-    _powerOff: null,
+    _callbackAction: null,
     _menuLabel: null,
     _settings: null,
     
-    _init: function(powerOffFunction) {
-        this._powerOff = powerOffFunction;
+    _init: function(callbackAction) {
+        this._callbackAction = callbackAction;
         this._settings = Convenience.getSettings();
     },
     
@@ -38,7 +38,7 @@ var Timer = new Lang.Class({
             let sliderValue = this._settings.get_int('slider-value') / 100.0;
             this._timerValue = Math.floor(sliderValue * this._settings.get_int('max-timer-value'));
             
-            if(!this._settings.get_boolean('root-mode-value')) {
+            if(this._settings.get_boolean('use-suspend-value') || !this._settings.get_boolean('root-mode-value')) {
                 this._startTime = GLib.get_monotonic_time();
                 this._timerId = Mainloop.timeout_add_seconds(1, Lang.bind(this, this._timerCallback));
                 this._menuLabel.text = this._timerValue.toString() + ' ' + _("min till shutdown");
@@ -67,7 +67,7 @@ var Timer = new Lang.Class({
             return true;
         }
         
-        this._powerOff();
+        this._callbackAction();
         return false;
     }
 
