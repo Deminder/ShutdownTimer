@@ -206,8 +206,8 @@ function enable() {
     timer = new Timer.Timer(timerAction);
 
     // render menu widget
-    render()
-    
+    render();
+
     // handlers for changed values in settings
     settings.connect('changed::max-timer-value', _onSettingsChanged);
     settings.connect('changed::slider-value', _onSettingsChanged);
