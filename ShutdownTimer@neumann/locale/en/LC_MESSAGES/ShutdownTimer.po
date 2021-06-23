@@ -75,6 +75,11 @@ msgstr ""
 msgid "Use suspend"
 msgstr "Use suspend"
 
+#: prefs.js:108
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:37
+msgid "Check command"
+msgstr "Check command"
+
 #: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:7
 msgid "Maximum time (in minutes)"
 msgstr "Maximum timer value (in minutes)"

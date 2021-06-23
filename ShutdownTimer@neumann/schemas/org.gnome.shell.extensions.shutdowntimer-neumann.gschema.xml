@@ -31,6 +31,18 @@
       <summary>Use suspend</summary>
       <description>Use suspend instead of shutdown command.</description>
     </key>
+
+    <key type="s" name="check-command-value">
+      <default>"/bin/true"</default>
+      <summary>Check command</summary>
+      <description>Run command before shutdown command. Proceed with shutdown only if command succeedes.</description>
+    </key>
+
+    <key type="b" name="ignore-check-command-value">
+      <default>false</default>
+      <summary>Ignore check command</summary>
+      <description>Run check command. Proceed with shutdown even if check command has failed.</description>
+    </key>
     
   </schema>
 </schemalist>

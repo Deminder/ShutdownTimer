@@ -7,8 +7,7 @@
 **/
 
 /* IMPORTS */
-// icons and labels
-const St = imports.gi.St;
+const {GLib, St, Gio} = imports.gi;
 
 // screen and main functionality
 const Main = imports.ui.main;
@@ -97,7 +96,8 @@ function _onToggle() {
     if(switcher.state) {
         timer.startTimer();
         _showTextbox(   _("System will shutdown in")+ ' ' 
-                        + _getTimerStartValue().toString() + ' '+_("minutes"));
+                        + _getTimerStartValue().toString() + ' '+_("minutes")
+                        + '\n [' + settings.get_string('check-command-value') + ']');
     } else {
         timer.stopTimer();
         _showTextbox(_("Shutdown Timer stopped"));
@@ -144,13 +144,81 @@ function _createSliderItem() {
     return sliderItem;
 }
 
+/**
+ * Execute a command asynchronously and check the exit status.
+ *
+ * If given, @cancellable can be used to stop the process before it finishes.
+ *
+ * @param {string[] | string} argv - a list of string arguments or command line that will be parsed
+ * @param {Gio.Cancellable} [cancellable] - optional cancellable object
+ * @returns {Promise<boolean>} - The process success
+ */
+async function execCheck(argv, cancellable = null) {
+    if (argv instanceof String) {
+        try {
+            argv = GLib.shell_parse_argv( command_line )[1];
+        } catch (e) {
+            return Promise.reject(e);
+        }
+    }
+    let cancelId = 0;
+    let proc = new Gio.Subprocess({
+        argv: argv,
+        flags: Gio.SubprocessFlags.NONE
+    });
+    proc.init(cancellable);
+
+    if (cancellable instanceof Gio.Cancellable) {
+        cancelId = cancellable.connect(() => proc.force_exit());
+    }
+
+    return new Promise((resolve, reject) => {
+        proc.wait_check_async(null, (proc, res) => {
+            try {
+                if (!proc.wait_check_finish(res)) {
+                    let status = proc.get_exit_status();
+
+                    throw new Gio.IOErrorEnum({
+                        code: Gio.io_error_from_errno(status),
+                        message: GLib.strerror(status)
+                    });
+                }
+
+                resolve();
+            } catch (e) {
+                reject(e);
+            } finally {
+                if (cancelId > 0) {
+                    cancellable.disconnect(cancelId);
+                }
+            }
+        });
+    });
+}
+
 // timer action (shutdown/suspend)
 function timerAction() {
-    if(settings.get_boolean('use-suspend-value')) {
-        suspend();
+    const turnOffAction = () => {
+        if(settings.get_boolean('use-suspend-value')) {
+            suspend();
+        } else {
+            powerOff();
+        }
+    };
+    const checkCommandStr = settings.get_string('check-command-value');
+    if (!checkCommandStr.length) {
+        turnOffAction();
     } else {
-        powerOff();
+        execCheck(checkCommandStr)
+            .then(() => turnOffAction())
+            .catch((e) => {
+                if ('message' in e) {
+                    _showTextbox('Shutdown aborted!\n' + e.message);
+                }
+                logError(e, "CheckCommandError");
+            });
     }
+
 }
 
 // shutdown the device

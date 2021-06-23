@@ -41,7 +41,7 @@ var Timer = new Lang.Class({
             if(this._settings.get_boolean('use-suspend-value') || !this._settings.get_boolean('root-mode-value')) {
                 this._startTime = GLib.get_monotonic_time();
                 this._timerId = Mainloop.timeout_add_seconds(1, Lang.bind(this, this._timerCallback));
-                this._menuLabel.text = this._timerValue.toString() + ' ' + _("min till shutdown");
+                this._menuLabel.text = this._timerValue.toString() + ' ' + _("min until shutdown");
             } else {
                 let pkexec_path = GLib.find_program_in_path('pkexec');
                 let shutdown_path = GLib.find_program_in_path('shutdown');
