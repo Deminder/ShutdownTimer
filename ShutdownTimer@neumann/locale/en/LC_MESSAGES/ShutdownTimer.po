@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-28 22:47+0200\n"
-"PO-Revision-Date: 2021-05-28 22:47+0200\n"
+"POT-Creation-Date: 2021-06-24 13:40+0200\n"
+"PO-Revision-Date: 2021-06-24 13:40+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -14,71 +14,39 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.4.3\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _\n"
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: extension.js:82 extension.js:105
+#: extension.js:81 extension.js:111
 msgid "min"
 msgstr "min"
 
-#: extension.js:85 extension.js:107
+#: extension.js:84 extension.js:113
 msgid "min (root)"
 msgstr "min (root)"
 
-#: extension.js:93
+#: extension.js:98
 msgid "System will shutdown in"
 msgstr "System will shutdown in"
 
-#: extension.js:94
+#: extension.js:99
 msgid "minutes"
 msgstr "minutes"
 
-#: extension.js:97
+#: extension.js:103
 msgid "Shutdown Timer stopped"
 msgstr "Shutdown Timer stopped"
 
-#: extension.js:98 extension.js:188
+#: extension.js:104 extension.js:250
 msgid "Shutdown Timer"
 msgstr "Shutdown Timer"
 
-#: extension.js:116
+#: extension.js:122
 msgid "Settings"
 msgstr "Settings"
-
-#: prefs.js:35
-msgid "Maximum timer value (in minutes)"
-msgstr "Maximum timer value (in minutes)"
-
-#: prefs.js:52
-#, javascript-format
-msgid "Slider position (in % from 0 to 100)"
-msgstr "Slider position (in % from 0 to 100)"
-
-#: prefs.js:70
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:19
-msgid "Show settings button"
-msgstr "Show settings button"
-
-#: prefs.js:83
-msgid ""
-"Root mode (uses 'pkexec shutdown' command,\n"
-"no interruption of timer, but needs root password)"
-msgstr ""
-"Root mode (uses 'pkexec shutdown' command,\n"
-"no interruption of timer, but needs root password)"
-
-#: prefs.js:96
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:31
-msgid "Use suspend"
-msgstr "Use suspend"
-
-#: prefs.js:108
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:37
-msgid "Check command"
-msgstr "Check command"
 
 #: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:7
 msgid "Maximum time (in minutes)"
@@ -104,11 +72,17 @@ msgstr ""
 "Set slider position as percent of the maximum time. Must be in range 0 and "
 "100."
 
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:19
+#: templates/pref-window-gtk4.ui:91 templates/pref-window.ui:133
+msgid "Show settings button"
+msgstr "Show settings button"
+
 #: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:20
 msgid "Show/hide settings button in widget."
 msgstr "Show/hide settings button in widget."
 
 #: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:25
+#: templates/pref-window-gtk4.ui:112 templates/pref-window.ui:169
 msgid "Root mode"
 msgstr "Root mode"
 
@@ -120,10 +94,94 @@ msgstr ""
 "Set root mode on/off. In root mode powering off is done via 'pkexec' and "
 "'shutdown' terminal command."
 
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:31
+#: templates/pref-window-gtk4.ui:132 templates/pref-window.ui:204
+msgid "Use suspend"
+msgstr "Use suspend"
+
 #: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:32
 msgid "Use suspend instead of shutdown command."
 msgstr "Use suspend instead of shutdown command."
 
-#: timer.js:44 timer.js:64
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:37
+#: templates/pref-window-gtk4.ui:151 templates/pref-window.ui:231
+msgid "Check command"
+msgstr "Check command"
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:38
+msgid ""
+"Run command before shutdown command. Proceed with shutdown only if check "
+"command succeedes."
+msgstr ""
+"Run command before shutdown command. Proceed with shutdown only if check "
+"command succeedes."
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:43
+#: templates/pref-window-gtk4.ui:170 templates/pref-window.ui:272
+msgid "Enable check command"
+msgstr "Enable check command"
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:44
+msgid "Check command is skipped if disabled."
+msgstr "Check command is skipped if disabled."
+
+#: templates/pref-window-gtk4.ui:43 templates/pref-window.ui:56
+msgid "Maximum timer value (in minutes)"
+msgstr "Maximum timer value (in minutes)"
+
+#: templates/pref-window-gtk4.ui:71 templates/pref-window.ui:98
+msgid "Slider position (in &amp; from 0 to 100)"
+msgstr "Slider position (in % from 0 to 100)"
+
+#: templates/pref-window-gtk4.ui:111 templates/pref-window.ui:168
+msgid ""
+"uses 'pkexec shutdown' command, no interruption of timer, but needs root "
+"password"
+msgstr ""
+"uses 'pkexec shutdown' command, no interruption of timer, but needs root "
+"password"
+
+#: templates/pref-window-gtk4.ui:149 templates/pref-window.ui:229
+msgid ""
+"Run check command after timer runs out. Only proceeds if check command "
+"terminates successfully."
+msgstr ""
+"Run check command after timer runs out. Only proceeds if check command "
+"terminates successfully."
+
+#: timer.js:44
+msgid "min until shutdown"
+msgstr "min untill shutdown"
+
+#: timer.js:64
 msgid "min till shutdown"
 msgstr "min till shutdown"
+
+#~ msgid ""
+#~ "Run command before shutdown command. Proceed with shutdown only if "
+#~ "command succeedes."
+#~ msgstr ""
+#~ "Run command before shutdown command. Proceed with shutdown only if "
+#~ "command succeedes."
+
+#, fuzzy
+#~| msgid "Check command"
+#~ msgid "Ignore failed check command"
+#~ msgstr "Check command"
+
+#, fuzzy
+#~| msgid "Root mode"
+#~ msgctxt "Show settings button"
+#~ msgid "Root mode"
+#~ msgstr "Root mode"
+
+#, fuzzy
+#~| msgid "Use suspend"
+#~ msgctxt "Show settings button"
+#~ msgid "Use suspend"
+#~ msgstr "Use suspend"
+
+#, fuzzy
+#~| msgid "Check command"
+#~ msgid "Check command:"
+#~ msgstr "Check command"

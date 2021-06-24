@@ -28,7 +28,7 @@
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
+        <property name="can-focus">True</property>
         <property name="spacing">5</property>
         <child>
           <object class="GtkSpinButton" id="max-timer-spinbutton">
@@ -71,7 +71,7 @@
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
+        <property name="can-focus">True</property>
         <property name="spacing">5</property>
         <child>
           <object class="GtkSpinButton" id="slider-spinbutton">
@@ -95,7 +95,7 @@
             <property name="can-focus">False</property>
             <property name="margin-start">5</property>
             <property name="margin-end">5</property>
-            <property name="label" translatable="yes">Slider position (in % from 0 to 100)</property>
+            <property name="label" translatable="yes">Slider position (in &amp;amp; from 0 to 100)</property>
             <property name="use-markup">True</property>
           </object>
           <packing>
@@ -113,7 +113,7 @@
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
+        <property name="can-focus">True</property>
         <property name="spacing">5</property>
         <child>
           <object class="GtkSwitch" id="show-settings-switch">
@@ -130,7 +130,7 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="label" translatable="yes" context="Show settings button">Show settings button</property>
+            <property name="label" translatable="yes">Show settings button</property>
             <property name="use-markup">True</property>
           </object>
           <packing>
@@ -148,7 +148,7 @@
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
+        <property name="can-focus">True</property>
         <property name="spacing">5</property>
         <child>
           <object class="GtkSwitch" id="root-mode-switch">
@@ -166,7 +166,7 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="tooltip-text" translatable="yes">uses 'pkexec shutdown' command, no interruption of timer, but needs root password</property>
-            <property name="label" translatable="yes" context="Show settings button">Root mode</property>
+            <property name="label" translatable="yes">Root mode</property>
             <property name="use-markup">True</property>
           </object>
           <packing>
@@ -184,7 +184,7 @@
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
+        <property name="can-focus">True</property>
         <property name="spacing">5</property>
         <child>
           <object class="GtkSwitch" id="use-suspend-switch">
@@ -201,7 +201,7 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="label" translatable="yes" context="Show settings button">Use suspend</property>
+            <property name="label" translatable="yes">Use suspend</property>
             <property name="use-markup">True</property>
           </object>
           <packing>
@@ -226,9 +226,9 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="tooltip-text" translatable="yes">Run command before shutdown command. Proceed with shutdown only if command succeedes.</property>
+            <property name="tooltip-text" translatable="yes">Run check command after timer runs out. Only proceeds if check command terminates successfully.</property>
             <property name="halign">start</property>
-            <property name="label" translatable="yes">Check command:</property>
+            <property name="label" translatable="yes">Check command</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -252,10 +252,10 @@
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
+            <property name="can-focus">True</property>
             <property name="spacing">5</property>
             <child>
-              <object class="GtkSwitch" id="ignore-check-command-switch">
+              <object class="GtkSwitch" id="enable-check-command-switch">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
               </object>
@@ -269,7 +269,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Ignore failed check command</property>
+                <property name="label" translatable="yes">Enable check command</property>
                 <property name="use-markup">True</property>
               </object>
               <packing>

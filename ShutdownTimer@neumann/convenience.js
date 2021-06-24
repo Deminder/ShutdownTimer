@@ -29,6 +29,7 @@ function initTranslations(domain) {
         Gettext.bindtextdomain(domain, localeDir.get_path());
     else
         Gettext.bindtextdomain(domain, Config.LOCALEDIR);
+    Gettext.textdomain(domain);
 }
 
 /**

@@ -26,7 +26,7 @@ const templateComponents = {
     'root-mode': 'switch',
     'use-suspend': 'switch',
     'check-command': 'buffer',
-    'ignore-check-command': 'switch',
+    'enable-check-command': 'switch',
 };
 const Config = imports.misc.config;
 const ShellVersion = parseFloat(Config.PACKAGE_VERSION);
