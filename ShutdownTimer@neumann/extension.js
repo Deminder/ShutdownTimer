@@ -28,11 +28,12 @@ const _ = Gettext.gettext;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Extension = ExtensionUtils.getCurrentExtension();
 const Timer = Extension.imports.timer;
+const RootMode = Extension.imports.rootmode;
 const Convenience = Extension.imports.convenience;
 
 
 /* GLOBAL VARIABLES */
-let textbox, submenu, slider, switcher, separator, settings, timer;
+let textbox, submenu, slider, switcher, separator, settings, timer, checkCancel, rootMode;
 
 
 /* ACTION FUNCTIONS */
@@ -49,7 +50,8 @@ function _showTextbox(textmsg) {
                       Math.floor(monitor.height / 2 - textbox.height / 2));
     textbox.ease ({
         opacity: 0,
-        duration: 4000,
+        delay: 3000,
+        duration: 1000,
         mode: Clutter.AnimationMode.EASE_OUT_QUAD,
         onComplete: _hideTextbox
     });
@@ -91,17 +93,44 @@ function _onShowSettingsButtonChanged() {
     render();
 }
 
-// toggle button starts/stops shutdown timer
+
 function _onToggle() {
-    if(switcher.state) {
-        timer.startTimer();
-        _showTextbox(   _("System will shutdown in")+ ' ' 
-                        + _getTimerStartValue().toString() + ' '+_("minutes")
-                        + '\n [' + settings.get_string('check-command-value') + ']');
+    _updateSwitcher();
+}
+// toggle button starts/stops shutdown timer
+function _updateSwitcher(show = true) {
+    const checkCmd = settings.get_string('check-command-value');
+    let showText;
+    if (checkCancel !== null && !checkCancel.is_cancelled()) {
+        if(switcher.state) {
+            submenu.label.text = _("Waiting for confirmation");
+            showText = _("Waiting for confirmation") + '\n ' + checkCmd;
+        } else {
+            checkCancel.cancel();
+            showText = _("Confirmation canceled");
+            submenu.label.text = _("Shutdown Timer");
+        }
+    } else if(switcher.state) {
+        const timerValue = Math.floor(settings.get_int('slider-value') * settings.get_int('max-timer-value') / 100.0);
+        if (settings.get_boolean('root-mode-value')) {
+            rootMode.runCommandLine('whoami')
+                .then((status) => {
+                    _showTextbox("You are root!" + status);
+                }).catch((err) => {
+                    _showTextbox("Failed to get root!\n" + err);
+                });
+        }
+        timer.startTimer(timerValue);
+        showText = _("System will shutdown in")+ ' ' 
+                        + _getTimerStartValue().toString() + ' '+_("minutes") + 
+                        (settings.get_boolean('enable-check-command-value') ? '\n ' + checkCmd : '');
     } else {
         timer.stopTimer();
-        _showTextbox(_("Shutdown Timer stopped"));
+        showText = _("Shutdown Timer stopped");
         submenu.label.text = _("Shutdown Timer");
+    }
+    if (show) {
+        _showTextbox(showText);
     }
 }
 
@@ -151,19 +180,19 @@ function _createSliderItem() {
  *
  * @param {string[] | string} argv - a list of string arguments or command line that will be parsed
  * @param {Gio.Cancellable} [cancellable] - optional cancellable object
+ * @param {boolean} shell - run command as shell command
  * @returns {Promise<boolean>} - The process success
  */
-async function execCheck(argv, cancellable = null) {
-    if (argv instanceof String) {
-        try {
-            argv = GLib.shell_parse_argv( command_line )[1];
-        } catch (e) {
-            return Promise.reject(e);
-        }
+async function execCheck(argv, cancellable = null, shell = true) {
+    if (!shell && typeof argv === "string") {
+        argv = GLib.shell_parse_argv( argv )[1];
+    }
+    if (shell && argv instanceof Array) {
+        argv = argv.map(c => `"${c.replaceAll('"', '\\"')}"`).join(' ');
     }
     let cancelId = 0;
     let proc = new Gio.Subprocess({
-        argv: argv,
+        argv: (shell ? ['/bin/sh', '-c'] : []).concat(argv),
         flags: Gio.SubprocessFlags.NONE
     });
     proc.init(cancellable);
@@ -205,17 +234,43 @@ function timerAction() {
             powerOff();
         }
     };
+    
+    // reset timer switcher
+    const resetSwitcher = () => {
+        switcher.state = false;
+        _updateSwitcher(false);
+
+    };
     const checkCommandStr = settings.get_string('check-command-value');
-    if (!checkCommandStr.length) {
+    const checkCommandEnabled = settings.get_boolean('enable-check-command-value');
+    if (!checkCommandEnabled || !checkCommandStr.length) {
         turnOffAction();
+        resetSwitcher();
     } else {
-        execCheck(checkCommandStr)
-            .then(() => turnOffAction())
+        if (checkCancel !== null) {
+            _showTextbox(_("Confirmation canceled"));
+            log('Confirmation canceled: attempted to start a second check command!');
+            resetSwitcher();
+            return;
+        }
+        checkCancel = new Gio.Cancellable();
+        _updateSwitcher();
+        execCheck(checkCommandStr, checkCancel)
+            .then(() => {
+                log(`Check command "${checkCommandStr}" confirmed shutdown.`);
+                turnOffAction();
+            })
             .catch((e) => {
-                if ('message' in e) {
-                    _showTextbox('Shutdown aborted!\n' + e.message);
+                if ('code' in e) {
+                    _showTextbox(_('Shutdown aborted') + `\n${checkCommandStr} (Code: ${e.code})`);
+                    log("Check command aborted shutdown. Status: " + e.code);
+                } else {
+                    logError(e, "CheckCommandError");
                 }
-                logError(e, "CheckCommandError");
+            })
+            .finally(() => {
+                checkCancel = null;
+                resetSwitcher();
             });
     }
 
@@ -272,6 +327,9 @@ function init() {
 function enable() {
     // initialize timer
     timer = new Timer.Timer(timerAction);
+    rootMode = new RootMode.RootMode();
+
+    checkCancel = null;
 
     // render menu widget
     render();
@@ -287,4 +345,9 @@ function disable() {
     timer.stopTimer(); // removes timer from Mainloop
     submenu.destroy(); // destroys switcher and sliderItem as children too
     separator.destroy();
+    if (checkCancel !== null && !checkCancel.is_cancelled()) {
+        checkCancel.cancel();
+        checkCancel = null;
+    }
+    rootMode.cleanup();
 }

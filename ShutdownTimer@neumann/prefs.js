@@ -28,15 +28,14 @@ const templateComponents = {
     'check-command': 'buffer',
     'enable-check-command': 'switch',
 };
-const Config = imports.misc.config;
-const ShellVersion = parseFloat(Config.PACKAGE_VERSION);
-
-const templateFile = Me.dir.get_child('templates').get_child('pref-window' + (ShellVersion < 40 ? '' : '-gtk4.ui')).get_path();
 
 const ShutdownTimerPrefsWidget = GObject.registerClass({
     Name: 'ShutdownTimer.Prefs.Widget',
     GTypeName: 'ShutdownTimerPrefsWidget',
-    Template: 'file://' + templateFile , 
+    Template: Me.dir
+    .get_child('templates')
+    .get_child('pref-window' + (Gtk.get_major_version() < 4 ? '' : '-gtk4.ui'))
+    .get_uri() , 
     InternalChildren: Object.entries(templateComponents).map((n) => n.join('-')),
 }, class ShutdownTimerPrefsWidget extends Gtk.Grid {
 
@@ -78,7 +77,7 @@ const ShutdownTimerPrefsWidget = GObject.registerClass({
             fieldSetter(this[fieldName], settingsGetter(settingsName));
             this[fieldName].connect(signal, (w) => {
                 settingsSetter(settingsName, fieldGetter(w));
-                log(`Signal ${signal}: ${fieldName} -> ${settingsName}`);
+                log(`Signal ${signal}: ${fieldName} (${fieldGetter(w)}) -> ${settingsName}`);
             });
         };
 
@@ -91,10 +90,12 @@ const ShutdownTimerPrefsWidget = GObject.registerClass({
 
 function buildPrefsWidget() {
     let widget = new ShutdownTimerPrefsWidget();
-    if (widget.show_all) {
-        widget.show_all();
-    } else {
-        widget.show();
+    if (Gtk.get_major_version() < 4) {
+        if (widget.show_all) {
+            widget.show_all();
+        } else {
+            widget.show();
+        }
     }
 
     return widget;

@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-24 13:40+0200\n"
-"PO-Revision-Date: 2021-06-24 13:40+0200\n"
+"POT-Creation-Date: 2021-06-24 16:13+0200\n"
+"PO-Revision-Date: 2021-06-24 16:13+0200\n"
 "Last-Translator: Jakub Żywiec <jakub.zywiec@gmail.com>\n"
 "Language-Team: POLISH <jakub.zywiec@gmail.com>\n"
 "Language: pl\n"
@@ -20,31 +20,39 @@ msgstr ""
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: extension.js:81 extension.js:111
+#: extension.js:82 extension.js:122
 msgid "min"
 msgstr "minut"
 
-#: extension.js:84 extension.js:113
+#: extension.js:85 extension.js:124
 msgid "min (root)"
 msgstr ""
 
-#: extension.js:98
-msgid "System will shutdown in"
-msgstr "Wyłączenie komputera nastąpi za"
+#: extension.js:100 extension.js:101
+msgid "Waiting for confirmation"
+msgstr ""
 
-#: extension.js:99
-msgid "minutes"
-msgstr "minut"
+#: extension.js:104 extension.js:224
+msgid "Confirmation canceled"
+msgstr ""
 
-#: extension.js:103
-msgid "Shutdown Timer stopped"
-msgstr "Wyłącznik czasowy wstrzymany"
-
-#: extension.js:104 extension.js:250
+#: extension.js:105 extension.js:115 extension.js:277
 msgid "Shutdown Timer"
 msgstr "Wyłącznik czasowy"
 
-#: extension.js:122
+#: extension.js:109
+msgid "System will shutdown in"
+msgstr "Wyłączenie komputera nastąpi za"
+
+#: extension.js:110
+msgid "minutes"
+msgstr "minut"
+
+#: extension.js:114
+msgid "Shutdown Timer stopped"
+msgstr "Wyłącznik czasowy wstrzymany"
+
+#: extension.js:133
 msgid "Settings"
 msgstr "Ustawienia"
 

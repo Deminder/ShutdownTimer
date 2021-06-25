@@ -33,20 +33,12 @@ var Timer = new Lang.Class({
         this._menuLabel = label;
     },
     
-    startTimer: function() {
+    startTimer: function(timerValue) {
         if (!this._timerId) {
-            let sliderValue = this._settings.get_int('slider-value') / 100.0;
-            this._timerValue = Math.floor(sliderValue * this._settings.get_int('max-timer-value'));
-            
-            if(this._settings.get_boolean('use-suspend-value') || !this._settings.get_boolean('root-mode-value')) {
-                this._startTime = GLib.get_monotonic_time();
-                this._timerId = Mainloop.timeout_add_seconds(1, Lang.bind(this, this._timerCallback));
-                this._menuLabel.text = this._timerValue.toString() + ' ' + _("min until shutdown");
-            } else {
-                let pkexec_path = GLib.find_program_in_path('pkexec');
-                let shutdown_path = GLib.find_program_in_path('shutdown');
-                Util.spawnCommandLine(pkexec_path + " " + shutdown_path + " -h " + this._timerValue);
-            }
+            this._timerValue = timerValue;
+            this._startTime = GLib.get_monotonic_time();
+            this._timerId = Mainloop.timeout_add_seconds(1, Lang.bind(this, this._timerCallback));
+            this._menuLabel.text = this._timerValue.toString() + ' ' + _("min until shutdown");
         }
     },
     
@@ -61,7 +53,7 @@ var Timer = new Lang.Class({
         
         let secondsLeft = (this._timerValue*60) - secondsElapsed;
         if (this._menuLabel && (secondsLeft%60 == 0)) {
-            this._menuLabel.text = Math.floor(secondsLeft/60).toString()+' '+_("min till shutdown");
+            this._menuLabel.text = Math.floor(secondsLeft/60).toString()+' '+_("min until shutdown");
         }
         if (secondsLeft > 0) {
             return true;
