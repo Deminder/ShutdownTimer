@@ -3,17 +3,18 @@
 **/
 
 const {Gio, GLib} = imports.gi;
+const ByteArray = imports.byteArray;
 
 
 // A simple asynchronous read loop
 async function readLine(stream) {
-    return new Promise((result, reject) => {
+    return new Promise((resolve, reject) => {
         stream.read_line_async(0, null, (stream, res) => {
             try {
                 let line = stream.read_line_finish_utf8(res)[0];
 
                 if (line !== null) {
-                    result(line);
+                    resolve(line);
                 } else {
                     reject(new Error("No line was read!"));
                 }
@@ -37,10 +38,10 @@ async function readLines(stream, linesBuffer = null) {
 }
 
 function writeLine(stream, line) {
-    return new Promise((result, reject) => {
+    return new Promise((resolve, reject) => {
         try {
             if (stream.put_string(line + '\n', null)) {
-                result();
+                resolve();
             } else {
                 reject(new Error("Write to stream failed!"));
             }
@@ -49,6 +50,34 @@ function writeLine(stream, line) {
         }
     });
 }
+
+async function shutdownInfo() {
+    return new Promise((resolve, _) => {
+        try {
+            const file = Gio.File.new_for_path('/run/systemd/shutdown/scheduled');
+            file.load_contents_async(null, (file, res) => {
+                try {
+                    const [, contents] = file.load_contents_finish(res);
+
+                    const [usec, _warn, mode] = ByteArray.toString(contents)
+                        .split('\n')
+                        .map((l) => l.split('=')[1]);
+                    resolve({
+                        mode, secondsLeft: (parseInt(usec) / 1000000)
+                        - GLib.DateTime.new_now_utc().to_unix()
+                    });
+                    GLib.free(contents);
+                } catch (err) {
+                    resolve({mode: null, secondsLeft: 0});
+                }
+            });
+        } catch (err) {
+            resolve({mode: null, secondsLeft: 0});
+        }
+    });
+}
+
+
 function execRootModeLoop(cancellable = null) {
 
     let cancelId = 0;
@@ -102,7 +131,7 @@ function execRootModeLoop(cancellable = null) {
         return [
             async function runCommandLine(command_line) {
                 await prevCmdLinePromise;
-                await writeLine(stdinStream, command_line.replaceAll('"', '\\"'));
+                await writeLine(stdinStream, command_line.replaceAll("\\","\\\\").replaceAll('"', '\\"'));
                 prevCmdLinePromise = readLine(stdoutStream).then((line) => parseInt(line));
                 return prevCmdLinePromise;
             },
@@ -141,12 +170,82 @@ function execRootModeLoop(cancellable = null) {
     }
 }
 
+/**
+ * Execute a command asynchronously and check the exit status.
+ *
+ * If given, @cancellable can be used to stop the process before it finishes.
+ *
+ * @param {string[] | string} argv - a list of string arguments or command line that will be parsed
+ * @param {Gio.Cancellable} [cancellable] - optional cancellable object
+ * @param {boolean} shell - run command as shell command
+ * @returns {Promise<>} - The process success
+ */
+async function execCheck(argv, cancellable = null, shell = true) {
+    if (!shell && typeof argv === "string") {
+        argv = GLib.shell_parse_argv( argv )[1];
+    }
+    if (shell && argv instanceof Array) {
+        argv = argv.map(c => `"${c.replaceAll('\\','\\\\').replaceAll('"', '\\"')}"`).join(' ');
+    }
+    let cancelId = 0;
+    let proc = new Gio.Subprocess({
+        argv: (shell ? ['/bin/sh', '-c'] : []).concat(argv),
+        flags: Gio.SubprocessFlags.NONE
+    });
+    proc.init(cancellable);
+
+    if (cancellable instanceof Gio.Cancellable) {
+        cancelId = cancellable.connect(() => proc.force_exit());
+    }
+
+    return new Promise((resolve, reject) => {
+        proc.wait_check_async(null, (proc, res) => {
+            try {
+                if (!proc.wait_check_finish(res)) {
+                    let status = proc.get_exit_status();
+
+                    throw new Gio.IOErrorEnum({
+                        code: Gio.io_error_from_errno(status),
+                        message: GLib.strerror(status)
+                    });
+                }
+
+                resolve();
+            } catch (e) {
+                reject(e);
+            } finally {
+                if (cancelId > 0) {
+                    cancellable.disconnect(cancelId);
+                }
+            }
+        });
+    });
+}
+
 /* ROOTMODE */
 class RootMode {
-    constructor() {
+    constructor(infoCallback) {
         this._cancel = null;
         this._runCommand = null;
         this._procPromise =  null;
+        this._latestInfo = {mode: null, secondsLeft: 0};
+        this._infoCallback = infoCallback;
+        this._requiresRootCmd = [];
+        this._updateInfoLoop();
+    }
+
+    _updateInfoLoop() {
+        this._infoTimerId = new Promise((resolve, _) => {
+            shutdownInfo()
+                .then((info) => {
+                    this._infoCallback(info);
+                    const nextTimerId = GLib.timeout_add_seconds(GLib.LOW_PRIORITY, 10, () => {
+                                this._updateInfoLoop();
+                                return GLib.SOURCE_REMOVE;
+                            });
+                    resolve(nextTimerId);
+                });
+        });
     }
 
     _startRootProc() {
@@ -158,19 +257,51 @@ class RootMode {
         }
     }
 
+
+    async _maybeTryWithoutRoot(cmd) {
+        const name = cmd[0];
+        if (this._requiresRootCmd.includes(name)) {
+            return this.runCommandLine(cmd.join(' '));
+        } else {
+            return execCheck(cmd, null, false)
+                .catch(() => {
+                    this._requiresRootCmd.push(cmd);
+                    return this.runCommandLine(cmd.join(' '));
+                });
+        }
+    }
+
+    async shutdown(minutes, reboot = false) {
+        let cmd = ['shutdown', `${minutes}`];
+        if (reboot) {
+            cmd.splice(1, 0, '-r');
+        }
+        return this._maybeTryWithoutRoot(cmd);
+    }
+
+    async cancelShutdown() {
+        return this._maybeTryWithoutRoot(['shutdown', '-c']);
+    }
+
+    // promise result is a successfully executed command line as root
     async runCommandLine(command_line) {
         this._startRootProc();
         return this._runCommand(command_line)
             .catch(async (err) => {
                 logError(err, 'RunCommandLineError');
-                await this._stopRootProc().catch(stoperr => {
+                await this.stopRootProc().catch(stoperr => {
                     logError(stoperr, 'KilledProc-RunCommandLineError');
                 });
                 throw err;
+            })
+            .then((status) => {
+                if (status !== 0) {
+                    throw new Error("Failure Exit Code:" + status);
+                }
             });
     }
 
-    async _stopRootProc() {
+    async stopRootProc() {
         if (this._cancel !== null) {
             this._cancel.cancel();
             this._cancel = null;
@@ -182,8 +313,25 @@ class RootMode {
         return Promise.resolve();
     }
 
+    async stopScheduleInfoLoop() {
+        if (this._infoTimerId !== null) {
+            GLib.Source.remove(await this._infoTimerId);
+        }
+        this._infoTimerId = null;
+    }
+
+    async updateScheduleInfo() {
+        await this.stopScheduleInfoLoop();
+        // restart loop
+        return this._updateInfoLoop();
+    }
+
+    latestShutdownInfo() {
+        return this._latestInfo;
+    }
+
     async cleanup() {
-        return this._stopRootProc();
+        await Promise.all([this.stopScheduleInfoLoop(), this.stopRootProc()]);
     }
 }
 
