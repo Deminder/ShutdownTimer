@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
-  <object class="GtkEntryBuffer" id="check-command-buffer">
-    <property name="text">/bin/true</property>
-  </object>
+  <object class="GtkEntryBuffer" id="check-command-buffer"/>
+  <object class="GtkEntryBuffer" id="show-shutdown-mode-buffer"/>
   <object class="GtkAdjustment" id="slider-pos-adjustment">
     <property name="upper">100</property>
     <property name="step-increment">1</property>
@@ -82,7 +81,9 @@
       <object class="GtkBox">
         <property name="spacing">5</property>
         <child>
-          <object class="GtkSwitch" id="show-settings-switch"/>
+          <object class="GtkSwitch" id="show-settings-switch">
+            <property name="can-focus">0</property>
+          </object>
         </child>
         <child>
           <object class="GtkLabel">
@@ -109,33 +110,13 @@
             <property name="hexpand">1</property>
             <property name="can-focus">0</property>
             <property name="tooltip-text" translatable="yes">uses &apos;pkexec shutdown&apos; command, no interruption of timer, but needs root password</property>
-            <property name="label" translatable="yes">Root mode</property>
+            <property name="label" translatable="yes">Root mode protection</property>
             <property name="use-markup">1</property>
           </object>
         </child>
         <layout>
           <property name="column">0</property>
           <property name="row">3</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="spacing">5</property>
-        <child>
-          <object class="GtkSwitch" id="use-suspend-switch"/>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="hexpand">1</property>
-            <property name="can-focus">0</property>
-            <property name="label" translatable="yes">Use suspend</property>
-            <property name="use-markup">1</property>
-          </object>
-        </child>
-        <layout>
-          <property name="column">0</property>
-          <property name="row">4</property>
         </layout>
       </object>
     </child>
@@ -152,9 +133,11 @@
           </object>
         </child>
         <child>
-          <object class="GtkEntry">
+          <object class="GtkEntry" id="check-command-entry">
             <property name="buffer">check-command-buffer</property>
-            <property name="primary-icon-name">text-x-generic-template</property>
+            <property name="primary-icon-name">application-x-executable</property>
+            <property name="primary-icon-tooltip-text" translatable="yes">command run in user shell</property>
+            <property name="placeholder-text">[ ! -f /run/systemd/shutdown/scheduled ]</property>
           </object>
         </child>
         <child>
@@ -173,9 +156,77 @@
             </child>
           </object>
         </child>
+        <child>
+          <object class="GtkBox">
+            <property name="spacing">5</property>
+            <child>
+              <object class="GtkSwitch" id="enable-root-mode-cancel-switch"/>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="hexpand">1</property>
+                <property name="can-focus">0</property>
+                <property name="tooltip-text" translatable="yes">Cancel the root mode protection before check command is run if enabled.</property>
+                <property name="label" translatable="yes">Cancel root mode protection</property>
+                <property name="use-markup">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
         <layout>
           <property name="column">0</property>
           <property name="row">5</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <property name="spacing">3</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="can-focus">0</property>
+            <property name="tooltip-text" translatable="yes">Comma-separated shutdown modes which are shown in the popup menu.</property>
+            <property name="halign">start</property>
+            <property name="label" translatable="yes">Show shutdown items</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkEntry" id="show-shutdown-mode-entry">
+            <property name="buffer">show-shutdown-mode-buffer</property>
+            <property name="placeholder-text">poweroff, reboot, suspend</property>
+          </object>
+        </child>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">4</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="spacing">5</property>
+        <child>
+          <object class="GtkComboBoxText" id="shutdown-mode-combo">
+            <property name="active">0</property>
+            <items>
+              <item id="poweroff" translatable="yes">Shutdown</item>
+              <item id="suspend" translatable="yes">Suspend</item>
+              <item id="reboot" translatable="yes">Reboot</item>
+            </items>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="hexpand">1</property>
+            <property name="can-focus">0</property>
+            <property name="label" translatable="yes">Use mode</property>
+            <property name="use-markup">1</property>
+          </object>
+        </child>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">6</property>
         </layout>
       </object>
     </child>

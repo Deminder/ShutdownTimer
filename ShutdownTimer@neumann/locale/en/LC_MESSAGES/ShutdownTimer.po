@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-24 16:13+0200\n"
-"PO-Revision-Date: 2021-06-24 16:14+0200\n"
+"POT-Creation-Date: 2021-06-27 18:58+0200\n"
+"PO-Revision-Date: 2021-06-27 18:58+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -20,41 +20,82 @@ msgstr ""
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: extension.js:82 extension.js:122
-msgid "min"
-msgstr "min"
+#: extension.js:37 templates/pref-window-gtk4.ui:214
+#: templates/pref-window.ui:348
+msgid "Suspend"
+msgstr "Suspend"
 
-#: extension.js:85 extension.js:124
-msgid "min (root)"
-msgstr "min (root)"
+#: extension.js:37
+msgid "Power Off"
+msgstr "Power Off"
 
-#: extension.js:100 extension.js:101
-msgid "Waiting for confirmation"
-msgstr "Waiting for confirmation"
+#: extension.js:37
+msgid "Restart"
+msgstr "Restart"
 
-#: extension.js:104 extension.js:224
-msgid "Confirmation canceled"
-msgstr "Confirmation canceled"
+#: extension.js:38
+msgid "suspend"
+msgstr "suspend"
 
-#: extension.js:105 extension.js:115 extension.js:277
+#: extension.js:38
+msgid "shutdown"
+msgstr "shutdown"
+
+#: extension.js:38
+msgid "reboot"
+msgstr "reboot"
+
+#: extension.js:73 extension.js:188
 msgid "Shutdown Timer"
 msgstr "Shutdown Timer"
 
-#: extension.js:109
+#: extension.js:75
+msgid "min until"
+msgstr "min until"
+
+#: extension.js:75
+msgid "(sys)"
+msgstr "(sys)"
+
+#: extension.js:132
+msgid "min"
+msgstr "min"
+
+#: extension.js:134
+msgid "(root)"
+msgstr "(root)"
+
+#: extension.js:183 extension.js:184
+msgid "Waiting for confirmation"
+msgstr "Waiting for confirmation"
+
+#: extension.js:187 extension.js:403
+msgid "Confirmation canceled"
+msgstr "Confirmation canceled"
+
+#: extension.js:215
 msgid "System will shutdown in"
 msgstr "System will shutdown in"
 
-#: extension.js:110
+#: extension.js:215
 msgid "minutes"
 msgstr "minutes"
 
-#: extension.js:114
+#: extension.js:224
 msgid "Shutdown Timer stopped"
 msgstr "Shutdown Timer stopped"
 
-#: extension.js:133
+#: extension.js:250 extension.js:277
+msgid "Root mode protection failed!"
+msgstr "Root mode protection failed!"
+
+#: extension.js:293
 msgid "Settings"
 msgstr "Settings"
+
+#: extension.js:419
+msgid "Shutdown aborted"
+msgstr "Shutdown aborted"
 
 #: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:7
 msgid "Maximum time (in minutes)"
@@ -81,7 +122,7 @@ msgstr ""
 "100."
 
 #: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:19
-#: templates/pref-window-gtk4.ui:91 templates/pref-window.ui:133
+#: templates/pref-window-gtk4.ui:92 templates/pref-window.ui:132
 msgid "Show settings button"
 msgstr "Show settings button"
 
@@ -90,7 +131,6 @@ msgid "Show/hide settings button in widget."
 msgstr "Show/hide settings button in widget."
 
 #: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:25
-#: templates/pref-window-gtk4.ui:112 templates/pref-window.ui:169
 msgid "Root mode"
 msgstr "Root mode"
 
@@ -103,20 +143,28 @@ msgstr ""
 "'shutdown' terminal command."
 
 #: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:31
-#: templates/pref-window-gtk4.ui:132 templates/pref-window.ui:204
-msgid "Use suspend"
-msgstr "Use suspend"
+msgid "Shown shutdown modes"
+msgstr "Shown shutdown modes"
 
 #: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:32
-msgid "Use suspend instead of shutdown command."
-msgstr "Use suspend instead of shutdown command."
+#: templates/pref-window-gtk4.ui:189 templates/pref-window.ui:307
+msgid "Comma-separated shutdown modes which are shown in the popup menu."
+msgstr "Comma-separated shutdown modes which are shown in the popup menu."
 
 #: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:37
-#: templates/pref-window-gtk4.ui:151 templates/pref-window.ui:231
+msgid "Shutdown mode"
+msgstr "Shutdown mode"
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:38
+msgid "Mode to use for shutdown command."
+msgstr "Mode to use for shutdown command."
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:43
+#: templates/pref-window-gtk4.ui:132 templates/pref-window.ui:195
 msgid "Check command"
 msgstr "Check command"
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:38
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:44
 msgid ""
 "Run command before shutdown command. Proceed with shutdown only if check "
 "command succeedes."
@@ -124,24 +172,34 @@ msgstr ""
 "Run command before shutdown command. Proceed with shutdown only if check "
 "command succeedes."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:43
-#: templates/pref-window-gtk4.ui:170 templates/pref-window.ui:272
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:49
+msgid "Allow cancel root mode protection"
+msgstr "Allow cancel root mode protection"
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:50
+#: templates/pref-window-gtk4.ui:169 templates/pref-window.ui:274
+msgid "Cancel the root mode protection before check command is run if enabled."
+msgstr ""
+"Cancel the root mode protection before check command is run if enabled."
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:55
+#: templates/pref-window-gtk4.ui:153 templates/pref-window.ui:238
 msgid "Enable check command"
 msgstr "Enable check command"
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:44
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:56
 msgid "Check command is skipped if disabled."
 msgstr "Check command is skipped if disabled."
 
-#: templates/pref-window-gtk4.ui:43 templates/pref-window.ui:56
+#: templates/pref-window-gtk4.ui:42 templates/pref-window.ui:55
 msgid "Maximum timer value (in minutes)"
 msgstr "Maximum timer value (in minutes)"
 
-#: templates/pref-window-gtk4.ui:71 templates/pref-window.ui:98
+#: templates/pref-window-gtk4.ui:70 templates/pref-window.ui:97
 msgid "Slider position (in &amp; from 0 to 100)"
 msgstr "Slider position (in % from 0 to 100)"
 
-#: templates/pref-window-gtk4.ui:111 templates/pref-window.ui:168
+#: templates/pref-window-gtk4.ui:112 templates/pref-window.ui:167
 msgid ""
 "uses 'pkexec shutdown' command, no interruption of timer, but needs root "
 "password"
@@ -149,7 +207,11 @@ msgstr ""
 "uses 'pkexec shutdown' command, no interruption of timer, but needs root "
 "password"
 
-#: templates/pref-window-gtk4.ui:149 templates/pref-window.ui:229
+#: templates/pref-window-gtk4.ui:113 templates/pref-window.ui:168
+msgid "Root mode protection"
+msgstr "Root mode protection"
+
+#: templates/pref-window-gtk4.ui:130 templates/pref-window.ui:193
 msgid ""
 "Run check command after timer runs out. Only proceeds if check command "
 "terminates successfully."
@@ -157,13 +219,38 @@ msgstr ""
 "Run check command after timer runs out. Only proceeds if check command "
 "terminates successfully."
 
-#: timer.js:44
-msgid "min until shutdown"
-msgstr "min untill shutdown"
+#: templates/pref-window-gtk4.ui:139 templates/pref-window.ui:209
+msgid "command run in user shell"
+msgstr "command run in user shell"
 
-#: timer.js:64
-msgid "min till shutdown"
-msgstr "min till shutdown"
+#: templates/pref-window-gtk4.ui:170 templates/pref-window.ui:275
+msgid "Cancel root mode protection"
+msgstr "Cancel root mode protection"
+
+#: templates/pref-window-gtk4.ui:191 templates/pref-window.ui:309
+msgid "Show shutdown items"
+msgstr "Show shutdown items"
+
+#: templates/pref-window-gtk4.ui:213 templates/pref-window.ui:347
+msgid "Shutdown"
+msgstr "Shutdown"
+
+#: templates/pref-window-gtk4.ui:215 templates/pref-window.ui:349
+msgid "Reboot"
+msgstr "Reboot"
+
+#: templates/pref-window-gtk4.ui:223 templates/pref-window.ui:362
+msgid "Use mode"
+msgstr "Use mode"
+
+#~ msgid "command run in user shell "
+#~ msgstr "command run in user shell "
+
+#~ msgid "Cancel root protection before check"
+#~ msgstr "Cancel root protection before check"
+
+#~ msgid "Root-Mode insurance failed!"
+#~ msgstr "Root-Mode insurance failed!"
 
 #~ msgid ""
 #~ "Run command before shutdown command. Proceed with shutdown only if "

@@ -26,16 +26,28 @@
       <description>Set root mode on/off. In root mode powering off is done via 'pkexec' and 'shutdown' terminal command.</description>
     </key>
 
-    <key type="b" name="use-suspend-value">
-      <default>false</default>
-      <summary>Use suspend</summary>
-      <description>Use suspend instead of shutdown command.</description>
+    <key type="s" name="show-shutdown-mode-value">
+      <default>"poweroff,reboot,suspend"</default>
+      <summary>Shown shutdown modes</summary>
+      <description>Comma-separated shutdown modes which are shown in the popup menu.</description>
+    </key>
+
+    <key type="s" name="shutdown-mode-value">
+      <default>"poweroff"</default>
+      <summary>Shutdown mode</summary>
+      <description>Mode to use for shutdown command.</description>
     </key>
 
     <key type="s" name="check-command-value">
-      <default>"/bin/true"</default>
+      <default>""</default>
       <summary>Check command</summary>
       <description>Run command before shutdown command. Proceed with shutdown only if check command succeedes.</description>
+    </key>
+
+    <key type="b" name="enable-root-mode-cancel-value">
+      <default>true</default>
+      <summary>Allow cancel root mode protection</summary>
+      <description>Cancel the root mode protection before check command is run if enabled.</description>
     </key>
 
     <key type="b" name="enable-check-command-value">

@@ -7,17 +7,17 @@
 **/
 
 /* IMPORTS */
-const {GLib, St, Gio} = imports.gi;
+const {Atk, GLib, St, Gio, Clutter, GObject} = imports.gi;
 
 // screen and main functionality
 const Main = imports.ui.main;
-const Clutter = imports.gi.Clutter;
 
 
 // menu items
 const PopupMenu = imports.ui.popupMenu;
 const Slider = imports.ui.slider;
 const Switcher = imports.ui.switcherPopup;
+const PadOsd = imports.ui.padOsd;
 
 // translations
 const Gettext = imports.gettext.domain('ShutdownTimer');
@@ -33,7 +33,9 @@ const Convenience = Extension.imports.convenience;
 
 
 /* GLOBAL VARIABLES */
-let textbox, submenu, slider, switcher, separator, settings, timer, checkCancel, rootMode, displayedInfo, internalScheduleInfo, externalScheduleInfo;
+let textbox, submenu, slider, switcher, switcherSettingsButton, separator, settings, timer, checkCancel, rootMode, displayedInfo, internalScheduleInfo, externalScheduleInfo;
+const MODE_LABELS = {suspend: _("Suspend"), poweroff: _("Power Off"), reboot: _("Restart")};
+const MODE_TEXTS = {suspend: _("suspend"), poweroff: _("shutdown"), reboot: _("reboot")};
 
 class ScheduleInfo {
     constructor({mode = '?', secondsLeft = 0, external = false, scheduled = false}) {
@@ -64,14 +66,7 @@ class ScheduleInfo {
     }
 
     get modeText() {
-        switch (this.mode) {
-            case 'suspend':
-                return _("suspend");
-            case 'reboot':
-                return _("reboot");
-            default:
-                return _("shutdown");
-        }
+        return this.mode in MODE_TEXTS ? MODE_TEXTS[this.mode] : MODE_TEXTS['poweroff'];
     }
 
     get label() {
@@ -146,7 +141,7 @@ function _onRootModeChanged() {
         rootMode.stopRootProc();
     }
     _updateSwitchLabel();
-    Promise.all([maybeStopRootModeInsurance(), maybeStartRootModeInsurance()])
+    Promise.all([maybeStopRootModeProtection(), maybeStartRootModeProtection()])
         .then(() => {
             if (!settings.get_boolean('root-mode-value')) {
                 rootMode.updateScheduleInfo();
@@ -154,28 +149,30 @@ function _onRootModeChanged() {
         });
 }
 
-function _onModeChange() {
-    // redo Root-mode insurance
+function _onModeChange(startNewMode = false) {
+    // redo Root-mode protection
     const prevScheduled = internalScheduleInfo.scheduled;
     internalScheduleInfo = internalScheduleInfo.copy({scheduled: false});
-    maybeStopRootModeInsurance()
+    maybeStopRootModeProtection()
         .then(() => {
             internalScheduleInfo = internalScheduleInfo.copy({scheduled: prevScheduled});
+            if (!prevScheduled && startNewMode) {
+                switcher.setToggleState(true);
+                _onToggle();
+            }
             _updateCurrentMode();
         })
-        .then(() => maybeStartRootModeInsurance());
+        .then(() => maybeStartRootModeProtection());
 }
 
     
 function _onShowSettingsButtonChanged() {
-    submenu.destroy();
-    separator.destroy();
-    render();
+    switcherSettingsButton.visible = settings.get_boolean('show-settings-value');
 }
 
-function maybeCheckCmdString() {
-    return settings.get_boolean('enable-check-command-value') ?
-        '\n ' + settings.get_string('check-command-value') : '';
+function maybeCheckCmdString(nl=false) {
+    const cmd = settings.get_string('check-command-value');
+    return (settings.get_boolean('enable-check-command-value') && cmd !== '') ?  (nl ? '\n' : '')  + cmd : '';
 }
 
 function _updateCheckCommandState() {
@@ -184,7 +181,7 @@ function _updateCheckCommandState() {
         // check command is running
         if(switcher.state) {
             submenu.label.text = _("Waiting for confirmation");
-            showText = _("Waiting for confirmation") + maybeCheckCmdString();
+            showText = _("Waiting for confirmation") + maybeCheckCmdString(true);
         } else {
             checkCancel.cancel();
             showText = _("Confirmation canceled");
@@ -210,17 +207,17 @@ function _onToggle(show = true) {
             secondsLeft: maxTimerMinutes*60,
             scheduled: true
         });
-        maybeStartRootModeInsurance()
+        maybeStartRootModeProtection()
             .then(() => {
                 timer.startTimer(maxTimerMinutes);
                 log('Timer started! ' + internalScheduleInfo.label);
             });
-        showText = `${_("System will shutdown in")} ${_getTimerStartValue()} ${_("minutes")}${maybeCheckCmdString()}`;
+        showText = `${_("System will shutdown in")} ${_getTimerStartValue()} ${_("minutes")}${maybeCheckCmdString(true)}`;
     } else if(!switcher.state && internalScheduleInfo.scheduled) {
         // stop shutdown timer
         internalScheduleInfo = internalScheduleInfo.copy({scheduled: false});
         timer.stopTimer();
-        maybeStopRootModeInsurance()
+        maybeStopRootModeProtection()
             .then(() => {
                 log('Timer stopped! ' + internalScheduleInfo.copy({scheduled: true}).label);
             });
@@ -236,26 +233,35 @@ function _onToggle(show = true) {
     }
 }
 
-async function maybeStopRootModeInsurance() {
+async function maybeStopRootModeProtection() {
     if (!internalScheduleInfo.scheduled && settings.get_boolean('root-mode-value')) {
-        log('Stop Root-Mode insurance for: ' + internalScheduleInfo.mode);
+        log('Stop root mode protection for: ' + internalScheduleInfo.mode);
         try {
-            await rootMode.cancelShutdown();
+            switch (internalScheduleInfo.mode) {
+                case 'poweroff':
+                case 'reboot':
+                    await rootMode.cancelShutdown();
+                    rootMode.updateScheduleInfo();
+                    break;
+                default:
+                    log('No root mode protection stopped for: ' + internalScheduleInfo.mode);
+            }
         } catch (err) {
-            _showTextbox(_("Root-Mode insurance failed!") + '\n' + err);
-            logErr(err, 'DisableRootModeInsurance');
+            _showTextbox(_("Root mode protection failed!") + '\n' + err);
+            logErr(err, 'DisableRootModeProtection');
         }
     }
 }
+
 /**
  *
  * Insure that shutdown is executed even if the GLib timer fails by running
  * shutdown in rootMode delayed by 1 minute. Suspend is not insured.
  *
  */
-async function maybeStartRootModeInsurance() {
+async function maybeStartRootModeProtection() {
     if (internalScheduleInfo.scheduled && settings.get_boolean('root-mode-value')) {
-        log('Start Root-Mode insurance for: ' + internalScheduleInfo.mode);
+        log('Start root mode protection for: ' + internalScheduleInfo.mode);
         try {
             switch (internalScheduleInfo.mode) {
                 case 'poweroff':
@@ -265,11 +271,11 @@ async function maybeStartRootModeInsurance() {
                     await rootMode.shutdown(internalScheduleInfo.minutes + 1, true);
                     break;
                 default:
-                    log('No Root-Mode insurance for: ' + internalScheduleInfo.mode);
+                    log('No root mode protection started for: ' + internalScheduleInfo.mode);
             }
         } catch (err) {
-            _showTextbox(_("Root-Mode insurance failed!") + '\n' + err);
-            logErr(err, 'EnableRootModeInsurance');
+            _showTextbox(_("Root mode protection failed!") + '\n' + err);
+            logErr(err, 'EnableRootModeProtection');
         }
     }
 
@@ -281,19 +287,18 @@ function _createSwitcherItem() {
     
     switchMenuItem.connect('toggled', _onToggle);
 
-    if(settings.get_boolean('show-settings-value')) {
-        let switcherSettingsButton = new St.Button({reactive: true,
-                                                    can_focus: true,
-                                                    track_hover: true,
-                                                    accessible_name: _("Settings"),
-                                                    style_class: 'system-menu-action settings-button' });
-        switcherSettingsButton.child = new St.Icon({icon_name: 'emblem-system-symbolic', 
-                                                    style_class: 'popup-menu-icon' });
-        switcherSettingsButton.connect('clicked', function () {
-                ExtensionUtils.openPrefs();
-        });
-        switchMenuItem.add_actor(switcherSettingsButton);
-    }
+    switcherSettingsButton = new St.Button({reactive: true,
+                                                can_focus: true,
+                                                track_hover: true,
+                                                accessible_name: _("Settings"),
+                                                style_class: 'system-menu-action settings-button' });
+    switcherSettingsButton.child = new St.Icon({icon_name: 'emblem-system-symbolic', 
+                                                style_class: 'popup-menu-icon' });
+    switcherSettingsButton.connect('clicked', () => {
+            ExtensionUtils.openPrefs();
+    });
+    switchMenuItem.add_actor(switcherSettingsButton);
+    _onShowSettingsButtonChanged();
     
     return switchMenuItem;
 }
@@ -312,15 +317,6 @@ function _createSliderItem() {
     sliderItem.add_actor(slider);
     return sliderItem;
 }
-
-
-function _currentMode() {
-    if (settings.get_boolean('use-suspend-value')) {
-        return 'suspend';
-    }
-    return 'poweroff';
-}
-
 
 
 function _updateShutdownInfo() {
@@ -344,7 +340,7 @@ function timerTick(secondsLeft) {
 }
 
 function _updateCurrentMode() {
-    internalScheduleInfo = internalScheduleInfo.copy({mode: _currentMode()});
+    internalScheduleInfo = internalScheduleInfo.copy({mode: settings.get_string('shutdown-mode-value')});
     _updateShutdownInfo();
 }
 
@@ -354,9 +350,35 @@ function _updateSubmenuLabel() {
     }
 }
 
+function _updateSelectedModeItems() {
+    const curMode = settings.get_string('shutdown-mode-value');
+    modeItems.forEach(([mode, item]) => {
+        item.setOrnament(mode === curMode ? PopupMenu.Ornament.DOT : PopupMenu.Ornament.NONE);
+    });
+}
+
+function _updateShownModeItems() {
+    const activeModes = settings.get_string('show-shutdown-mode-value').split(',')
+        .map(s => s.trim().toLowerCase())
+        .filter(s => s in MODE_LABELS);
+    modeItems.forEach(([mode, item]) => {
+        const position = activeModes.indexOf(mode);
+        if (position > -1) {
+            submenu.menu.moveMenuItem(item, position + 2);
+        }
+        item.visible = position > -1;
+    });
+}
+
+function _setMode(mode) {
+    settings.set_string('shutdown-mode-value', mode);
+    _updateSelectedModeItems();
+    _onModeChange(true);
+}
+
 // timer action (shutdown/suspend)
 function timerAction() {
-    maybeStopRootModeInsurance();
+    maybeStopRootModeProtection();
     maybeDoCheck()
         .then(() => shutdown())
         .catch((err) => {
@@ -369,13 +391,12 @@ function timerAction() {
 }
 
 async function maybeDoCheck() {
-    const checkCommandStr = settings.get_string('check-command-value');
-    const checkCommandEnabled = settings.get_boolean('enable-check-command-value');
-    if (!checkCommandEnabled || !checkCommandStr.length) {
+    const checkCmd = maybeCheckCmdString();
+    if (checkCmd === '') {
         return;
     }
-    if (settings.get_boolean('root-mode-value')) {
-        // avoid shutting down (with Root-Mode insurance) before check command is done
+    if (settings.get_boolean('root-mode-value') && settings.get_boolean('enable-root-mode-cancel-value')) {
+        // avoid shutting down (with root mode protection) before check command is done
         rootMode.cancelShutdown();
     }
     if (checkCancel !== null) {
@@ -384,9 +405,9 @@ async function maybeDoCheck() {
     }
     checkCancel = new Gio.Cancellable();
     _updateCheckCommandState();
-    return RootMode.execCheck(checkCommandStr, checkCancel)
+    return RootMode.execCheck(checkCmd, checkCancel)
         .then(() => {
-            log(`Check command "${checkCommandStr}" confirmed shutdown.`);
+            log(`Check command "${checkCmd}" confirmed shutdown.`);
             return;
         })
         .catch((err) => {
@@ -395,44 +416,33 @@ async function maybeDoCheck() {
                 code = `${err.code}`;
                 log("Check command aborted shutdown. Code: " + code);
             }
-            _showTextbox(_('Shutdown aborted') + `\n${checkCommandStr} (Code: ${code})`);
+            _showTextbox(_('Shutdown aborted') + `\n${checkCmd} (Code: ${code})`);
             throw err;
         })
         .finally(() => {
             checkCancel = null;
         });
 }
+
+
 function shutdown() {
-    log('Executing: '+ internalScheduleInfo.mode);
-    switch (internalScheduleInfo.mode) {
-        case 'poweroff':
-            return powerOff();
-        case 'suspend':
-            return suspend();
-        default:
-            logError('Shutdown mode not supported!' + internalScheduleInfo.mode);
-    }
-}
-
-// shutdown the device
-function powerOff() {
     Main.overview.hide();
-
-    const GnomeSession = imports.misc.gnomeSession;
-    let session = new GnomeSession.SessionManager();
-    session.ShutdownRemote(0);	// shutdown after 60s
-
-    // const Util = imports.misc.util;
-    //Util.spawnCommandLine('poweroff');	// shutdown immediately
-}
-
-// suspend the device
-function suspend() {
-    Main.overview.hide();
-
+    const session = new imports.misc.gnomeSession.SessionManager();
     const LoginManager = imports.misc.loginManager;
-    let loginManager = LoginManager.getLoginManager();
-    loginManager.suspend();
+    const loginManager = LoginManager.getLoginManager();
+
+    switch (internalScheduleInfo.mode) {
+        case 'reboot':
+            session.RebootRemote(0);
+            break;
+        case 'suspend':
+            loginManager.suspend();
+        default:
+            session.ShutdownRemote(0);	// shutdown after 60s
+            // const Util = imports.misc.util;
+            // Util.spawnCommandLine('poweroff');	// shutdown immediately
+            break;
+    }
 }
 
 function render() {
@@ -444,15 +454,28 @@ function render() {
     submenu = new PopupMenu.PopupSubMenuMenuItem('', true);
     submenu.icon.icon_name = 'system-shutdown-symbolic';
     submenu.menu.addMenuItem(switcher);
+    // make switcher toggle without popup menu closing
+    switcher.disconnect(switcher._activateId);
     submenu.menu.addMenuItem(sliderItem);
+    _updateSubmenuLabel();
+
+    modeItems = Object.entries(MODE_LABELS)
+        .map(([mode, label]) => {
+            const modeItem = new PopupMenu.PopupMenuItem(label);
+            modeItem.connect('activate', () => {
+                _setMode(mode);
+            });
+            submenu.menu.addMenuItem(modeItem);
+            return [mode, modeItem];
+        });
+    _updateShownModeItems();
+    _updateSelectedModeItems();
 
     // add separator line and submenu in status area menu
     separator = new PopupMenu.PopupSeparatorMenuItem();
     let statusMenu = Main.panel.statusArea['aggregateMenu'];
     statusMenu.menu.addMenuItem(separator);
     statusMenu.menu.addMenuItem(submenu);
-
-    _updateSubmenuLabel();
 }
 
 /* EXTENSION MAIN FUNCTIONS */
@@ -484,12 +507,12 @@ function enable() {
     settings.connect('changed::slider-value', _updateSlider);
     settings.connect('changed::root-mode-value', _onRootModeChanged);
     settings.connect('changed::show-settings-value', _onShowSettingsButtonChanged);
-    settings.connect('changed::use-suspend-value', _onModeChange);
+    settings.connect('changed::show-shutdown-mode-value', _updateShownModeItems);
 }
 
 
 function disable() {
-    // root mode insurance will NOT be stopped
+    // root mode protection will NOT be stopped
     internalScheduleInfo = internalScheduleInfo.copy({scheduled: false});
     timer.stopTimer();
     submenu.destroy(); // destroys switcher and sliderItem as children too
