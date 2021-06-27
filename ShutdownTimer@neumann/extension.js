@@ -508,6 +508,7 @@ function enable() {
     settings.connect('changed::root-mode-value', _onRootModeChanged);
     settings.connect('changed::show-settings-value', _onShowSettingsButtonChanged);
     settings.connect('changed::show-shutdown-mode-value', _updateShownModeItems);
+    settings.connect('changed::shutdown-mode-value', _updateSelectedModeItems);
 }
 
 
