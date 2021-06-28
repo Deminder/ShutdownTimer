@@ -380,8 +380,15 @@ function _setMode(mode) {
 function timerAction() {
     maybeStopRootModeProtection();
     maybeDoCheck()
-        .then(() => shutdown())
+        .then(() => {
+            // check succeeded: do shutdown
+            shutdown();
+        })
         .catch((err) => {
+            // check failed: cancel shutdown
+            if (settings.get_boolean('root-mode-value')) {
+                rootMode.cancelShutdown();
+            }
             logError(err, 'CheckError');
         })
         .finally(() => {
