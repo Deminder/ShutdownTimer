@@ -7,7 +7,7 @@
 **/
 
 /* IMPORTS */
-const {Atk, GLib, St, Gio, Clutter, GObject} = imports.gi;
+const {St, Gio, Clutter} = imports.gi;
 
 // screen and main functionality
 const Main = imports.ui.main;

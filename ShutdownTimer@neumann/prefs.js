@@ -3,7 +3,6 @@
 **/
 
 const { GObject, Gtk } = imports.gi;
-const Lang = imports.lang;
 
 const Gettext = imports.gettext.domain('ShutdownTimer');
 const _ = Gettext.gettext;
