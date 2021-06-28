@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-27 18:58+0200\n"
-"PO-Revision-Date: 2021-06-27 19:15+0200\n"
+"POT-Creation-Date: 2021-06-28 14:47+0200\n"
+"PO-Revision-Date: 2021-06-28 14:47+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: Jesús Ignacio García <jesusignazio@gmail.com>\n"
 "Language: es\n"
@@ -18,19 +18,6 @@ msgstr ""
 "X-Poedit-KeywordsList: _\n"
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: .\n"
-
-#: extension.js:37 templates/pref-window-gtk4.ui:214
-#: templates/pref-window.ui:348
-msgid "Suspend"
-msgstr ""
-
-#: extension.js:37
-msgid "Power Off"
-msgstr ""
-
-#: extension.js:37
-msgid "Restart"
-msgstr ""
 
 #: extension.js:38
 msgid "suspend"
@@ -44,7 +31,7 @@ msgstr "apagado."
 msgid "reboot"
 msgstr ""
 
-#: extension.js:73 extension.js:188
+#: extension.js:73 extension.js:184
 msgid "Shutdown Timer"
 msgstr "Apagar con temporizador."
 
@@ -64,37 +51,48 @@ msgstr "minutos."
 msgid "(root)"
 msgstr ""
 
-#: extension.js:183 extension.js:184
+#: extension.js:179 extension.js:180
 msgid "Waiting for confirmation"
 msgstr ""
 
-#: extension.js:187 extension.js:403
+#: extension.js:183 extension.js:409
 msgid "Confirmation canceled"
 msgstr ""
 
-#: extension.js:215
+#: extension.js:211
 msgid "System will shutdown in"
 msgstr "El sistema se apagará en"
 
-#: extension.js:215
+#: extension.js:211
 msgid "minutes"
 msgstr "minutos."
 
-#: extension.js:224
+#: extension.js:220
 msgid "Shutdown Timer stopped"
 msgstr "Temporizador apagado."
 
-#: extension.js:250 extension.js:277
+#: extension.js:246 extension.js:273
 msgid "Root mode protection failed!"
 msgstr ""
 
-#: extension.js:293
+#: extension.js:289
 msgid "Settings"
 msgstr ""
 
-#: extension.js:419
-#| msgid "Shutdown Timer stopped"
+#: extension.js:425
 msgid "Shutdown aborted"
+msgstr ""
+
+#: prefs.js:16
+msgid "Suspend"
+msgstr ""
+
+#: prefs.js:16
+msgid "Power Off"
+msgstr ""
+
+#: prefs.js:16
+msgid "Restart"
 msgstr ""
 
 #: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:7
@@ -137,7 +135,6 @@ msgid ""
 msgstr ""
 
 #: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:31
-#| msgid "Shutdown Timer"
 msgid "Shown shutdown modes"
 msgstr ""
 
@@ -147,7 +144,6 @@ msgid "Comma-separated shutdown modes which are shown in the popup menu."
 msgstr ""
 
 #: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:37
-#| msgid "Shutdown Timer"
 msgid "Shutdown mode"
 msgstr ""
 
@@ -217,18 +213,12 @@ msgid "Cancel root mode protection"
 msgstr ""
 
 #: templates/pref-window-gtk4.ui:191 templates/pref-window.ui:309
-#| msgid "Shutdown Timer"
 msgid "Show shutdown items"
 msgstr ""
 
-#: templates/pref-window-gtk4.ui:213 templates/pref-window.ui:347
-msgid "Shutdown"
-msgstr "Apagado"
-
-#: templates/pref-window-gtk4.ui:215 templates/pref-window.ui:349
-msgid "Reboot"
-msgstr ""
-
-#: templates/pref-window-gtk4.ui:223 templates/pref-window.ui:362
+#: templates/pref-window-gtk4.ui:224 templates/pref-window.ui:363
 msgid "Use mode"
 msgstr ""
+
+#~ msgid "Shutdown"
+#~ msgstr "Apagado"
