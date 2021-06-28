@@ -13,6 +13,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 const Convenience = Me.imports.convenience;
 
 var settings;
+var MODE_LABELS = {suspend: _("Suspend"), poweroff: _("Power Off"), reboot: _("Restart")};
 
 function init() {
     Convenience.initTranslations();
@@ -29,9 +30,10 @@ const templateComponents = {
     'enable-check-command': 'switch',
     'shutdown-mode': 'combo',
 };
+
 templateFile = Me.dir
     .get_child('templates')
-    .get_child('pref-window' + (Gtk.get_major_version() < 4 ? '' : '-gtk4.ui'))
+    .get_child('pref-window' + (Gtk.get_major_version() < 4 ? '' : '-gtk4') + '.ui')
     .get_uri();
 
 const ShutdownTimerPrefsWidget = GObject.registerClass({
@@ -91,11 +93,20 @@ const ShutdownTimerPrefsWidget = GObject.registerClass({
             const settingsName = `${baseName}-value`;
             const fieldName = fieldNameByInteralID(`${baseName}-${component}`);
             const fieldValue= settingsGetter(settingsName);
+            if (baseName === 'shutdown-mode') {
+                // update combo box entries
+                this[fieldName].remove_all();
+                Object.entries(MODE_LABELS).forEach(([mode, label]) => {
+                    this[fieldName].append(mode, label);
+                });
+            }
             fieldSetter(this[fieldName], fieldValue);
             if (component == 'buffer') {
                 // fix init of placeholder text
                 const entry = this[fieldNameByInteralID(`${baseName}-entry`)];
-                const placeholder = entry.get_placeholder_text();
+                const placeholder = baseName === 'show-shutdown-mode' ? 
+                    `${Object.keys(MODE_LABELS).join(',')}  (${Object.values(MODE_LABELS).join(', ')})` :
+                    entry.get_placeholder_text();
                 entry.set_placeholder_text(fieldValue === '' ? placeholder : '');
                 const changedId = entry.connect('changed', () => {
                     entry.set_placeholder_text(placeholder);

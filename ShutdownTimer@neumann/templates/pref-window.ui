@@ -344,9 +344,10 @@
             <property name="can-focus">True</property>
             <property name="active">0</property>
             <items>
-              <item id="poweroff" translatable="yes">Shutdown</item>
-              <item id="suspend" translatable="yes">Suspend</item>
-              <item id="reboot" translatable="yes">Reboot</item>
+              <item id="poweroff">Shutdown</item>
+              <item id="suspend">Suspend</item>
+              <item id="reboot">Reboot</item>
+              <item id="DO NOT EDIT">(replaced in code)</item>
             </items>
           </object>
           <packing>

@@ -34,7 +34,7 @@ const Convenience = Extension.imports.convenience;
 
 /* GLOBAL VARIABLES */
 let textbox, submenu, slider, switcher, switcherSettingsButton, separator, settings, timer, checkCancel, rootMode, displayedInfo, internalScheduleInfo, externalScheduleInfo;
-const MODE_LABELS = {suspend: _("Suspend"), poweroff: _("Power Off"), reboot: _("Restart")};
+const MODE_LABELS = Extension.imports.prefs.MODE_LABELS;
 const MODE_TEXTS = {suspend: _("suspend"), poweroff: _("shutdown"), reboot: _("reboot")};
 
 class ScheduleInfo {
