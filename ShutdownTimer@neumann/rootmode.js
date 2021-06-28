@@ -265,7 +265,7 @@ class RootMode {
         } else {
             return execCheck(cmd, null, false)
                 .catch(() => {
-                    this._requiresRootCmd.push(cmd);
+                    this._requiresRootCmd.push(name);
                     return this.runCommandLine(cmd.join(' '));
                 });
         }

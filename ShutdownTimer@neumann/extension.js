@@ -149,23 +149,19 @@ function _onRootModeChanged() {
         });
 }
 
-function _onModeChange(startNewMode = false) {
+function _onModeChange() {
     // redo Root-mode protection
     const prevScheduled = internalScheduleInfo.scheduled;
     internalScheduleInfo = internalScheduleInfo.copy({scheduled: false});
     maybeStopRootModeProtection()
         .then(() => {
             internalScheduleInfo = internalScheduleInfo.copy({scheduled: prevScheduled});
-            if (!prevScheduled && startNewMode) {
-                switcher.setToggleState(true);
-                _onToggle();
-            }
             _updateCurrentMode();
+            _updateSelectedModeItems();
         })
         .then(() => maybeStartRootModeProtection());
 }
 
-    
 function _onShowSettingsButtonChanged() {
     switcherSettingsButton.visible = settings.get_boolean('show-settings-value');
 }
@@ -261,7 +257,7 @@ async function maybeStopRootModeProtection() {
  */
 async function maybeStartRootModeProtection() {
     if (internalScheduleInfo.scheduled && settings.get_boolean('root-mode-value')) {
-        log('Start root mode protection for: ' + internalScheduleInfo.mode);
+        log('Start root mode protection for: ' + internalScheduleInfo.label);
         try {
             switch (internalScheduleInfo.mode) {
                 case 'poweroff':
@@ -351,9 +347,8 @@ function _updateSubmenuLabel() {
 }
 
 function _updateSelectedModeItems() {
-    const curMode = settings.get_string('shutdown-mode-value');
     modeItems.forEach(([mode, item]) => {
-        item.setOrnament(mode === curMode ? PopupMenu.Ornament.DOT : PopupMenu.Ornament.NONE);
+        item.setOrnament(mode === internalScheduleInfo.mode ? PopupMenu.Ornament.DOT : PopupMenu.Ornament.NONE);
     });
 }
 
@@ -370,10 +365,14 @@ function _updateShownModeItems() {
     });
 }
 
-function _setMode(mode) {
+function _startMode(mode) {
+    const prevScheduled = internalScheduleInfo.scheduled;
     settings.set_string('shutdown-mode-value', mode);
-    _updateSelectedModeItems();
-    _onModeChange(true);
+    if (!prevScheduled) {
+        switcher.setToggleState(true);
+        // start timer and maybe root protection
+        _onToggle();
+    }
 }
 
 // timer action (shutdown/suspend)
@@ -470,7 +469,7 @@ function render() {
         .map(([mode, label]) => {
             const modeItem = new PopupMenu.PopupMenuItem(label);
             modeItem.connect('activate', () => {
-                _setMode(mode);
+                _startMode(mode);
             });
             submenu.menu.addMenuItem(modeItem);
             return [mode, modeItem];
@@ -515,7 +514,7 @@ function enable() {
     settings.connect('changed::root-mode-value', _onRootModeChanged);
     settings.connect('changed::show-settings-value', _onShowSettingsButtonChanged);
     settings.connect('changed::show-shutdown-mode-value', _updateShownModeItems);
-    settings.connect('changed::shutdown-mode-value', _updateSelectedModeItems);
+    settings.connect('changed::shutdown-mode-value', _onModeChange);
 }
 
 
