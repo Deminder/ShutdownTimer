@@ -2,232 +2,351 @@
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkEntryBuffer" id="check-command-buffer"/>
-  <object class="GtkEntryBuffer" id="show-shutdown-mode-buffer"/>
-  <object class="GtkAdjustment" id="slider-pos-adjustment">
-    <property name="upper">100</property>
+  <object class="GtkAdjustment" id="max-timer-adjustment">
+    <property name="upper">500</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkAdjustment" id="timer-minutes-adjustment">
-    <property name="upper">500</property>
+  <object class="GtkEntryBuffer" id="show-shutdown-mode-buffer"/>
+  <object class="GtkAdjustment" id="slider-adjustment">
+    <property name="upper">100</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
   <template class="ShutdownTimerPrefsWidget" parent="GtkGrid">
     <property name="name">ShutdownTimer.Prefs.Widget</property>
-    <property name="margin-start">5</property>
-    <property name="margin-end">5</property>
-    <property name="margin-top">5</property>
-    <property name="margin-bottom">5</property>
-    <property name="row-spacing">5</property>
+    <property name="row-homogeneous">1</property>
+    <property name="column-homogeneous">1</property>
     <child>
-      <object class="GtkBox">
-        <property name="spacing">5</property>
+      <object class="GtkNotebook">
         <child>
-          <object class="GtkSpinButton" id="max-timer-spinbutton">
-            <property name="adjustment">timer-minutes-adjustment</property>
-            <property name="climb-rate">1</property>
-            <property name="snap-to-ticks">1</property>
-            <property name="numeric">1</property>
-            <property name="update-policy">if-valid</property>
-            <property name="value">120</property>
+          <object class="GtkNotebookPage">
+            <property name="child">
+              <object class="GtkBox">
+                <property name="can-focus">0</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">5</property>
+                <child>
+                  <object class="GtkListBox">
+                    <property name="can-focus">0</property>
+                    <property name="margin-start">10</property>
+                    <property name="margin-end">10</property>
+                    <property name="margin-top">10</property>
+                    <property name="margin-bottom">10</property>
+                    <property name="selection-mode">none</property>
+                    <child>
+                      <object class="GtkListBoxRow">
+                        <property name="child">
+                          <object class="GtkBox">
+                            <property name="spacing">5</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="hexpand">1</property>
+                                <property name="can-focus">0</property>
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">Use mode</property>
+                                <property name="use-markup">1</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkComboBoxText" id="shutdown-mode-combo">
+                                <property name="active">0</property>
+                                <items>
+                                  <item id="poweroff">Shutdown</item>
+                                  <item id="suspend">Suspend</item>
+                                  <item id="reboot">Reboot</item>
+                                  <item id="DO NOT EDIT">(replaced in code)</item>
+                                </items>
+                              </object>
+                            </child>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkListBoxRow">
+                        <property name="child">
+                          <object class="GtkBox">
+                            <property name="spacing">5</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="hexpand">1</property>
+                                <property name="can-focus">0</property>
+                                <property name="tooltip-text" translatable="yes">uses &apos;pkexec shutdown&apos; command, no interruption of timer, but needs root password</property>
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">Root mode protection</property>
+                                <property name="use-markup">1</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkSwitch" id="root-mode-switch">
+                                <property name="halign">center</property>
+                              </object>
+                            </child>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkListBox">
+                    <property name="can-focus">0</property>
+                    <property name="margin-start">10</property>
+                    <property name="margin-end">10</property>
+                    <property name="margin-top">10</property>
+                    <property name="margin-bottom">10</property>
+                    <property name="selection-mode">none</property>
+                    <child>
+                      <object class="GtkListBoxRow">
+                        <property name="child">
+                          <object class="GtkBox">
+                            <property name="can-focus">0</property>
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">5</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="vexpand">1</property>
+                                <property name="can-focus">0</property>
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">Slider position (in &amp;amp; from 0 to 100)</property>
+                                <property name="use-markup">1</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkScale">
+                                <property name="draw-value">1</property>
+                                <property name="adjustment">slider-adjustment</property>
+                                <property name="show-fill-level">1</property>
+                                <property name="round-digits">0</property>
+                                <property name="digits">0</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkSpinButton" id="slider-spinbutton">
+                                <property name="valign">center</property>
+                                <property name="halign">end</property>
+                                <property name="text" translatable="yes">0</property>
+                                <property name="adjustment">slider-adjustment</property>
+                                <property name="climb-rate">1</property>
+                                <property name="snap-to-ticks">1</property>
+                                <property name="numeric">1</property>
+                                <property name="update-policy">if-valid</property>
+                              </object>
+                            </child>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkListBoxRow">
+                        <property name="child">
+                          <object class="GtkBox">
+                            <property name="can-focus">0</property>
+                            <property name="spacing">5</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="hexpand">1</property>
+                                <property name="can-focus">0</property>
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">Maximum timer value (in minutes)</property>
+                                <property name="use-markup">1</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkSpinButton" id="max-timer-spinbutton">
+                                <property name="text" translatable="yes">120</property>
+                                <property name="adjustment">max-timer-adjustment</property>
+                                <property name="climb-rate">1</property>
+                                <property name="snap-to-ticks">1</property>
+                                <property name="numeric">1</property>
+                                <property name="update-policy">if-valid</property>
+                                <property name="value">120</property>
+                              </object>
+                            </child>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </property>
+            <property name="tab">
+              <object class="GtkLabel">
+                <property name="can-focus">0</property>
+                <property name="label" translatable="yes">Mode</property>
+              </object>
+            </property>
           </object>
         </child>
         <child>
-          <object class="GtkLabel">
-            <property name="hexpand">1</property>
-            <property name="can-focus">0</property>
-            <property name="margin-start">5</property>
-            <property name="margin-end">5</property>
-            <property name="label" translatable="yes">Maximum timer value (in minutes)</property>
-            <property name="use-markup">1</property>
+          <object class="GtkNotebookPage">
+            <property name="position">1</property>
+            <property name="child">
+              <object class="GtkListBox">
+                <property name="can-focus">0</property>
+                <property name="margin-start">10</property>
+                <property name="margin-end">10</property>
+                <property name="margin-top">10</property>
+                <property name="margin-bottom">10</property>
+                <property name="selection-mode">none</property>
+                <child>
+                  <object class="GtkListBoxRow">
+                    <property name="child">
+                      <object class="GtkBox">
+                        <property name="spacing">5</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="hexpand">1</property>
+                            <property name="can-focus">0</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Show settings button</property>
+                            <property name="use-markup">1</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkSwitch" id="show-settings-switch">
+                            <property name="halign">center</property>
+                            <property name="can-focus">0</property>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkListBoxRow">
+                    <property name="child">
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">3</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="can-focus">0</property>
+                            <property name="tooltip-text" translatable="yes">Comma-separated shutdown modes which are shown in the popup menu.</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Show shutdown items</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="show-shutdown-mode-entry">
+                            <property name="buffer">show-shutdown-mode-buffer</property>
+                            <property name="placeholder-text">poweroff, reboot, suspend</property>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+              </object>
+            </property>
+            <property name="tab">
+              <object class="GtkLabel">
+                <property name="can-focus">0</property>
+                <property name="label" translatable="yes">Display</property>
+              </object>
+            </property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkNotebookPage">
+            <property name="position">2</property>
+            <property name="child">
+              <object class="GtkListBox">
+                <property name="can-focus">0</property>
+                <property name="margin-start">10</property>
+                <property name="margin-end">10</property>
+                <property name="margin-top">10</property>
+                <property name="margin-bottom">10</property>
+                <property name="selection-mode">none</property>
+                <child>
+                  <object class="GtkListBoxRow">
+                    <property name="child">
+                      <object class="GtkBox">
+                        <property name="spacing">5</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="hexpand">1</property>
+                            <property name="can-focus">0</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Enable check command</property>
+                            <property name="use-markup">1</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkSwitch" id="enable-check-command-switch">
+                            <property name="halign">center</property>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkListBoxRow">
+                    <property name="child">
+                      <object class="GtkBox">
+                        <property name="can-focus">0</property>
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">3</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="can-focus">0</property>
+                            <property name="tooltip-text" translatable="yes">Run check command after timer runs out. Only proceeds if check command terminates successfully.</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Check command</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="check-command-entry">
+                            <property name="buffer">check-command-buffer</property>
+                            <property name="primary-icon-name">application-x-executable</property>
+                            <property name="primary-icon-tooltip-text" translatable="yes">command run in user shell</property>
+                            <property name="placeholder-text">[ ! -f /run/systemd/shutdown/scheduled ]</property>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkListBoxRow">
+                    <property name="child">
+                      <object class="GtkBox">
+                        <property name="spacing">5</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="hexpand">1</property>
+                            <property name="can-focus">0</property>
+                            <property name="tooltip-text" translatable="yes">Cancel the root mode protection before check command is run if enabled.</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Cancel root mode protection</property>
+                            <property name="use-markup">1</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkSwitch" id="enable-root-mode-cancel-switch">
+                            <property name="halign">center</property>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+              </object>
+            </property>
+            <property name="tab">
+              <object class="GtkLabel">
+                <property name="can-focus">0</property>
+                <property name="label" translatable="yes">Check</property>
+              </object>
+            </property>
           </object>
         </child>
         <layout>
           <property name="column">0</property>
           <property name="row">0</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="spacing">5</property>
-        <child>
-          <object class="GtkSpinButton" id="slider-spinbutton">
-            <property name="adjustment">slider-pos-adjustment</property>
-            <property name="climb-rate">1</property>
-            <property name="snap-to-ticks">1</property>
-            <property name="numeric">1</property>
-            <property name="update-policy">if-valid</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="hexpand">1</property>
-            <property name="can-focus">0</property>
-            <property name="margin-start">5</property>
-            <property name="margin-end">5</property>
-            <property name="label" translatable="yes">Slider position (in &amp;amp; from 0 to 100)</property>
-            <property name="use-markup">1</property>
-          </object>
-        </child>
-        <layout>
-          <property name="column">0</property>
-          <property name="row">1</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="spacing">5</property>
-        <child>
-          <object class="GtkSwitch" id="show-settings-switch">
-            <property name="can-focus">0</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="hexpand">1</property>
-            <property name="can-focus">0</property>
-            <property name="label" translatable="yes">Show settings button</property>
-            <property name="use-markup">1</property>
-          </object>
-        </child>
-        <layout>
-          <property name="column">0</property>
-          <property name="row">2</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="spacing">5</property>
-        <child>
-          <object class="GtkSwitch" id="root-mode-switch"/>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="hexpand">1</property>
-            <property name="can-focus">0</property>
-            <property name="tooltip-text" translatable="yes">uses &apos;pkexec shutdown&apos; command, no interruption of timer, but needs root password</property>
-            <property name="label" translatable="yes">Root mode protection</property>
-            <property name="use-markup">1</property>
-          </object>
-        </child>
-        <layout>
-          <property name="column">0</property>
-          <property name="row">3</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="orientation">vertical</property>
-        <property name="spacing">3</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="can-focus">0</property>
-            <property name="tooltip-text" translatable="yes">Run check command after timer runs out. Only proceeds if check command terminates successfully.</property>
-            <property name="halign">start</property>
-            <property name="label" translatable="yes">Check command</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkEntry" id="check-command-entry">
-            <property name="buffer">check-command-buffer</property>
-            <property name="primary-icon-name">application-x-executable</property>
-            <property name="primary-icon-tooltip-text" translatable="yes">command run in user shell</property>
-            <property name="placeholder-text">[ ! -f /run/systemd/shutdown/scheduled ]</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="spacing">5</property>
-            <child>
-              <object class="GtkSwitch" id="enable-check-command-switch"/>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="hexpand">1</property>
-                <property name="can-focus">0</property>
-                <property name="label" translatable="yes">Enable check command</property>
-                <property name="use-markup">1</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="spacing">5</property>
-            <child>
-              <object class="GtkSwitch" id="enable-root-mode-cancel-switch"/>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="hexpand">1</property>
-                <property name="can-focus">0</property>
-                <property name="tooltip-text" translatable="yes">Cancel the root mode protection before check command is run if enabled.</property>
-                <property name="label" translatable="yes">Cancel root mode protection</property>
-                <property name="use-markup">1</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <layout>
-          <property name="column">0</property>
-          <property name="row">5</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="orientation">vertical</property>
-        <property name="spacing">3</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="can-focus">0</property>
-            <property name="tooltip-text" translatable="yes">Comma-separated shutdown modes which are shown in the popup menu.</property>
-            <property name="halign">start</property>
-            <property name="label" translatable="yes">Show shutdown items</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkEntry" id="show-shutdown-mode-entry">
-            <property name="buffer">show-shutdown-mode-buffer</property>
-            <property name="placeholder-text">poweroff, reboot, suspend</property>
-          </object>
-        </child>
-        <layout>
-          <property name="column">0</property>
-          <property name="row">4</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="spacing">5</property>
-        <child>
-          <object class="GtkComboBoxText" id="shutdown-mode-combo">
-            <property name="active">0</property>
-            <items>
-              <item id="poweroff">Shutdown</item>
-              <item id="suspend">Suspend</item>
-              <item id="reboot">Reboot</item>
-              <item id="DO NOT EDIT">(replaced in code)</item>
-            </items>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="hexpand">1</property>
-            <property name="can-focus">0</property>
-            <property name="label" translatable="yes">Use mode</property>
-            <property name="use-markup">1</property>
-          </object>
-        </child>
-        <layout>
-          <property name="column">0</property>
-          <property name="row">6</property>
         </layout>
       </object>
     </child>

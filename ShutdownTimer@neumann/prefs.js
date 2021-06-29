@@ -2,7 +2,7 @@
 	AUTHOR: Daniel Neumann
 **/
 
-const { GObject, Gtk } = imports.gi;
+const { GLib, GObject, Gtk } = imports.gi;
 
 const Gettext = imports.gettext.domain('ShutdownTimer');
 const _ = Gettext.gettext;
@@ -20,8 +20,8 @@ function init() {
 }
 
 const templateComponents = {
-    'max-timer' : 'spinbutton',
-    'slider' : 'spinbutton',
+    'max-timer' : 'adjustment',
+    'slider' : 'adjustment',
     'show-settings': 'switch',
     'root-mode': 'switch',
     'show-shutdown-mode': 'buffer',
@@ -30,7 +30,8 @@ const templateComponents = {
     'shutdown-mode': 'combo',
 };
 
-templateFile = Me.dir
+
+const templateFile = Me.dir
     .get_child('templates')
     .get_child('pref-window' + (Gtk.get_major_version() < 4 ? '' : '-gtk4') + '.ui')
     .get_uri();
@@ -49,8 +50,8 @@ const ShutdownTimerPrefsWidget = GObject.registerClass({
         super._init(params);
 
         const connectFuncs = {
-            spinbutton: [
-                (v) => v.get_value_as_int(),
+            adjustment: [
+                (v) => v.get_value(),
                 (v, s) => v.set_value(s),
                 (sn) => settings.get_int(sn),
                 (sn, v) => settings.set_int(sn, v),
@@ -112,9 +113,23 @@ const ShutdownTimerPrefsWidget = GObject.registerClass({
                     entry.disconnect(changedId);
                 });
             }
+            let lastActivity = {type:'internal', time:0};
             this[fieldName].connect(signal, (w) => {
-                settingsSetter(settingsName, fieldGetter(w));
-                log(`Signal ${signal}: ${fieldName} (${fieldGetter(w)}) -> ${settingsName}`);
+                if (lastActivity.type == 'internal' || GLib.get_monotonic_time() > lastActivity.time + 100000) {
+                    lastActivity = {type:'internal', time:GLib.get_monotonic_time()};
+                    const val = fieldGetter(w);
+                    settingsSetter(settingsName, val);
+                }
+            });
+            // update ui if values change externally 
+            settings.connect('changed::' + settingsName, () => {
+                if (lastActivity.type == 'external' || GLib.get_monotonic_time() > lastActivity.time + 100000) {
+                    lastActivity = {type:'external', time:GLib.get_monotonic_time()};
+                    const val = settingsGetter(settingsName);
+                    if (val !== fieldGetter(this[fieldName])) {
+                        fieldSetter(this[fieldName], val);
+                    }
+                }
             });
         };
 
