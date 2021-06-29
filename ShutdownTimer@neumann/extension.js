@@ -151,11 +151,8 @@ function _onRootModeChanged() {
 
 function _onModeChange() {
     // redo Root-mode protection
-    const prevScheduled = internalScheduleInfo.scheduled;
-    internalScheduleInfo = internalScheduleInfo.copy({scheduled: false});
-    maybeStopRootModeProtection()
+    maybeStopRootModeProtection(true)
         .then(() => {
-            internalScheduleInfo = internalScheduleInfo.copy({scheduled: prevScheduled});
             _updateCurrentMode();
             _updateSelectedModeItems();
         })
@@ -229,8 +226,8 @@ function _onToggle(show = true) {
     }
 }
 
-async function maybeStopRootModeProtection() {
-    if (!internalScheduleInfo.scheduled && settings.get_boolean('root-mode-value')) {
+async function maybeStopRootModeProtection(stopScheduled = false) {
+    if ((stopScheduled || !internalScheduleInfo.scheduled) && settings.get_boolean('root-mode-value')) {
         log('Stop root mode protection for: ' + internalScheduleInfo.mode);
         try {
             switch (internalScheduleInfo.mode) {
