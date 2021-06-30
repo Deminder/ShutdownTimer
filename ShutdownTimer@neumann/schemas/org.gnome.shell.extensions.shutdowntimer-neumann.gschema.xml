@@ -7,6 +7,12 @@
       <summary>Maximum time (in minutes)</summary>
       <description>Set maximum selectable time of the slider (in minutes). Use only values greater zero.</description>
     </key>
+
+    <key type="i" name="shutdown-timestamp-value">
+      <default>-1</default>
+      <summary>Scheduled shutdown timestamp.</summary>
+      <description>Unix time in seconds of scheduled shutdown or -1 if disabled.</description>
+    </key>
     
     <key type="i" name="slider-value">
       <default>70</default>

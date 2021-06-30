@@ -178,7 +178,7 @@ function execRootModeLoop(cancellable = null) {
  * @param {string[] | string} argv - a list of string arguments or command line that will be parsed
  * @param {Gio.Cancellable} [cancellable] - optional cancellable object
  * @param {boolean} shell - run command as shell command
- * @returns {Promise<>} - The process success
+ * @returns {Promise<void>} - The process success
  */
 async function execCheck(argv, cancellable = null, shell = true) {
     if (!shell && typeof argv === "string") {
@@ -228,7 +228,6 @@ class RootMode {
         this._cancel = null;
         this._runCommand = null;
         this._procPromise =  null;
-        this._latestInfo = {mode: null, secondsLeft: 0};
         this._infoCallback = infoCallback;
         this._requiresRootCmd = [];
         this._updateInfoLoop();
@@ -239,7 +238,7 @@ class RootMode {
             shutdownInfo()
                 .then((info) => {
                     this._infoCallback(info);
-                    const nextTimerId = GLib.timeout_add_seconds(GLib.LOW_PRIORITY, 10, () => {
+                    const nextTimerId = GLib.timeout_add_seconds(GLib.LOW_PRIORITY, 5, () => {
                                 this._updateInfoLoop();
                                 return GLib.SOURCE_REMOVE;
                             });
@@ -324,14 +323,6 @@ class RootMode {
         await this.stopScheduleInfoLoop();
         // restart loop
         return this._updateInfoLoop();
-    }
-
-    latestShutdownInfo() {
-        return this._latestInfo;
-    }
-
-    async cleanup() {
-        await Promise.all([this.stopScheduleInfoLoop(), this.stopRootProc()]);
     }
 }
 

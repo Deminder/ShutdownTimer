@@ -7,7 +7,7 @@
 **/
 
 /* IMPORTS */
-const {St, Gio, Clutter} = imports.gi;
+const {GLib, St, Gio, Clutter} = imports.gi;
 
 // screen and main functionality
 const Main = imports.ui.main;
@@ -27,38 +27,43 @@ const _ = Gettext.gettext;
 // import own scripts
 const ExtensionUtils = imports.misc.extensionUtils;
 const Extension = ExtensionUtils.getCurrentExtension();
-const Timer = Extension.imports.timer;
 const RootMode = Extension.imports.rootmode;
+const Timer = Extension.imports.timer;
 const Convenience = Extension.imports.convenience;
 
 
 /* GLOBAL VARIABLES */
-let textbox, submenu, slider, switcher, switcherSettingsButton, separator, settings, timer, checkCancel, rootMode, displayedInfo, internalScheduleInfo, externalScheduleInfo;
+let textbox, submenu, slider, switcher, switcherSettingsButton, separator, settings, checkCancel, rootMode, displayedInfo, internalScheduleInfo, externalScheduleInfo, settingsHandlerIds;
 const MODE_LABELS = Extension.imports.prefs.MODE_LABELS;
 const MODE_TEXTS = {suspend: _("suspend"), poweroff: _("shutdown"), reboot: _("reboot")};
 
 class ScheduleInfo {
-    constructor({mode = '?', secondsLeft = 0, external = false, scheduled = false}) {
-        this._v = {mode, secondsLeft, external, scheduled};
+    constructor({mode = '?', deadline = -1, external = false}) {
+        this._v = {mode, deadline, external};
     }
 
     copy(vals) {
         return new ScheduleInfo({...this._v, ...vals})
     }
 
-    get scheduled() {
-        return this._v.scheduled;
+    get deadline() {
+        return this._v.deadline;
     }
 
     get external() {
         return this._v.external;
     }
 
-    get secondsLeft() {
-        return this._v.secondsLeft;
-    }
     get mode() {
         return this._v.mode;
+    }
+
+    get scheduled() {
+        return this.deadline > -1;
+    }
+
+    get secondsLeft() {
+        return this.deadline - GLib.DateTime.new_now_utc().to_unix();
     }
 
     get minutes() {
@@ -170,14 +175,12 @@ function maybeCheckCmdString(nl=false) {
 
 function _updateCheckCommandState() {
 
-    if (checkCancel !== null && !checkCancel.is_cancelled()) {
+    if (checkCancel !== null) {
         // check command is running
-        if(switcher.state) {
+        if(internalScheduleInfo.scheduled) {
             submenu.label.text = _("Waiting for confirmation");
             showText = _("Waiting for confirmation") + maybeCheckCmdString(true);
         } else {
-            checkCancel.cancel();
-            showText = _("Confirmation canceled");
             submenu.label.text = _("Shutdown Timer");
         }
         _showTextbox(showText);
@@ -185,45 +188,33 @@ function _updateCheckCommandState() {
 }
 
 // toggle button starts/stops shutdown timer
-// also considers check command state
-function _onToggle(show = true) {
-    if (checkCancel !== null) {
-        // toggle may cancel the check command (otherwise ignored)
-        _updateCheckCommandState();
-    }
-
-    let showText;
-    if(switcher.state && !internalScheduleInfo.scheduled) {
+function _onToggle() {
+    if (switcher.state) {
         // start shutdown timer
-        const maxTimerMinutes = Math.floor(settings.get_int('slider-value') * settings.get_int('max-timer-value') / 100.0);
-        internalScheduleInfo = internalScheduleInfo.copy({
-            secondsLeft: maxTimerMinutes*60,
-            scheduled: true
-        });
-        maybeStartRootModeProtection()
-            .then(() => {
-                timer.startTimer(maxTimerMinutes);
-                log('Timer started! ' + internalScheduleInfo.label);
-            });
-        showText = `${_("System will shutdown in")} ${_getTimerStartValue()} ${_("minutes")}${maybeCheckCmdString(true)}`;
-    } else if(!switcher.state && internalScheduleInfo.scheduled) {
-        // stop shutdown timer
-        internalScheduleInfo = internalScheduleInfo.copy({scheduled: false});
-        timer.stopTimer();
-        maybeStopRootModeProtection()
-            .then(() => {
-                log('Timer stopped! ' + internalScheduleInfo.copy({scheduled: true}).label);
-            });
-        showText = _("Shutdown Timer stopped");
+        startSchedule();
     } else {
-        // nothing to do
-        return;
+        // stop shutdown timer
+        stopSchedule();
     }
-    _updateShutdownInfo();
+}
 
+function stopSchedule(show = false) {
+    settings.set_int('shutdown-timestamp-value', -1);
+    let showText = _("Shutdown Timer stopped");
+    if (checkCancel !== null) {
+        checkCancel.cancel();
+        showText = _("Confirmation canceled");
+        submenu.label.text = _("Shutdown Timer");
+    }
     if (show) {
         _showTextbox(showText);
     }
+}
+
+function startSchedule() {
+    const maxTimerMinutes = Math.floor(settings.get_int('slider-value') * settings.get_int('max-timer-value') / 100.0);
+    settings.set_int('shutdown-timestamp-value', GLib.DateTime.new_now_utc().to_unix()+ maxTimerMinutes*60);
+    _showTextbox(`${_("System will shutdown in")} ${_getTimerStartValue()} ${_("minutes")}${maybeCheckCmdString(true)}`);
 }
 
 async function maybeStopRootModeProtection(stopScheduled = false) {
@@ -276,7 +267,7 @@ async function maybeStartRootModeProtection() {
 
 // menu items switcher and slider
 function _createSwitcherItem() {
-    let switchMenuItem = new PopupMenu.PopupSwitchMenuItem('', false);
+    let switchMenuItem = new PopupMenu.PopupSwitchMenuItem('', internalScheduleInfo.scheduled);
     
     switchMenuItem.connect('toggled', _onToggle);
 
@@ -305,12 +296,17 @@ function _createSliderItem() {
     slider = new Slider.Slider(sliderValue);
     slider.connect('notify::value', () => {
         settings.set_int('slider-value', (slider.value * 100));
-        _updateSlider();
     });
     sliderItem.add_actor(slider);
     return sliderItem;
 }
 
+function _onInternalShutdownTimestampChanged() {
+    internalScheduleInfo = internalScheduleInfo.copy({
+        deadline: settings.get_int('shutdown-timestamp-value')
+    });
+    internalScheduleInfoTick();
+}
 
 function _updateShutdownInfo() {
     let displayInfo = externalScheduleInfo.isMoreUrgendThan(internalScheduleInfo) ?
@@ -322,13 +318,14 @@ function _updateShutdownInfo() {
         _updateSubmenuLabel();
     }
 }
-function externalScheduleInfoTick(info) {
-    externalScheduleInfo = externalScheduleInfo.copy({...info, scheduled: info.mode !== null});
+
+function internalScheduleInfoTick() {
+    timer.adjustTo(internalScheduleInfo);
     _updateShutdownInfo();
 }
 
-function timerTick(secondsLeft) {
-    internalScheduleInfo = internalScheduleInfo.copy({ secondsLeft});
+function externalScheduleInfoTick(info) {
+    externalScheduleInfo = externalScheduleInfo.copy({...info, scheduled: info.mode !== null});
     _updateShutdownInfo();
 }
 
@@ -363,18 +360,17 @@ function _updateShownModeItems() {
 }
 
 function _startMode(mode) {
-    const prevScheduled = internalScheduleInfo.scheduled;
     settings.set_string('shutdown-mode-value', mode);
-    if (!prevScheduled) {
-        switcher.setToggleState(true);
-        // start timer and maybe root protection
-        _onToggle();
-    }
+    startSchedule();
+    _updateSwitcherState();
+}
+
+function _updateSwitcherState() {
+    switcher.setToggleState(internalScheduleInfo.scheduled);
 }
 
 // timer action (shutdown/suspend)
-function timerAction() {
-    maybeStopRootModeProtection();
+function serveInernalSchedule() {
     maybeDoCheck()
         .then(() => {
             // check succeeded: do shutdown
@@ -388,8 +384,9 @@ function timerAction() {
             logError(err, 'CheckError');
         })
         .finally(() => {
-            switcher.setToggleState(false);
-            _onToggle(false);
+            stopSchedule(false);
+            _updateSwitcherState();
+            _updateCheckCommandState();
         });
 }
 
@@ -489,41 +486,53 @@ function init() {
     // initialize settings
     settings = Convenience.getSettings();
 
+    // check for shutdown may run in background and can be canceled by user
     checkCancel = null;
+    // track external schutdown schedule
+    // keeps track of priviledged process (for root mode)
+    rootMode = new RootMode.RootMode(externalScheduleInfoTick);
+    // starts internal shutdown schedule if ready
+    timer = new Timer.Timer(serveInernalSchedule, internalScheduleInfoTick);
 }
 
 function enable() {
-    // initialize timer
-    timer = new Timer.Timer(timerAction, timerTick);
-    rootMode = new RootMode.RootMode(externalScheduleInfoTick);
 
     externalScheduleInfo = new ScheduleInfo({external: true});
-    internalScheduleInfo = new ScheduleInfo({external: false});
+    internalScheduleInfo = new ScheduleInfo({
+        external: false,
+        deadline: settings.get_int('shutdown-timestamp-value'),
+        mode: settings.get_string('shutdown-mode-value'),
+    });
     displayedInfo = internalScheduleInfo;
-    _updateCurrentMode();
 
     // render menu widget
     render();
 
+
     // handlers for changed values in settings
-    settings.connect('changed::max-timer-value', _updateSwitchLabel);
-    settings.connect('changed::slider-value', _updateSlider);
-    settings.connect('changed::root-mode-value', _onRootModeChanged);
-    settings.connect('changed::show-settings-value', _onShowSettingsButtonChanged);
-    settings.connect('changed::show-shutdown-mode-value', _updateShownModeItems);
-    settings.connect('changed::shutdown-mode-value', _onModeChange);
+    settingsHandlerIds = [
+        ['max-timer-value', _updateSwitchLabel],
+        ['slider-value', _updateSlider],
+        ['root-mode-value', _onRootModeChanged],
+        ['show-settings-value', _onShowSettingsButtonChanged],
+        ['show-shutdown-mode-value', _updateShownModeItems],
+        ['shutdown-mode-value', _onModeChange],
+        ['shutdown-timestamp-value', _onInternalShutdownTimestampChanged]
+    ].map(([label, func]) => settings.connect( 'changed::' + label, func));
+
+
+    internalScheduleInfoTick();
 }
 
 
 function disable() {
-    // root mode protection will NOT be stopped
-    internalScheduleInfo = internalScheduleInfo.copy({scheduled: false});
-    timer.stopTimer();
+    timer.stopGLibTimer();
+    settingsHandlerIds.forEach((handlerId) => {
+        settings.disconnect(handlerId);
+    });
     submenu.destroy(); // destroys switcher and sliderItem as children too
     separator.destroy();
-    if (checkCancel !== null && !checkCancel.is_cancelled()) {
-        checkCancel.cancel();
-        checkCancel = null;
-    }
-    rootMode.cleanup();
+    // requires root password again but root mode protection will NOT be canceled
+    rootMode.stopScheduleInfoLoop();
+
 }

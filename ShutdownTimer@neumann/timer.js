@@ -2,50 +2,82 @@
     AUTHOR: Daniel Neumann
 **/
 
-const GLib = imports.gi.GLib;
+const { GLib, Gio } = imports.gi;
+
+const ExtensionUtils = imports.misc.extensionUtils;
+const Extension = ExtensionUtils.getCurrentExtension();
+const RootMode = Extension.imports.rootmode;
 
 /* TIMER */
 var Timer = class {
     
-    constructor(callbackAction, secondsLeftCallback) {
-        this._timerTotalMinutes = 0;
-        this._timerId = null;
-        this._startTime = 0;
+    constructor(callbackAction, tick) {
+        this._timerMaxSeconds = 0;
+        this._timerCancel = null;
         this._callbackAction = callbackAction;
-        this._secondsLeftCallback = secondsLeftCallback;
+        this._tick = tick;
+        this.deadline = -1;
+    }
+
+
+    adjustTo(info) {
+        if (info.scheduled) {
+            this.startTimer(info);
+        } else {
+            this.stopTimer();
+        }
     }
     
-    
-    startTimer(maxTimerMinutes) {
-        if (this._timerId === null) {
-            this._timerTotalMinutes = maxTimerMinutes;
-            this._secondsLeftCallback(maxTimerMinutes*60);
+    startTimer(info) {
+        if (info.deadline !== this.deadline) {
+            // updater for shutdown task
+            this.stopProcTimer();
+            this.deadline = info.deadline;
 
-            if (this._timerTotalMinutes > 0) {
-                // GLib monotonic time misses ticks if suspended
-                // [https://gjs-docs.gnome.org/glib20~2.66.1/glib.get_monotonic_time]
-                this._startTime = GLib.DateTime.new_now_utc().to_unix();
-                this._timerId = GLib.timeout_add_seconds(GLib.PRIORITY_LOW, 10, () => {
-                    let currentTime = GLib.DateTime.new_now_utc().to_unix();
-                    let secondsElapsed = currentTime - this._startTime;
-                    
-                    let secondsLeft = (this._timerTotalMinutes*60) - secondsElapsed;
-                    this._secondsLeftCallback(secondsLeft);
-                    if (secondsLeft > 0) {
-                        return GLib.SOURCE_CONTINUE;
-                    }
-                    
-                    this._callbackAction();
-                    this._timerId = null;
-                    return GLib.SOURCE_REMOVE;
-                });
+            const secs = info.secondsLeft;
+            if (secs > 0) {
+                log('Started timer: ' + info.label);
+                this._timerCancel = new Gio.Cancellable();
+                RootMode.execCheck(['sleep', `${secs}`], this._timerCancel, false)
+                    .then(() => {
+                        this._callbackAction();
+                    })
+                    .catch(() => {
+                        log('Stopped timer: ' + info.label);
+                    });
+
             } else {
                 this._callbackAction();
             }
         }
+        if (this._timerId === null) {
+            // ticks for gui
+            this._timerId = GLib.timeout_add_seconds(GLib.PRIORITY_LOW, 1, () => {
+                this._tick();
+                if (this.deadline > GLib.DateTime.new_now_utc().to_unix()) {
+                    return GLib.SOURCE_CONTINUE;
+                }
+                this._timerId = null;
+                return GLib.SOURCE_REMOVE;
+            });
+            this._tick();
+        }
+    }
+
+    stopProcTimer() {
+        if (this._timerCancel !== null) {
+            this._timerCancel.cancel();
+        }
+        this._timerCancel = null;
     }
 
     stopTimer() {
+        this.deadline = -1;
+        this.stopProcTimer();
+        this.stopGLibTimer();
+    }
+
+    stopGLibTimer() {
         if (this._timerId !== null) {
             GLib.Source.remove(this._timerId);
         }
