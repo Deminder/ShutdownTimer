@@ -48,6 +48,7 @@ const ShutdownTimerPrefsWidget = GObject.registerClass({
 
     _init(params = {}) {
         super._init(params);
+        this.handlers = [];
 
         const connectFuncs = {
             adjustment: [
@@ -93,15 +94,16 @@ const ShutdownTimerPrefsWidget = GObject.registerClass({
             const settingsName = `${baseName}-value`;
             const fieldName = fieldNameByInteralID(`${baseName}-${component}`);
             const fieldValue= settingsGetter(settingsName);
+            const comp = this[fieldName];
             if (baseName === 'shutdown-mode') {
                 // update combo box entries
-                this[fieldName].remove_all();
+                comp.remove_all();
                 Object.entries(MODE_LABELS).forEach(([mode, label]) => {
-                    this[fieldName].append(mode, label);
+                    comp.append(mode, label);
                 });
             }
-            fieldSetter(this[fieldName], fieldValue);
-            if (component == 'buffer') {
+            fieldSetter(comp, fieldValue);
+            if (comp == 'buffer') {
                 // fix init of placeholder text
                 const entry = this[fieldNameByInteralID(`${baseName}-entry`)];
                 const placeholder = baseName === 'show-shutdown-mode' ? 
@@ -112,30 +114,51 @@ const ShutdownTimerPrefsWidget = GObject.registerClass({
                     entry.set_placeholder_text(placeholder);
                     entry.disconnect(changedId);
                 });
+                const destroyId  = entry.connect('destroy', () => {
+                    entry.disconnect(changedId);
+                    entry.disconnect(destroyId);
+                });
             }
             let lastActivity = {type:'internal', time:0};
-            this[fieldName].connect(signal, (w) => {
-                if (lastActivity.type == 'internal' || GLib.get_monotonic_time() > lastActivity.time + 100000) {
-                    lastActivity = {type:'internal', time:GLib.get_monotonic_time()};
+            const maybeUpdate = (type, update) => {
+                const time = GLib.get_monotonic_time();
+                if (lastActivity.type == type || time > lastActivity.time + 100000) {
+                    lastActivity = {type, time};
+                    update();
+                }
+            };
+            const handlerId = comp.connect(signal, (w) => {
+                maybeUpdate('internal', () => {
                     const val = fieldGetter(w);
                     settingsSetter(settingsName, val);
-                }
+                });
             });
             // update ui if values change externally 
-            settings.connect('changed::' + settingsName, () => {
-                if (lastActivity.type == 'external' || GLib.get_monotonic_time() > lastActivity.time + 100000) {
-                    lastActivity = {type:'external', time:GLib.get_monotonic_time()};
+            const settingsHandlerId = settings.connect('changed::' + settingsName, () => {
+                maybeUpdate('internal', () => {
                     const val = settingsGetter(settingsName);
-                    if (val !== fieldGetter(this[fieldName])) {
-                        fieldSetter(this[fieldName], val);
+                    if (val !== fieldGetter(comp)) {
+                        fieldSetter(comp, val);
                     }
-                }
+                });
             });
+            this.handlers.push([comp, handlerId, () => {
+                settings.disconnect(settingsHandlerId);
+            }]);
         };
 
         Object.entries(templateComponents).forEach(([k, v]) => {
             connect_comp(k, v);
         });
+    }
+
+    destroy() {
+        this.handlers.forEach(([comp, handlerId, onDisconnect]) => {
+            comp.disconnect(handlerId);
+            onDisconnect();
+        });
+        this.handlers = [];
+        super.destroy();
     }
 
 });
