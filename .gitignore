@@ -1,2 +1,6 @@
-*.ui~
-*.ui#
+/locale
+/schemas/gschemas.compiled
+*~
+*#
+*.zip
+

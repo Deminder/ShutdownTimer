@@ -1,0 +1,9 @@
+{
+    "shell-version": ["40"],
+    "uuid": "ShutdownTimer@deminder", 
+    "name": "ShutdownTimer", 
+    "gettext-domain": "ShutdownTimer", 
+    "settings-schema": "org.gnome.shell.extensions.shutdowntimer-neumann", 
+    "description": "Shutdown/reboot/suspend the device after a specific time.\n\n Additionally an check command may be configured before shutdown.", 
+    "url": "https://github.com/Deminder/ShutdownTimer"
+}

@@ -1,0 +1,247 @@
+#
+# 	AUTHOR: Daniel Neumann
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-06-30 23:12+0200\n"
+"PO-Revision-Date: 2021-06-30 23:17+0200\n"
+"Last-Translator: Daniel Neumann\n"
+"Language-Team: \n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.4.3\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: _\n"
+"X-Poedit-Basepath: ../../..\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: ui/prefs.ui:57
+msgid "Use mode"
+msgstr ""
+
+#: ui/prefs.ui:101
+msgid ""
+"uses 'pkexec shutdown' command, no interruption of timer, but needs root "
+"password"
+msgstr ""
+"χρησιμποποιεί την 'pkexec shutdown' εντολή, η αντίστροφη μέτρηση δεν "
+"διακόπτεται, αλλά απαιτείται κωδικός διαχειριστή"
+
+#: ui/prefs.ui:103
+msgid "Root mode protection"
+msgstr "Λειτουργία διαχειριστή"
+
+#: ui/prefs.ui:158
+msgid "Slider position (in &amp; from 0 to 100)"
+msgstr "Θέση δείκτη (σε ποσοστό τοις εκατό, από 0 έως 100)"
+
+#: ui/prefs.ui:217
+msgid "Maximum timer value (in minutes)"
+msgstr "Μέγιστος χρόνος αναμονής (σε λεπτά)"
+
+#: ui/prefs.ui:260
+msgid "Mode"
+msgstr ""
+
+#: ui/prefs.ui:289
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:25
+msgid "Show settings button"
+msgstr ""
+
+#: ui/prefs.ui:327
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:38
+msgid "Comma-separated shutdown modes which are shown in the popup menu."
+msgstr ""
+
+#: ui/prefs.ui:329
+msgid "Show shutdown items"
+msgstr ""
+
+#: ui/prefs.ui:363
+msgid "Display"
+msgstr ""
+
+#: ui/prefs.ui:393
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:61
+msgid "Enable check command"
+msgstr ""
+
+#: ui/prefs.ui:431
+msgid ""
+"Run check command after timer runs out. Only proceeds if check command "
+"terminates successfully."
+msgstr ""
+
+#: ui/prefs.ui:433
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:49
+msgid "Check command"
+msgstr ""
+
+#: ui/prefs.ui:447
+msgid "command run in user shell"
+msgstr ""
+
+#: ui/prefs.ui:473
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:56
+msgid "Cancel the root mode protection before check command is run if enabled."
+msgstr ""
+
+#: ui/prefs.ui:475
+msgid "Cancel root mode protection"
+msgstr ""
+
+#: ui/prefs.ui:508
+msgid "Check"
+msgstr ""
+
+#: extension.js:38
+msgid "suspend"
+msgstr ""
+
+#: extension.js:38
+msgid "shutdown"
+msgstr "απενεργοποίηση"
+
+#: extension.js:38
+msgid "reboot"
+msgstr ""
+
+#: extension.js:78 extension.js:184 extension.js:207
+msgid "Shutdown Timer"
+msgstr "Αυτόματη Απενεργοποίηση "
+
+#: extension.js:80
+msgid "min until"
+msgstr "λεπτά μέχρι την"
+
+#: extension.js:80
+msgid "(sys)"
+msgstr ""
+
+#: extension.js:137
+msgid "min"
+msgstr "λεπτά"
+
+#: extension.js:139
+msgid "(root)"
+msgstr ""
+
+#: extension.js:181 extension.js:182
+msgid "Waiting for confirmation"
+msgstr ""
+
+#: extension.js:203
+msgid "Shutdown Timer stopped"
+msgstr "Η Αυτόματη Απενεργοποίηση σταμάτησε"
+
+#: extension.js:206 extension.js:403
+msgid "Confirmation canceled"
+msgstr ""
+
+#: extension.js:217
+msgid "System will shutdown in"
+msgstr "Ο υπολογιστής θα κλείσει σε"
+
+#: extension.js:217
+msgid "minutes"
+msgstr "λεπτά"
+
+#: extension.js:234 extension.js:261
+msgid "Root mode protection failed!"
+msgstr ""
+
+#: extension.js:277
+msgid "Settings"
+msgstr "Ρυθμίσεις"
+
+#: extension.js:419
+msgid "Shutdown aborted"
+msgstr ""
+
+#: prefs.js:15
+msgid "Suspend"
+msgstr ""
+
+#: prefs.js:15
+msgid "Power Off"
+msgstr ""
+
+#: prefs.js:15
+msgid "Restart"
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:7
+msgid "Maximum time (in minutes)"
+msgstr "Μέγιστος χρόνος αναμονής (σε λεπτά)"
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:8
+msgid ""
+"Set maximum selectable time of the slider (in minutes). Use only values "
+"greater zero."
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:13
+msgid "Scheduled shutdown timestamp."
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:14
+msgid "Unix time in seconds of scheduled shutdown or -1 if disabled."
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:19
+msgid "Slider position"
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:20
+msgid ""
+"Set slider position as percent of the maximum time. Must be in range 0 and "
+"100."
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:26
+msgid "Show/hide settings button in widget."
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:31
+msgid "Root mode"
+msgstr "Λειτουργία διαχειριστή"
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:32
+msgid ""
+"Set root mode on/off. In root mode powering off is done via 'pkexec' and "
+"'shutdown' terminal command."
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:37
+msgid "Shown shutdown modes"
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:43
+msgid "Shutdown mode"
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:44
+msgid "Mode to use for shutdown command."
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:50
+msgid ""
+"Run command before shutdown command. Proceed with shutdown only if check "
+"command succeedes."
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:55
+msgid "Allow cancel root mode protection"
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:62
+msgid "Check command is skipped if disabled."
+msgstr ""
+
+#~ msgid "Shutdown"
+#~ msgstr "Απενεργοποίηση"

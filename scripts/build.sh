@@ -1,21 +1,42 @@
 #!/bin/bash
-NAME=ShutdownTimer@neumann
-cd "$NAME" || exit
+
+# Script to build the extension zip and install the package
+#
+# This Script is released under GPL v3 license
+# Copyright (C) 2021 Javad Rahmatzadeh (changed)
+
+set -e
+
+# cd to the repo root
+cd "$( cd "$( dirname "$0" )" && pwd )/.."
+
+echo "Compiling schemas..."
 glib-compile-schemas schemas/
-gtk4-builder-tool simplify --3to4 ui/pref-window.ui > ui/pref-window-gtk4.ui
 
+echo "Transform gtk3 to gtk4"
+gtk4-builder-tool simplify --3to4 ui/prefs.ui > ui/prefs-gtk4.ui
+
+echo "Generating translations..."
+scripts/generate-mo.sh
+
+echo "Packing extension..."
 gnome-extensions pack \
-	--force \
-	--extra-source="ui"
+    --force \
+    --extra-source="bin" \
+    --extra-source="lib" \
+    --extra-source="ui" \
+    --extra-source="LICENSE" \
+    --extra-source="README.md" \
+    --extra-source="CHANGELOG.md"
 
-# Source: https://gitlab.gnome.org/jrahmatzadeh/just-perfection/-/blob/master/scripts/build.sh
 echo "Packing Done!"
+
+UUID=$(grep uuid metadata.json | cut -d\" -f 4)
 
 while getopts i flag; do
     case $flag in
-
         i)  gnome-extensions install \
-            --force ${NAME}.shell-extension.zip && \
+            --force "$UUID".shell-extension.zip && \
             echo "Extension is installed. Now restart the GNOME Shell." || \
             { echo "ERROR: Could not install the extension!"; exit 1; };;
 
@@ -25,4 +46,3 @@ while getopts i flag; do
             exit 1;;
     esac
 done
-
