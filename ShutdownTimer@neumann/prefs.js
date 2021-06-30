@@ -32,7 +32,7 @@ const templateComponents = {
 
 
 const templateFile = Me.dir
-    .get_child('templates')
+    .get_child('ui')
     .get_child('pref-window' + (Gtk.get_major_version() < 4 ? '' : '-gtk4') + '.ui')
     .get_uri();
 
