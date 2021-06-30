@@ -14,7 +14,7 @@ xgettext \
     --from-code=UTF-8 \
     --copyright-holder="Shutdown Timer" \
     --package-name="Shutdown Timer" \
-    --package-version="2" \
+    --package-version="v31" \
     --output="po/main.pot" \
     ui/prefs.ui lib/*.js *.js schemas/*.xml
 
