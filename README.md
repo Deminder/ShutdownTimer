@@ -19,7 +19,7 @@ Shutdown/reboot/suspend your device after a specific time. Disabling the extensi
 
 ## Official Installation
 
-Visit [https://extensions.gnome.org/extension/792/shutdowntimer/](https://extensions.gnome.org/extension/792/shutdowntimer/) and follow browser extension install instructions.
+Visit [https://extensions.gnome.org/extension/4372/shutdowntimer/](https://extensions.gnome.org/extension/4372/shutdowntimer/) and follow browser extension install instructions.
 
 
 ## Manual Installation
