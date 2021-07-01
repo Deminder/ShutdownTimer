@@ -588,7 +588,6 @@ function init() {
 }
 
 function enable() {
-  started = true;
   if (!initialized) {
     // initialize settings
     settings = Convenience.getSettings();
