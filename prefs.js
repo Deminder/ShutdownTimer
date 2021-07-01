@@ -110,7 +110,7 @@ const ShutdownTimerPrefsWidget = GObject.registerClass({
                     entry.set_placeholder_text(placeholder);
                     entry.disconnect(changedId);
                 });
-                const destroyId  = entry.connect('destroy', () => {
+                const destroyId = entry.connect('destroy', () => {
                     entry.disconnect(changedId);
                     entry.disconnect(destroyId);
                 });
