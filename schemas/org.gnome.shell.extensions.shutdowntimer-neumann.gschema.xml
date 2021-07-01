@@ -25,6 +25,18 @@
       <summary>Show settings button</summary>
       <description>Show/hide settings button in widget.</description>
     </key>
+
+    <key type="b" name="show-slider-value">
+      <default>true</default>
+      <summary>Show slider</summary>
+      <description>Show/hide slider in widget.</description>
+    </key>
+
+    <key type="b" name="show-textboxes-value">
+      <default>true</default>
+      <summary>Show notification text boxes</summary>
+      <description>Show/hide notification text boxes on screen.</description>
+    </key>
     
     <key type="b" name="root-mode-value">
       <default>false</default>

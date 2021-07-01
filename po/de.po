@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-01 00:26+0200\n"
-"PO-Revision-Date: 2021-06-30 23:14+0200\n"
+"POT-Creation-Date: 2021-07-01 14:15+0200\n"
+"PO-Revision-Date: 2021-07-01 14:19+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: GERMAN Jonatan Zeidler <jonatan_zeidler@gmx.de>\n"
 "Language: de\n"
@@ -54,7 +54,7 @@ msgid "Show settings button"
 msgstr "Zeige Einstellungsbutton"
 
 #: ui/prefs.ui:327
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:38
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:50
 msgid "Comma-separated shutdown modes which are shown in the popup menu."
 msgstr "Kommagetrennt Ausschaltoptionen, die im Menü erscheinen."
 
@@ -62,16 +62,26 @@ msgstr "Kommagetrennt Ausschaltoptionen, die im Menü erscheinen."
 msgid "Show shutdown items"
 msgstr "Zeige Ausschaltoptionen"
 
-#: ui/prefs.ui:363
+#: ui/prefs.ui:368
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:31
+msgid "Show slider"
+msgstr "Zeige Minuten-Schieber"
+
+#: ui/prefs.ui:406
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:37
+msgid "Show notification text boxes"
+msgstr "Zeige Textbox-Notifikationen"
+
+#: ui/prefs.ui:439
 msgid "Display"
 msgstr "Anzeige"
 
-#: ui/prefs.ui:393
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:61
+#: ui/prefs.ui:469
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:73
 msgid "Enable check command"
 msgstr "Prüfbefehl verwenden"
 
-#: ui/prefs.ui:431
+#: ui/prefs.ui:507
 msgid ""
 "Run check command after timer runs out. Only proceeds if check command "
 "terminates successfully."
@@ -79,101 +89,101 @@ msgstr ""
 "Führt den Prüfbefehl nach dem auslaufen der Ausschaltuhr aus. Nur wenn der "
 "Prüfbefehl erfolgreich terminiert, wird vorangeschritten."
 
-#: ui/prefs.ui:433
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:49
+#: ui/prefs.ui:509
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:61
 msgid "Check command"
 msgstr "Prüfbefehl"
 
-#: ui/prefs.ui:447
+#: ui/prefs.ui:523
 msgid "command run in user shell"
 msgstr "Befehl wird mit der Benutzer-Shell ausgeführt"
 
-#: ui/prefs.ui:473
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:56
+#: ui/prefs.ui:549
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:68
 msgid "Cancel the root mode protection before check command is run if enabled."
 msgstr "Stoppe die Root-Mode-Absicherung bevor der Prüfbefehl ausgeführt wird."
 
-#: ui/prefs.ui:475
+#: ui/prefs.ui:551
 msgid "Cancel root mode protection"
 msgstr "Stoppt die Root-Modus-Absicherung"
 
-#: ui/prefs.ui:508
+#: ui/prefs.ui:584
 msgid "Check"
 msgstr "Prüfung"
 
-#: extension.js:34
+#: extension.js:45
 msgid "suspend"
 msgstr "Ruhezustand"
 
-#: extension.js:34
+#: extension.js:46
 msgid "shutdown"
 msgstr "Herunterfahren"
 
-#: extension.js:34
+#: extension.js:47
 msgid "reboot"
 msgstr "Neustart"
 
-#: extension.js:74 extension.js:180 extension.js:203
+#: extension.js:90
 msgid "Shutdown Timer"
 msgstr "Ausschaltuhr"
 
-#: extension.js:76
+#: extension.js:93
 msgid "min until"
 msgstr "min bis zum"
 
-#: extension.js:76
+#: extension.js:94
 msgid "(sys)"
 msgstr "(sys)"
 
-#: extension.js:133
-msgid "min"
-msgstr "min"
-
-#: extension.js:135
-msgid "(root)"
-msgstr "(root)"
-
-#: extension.js:177 extension.js:178
-msgid "Waiting for confirmation"
-msgstr "Warte auf Bestätigung"
-
-#: extension.js:199
-msgid "Shutdown Timer stopped"
-msgstr "Ausschaltuhr gestoppt"
-
-#: extension.js:202 extension.js:399
-msgid "Confirmation canceled"
-msgstr "Prüfung abgebrochen"
-
-#: extension.js:213
-msgid "System will shutdown in"
-msgstr "System wird herunterfahren in"
-
-#: extension.js:213
-msgid "minutes"
-msgstr "Minuten"
-
-#: extension.js:230 extension.js:257
+#: extension.js:166 extension.js:200
 msgid "Root mode protection failed!"
 msgstr "Root-Modus-Absicherung fehlgeschlagen!"
 
-#: extension.js:273
-msgid "Settings"
-msgstr "Einstellungen"
+#: extension.js:262 extension.js:459
+msgid "Waiting for confirmation"
+msgstr "Warte auf Bestätigung"
 
-#: extension.js:415
+#: extension.js:276
 msgid "Shutdown aborted"
 msgstr "Auschalten abgebrochen"
 
-#: prefs.js:11
+#: extension.js:368
+msgid "min"
+msgstr "min"
+
+#: extension.js:370
+msgid "(root)"
+msgstr "(root)"
+
+#: extension.js:404
+msgid "Shutdown Timer stopped"
+msgstr "Ausschaltuhr gestoppt"
+
+#: extension.js:407
+msgid "Confirmation canceled"
+msgstr "Prüfung abgebrochen"
+
+#: extension.js:419
+msgid "System will shutdown in"
+msgstr "System wird herunterfahren in"
+
+#: extension.js:420
+msgid "minutes"
+msgstr "Minuten"
+
+#: extension.js:490
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: prefs.js:12
 msgid "Suspend"
 msgstr "Ruhezustand"
 
-#: prefs.js:11
+#: prefs.js:13
 msgid "Power Off"
 msgstr "Herunterfahren"
 
-#: prefs.js:11
+#: prefs.js:14
 msgid "Restart"
 msgstr "Neustart"
 
@@ -215,11 +225,19 @@ msgstr ""
 msgid "Show/hide settings button in widget."
 msgstr "Zeige/verberge Einstellungsbutton im Widget."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:31
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:32
+msgid "Show/hide slider in widget."
+msgstr "Zeige/verberge Minuten-Schieber im Widget."
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:38
+msgid "Show/hide notification text boxes on screen."
+msgstr "Zeige/verberge Textbox-Notifikationen auf dem Bildschirm."
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:43
 msgid "Root mode"
 msgstr "Root-Modus"
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:32
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:44
 msgid ""
 "Set root mode on/off. In root mode powering off is done via 'pkexec' and "
 "'shutdown' terminal command."
@@ -227,19 +245,19 @@ msgstr ""
 "Schalte Root-Modus an/aus. Im Root-Modus wird das Ausschalten per 'pkexec' "
 "und 'shutdown' Terminal-Kommando ausgeführt."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:37
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:49
 msgid "Shown shutdown modes"
 msgstr "Angezeigte Auschaltoptionen"
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:43
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:55
 msgid "Shutdown mode"
 msgstr "Ausschaltoption"
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:44
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:56
 msgid "Mode to use for shutdown command."
 msgstr "Verwendete Ausschaltoption der Stoppuhr."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:50
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:62
 msgid ""
 "Run command before shutdown command. Proceed with shutdown only if check "
 "command succeedes."
@@ -248,11 +266,11 @@ msgstr ""
 "Prüfbefehl erfolgreich terminiert, wird das Herunterfahren/Ruhezustand "
 "ausgeführt."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:55
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:67
 msgid "Allow cancel root mode protection"
 msgstr "Vor dem Prüfbefehl wird Root-Modus-Absicherung gestoppt"
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:62
+#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:74
 msgid "Check command is skipped if disabled."
 msgstr "Prüfbefehl wird übersprungen, wenn er deaktiviert ist."
 

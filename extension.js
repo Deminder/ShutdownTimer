@@ -28,6 +28,7 @@ const _ = Gettext.gettext;
 let textbox,
   submenu,
   slider,
+    sliderItem,
   switcher,
   switcherSettingsButton,
   separator,
@@ -36,7 +37,6 @@ let textbox,
   idleSourceIds,
   checkCancel,
   rootMode,
-  displayedInfo,
   internalScheduleInfo,
   externalScheduleInfo,
   settingsHandlerIds;
@@ -327,6 +327,9 @@ function externalScheduleInfoTick(info) {
 /* ACTION FUNCTIONS */
 // show textbox with message
 function _showTextbox(textmsg) {
+  if (!settings.get_boolean("show-textboxes-value")) {
+    return;
+  }
   if (!textbox) {
     textbox = new St.Label({
       style_class: "textbox-label",
@@ -371,6 +374,10 @@ function _updateSwitchLabel() {
 
 function _onShowSettingsButtonChanged() {
   switcherSettingsButton.visible = settings.get_boolean("show-settings-value");
+}
+
+function _onShowSliderChanged() {
+  sliderItem.visible = settings.get_boolean("show-slider-value");
 }
 
 function _startMode(mode) {
@@ -452,10 +459,10 @@ function _updateShutdownInfo() {
     submenu.label.text = _("Waiting for confirmation");
     return;
   }
-  displayedInfo = externalScheduleInfo.isMoreUrgendThan(internalScheduleInfo)
+  const info = externalScheduleInfo.isMoreUrgendThan(internalScheduleInfo)
     ? externalScheduleInfo
     : internalScheduleInfo;
-  submenu.label.text = displayedInfo.label;
+  submenu.label.text = info.label;
 }
 function _updateSelectedModeItems() {
   modeItems.forEach(([mode, item]) => {
@@ -502,9 +509,9 @@ function _createSwitcherItem() {
 }
 
 function _createSliderItem() {
-  let sliderValue = settings.get_int("slider-value") / 100.0;
-  let sliderItem = new PopupMenu.PopupMenuItem("");
-  let sliderIcon = new St.Icon({
+  const sliderValue = settings.get_int("slider-value") / 100.0;
+  sliderItem = new PopupMenu.PopupMenuItem("");
+  const sliderIcon = new St.Icon({
     icon_name: "preferences-system-time-symbolic",
     style_class: "popup-menu-icon",
   });
@@ -519,16 +526,17 @@ function _createSliderItem() {
     ],
   ]);
   sliderItem.add_actor(slider);
+  _onShowSliderChanged();
   return sliderItem;
 }
 
 function render() {
   // submenu in status area menu with slider and toggle button
-  let sliderItem = _createSliderItem();
+  const sliderItem = _createSliderItem();
   switcher = _createSwitcherItem();
   _updateSwitchLabel();
 
-  submenu = new PopupMenu.PopupSubMenuMenuItem(displayedInfo.label, true);
+  submenu = new PopupMenu.PopupSubMenuMenuItem("", true);
   submenu.icon.icon_name = "system-shutdown-symbolic";
   submenu.menu.addMenuItem(switcher);
   // make switcher toggle without popup menu closing
@@ -555,7 +563,7 @@ function render() {
 
   // add separator line and submenu in status area menu
   separator = new PopupMenu.PopupSeparatorMenuItem();
-  let statusMenu = Main.panel.statusArea["aggregateMenu"];
+  const statusMenu = Main.panel.statusArea["aggregateMenu"];
   statusMenu.menu.addMenuItem(separator);
   statusMenu.menu.addMenuItem(submenu);
 }
@@ -596,7 +604,6 @@ function enable() {
     deadline: settings.get_int("shutdown-timestamp-value"),
     mode: settings.get_string("shutdown-mode-value"),
   });
-  displayedInfo = internalScheduleInfo;
 
   // render menu widget
   render();
@@ -608,6 +615,7 @@ function enable() {
     ["slider-value", _updateSlider],
     ["root-mode-value", _onRootModeChanged],
     ["show-settings-value", _onShowSettingsButtonChanged],
+    ["show-slider-value", _onShowSliderChanged],
     ["show-shutdown-mode-value", _updateShownModeItems],
     ["shutdown-mode-value", _onModeChange],
     ["shutdown-timestamp-value", _onInternalShutdownTimestampChanged],

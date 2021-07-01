@@ -25,6 +25,8 @@ const templateComponents = {
   "show-settings": "switch",
   "root-mode": "switch",
   "show-shutdown-mode": "buffer",
+  "show-slider": "switch",
+  "show-textboxes": "switch",
   "check-command": "buffer",
   "enable-check-command": "switch",
   "shutdown-mode": "combo",
