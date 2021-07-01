@@ -6,10 +6,10 @@ Shutdown/reboot/suspend your device after a specific time. Disabling the extensi
 ![Screenshot](screenshot.png)
 
 ## Features
-- Poweroff, Reboot, Suspend (options can reordered and disabled)
+- Poweroff, Reboot, Suspend (options can be reordered and disabled)
 - Show scheduled shutdown info as *(sys)* (fetched from `/run/systemd/shutdown/scheduled`)
 
-- Root mode (this *may* trigger a password prompt with `pkexec`)
+- Root mode protection (this *may* trigger a password prompt with `pkexec`)
   - Protection against gnome-shell failing by scheduling `shutdown ${REQUESTED_MINUTES + 1}`
   - Only requires root password once (keep `pkexec` process open as long as extension is enabled)
 
