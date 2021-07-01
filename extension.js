@@ -574,7 +574,7 @@ function _disconnectOnDestroy(item, connections) {
   );
   const destoryId = item.connect("destroy", () => {
     handlerIds.concat(destoryId).forEach((handlerId) => {
-      item.connect(handlerId);
+      item.disconnect(handlerId);
     });
   });
 }
