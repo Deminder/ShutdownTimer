@@ -8,6 +8,8 @@ Shutdown/reboot/suspend your device after a specific time. Disabling the extensi
 ## Features
 - Poweroff, Reboot, Suspend (options can be reordered and disabled)
 - Show scheduled shutdown info as *(sys)* (fetched from `/run/systemd/shutdown/scheduled`)
+  - Externally run `shutdown 100` displayed in menu: ![externalScheduleMenu](externalScheduleFeature.png)
+  - Displays the more urgent (external or interal) timer 
 
 - Root mode protection (this *may* trigger a password prompt with `pkexec`)
   - Protection against gnome-shell failing by scheduling `shutdown ${REQUESTED_MINUTES + 1}`
