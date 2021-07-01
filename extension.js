@@ -7,6 +7,7 @@
 
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const { RootMode, Timer, Convenience } = Me.imports.lib;
+const logDebug = Convenience.logDebug;
 
 /* IMPORTS */
 const { GLib, St, Gio, Clutter } = imports.gi;
@@ -28,7 +29,7 @@ const _ = Gettext.gettext;
 let textbox,
   submenu,
   slider,
-    sliderItem,
+  sliderItem,
   switcher,
   switcherSettingsButton,
   separator,
@@ -40,6 +41,7 @@ let textbox,
   internalScheduleInfo,
   externalScheduleInfo,
   settingsHandlerIds;
+let initialized = false;
 const MODE_LABELS = Me.imports.prefs.MODE_LABELS;
 const MODE_TEXTS = {
   suspend: _("suspend"),
@@ -133,7 +135,7 @@ function _onModeChange() {
   maybeStopRootModeProtection(true)
     .then(() => {
       _updateCurrentMode();
-      log("Shutdown mode: " + internalScheduleInfo.mode);
+      logDebug("Shutdown mode: " + internalScheduleInfo.mode);
       guiIdle(() => {
         _updateSelectedModeItems();
       });
@@ -146,7 +148,7 @@ async function maybeStopRootModeProtection(stopScheduled = false) {
     (stopScheduled || !internalScheduleInfo.scheduled) &&
     settings.get_boolean("root-mode-value")
   ) {
-    log("Stop root mode protection for: " + internalScheduleInfo.mode);
+    logDebug("Stop root mode protection for: " + internalScheduleInfo.mode);
     try {
       switch (internalScheduleInfo.mode) {
         case "poweroff":
@@ -157,7 +159,7 @@ async function maybeStopRootModeProtection(stopScheduled = false) {
           }
           break;
         default:
-          log(
+          logDebug(
             "No root mode protection stopped for: " + internalScheduleInfo.mode
           );
       }
@@ -181,7 +183,7 @@ async function maybeStartRootModeProtection() {
     internalScheduleInfo.scheduled &&
     settings.get_boolean("root-mode-value")
   ) {
-    log("Start root mode protection for: " + internalScheduleInfo.label);
+    logDebug("Start root mode protection for: " + internalScheduleInfo.label);
     try {
       switch (internalScheduleInfo.mode) {
         case "poweroff":
@@ -191,7 +193,7 @@ async function maybeStartRootModeProtection() {
           await rootMode.shutdown(internalScheduleInfo.minutes + 1, true);
           break;
         default:
-          log(
+          logDebug(
             "No root mode protection started for: " + internalScheduleInfo.mode
           );
       }
@@ -263,14 +265,14 @@ async function maybeDoCheck() {
   });
   return RootMode.execCheck(checkCmd, checkCancel)
     .then(() => {
-      log(`Check command "${checkCmd}" confirmed shutdown.`);
+      logDebug(`Check command "${checkCmd}" confirmed shutdown.`);
       return;
     })
     .catch((err) => {
       let code = "?";
       if ("code" in err) {
         code = `${err.code}`;
-        log("Check command aborted shutdown. Code: " + code);
+        logDebug("Check command aborted shutdown. Code: " + code);
       }
       guiIdle(() => {
         _showTextbox(_("Shutdown aborted") + `\n${checkCmd} (Code: ${code})`);
@@ -583,20 +585,24 @@ function _disconnectOnDestroy(item, connections) {
 function init() {
   // initialize translations
   Convenience.initTranslations();
-
-  // initialize settings
-  settings = Convenience.getSettings();
-
-  // check for shutdown may run in background and can be canceled by user
-  checkCancel = null;
-  // track external schutdown schedule
-  // keeps track of priviledged process (for root mode)
-  rootMode = new RootMode.RootMode(externalScheduleInfoTick);
-  // starts internal shutdown schedule if ready
-  timer = new Timer.Timer(serveInernalSchedule, _updateShutdownInfo);
 }
 
 function enable() {
+  started = true;
+  if (!initialized) {
+    // initialize settings
+    settings = Convenience.getSettings();
+
+    // check for shutdown may run in background and can be canceled by user
+    checkCancel = null;
+    // track external schutdown schedule
+    // keeps track of priviledged process (for root mode)
+    rootMode = new RootMode.RootMode(externalScheduleInfoTick);
+    // starts internal shutdown schedule if ready
+    timer = new Timer.Timer(serveInernalSchedule, _updateShutdownInfo);
+    initialized = true;
+  }
+
   idleSourceIds = {};
   externalScheduleInfo = new ScheduleInfo({ external: true });
   internalScheduleInfo = new ScheduleInfo({
