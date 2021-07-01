@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="210mm"
-   height="297mm"
-   viewBox="0 0 210 297"
+   width="50mm"
+   height="52.407028mm"
+   viewBox="0 0 50 52.407028"
    version="1.1"
    id="svg5"
    inkscape:version="1.1 (c68e22c387, 2021-05-23)"
@@ -23,9 +23,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="2.7652076"
-     inkscape:cx="47.736017"
-     inkscape:cy="85.346213"
+     inkscape:zoom="0.6913019"
+     inkscape:cx="-29.654193"
+     inkscape:cy="219.87499"
      inkscape:window-width="1920"
      inkscape:window-height="1043"
      inkscape:window-x="0"
@@ -82,17 +82,17 @@
        hide_clip="false"
        message="Use fill-rule evenodd on &lt;b&gt;fill and stroke&lt;/b&gt; dialog if no flatten result after convert clip to paths." />
     <marker
-       style="overflow:visible;"
+       style="overflow:visible"
        id="Arrow1Lend"
-       refX="0.0"
-       refY="0.0"
+       refX="0"
+       refY="0"
        orient="auto"
        inkscape:stockid="Arrow1Lend"
        inkscape:isstock="true">
       <path
-         transform="scale(0.8) rotate(180) translate(12.5,0)"
-         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt;"
-         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
          id="path9525" />
     </marker>
     <filter
@@ -421,7 +421,7 @@
       <path
          id="lpe_path-effect2248"
          class="powerclip"
-         d="M 8.5497999,-12.263451 H 41.450239 V 40.261375 H 8.5497999 Z M 17.488029,8.5040607 v 2.2900003 h 14.91198 V 8.5040607 Z m 0,6.0929393 v 1.89 h 14.926539 v -1.89 z m 0,4.365999 v 1.459 h 14.926539 v -1.459 z m 0,3.129 v 0.85 h 14.926539 v -0.85 z m 0,2.241001 v 0.334326 H 32.414568 V 24.333 Z m 0,1.607001 v 0.334326 h 14.926539 v -0.334326 z m 0,1.149999 v 0.334326 H 32.414568 V 27.09 Z m 0,0.825001 v 0.334326 h 14.926539 v -0.334326 z m 0,0.591 v 0.334326 h 14.926539 v -0.334326 z m 0,0.423999 v 0.334326 H 32.414568 V 28.93 Z m 0,0.303 v 0.334326 H 32.414568 V 29.233 Z m 0,0.217001 v 0.334326 h 14.926539 v -0.334326 z m 0,0.149999 v 0.334326 H 32.414568 V 29.6 Z m 0,0.118 v 0.334327 H 32.414568 V 29.718 Z m 0,0.08 v 0.334326 H 32.414568 V 29.798 Z m 0,0.057 v 0.334326 H 32.414568 V 29.855 Z m 0,0.07 v 0.334326 H 32.414568 V 29.925 Z m 0,0.022 v 0.334326 H 32.414568 V 29.947 Z m 0,0.015 v 0.334326 H 32.414568 V 29.962 Z" />
+         d="M 15.0103,-5.8029513 H 34.989739 V 33.800875 H 15.0103 Z m 2.477729,14.307012 v 2.2900003 h 14.91198 V 8.5040607 Z m 0,6.0929393 v 1.89 h 14.926539 v -1.89 z m 0,4.365999 v 1.459 h 14.926539 v -1.459 z m 0,3.129 v 0.85 h 14.926539 v -0.85 z m 0,2.241001 v 0.334326 H 32.414568 V 24.333 Z m 0,1.607001 v 0.334326 h 14.926539 v -0.334326 z m 0,1.149999 v 0.334326 H 32.414568 V 27.09 Z m 0,0.825001 v 0.334326 h 14.926539 v -0.334326 z m 0,0.591 v 0.334326 h 14.926539 v -0.334326 z m 0,0.423999 v 0.334326 H 32.414568 V 28.93 Z m 0,0.303 v 0.334326 H 32.414568 V 29.233 Z m 0,0.217001 v 0.334326 h 14.926539 v -0.334326 z m 0,0.149999 v 0.334326 H 32.414568 V 29.6 Z m 0,0.118 v 0.334327 H 32.414568 V 29.718 Z m 0,0.08 v 0.334326 H 32.414568 V 29.798 Z m 0,0.057 v 0.334326 H 32.414568 V 29.855 Z m 0,0.07 v 0.334326 H 32.414568 V 29.925 Z m 0,0.022 v 0.334326 H 32.414568 V 29.947 Z m 0,0.015 v 0.334326 H 32.414568 V 29.962 Z" />
     </clipPath>
     <clipPath
        clipPathUnits="userSpaceOnUse"
@@ -685,12 +685,14 @@
      inkscape:groupmode="layer"
      id="layer4"
      inkscape:label="Layer 2"
-     style="display:inline" />
+     style="display:inline"
+     transform="translate(-4.7683716e-7,0.99431726)" />
   <g
      inkscape:groupmode="layer"
      id="layer3"
      inkscape:label="Circle"
-     style="display:inline">
+     style="display:inline"
+     transform="translate(-4.7683716e-7,0.99431726)">
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:8.80408;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
        id="path31"
@@ -708,7 +710,8 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     style="display:inline;mix-blend-mode:normal">
+     style="display:inline;mix-blend-mode:normal"
+     transform="translate(-4.7683716e-7,0.99431726)">
     <g
        id="g1822"
        transform="translate(0,-0.19136598)"
@@ -730,7 +733,7 @@
        transform="translate(0,-0.19136598)"
        clip-path="url(#clipath_lpe_path-effect2248)"
        inkscape:path-effect="#path-effect2248"
-       style="stroke:none;fill:#020000;fill-opacity:1">
+       style="fill:#020000;fill-opacity:1;stroke:none">
       <path
          style="fill:#020000;fill-opacity:1;stroke:none;stroke-width:12.921;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
          id="path2242"
