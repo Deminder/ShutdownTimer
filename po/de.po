@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-01 14:15+0200\n"
+"POT-Creation-Date: 2021-07-01 14:55+0200\n"
 "PO-Revision-Date: 2021-07-01 14:19+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: GERMAN Jonatan Zeidler <jonatan_zeidler@gmx.de>\n"
@@ -49,12 +49,12 @@ msgid "Mode"
 msgstr "Modus"
 
 #: ui/prefs.ui:289
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:25
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:25
 msgid "Show settings button"
 msgstr "Zeige Einstellungsbutton"
 
 #: ui/prefs.ui:327
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:50
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:50
 msgid "Comma-separated shutdown modes which are shown in the popup menu."
 msgstr "Kommagetrennt Ausschaltoptionen, die im Menü erscheinen."
 
@@ -63,12 +63,12 @@ msgid "Show shutdown items"
 msgstr "Zeige Ausschaltoptionen"
 
 #: ui/prefs.ui:368
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:31
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:31
 msgid "Show slider"
 msgstr "Zeige Minuten-Schieber"
 
 #: ui/prefs.ui:406
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:37
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:37
 msgid "Show notification text boxes"
 msgstr "Zeige Textbox-Notifikationen"
 
@@ -77,7 +77,7 @@ msgid "Display"
 msgstr "Anzeige"
 
 #: ui/prefs.ui:469
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:73
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:73
 msgid "Enable check command"
 msgstr "Prüfbefehl verwenden"
 
@@ -90,7 +90,7 @@ msgstr ""
 "Prüfbefehl erfolgreich terminiert, wird vorangeschritten."
 
 #: ui/prefs.ui:509
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:61
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:61
 msgid "Check command"
 msgstr "Prüfbefehl"
 
@@ -99,7 +99,7 @@ msgid "command run in user shell"
 msgstr "Befehl wird mit der Benutzer-Shell ausgeführt"
 
 #: ui/prefs.ui:549
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:68
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:68
 msgid "Cancel the root mode protection before check command is run if enabled."
 msgstr "Stoppe die Root-Mode-Absicherung bevor der Prüfbefehl ausgeführt wird."
 
@@ -187,11 +187,11 @@ msgstr "Herunterfahren"
 msgid "Restart"
 msgstr "Neustart"
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:7
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:7
 msgid "Maximum time (in minutes)"
 msgstr "Maximaler Uhrenwert (in Minuten)"
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:8
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:8
 msgid ""
 "Set maximum selectable time of the slider (in minutes). Use only values "
 "greater zero."
@@ -199,21 +199,21 @@ msgstr ""
 "Setze maximal auswählbare Zeit des Schiebereglers (in Minuten). Verwende nur "
 "Werte größer Null."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:13
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:13
 msgid "Scheduled shutdown timestamp."
 msgstr "Geplanter Ausschaltzeitstempel."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:14
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:14
 msgid "Unix time in seconds of scheduled shutdown or -1 if disabled."
 msgstr ""
 "Unix Zeitstempel des geplanten Abschaltens in Sekunden oder -1 wenn nicht "
 "aktiv."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:19
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:19
 msgid "Slider position"
 msgstr "Schieberegler-Position"
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:20
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:20
 msgid ""
 "Set slider position as percent of the maximum time. Must be in range 0 and "
 "100."
@@ -221,23 +221,23 @@ msgstr ""
 "Setze Schieberegler-Position in Prozent der maximalen Zeit. Wert muss im "
 "Bereich von 0 bis 100 liegen."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:26
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:26
 msgid "Show/hide settings button in widget."
 msgstr "Zeige/verberge Einstellungsbutton im Widget."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:32
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:32
 msgid "Show/hide slider in widget."
 msgstr "Zeige/verberge Minuten-Schieber im Widget."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:38
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:38
 msgid "Show/hide notification text boxes on screen."
 msgstr "Zeige/verberge Textbox-Notifikationen auf dem Bildschirm."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:43
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:43
 msgid "Root mode"
 msgstr "Root-Modus"
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:44
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:44
 msgid ""
 "Set root mode on/off. In root mode powering off is done via 'pkexec' and "
 "'shutdown' terminal command."
@@ -245,19 +245,19 @@ msgstr ""
 "Schalte Root-Modus an/aus. Im Root-Modus wird das Ausschalten per 'pkexec' "
 "und 'shutdown' Terminal-Kommando ausgeführt."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:49
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:49
 msgid "Shown shutdown modes"
 msgstr "Angezeigte Auschaltoptionen"
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:55
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:55
 msgid "Shutdown mode"
 msgstr "Ausschaltoption"
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:56
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:56
 msgid "Mode to use for shutdown command."
 msgstr "Verwendete Ausschaltoption der Stoppuhr."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:62
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:62
 msgid ""
 "Run command before shutdown command. Proceed with shutdown only if check "
 "command succeedes."
@@ -266,11 +266,11 @@ msgstr ""
 "Prüfbefehl erfolgreich terminiert, wird das Herunterfahren/Ruhezustand "
 "ausgeführt."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:67
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:67
 msgid "Allow cancel root mode protection"
 msgstr "Vor dem Prüfbefehl wird Root-Modus-Absicherung gestoppt"
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:74
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:74
 msgid "Check command is skipped if disabled."
 msgstr "Prüfbefehl wird übersprungen, wenn er deaktiviert ist."
 

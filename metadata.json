@@ -3,7 +3,7 @@
     "uuid": "ShutdownTimer@deminder", 
     "name": "ShutdownTimer", 
     "gettext-domain": "ShutdownTimer", 
-    "settings-schema": "org.gnome.shell.extensions.shutdowntimer-neumann", 
-    "description": "Shutdown/reboot/suspend the device after a specific time.\n\n Additionally an check command may be configured before shutdown.", 
+    "settings-schema": "org.gnome.shell.extensions.shutdowntimer-deminder", 
+    "description": "Shutdown/reboot/suspend the device after a specific time.\n\n Additionally a check command may be configured before shutdown. Disabling the extension will not terminate the timer. This allows the timer to run uninterrupted during an active screen saver.", 
     "url": "https://github.com/Deminder/ShutdownTimer"
 }

@@ -1,6 +1,6 @@
 # Shutdown Timer
 
-Shutdown/reboot/suspend your device after a specific time. Operation is *not* interrupted by active screen saver. This extension adds a submenu to the status area. 
+Shutdown/reboot/suspend your device after a specific time. Disabling the extension will not terminate the timer. This allows the timer to run uninterrupted during an active screen saver.. This extension adds a submenu to the status area. 
 
 ![Screenshot](screenshot.png)
 

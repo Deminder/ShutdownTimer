@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="ShutdownTimer">
-  <schema path="/org/gnome/shell/extensions/shutdowntimer-neumann/" id="org.gnome.shell.extensions.shutdowntimer-neumann">
+  <schema path="/org/gnome/shell/extensions/shutdowntimer-deminder/" id="org.gnome.shell.extensions.shutdowntimer-deminder">
     
     <key type="i" name="max-timer-value">
       <default>180</default>

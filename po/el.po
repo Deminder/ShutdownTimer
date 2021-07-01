@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-01 14:15+0200\n"
+"POT-Creation-Date: 2021-07-01 14:55+0200\n"
 "PO-Revision-Date: 2021-06-30 23:17+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: \n"
@@ -49,12 +49,12 @@ msgid "Mode"
 msgstr ""
 
 #: ui/prefs.ui:289
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:25
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:25
 msgid "Show settings button"
 msgstr ""
 
 #: ui/prefs.ui:327
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:50
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:50
 msgid "Comma-separated shutdown modes which are shown in the popup menu."
 msgstr ""
 
@@ -63,12 +63,12 @@ msgid "Show shutdown items"
 msgstr ""
 
 #: ui/prefs.ui:368
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:31
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:31
 msgid "Show slider"
 msgstr ""
 
 #: ui/prefs.ui:406
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:37
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:37
 msgid "Show notification text boxes"
 msgstr ""
 
@@ -77,7 +77,7 @@ msgid "Display"
 msgstr ""
 
 #: ui/prefs.ui:469
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:73
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:73
 msgid "Enable check command"
 msgstr ""
 
@@ -88,7 +88,7 @@ msgid ""
 msgstr ""
 
 #: ui/prefs.ui:509
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:61
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:61
 msgid "Check command"
 msgstr ""
 
@@ -97,7 +97,7 @@ msgid "command run in user shell"
 msgstr ""
 
 #: ui/prefs.ui:549
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:68
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:68
 msgid "Cancel the root mode protection before check command is run if enabled."
 msgstr ""
 
@@ -185,79 +185,79 @@ msgstr ""
 msgid "Restart"
 msgstr ""
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:7
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:7
 msgid "Maximum time (in minutes)"
 msgstr "Μέγιστος χρόνος αναμονής (σε λεπτά)"
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:8
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:8
 msgid ""
 "Set maximum selectable time of the slider (in minutes). Use only values "
 "greater zero."
 msgstr ""
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:13
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:13
 msgid "Scheduled shutdown timestamp."
 msgstr ""
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:14
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:14
 msgid "Unix time in seconds of scheduled shutdown or -1 if disabled."
 msgstr ""
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:19
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:19
 msgid "Slider position"
 msgstr ""
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:20
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:20
 msgid ""
 "Set slider position as percent of the maximum time. Must be in range 0 and "
 "100."
 msgstr ""
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:26
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:26
 msgid "Show/hide settings button in widget."
 msgstr ""
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:32
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:32
 msgid "Show/hide slider in widget."
 msgstr ""
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:38
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:38
 msgid "Show/hide notification text boxes on screen."
 msgstr ""
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:43
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:43
 msgid "Root mode"
 msgstr "Λειτουργία διαχειριστή"
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:44
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:44
 msgid ""
 "Set root mode on/off. In root mode powering off is done via 'pkexec' and "
 "'shutdown' terminal command."
 msgstr ""
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:49
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:49
 msgid "Shown shutdown modes"
 msgstr ""
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:55
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:55
 msgid "Shutdown mode"
 msgstr ""
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:56
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:56
 msgid "Mode to use for shutdown command."
 msgstr ""
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:62
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:62
 msgid ""
 "Run command before shutdown command. Proceed with shutdown only if check "
 "command succeedes."
 msgstr ""
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:67
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:67
 msgid "Allow cancel root mode protection"
 msgstr ""
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:74
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:74
 msgid "Check command is skipped if disabled."
 msgstr ""
 
