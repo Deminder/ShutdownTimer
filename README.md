@@ -13,7 +13,7 @@ Shutdown/reboot/suspend your device after a specific time. Disabling the extensi
 
 - Root mode protection (this *may* trigger a password prompt with `pkexec`)
   - Protection against gnome-shell failing by scheduling `shutdown ${REQUESTED_MINUTES + 1}`
-  - Only requires root password once (keep `pkexec` process open as long as extension is enabled)
+  - Only requires root password once if at all
 
 - Check command
   - Runs a shell command and will only continue shutdown if command succeeds
