@@ -28,11 +28,13 @@ const _ = Gettext.gettext;
 /* GLOBAL VARIABLES */
 let textbox,
   submenu,
-  slider,
-  sliderItem,
+  sliders,
+  sliderItems,
   switcher,
   switcherSettingsButton,
   separator,
+  wakeItems,
+  wakeModeItem,
   settings,
   guiReady,
   idleSourceIds,
@@ -40,9 +42,14 @@ let textbox,
   rootMode,
   internalScheduleInfo,
   externalScheduleInfo,
+  externalWakeInfo,
   settingsHandlerIds;
 let initialized = false;
 const MODE_LABELS = Me.imports.prefs.MODE_LABELS;
+const WAKE_MODE_LABELS = {
+  wake: _("Wake after"),
+  "no-wake": _("No Wake"),
+};
 const MODE_TEXTS = {
   suspend: _("suspend"),
   poweroff: _("shutdown"),
@@ -92,7 +99,7 @@ class ScheduleInfo {
     let label = _("Shutdown Timer");
     if (this.scheduled) {
       label =
-        `${this.minutes} ${_("min until")} ${this.modeText}` +
+        `${durationString(this.secondsLeft)} ${_("until")} ${this.modeText}` +
         (this.external ? " " + _("(sys)") : "");
     }
     return label;
@@ -110,13 +117,13 @@ function _onRootModeChanged() {
   if (!settings.get_boolean("root-mode-value")) {
     rootMode.stopRootProc();
   }
-  _updateSwitchLabel();
   Promise.all([
     maybeStopRootModeProtection(),
     maybeStartRootModeProtection(),
   ]).then(() => {
     if (guiReady) {
       rootMode.updateScheduleInfo();
+      _updateSwitchLabel();
     }
   });
 }
@@ -304,11 +311,37 @@ function shutdown() {
   }
 }
 
-// Values derived from Config
+/* Schedule Info updates */
+function externalScheduleInfoTick(info, wakeInfo) {
+  externalScheduleInfo = externalScheduleInfo.copy({ ...info });
+  externalWakeInfo = { ...externalWakeInfo, ...wakeInfo };
+  guiIdle(() => {
+    _updateShutdownInfo();
+  });
+}
 
-function _getTimerStartValue() {
-  let sliderValue = settings.get_int("slider-value") / 100.0;
-  return Math.floor(sliderValue * settings.get_int("max-timer-value"));
+function rootModeToggle() {
+  _updateSwitchLabel();
+}
+
+// Derived values
+function durationString(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  if (hours >= 3) {
+    return `${hours} ${_("hour")}`;
+  }
+  if (minutes === 0) {
+    return `${seconds} ${_("sec")}`;
+  }
+  return `${minutes} ${_("min")}`;
+}
+
+function _getSliderMinutes(prefix) {
+  let sliderValue = settings.get_int(prefix + "-slider-value") / 100.0;
+  return Math.floor(
+    sliderValue * settings.get_int(prefix + "-max-timer-value")
+  );
 }
 
 function maybeCheckCmdString(nl = false) {
@@ -319,12 +352,6 @@ function maybeCheckCmdString(nl = false) {
 }
 
 /* --- GUI main loop ---- */
-
-/* Schedule Info updates */
-function externalScheduleInfoTick(info) {
-  externalScheduleInfo = externalScheduleInfo.copy({ ...info });
-  _updateShutdownInfo();
-}
 
 /* ACTION FUNCTIONS */
 // show textbox with message
@@ -361,25 +388,39 @@ function _hideTextbox() {
 }
 
 // update timer value if slider has changed
-function _updateSlider() {
-  slider.value = settings.get_int("slider-value") / 100.0;
-  _updateSwitchLabel();
+function _updateSlider(prefix) {
+  sliders[prefix].value = settings.get_int(prefix + "-slider-value") / 100.0;
 }
 
 function _updateSwitchLabel() {
-  let label = `${_getTimerStartValue()} ${_("min")}`;
-  if (settings.get_boolean("root-mode-value")) {
+  let label = `${_getSliderMinutes("shutdown")} ${_("min")}`;
+  if (rootMode.isActive()) {
     label += " " + _("(root)");
   }
   switcher.label.text = label;
+}
+
+function _updateWakeModeItem() {
+  wakeModeItem.label.text =
+    WAKE_MODE_LABELS["wake"] + ` ${_getSliderMinutes("wake")} ${_("min")}`;
 }
 
 function _onShowSettingsButtonChanged() {
   switcherSettingsButton.visible = settings.get_boolean("show-settings-value");
 }
 
-function _onShowSliderChanged() {
-  sliderItem.visible = settings.get_boolean("show-slider-value");
+function _updateShownWakeItems() {
+  wakeItems.forEach((item) => {
+    item.visible = settings.get_boolean("show-wake-items-value");
+  });
+  _onShowSliderChanged("wake");
+}
+
+function _onShowSliderChanged(settingsPrefix) {
+  sliderItems[settingsPrefix].visible =
+    (settingsPrefix !== "wake" ||
+      settings.get_boolean("show-wake-items-value")) &&
+    settings.get_boolean(`show-${settingsPrefix}-slider-value`);
 }
 
 function _startMode(mode) {
@@ -393,11 +434,19 @@ function _onToggle() {
   if (switcher.state) {
     // start shutdown timer
     startSchedule();
-    maybeStartRootModeProtection();
+    maybeStartRootModeProtection().then(() => {
+      if (settings.get_string("auto-wake-value")) {
+        rootMode.wake(_getSliderMinutes("wake"));
+      }
+    });
   } else {
     // stop shutdown timer
     stopSchedule();
-    maybeStopRootModeProtection();
+    maybeStopRootModeProtection().then(() => {
+      if (settings.get_string("auto-wake-value")) {
+        rootMode.wakeCancel();
+      }
+    });
   }
 }
 
@@ -412,7 +461,7 @@ function stopSchedule() {
 }
 
 function startSchedule() {
-  const maxTimerMinutes = _getTimerStartValue();
+  const maxTimerMinutes = _getSliderMinutes("shutdown");
   settings.set_int(
     "shutdown-timestamp-value",
     GLib.DateTime.new_now_utc().to_unix() + maxTimerMinutes * 60
@@ -457,14 +506,18 @@ function _updateShownModeItems() {
 }
 
 function _updateShutdownInfo() {
+  let wakeLabel = externalWakeInfo.scheduled
+    ? "\n" + externalWakeInfo.label
+    : "";
+
   if (checkCancel !== null) {
-    submenu.label.text = _("Waiting for confirmation");
+    submenu.label.text = _("Waiting for confirmation") + wakeLabel;
     return;
   }
   const info = externalScheduleInfo.isMoreUrgendThan(internalScheduleInfo)
     ? externalScheduleInfo
     : internalScheduleInfo;
-  submenu.label.text = info.label;
+  submenu.label.text = info.label + wakeLabel;
 }
 function _updateSelectedModeItems() {
   modeItems.forEach(([mode, item]) => {
@@ -504,38 +557,45 @@ function _createSwitcherItem() {
       },
     ],
   ]);
-  switchMenuItem.add_actor(switcherSettingsButton);
-  _onShowSettingsButtonChanged();
+  switchMenuItem.add_child(switcherSettingsButton);
 
   return switchMenuItem;
 }
 
-function _createSliderItem() {
-  const sliderValue = settings.get_int("slider-value") / 100.0;
-  sliderItem = new PopupMenu.PopupMenuItem("");
+function _createSliderItem(settingsPrefix) {
+  const sliderValue =
+    settings.get_int(settingsPrefix + "-slider-value") / 100.0;
+  const item = new PopupMenu.PopupBaseMenuItem({ activate: false });
   const sliderIcon = new St.Icon({
-    icon_name: "preferences-system-time-symbolic",
+    icon_name: settingsPrefix === 'wake' ? "alarm-symbolic" : "preferences-system-time-symbolic",
     style_class: "popup-menu-icon",
   });
-  sliderItem.actor.add(sliderIcon);
-  slider = new Slider.Slider(sliderValue);
+  item.add(sliderIcon);
+  const slider = new Slider.Slider(sliderValue);
   _disconnectOnDestroy(slider, [
     [
       "notify::value",
       () => {
-        settings.set_int("slider-value", slider.value * 100);
+        settings.set_int(settingsPrefix + "-slider-value", slider.value * 100);
       },
     ],
   ]);
-  sliderItem.add_actor(slider);
-  _onShowSliderChanged();
-  return sliderItem;
+  item.add_child(slider);
+  return [item, slider];
 }
 
 function render() {
   // submenu in status area menu with slider and toggle button
-  const sliderItem = _createSliderItem();
+  sliderItems = {};
+  sliders = {};
+  ["shutdown", "wake"].forEach((prefix) => {
+    const [item, slider] = _createSliderItem(prefix);
+    sliderItems[prefix] = item;
+    sliders[prefix] = slider;
+    _onShowSliderChanged(prefix);
+  });
   switcher = _createSwitcherItem();
+  _onShowSettingsButtonChanged();
   _updateSwitchLabel();
 
   submenu = new PopupMenu.PopupSubMenuMenuItem("", true);
@@ -545,7 +605,7 @@ function render() {
   switcher.disconnect(switcher._activateId);
   // dummy for clean disconnect
   switcher._activateId = switcher.connect_after("activate", () => {});
-  submenu.menu.addMenuItem(sliderItem);
+  submenu.menu.addMenuItem(sliderItems["shutdown"]);
 
   modeItems = Object.entries(MODE_LABELS).map(([mode, label]) => {
     const modeItem = new PopupMenu.PopupMenuItem(label);
@@ -560,6 +620,39 @@ function render() {
     submenu.menu.addMenuItem(modeItem);
     return [mode, modeItem];
   });
+
+  wakeItems = [
+    new PopupMenu.PopupSeparatorMenuItem(),
+    sliderItems["wake"],
+    ...Object.entries(WAKE_MODE_LABELS).map(([mode, label]) => {
+      const modeItem = new PopupMenu.PopupMenuItem(label);
+      if (mode === "wake") {
+        wakeModeItem = modeItem;
+      }
+      _disconnectOnDestroy(modeItem, [
+        [
+          "activate",
+          () => {
+            switch (mode) {
+              case "wake":
+                rootMode.wake(_getSliderMinutes("wake"));
+                break;
+              case "no-wake":
+                rootMode.wakeCancel();
+                break;
+              default:
+                logError(new Error("Unknown wake mode: " + mode));
+            }
+          },
+        ],
+      ]);
+      return modeItem;
+    }),
+  ];
+  wakeItems.forEach((item) => {
+    submenu.menu.addMenuItem(item);
+  });
+  _updateShownWakeItems();
   _updateShownModeItems();
   _updateSelectedModeItems();
 
@@ -594,9 +687,9 @@ function enable() {
 
     // check for shutdown may run in background and can be canceled by user
     checkCancel = null;
-    // track external schutdown schedule
+    // track external schutdown and wake schedule
     // keeps track of priviledged process (for root mode)
-    rootMode = new RootMode.RootMode(externalScheduleInfoTick);
+    rootMode = new RootMode.RootMode(externalScheduleInfoTick, rootModeToggle);
     // starts internal shutdown schedule if ready
     timer = new Timer.Timer(serveInernalSchedule, _updateShutdownInfo);
     initialized = true;
@@ -604,6 +697,7 @@ function enable() {
 
   idleSourceIds = {};
   externalScheduleInfo = new ScheduleInfo({ external: true });
+  externalWakeInfo = new ScheduleInfo({ external: true, mode: "wake" });
   internalScheduleInfo = new ScheduleInfo({
     external: false,
     deadline: settings.get_int("shutdown-timestamp-value"),
@@ -616,16 +710,33 @@ function enable() {
 
   // handlers for changed values in settings
   settingsHandlerIds = [
-    ["max-timer-value", _updateSwitchLabel],
-    ["slider-value", _updateSlider],
+    ["shutdown-max-timer-value", _updateSwitchLabel],
+    ["wake-max-timer-value", _updateWakeModeItem],
+    [
+      "shutdown-slider-value",
+      () => {
+        _updateSlider("shutdown");
+        _updateSwitchLabel();
+      },
+    ],
+    [
+      "wake-slider-value",
+      () => {
+        _updateSlider("wake");
+        _updateWakeModeItem();
+      },
+    ],
     ["root-mode-value", _onRootModeChanged],
     ["show-settings-value", _onShowSettingsButtonChanged],
-    ["show-slider-value", _onShowSliderChanged],
+    ["show-shutdown-slider-value", () => _onShowSliderChanged("shutdown")],
+    ["show-wake-slider-value", () => _onShowSliderChanged("wake")],
+    ["show-wake-items-value", _updateShownWakeItems],
     ["show-shutdown-mode-value", _updateShownModeItems],
     ["shutdown-mode-value", _onModeChange],
     ["shutdown-timestamp-value", _onInternalShutdownTimestampChanged],
   ].map(([label, func]) => settings.connect("changed::" + label, func));
 
+  // restart root mode update loop
   rootMode.updateScheduleInfo();
   _onInternalShutdownTimestampChanged();
 }
@@ -642,6 +753,8 @@ function disable() {
   idleSourceIds = {};
   submenu.destroy(); // destroys switcher and sliderItem as children too
   separator.destroy();
+  modeItems = [];
+  wakeItems = [];
   // root mode protection will NOT be canceled (otherwise new password would be required after ScreenSaver was active)
   rootMode.stopScheduleInfoLoop();
 }

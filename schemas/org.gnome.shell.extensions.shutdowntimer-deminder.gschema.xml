@@ -2,10 +2,22 @@
 <schemalist gettext-domain="ShutdownTimer">
   <schema path="/org/gnome/shell/extensions/shutdowntimer-deminder/" id="org.gnome.shell.extensions.shutdowntimer-deminder">
     
-    <key type="i" name="max-timer-value">
+    <key type="i" name="shutdown-max-timer-value">
       <default>180</default>
-      <summary>Maximum time (in minutes)</summary>
-      <description>Set maximum selectable time of the slider (in minutes). Use only values greater zero.</description>
+      <summary>Maximum shutdown time (in minutes)</summary>
+      <description>Set maximum selectable shutdown time of the slider (in minutes). Use only values greater zero.</description>
+    </key>
+
+    <key type="i" name="wake-max-timer-value">
+      <default>1440</default>
+      <summary>Maximum wake time (in minutes)</summary>
+      <description>Set maximum selectable wake time of the slider (in minutes). Use only values greater zero.</description>
+    </key>
+
+    <key type="b" name="auto-wake-value">
+      <default>false</default>
+      <summary>Automatically start and stop wake on shutdown timer toggle</summary>
+      <description>Enable/Disable the wake alarm when the shutdown timer is started/stopped.</description>
     </key>
 
     <key type="i" name="shutdown-timestamp-value">
@@ -13,11 +25,17 @@
       <summary>Scheduled shutdown timestamp.</summary>
       <description>Unix time in seconds of scheduled shutdown or -1 if disabled.</description>
     </key>
-    
-    <key type="i" name="slider-value">
+
+    <key type="i" name="wake-slider-value">
       <default>70</default>
-      <summary>Slider position</summary>
-      <description>Set slider position as percent of the maximum time. Must be in range 0 and 100.</description>
+      <summary>Wake slider position</summary>
+      <description>Set wake slider position as percent of the maximum time. Must be in range 0 and 100.</description>
+    </key>
+
+    <key type="i" name="shutdown-slider-value">
+      <default>70</default>
+      <summary>Shutdown slider position</summary>
+      <description>Set shutdown slider position as percent of the maximum time. Must be in range 0 and 100.</description>
     </key>
 
     <key type="b" name="show-settings-value">
@@ -26,10 +44,22 @@
       <description>Show/hide settings button in widget.</description>
     </key>
 
-    <key type="b" name="show-slider-value">
+    <key type="b" name="show-shutdown-slider-value">
       <default>true</default>
-      <summary>Show slider</summary>
-      <description>Show/hide slider in widget.</description>
+      <summary>Show shutdown slider</summary>
+      <description>Show/hide shutdown  slider in widget.</description>
+    </key>
+
+    <key type="b" name="show-wake-slider-value">
+      <default>true</default>
+      <summary>Show wake slider</summary>
+      <description>Show/hide wake slider in widget.</description>
+    </key>
+
+    <key type="b" name="show-wake-items-value">
+      <default>false</default>
+      <summary>Show all wake items</summary>
+      <description>Show/hide all wake items in widget.</description>
     </key>
 
     <key type="b" name="show-textboxes-value">

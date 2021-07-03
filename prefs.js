@@ -20,16 +20,21 @@ function init() {
 }
 
 const templateComponents = {
-  "max-timer": "adjustment",
-  slider: "adjustment",
+  "shutdown-max-timer": "adjustment",
+  "shutdown-slider": "adjustment",
   "show-settings": "switch",
   "root-mode": "switch",
   "show-shutdown-mode": "buffer",
-  "show-slider": "switch",
+  "show-shutdown-slider": "switch",
   "show-textboxes": "switch",
   "check-command": "buffer",
   "enable-check-command": "switch",
   "shutdown-mode": "combo",
+  "auto-wake": "switch",
+  "wake-max-timer": "adjustment",
+  "wake-slider": "adjustment",
+  "show-wake-slider": "switch",
+  "show-wake-items": "switch",
 };
 
 const templateFile = Me.dir
