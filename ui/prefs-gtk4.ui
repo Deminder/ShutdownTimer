@@ -258,7 +258,7 @@
                               <object class="GtkSpinButton" id="wake-slider-spinbutton">
                                 <property name="valign">center</property>
                                 <property name="halign">end</property>
-                                <property name="text" translatable="yes">0</property>
+                                <property name="text">0</property>
                                 <property name="adjustment">wake-slider-adjustment</property>
                                 <property name="climb-rate">1</property>
                                 <property name="snap-to-ticks">1</property>
@@ -286,7 +286,7 @@
                             </child>
                             <child>
                               <object class="GtkSpinButton" id="wake-max-timer-spinbutton">
-                                <property name="text" translatable="yes">120</property>
+                                <property name="text">120</property>
                                 <property name="adjustment">wake-max-timer-adjustment</property>
                                 <property name="climb-rate">1</property>
                                 <property name="snap-to-ticks">1</property>

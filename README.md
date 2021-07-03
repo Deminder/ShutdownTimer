@@ -14,8 +14,8 @@ Shutdown/reboot/suspend your device after a specific time. Disabling the extensi
 - Wake
   - Set a real-time-clock (rtc) alarm which wakes the system after shutdown
   - Wake info displayed in menu: ![wakeInfoMenu](wakeInfoFeature.png)
-  - Requires root priviliges
-  - Note: for advanced use-cases use: *gnome-schedule*
+  - Requires root priviliges (password prompt with `pkexec`)
+  - Note: for advanced use-cases there are more suitable tools: e.g. [gnome-schedule](https://gitlab.gnome.org/GNOME/gnome-schedule)
 
 - Root mode protection (this *may* trigger a password prompt with `pkexec`)
   - Protection against gnome-shell failing by scheduling `shutdown ${REQUESTED_MINUTES + 1}`

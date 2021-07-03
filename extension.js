@@ -231,6 +231,7 @@ function serveInernalSchedule() {
       shutdown();
     })
     .catch((err) => {
+      logError(err, "CheckError");
       // check failed: cancel shutdown
       if (settings.get_boolean("root-mode-value")) {
         rootMode.shutdownCancel();
@@ -238,7 +239,6 @@ function serveInernalSchedule() {
       if (settings.get_boolean("auto-wake-value")) {
         rootMode.wakeCancel();
       }
-      logError(err, "CheckError");
     })
     .finally(() => {
       // reset schedule timestamp
