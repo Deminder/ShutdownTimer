@@ -13,6 +13,7 @@ Shutdown/reboot/suspend your device after a specific time or wake with a rtc ala
 
 - Wake alarm
   - Set a real-time-clock (rtc) alarm which wakes the system after shutdown
+  - Configured via: `/sys/class/rtc/rtc0/wakealarm`
   - Wake info displayed in menu: ![wakeInfoMenu](wakeInfoFeature.png)
   - Requires root priviliges (password prompt with `pkexec`)
   - Note: for advanced use-cases there are more suitable tools: e.g. [gnome-schedule](https://gitlab.gnome.org/GNOME/gnome-schedule)
