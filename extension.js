@@ -54,6 +54,7 @@ const MODE_TEXTS = {
   suspend: _("suspend"),
   poweroff: _("shutdown"),
   reboot: _("reboot"),
+  wake: _("wakeup"),
 };
 
 class ScheduleInfo {
@@ -145,6 +146,7 @@ function _onModeChange() {
       logDebug("Shutdown mode: " + internalScheduleInfo.mode);
       guiIdle(() => {
         _updateSelectedModeItems();
+        rootMode.updateScheduleInfo();
       });
     })
     .then(() => maybeStartRootModeProtection());
@@ -160,10 +162,7 @@ async function maybeStopRootModeProtection(stopScheduled = false) {
       switch (internalScheduleInfo.mode) {
         case "poweroff":
         case "reboot":
-          await rootMode.cancelShutdown();
-          if (guiReady) {
-            rootMode.updateScheduleInfo();
-          }
+          await rootMode.shutdownCancel();
           break;
         default:
           logDebug(
@@ -234,7 +233,10 @@ function serveInernalSchedule() {
     .catch((err) => {
       // check failed: cancel shutdown
       if (settings.get_boolean("root-mode-value")) {
-        rootMode.cancelShutdown();
+        rootMode.shutdownCancel();
+      }
+      if (settings.get_boolean("auto-wake-value")) {
+        rootMode.wakeCancel();
       }
       logError(err, "CheckError");
     })
@@ -264,7 +266,7 @@ async function maybeDoCheck() {
     settings.get_boolean("enable-root-mode-cancel-value")
   ) {
     // avoid shutting down (with root mode protection) before check command is done
-    rootMode.cancelShutdown();
+    rootMode.shutdownCancel();
   }
   guiIdle(() => {
     _updateShutdownInfo();
@@ -291,6 +293,18 @@ async function maybeDoCheck() {
     });
 }
 
+async function wakeAction(mode) {
+  switch (mode) {
+    case "wake":
+      return await rootMode.wake(_getSliderMinutes("wake"));
+    case "no-wake":
+      return await rootMode.wakeCancel();
+    default:
+      logError(new Error("Unknown wake mode: " + mode));
+      return false;
+  }
+}
+
 function shutdown() {
   Main.overview.hide();
   const session = new imports.misc.gnomeSession.SessionManager();
@@ -314,7 +328,7 @@ function shutdown() {
 /* Schedule Info updates */
 function externalScheduleInfoTick(info, wakeInfo) {
   externalScheduleInfo = externalScheduleInfo.copy({ ...info });
-  externalWakeInfo = { ...externalWakeInfo, ...wakeInfo };
+  externalWakeInfo = externalWakeInfo.copy({ ...wakeInfo });
   guiIdle(() => {
     _updateShutdownInfo();
   });
@@ -329,12 +343,12 @@ function durationString(seconds) {
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
   if (hours >= 3) {
-    return `${hours} ${_("hour")}`;
+    return `${hours} ${_("hours")}`;
   }
   if (minutes === 0) {
-    return `${seconds} ${_("sec")}`;
+    return `${seconds} ${_("seconds")}`;
   }
-  return `${minutes} ${_("min")}`;
+  return `${minutes} ${_("minutes")}`;
 }
 
 function _getSliderMinutes(prefix) {
@@ -401,8 +415,10 @@ function _updateSwitchLabel() {
 }
 
 function _updateWakeModeItem() {
+  const minutes = _getSliderMinutes("wake");
+  const hours = Math.floor(minutes / 60);
   wakeModeItem.label.text =
-    WAKE_MODE_LABELS["wake"] + ` ${_getSliderMinutes("wake")} ${_("min")}`;
+    WAKE_MODE_LABELS["wake"] + ` ${hours} ${_("hours")} ${minutes % 60} ${_("minutes")}`;
 }
 
 function _onShowSettingsButtonChanged() {
@@ -434,17 +450,23 @@ function _onToggle() {
   if (switcher.state) {
     // start shutdown timer
     startSchedule();
-    maybeStartRootModeProtection().then(() => {
-      if (settings.get_string("auto-wake-value")) {
-        rootMode.wake(_getSliderMinutes("wake"));
+    maybeStartRootModeProtection().then(async () => {
+      if (settings.get_boolean("auto-wake-value")) {
+        await rootMode.wake(_getSliderMinutes("wake"));
+      }
+      if (guiReady) {
+        rootMode.updateScheduleInfo();
       }
     });
   } else {
     // stop shutdown timer
     stopSchedule();
-    maybeStopRootModeProtection().then(() => {
-      if (settings.get_string("auto-wake-value")) {
-        rootMode.wakeCancel();
+    maybeStopRootModeProtection().then(async () => {
+      if (settings.get_boolean("auto-wake-value")) {
+        await rootMode.wakeCancel();
+      }
+      if (guiReady) {
+        rootMode.updateScheduleInfo();
       }
     });
   }
@@ -567,7 +589,10 @@ function _createSliderItem(settingsPrefix) {
     settings.get_int(settingsPrefix + "-slider-value") / 100.0;
   const item = new PopupMenu.PopupBaseMenuItem({ activate: false });
   const sliderIcon = new St.Icon({
-    icon_name: settingsPrefix === 'wake' ? "alarm-symbolic" : "preferences-system-time-symbolic",
+    icon_name:
+      settingsPrefix === "wake"
+        ? "alarm-symbolic"
+        : "preferences-system-time-symbolic",
     style_class: "popup-menu-icon",
   });
   item.add(sliderIcon);
@@ -633,22 +658,20 @@ function render() {
         [
           "activate",
           () => {
-            switch (mode) {
-              case "wake":
-                rootMode.wake(_getSliderMinutes("wake"));
-                break;
-              case "no-wake":
-                rootMode.wakeCancel();
-                break;
-              default:
-                logError(new Error("Unknown wake mode: " + mode));
-            }
+            wakeAction(mode).then((success) => {
+              if (success) {
+                guiIdle(() => {
+                  rootMode.updateScheduleInfo();
+                });
+              }
+            });
           },
         ],
       ]);
       return modeItem;
     }),
   ];
+  _updateWakeModeItem();
   wakeItems.forEach((item) => {
     submenu.menu.addMenuItem(item);
   });
@@ -697,7 +720,7 @@ function enable() {
 
   idleSourceIds = {};
   externalScheduleInfo = new ScheduleInfo({ external: true });
-  externalWakeInfo = new ScheduleInfo({ external: true, mode: "wake" });
+  externalWakeInfo = new ScheduleInfo({ external: false, mode: "wake" });
   internalScheduleInfo = new ScheduleInfo({
     external: false,
     deadline: settings.get_int("shutdown-timestamp-value"),

@@ -11,6 +11,12 @@ Shutdown/reboot/suspend your device after a specific time. Disabling the extensi
   - Externally run `shutdown 100` displayed in menu: ![externalScheduleMenu](externalScheduleFeature.png)
   - Displays the more urgent (external or interal) timer 
 
+- Wake
+  - Set a real-time-clock (rtc) alarm which wakes the system after shutdown
+  - Wake info displayed in menu: ![wakeInfoMenu](wakeInfoFeature.png)
+  - Requires root priviliges
+  - Note: for advanced use-cases use: *gnome-schedule*
+
 - Root mode protection (this *may* trigger a password prompt with `pkexec`)
   - Protection against gnome-shell failing by scheduling `shutdown ${REQUESTED_MINUTES + 1}`
   - Only requires root password once if at all
