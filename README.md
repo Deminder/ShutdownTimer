@@ -1,7 +1,7 @@
 ![icon](bin/icon.svg) 
 # Shutdown Timer
 
-Shutdown/reboot/suspend your device after a specific time. Disabling the extension will not terminate the timer. This allows the timer to run uninterrupted during an active screen saver. This extension adds a submenu to the status area. 
+Shutdown/reboot/suspend your device after a specific time or wake with a rtc alarm. Disabling the extension will not terminate the timer. This allows the timer to run uninterrupted during an active screen saver. This extension adds a submenu to the status area.
 
 ![Screenshot](screenshot.png)
 
@@ -11,7 +11,7 @@ Shutdown/reboot/suspend your device after a specific time. Disabling the extensi
   - Externally run `shutdown 100` displayed in menu: ![externalScheduleMenu](externalScheduleFeature.png)
   - Displays the more urgent (external or interal) timer 
 
-- Wake
+- Wake alarm
   - Set a real-time-clock (rtc) alarm which wakes the system after shutdown
   - Wake info displayed in menu: ![wakeInfoMenu](wakeInfoFeature.png)
   - Requires root priviliges (password prompt with `pkexec`)
