@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-03 22:11+0200\n"
+"POT-Creation-Date: 2021-07-04 22:52+0200\n"
 "PO-Revision-Date: 2021-07-03 22:31+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: CZECH <jiri.doubravsky@gmail.com>\n"
@@ -131,99 +131,99 @@ msgstr ""
 msgid "Check"
 msgstr ""
 
-#: extension.js:50
+#: extension.js:52
 msgid "Wake after"
 msgstr ""
 
-#: extension.js:51
+#: extension.js:53
 msgid "No Wake"
 msgstr ""
 
-#: extension.js:54
+#: extension.js:56
 msgid "suspend"
 msgstr ""
 
-#: extension.js:55
+#: extension.js:57
 msgid "shutdown"
 msgstr "vypnutí"
 
-#: extension.js:56
+#: extension.js:58
 msgid "reboot"
 msgstr ""
 
-#: extension.js:57
+#: extension.js:59
 msgid "wakeup"
 msgstr ""
 
-#: extension.js:100
+#: extension.js:102
 msgid "Shutdown Timer"
 msgstr "Odpočet k vypnutí"
 
-#: extension.js:103
+#: extension.js:105
 msgid "until"
 msgstr "do"
 
-#: extension.js:104
+#: extension.js:106
 msgid "(sys)"
 msgstr ""
 
-#: extension.js:174 extension.js:208
+#: extension.js:169 extension.js:198
 msgid "Root mode protection failed!"
 msgstr ""
 
-#: extension.js:273 extension.js:536
+#: extension.js:252 extension.js:641
 msgid "Waiting for confirmation"
 msgstr ""
 
-#: extension.js:287
+#: extension.js:266
 msgid "Shutdown aborted"
 msgstr ""
 
-#: extension.js:346 extension.js:421
+#: extension.js:312 extension.js:679
 msgid "hours"
 msgstr ""
 
-#: extension.js:349
+#: extension.js:315
 msgid "seconds"
 msgstr ""
 
-#: extension.js:351 extension.js:421 extension.js:493
+#: extension.js:317 extension.js:356 extension.js:682
 msgid "minutes"
 msgstr "minut."
 
-#: extension.js:410
-msgid "min"
-msgstr "minut."
-
-#: extension.js:412
-msgid "(root)"
-msgstr ""
-
-#: extension.js:477
+#: extension.js:340
 msgid "Shutdown Timer stopped"
 msgstr "Odpočítávání k vypnutí zastaveno"
 
-#: extension.js:480
+#: extension.js:343
 msgid "Confirmation canceled"
 msgstr ""
 
-#: extension.js:492
+#: extension.js:355
 msgid "System will shutdown in"
 msgstr "Bude vypnuto za"
 
-#: extension.js:567
+#: extension.js:434
 msgid "Settings"
 msgstr "Možnosti"
 
-#: prefs.js:12
-msgid "Suspend"
+#: extension.js:669
+msgid "min"
+msgstr "minut."
+
+#: extension.js:671
+msgid "(root)"
 msgstr ""
 
 #: prefs.js:13
-msgid "Power Off"
+msgid "Suspend"
 msgstr ""
 
 #: prefs.js:14
+msgid "Power Off"
+msgstr ""
+
+#: prefs.js:15
 msgid "Restart"
 msgstr ""
 
