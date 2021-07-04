@@ -1,12 +1,13 @@
 ![icon](bin/icon.svg) 
 # Shutdown Timer
 
-Shutdown/reboot/suspend your device after a specific time or wake with a rtc alarm. Disabling the extension will not terminate the timer. This allows the timer to run uninterrupted during an active screen saver. This extension adds a submenu to the status area.
+Shutdown/reboot/suspend your device after a specific time or wake with a rtc alarm. The timer will not be interrupted by the screen saver. This extension adds a submenu to the status area.
 
 ![Screenshot](screenshot.png)
 
 ## Features
-- Poweroff, Reboot, Suspend (options can be reordered and disabled)
+- Timer for *Poweroff*, *Reboot*, *Suspend* (options can be reordered and hidden)
+  - Disabling the extension leaves a timer process alive if the user was inactive for more than a second (`org.gnome.Mutter.IdleMonitor.GetIdletime > 1000` is true when the screen saver disables the extension)
 - Show scheduled shutdown info as *(sys)* (fetched from `/run/systemd/shutdown/scheduled`)
   - Externally run `shutdown 100` displayed in menu: ![externalScheduleMenu](externalScheduleFeature.png)
   - Displays the more urgent (external or interal) timer 

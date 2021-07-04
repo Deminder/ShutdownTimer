@@ -32,7 +32,20 @@ let textbox,
   separator,
   settings,
   checkCancel,
-  rootMode;
+  rootMode,
+  idleMonitor;
+
+const MutterIdleMonitorInf =
+  '<node>\
+  <interface name="org.gnome.Mutter.IdleMonitor">\
+    <method name="GetIdletime">\
+      <arg type="t" name="idletime" direction="out"/>\
+    </method>\
+  </interface>\
+</node>';
+const MutterIdleMonitorProxy =
+  Gio.DBusProxy.makeProxyWrapper(MutterIdleMonitorInf);
+
 let initialized = false;
 const MODE_LABELS = Me.imports.prefs.MODE_LABELS;
 const WAKE_MODE_LABELS = {
@@ -756,6 +769,21 @@ function enable() {
     // starts internal shutdown schedule if ready
     timer = new Timer.Timer(serveInernalSchedule);
 
+    idleMonitor = new Promise((resolve, reject) => {
+      new MutterIdleMonitorProxy(
+        Gio.DBus.session,
+        "org.gnome.Mutter.IdleMonitor",
+        "/org/gnome/Mutter/IdleMonitor/Core",
+        (proxy, error) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(proxy);
+          }
+        }
+      );
+    });
+
     initialized = true;
   }
 
@@ -772,4 +800,31 @@ function disable() {
   shutdowTimerMenu = null;
   separator.destroy();
   separator = null;
+
+  idleMonitor
+    .then((proxy) =>
+      proxy.GetIdletimeRemote(([userIdle], error) => {
+        if (error || userIdle > 1000) {
+          logDebug(
+            `Partially disabled. User idled for ${userIdle} ms or Error: ${error}.`
+          );
+        } else {
+          // user active in last 10 sec => probably the user disabled the extension
+          timer.stopTimer();
+          timer = null;
+          if (checkCancel !== null) {
+            checkCancel.cancel();
+            checkCancel = null;
+          }
+          rootMode.stopRootProc();
+          rootMode = null;
+          idleMonitor = null;
+          initialized = false;
+          logDebug(`Completly disabled. User idled for ${userIdle} ms.`);
+        }
+      })
+    )
+    .catch((err) => {
+      logError(err, "MissingIdleMonitor");
+    });
 }
