@@ -115,7 +115,7 @@
                                 <property name="vexpand">1</property>
                                 <property name="can-focus">0</property>
                                 <property name="halign">start</property>
-                                <property name="label" translatable="yes">Shutdown slider position (in &amp;amp;)</property>
+                                <property name="label" translatable="yes">Shutdown slider position (in &amp;#37;)</property>
                                 <property name="use-markup">1</property>
                               </object>
                             </child>
@@ -241,7 +241,7 @@
                                 <property name="vexpand">1</property>
                                 <property name="can-focus">0</property>
                                 <property name="halign">start</property>
-                                <property name="label" translatable="yes">Wake slider position (in &amp;amp;)</property>
+                                <property name="label" translatable="yes">Wake slider position (in &amp;#37;)</property>
                                 <property name="use-markup">1</property>
                               </object>
                             </child>

@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-04 22:52+0200\n"
-"PO-Revision-Date: 2021-07-03 22:23+0200\n"
+"POT-Creation-Date: 2021-07-04 23:13+0200\n"
+"PO-Revision-Date: 2021-07-04 23:14+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: Russian <LL@li.org>\n"
 "Language: ru\n"
@@ -34,7 +34,7 @@ msgid "Root mode protection"
 msgstr ""
 
 #: ui/prefs.ui:168
-msgid "Shutdown slider position (in &amp;)"
+msgid "Shutdown slider position (in &#37;)"
 msgstr ""
 
 #: ui/prefs.ui:227 ui/prefs.ui:421
@@ -50,7 +50,7 @@ msgid "Toggle wake with shutdown timer"
 msgstr ""
 
 #: ui/prefs.ui:361
-msgid "Wake slider position (in &amp;)"
+msgid "Wake slider position (in &#37;)"
 msgstr ""
 
 #: ui/prefs.ui:468
@@ -167,7 +167,7 @@ msgstr ""
 msgid "Root mode protection failed!"
 msgstr ""
 
-#: extension.js:252 extension.js:641
+#: extension.js:252 extension.js:642
 msgid "Waiting for confirmation"
 msgstr ""
 
@@ -175,7 +175,7 @@ msgstr ""
 msgid "Shutdown aborted"
 msgstr ""
 
-#: extension.js:312 extension.js:679
+#: extension.js:312 extension.js:680
 msgid "hours"
 msgstr ""
 
@@ -183,7 +183,7 @@ msgstr ""
 msgid "seconds"
 msgstr ""
 
-#: extension.js:317 extension.js:356 extension.js:682
+#: extension.js:317 extension.js:356 extension.js:683
 msgid "minutes"
 msgstr "мин."
 
@@ -203,11 +203,11 @@ msgstr "Система будет выключена через"
 msgid "Settings"
 msgstr ""
 
-#: extension.js:669
+#: extension.js:670
 msgid "min"
 msgstr "мин."
 
-#: extension.js:671
+#: extension.js:672
 msgid "(root)"
 msgstr ""
 

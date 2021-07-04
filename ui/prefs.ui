@@ -165,7 +165,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="halign">start</property>
-                            <property name="label" translatable="yes">Shutdown slider position (in &amp;amp;)</property>
+                            <property name="label" translatable="yes">Shutdown slider position (in &amp;#37;)</property>
                             <property name="use-markup">True</property>
                           </object>
                           <packing>
@@ -358,7 +358,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="halign">start</property>
-                            <property name="label" translatable="yes">Wake slider position (in &amp;amp;)</property>
+                            <property name="label" translatable="yes">Wake slider position (in &amp;#37;)</property>
                             <property name="use-markup">True</property>
                           </object>
                           <packing>

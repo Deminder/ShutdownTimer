@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-04 22:52+0200\n"
-"PO-Revision-Date: 2021-07-03 22:21+0200\n"
+"POT-Creation-Date: 2021-07-04 23:13+0200\n"
+"PO-Revision-Date: 2021-07-04 23:15+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: GERMAN Jonatan Zeidler <jonatan_zeidler@gmx.de>\n"
 "Language: de\n"
@@ -37,7 +37,7 @@ msgid "Root mode protection"
 msgstr "Root-Modus-Absicherung"
 
 #: ui/prefs.ui:168
-msgid "Shutdown slider position (in &amp;)"
+msgid "Shutdown slider position (in &#37;)"
 msgstr "Standardposition des Ausschalt-Schiebereglers (in %)"
 
 #: ui/prefs.ui:227 ui/prefs.ui:421
@@ -53,8 +53,8 @@ msgid "Toggle wake with shutdown timer"
 msgstr "Schalte den Wecker zusammen mit der Ausschaltuhr"
 
 #: ui/prefs.ui:361
-msgid "Wake slider position (in &amp;)"
-msgstr "Standardposition des Schiebereglers (in %)"
+msgid "Wake slider position (in &#37;)"
+msgstr "Standardposition des Wecker-Schiebereglers (in %)"
 
 #: ui/prefs.ui:468
 msgid "Wake"
@@ -172,7 +172,7 @@ msgstr "(sys)"
 msgid "Root mode protection failed!"
 msgstr "Root-Modus-Absicherung fehlgeschlagen!"
 
-#: extension.js:252 extension.js:641
+#: extension.js:252 extension.js:642
 msgid "Waiting for confirmation"
 msgstr "Warte auf Bestätigung"
 
@@ -180,7 +180,7 @@ msgstr "Warte auf Bestätigung"
 msgid "Shutdown aborted"
 msgstr "Auschalten abgebrochen"
 
-#: extension.js:312 extension.js:679
+#: extension.js:312 extension.js:680
 msgid "hours"
 msgstr "Stunden"
 
@@ -188,7 +188,7 @@ msgstr "Stunden"
 msgid "seconds"
 msgstr "Sekunden"
 
-#: extension.js:317 extension.js:356 extension.js:682
+#: extension.js:317 extension.js:356 extension.js:683
 msgid "minutes"
 msgstr "Minuten"
 
@@ -208,11 +208,11 @@ msgstr "System wird herunterfahren in"
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: extension.js:669
+#: extension.js:670
 msgid "min"
 msgstr "min"
 
-#: extension.js:671
+#: extension.js:672
 msgid "(root)"
 msgstr "(root)"
 
