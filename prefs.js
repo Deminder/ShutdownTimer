@@ -1,4 +1,5 @@
-const Me = imports.misc.extensionUtils.getCurrentExtension();
+const ExtensionUtils = imports.misc.extensionUtils;
+const Me = ExtensionUtils.getCurrentExtension();
 
 const Convenience = Me.imports.lib.Convenience;
 
@@ -15,8 +16,9 @@ var MODE_LABELS = {
 };
 
 function init() {
-  Convenience.initTranslations();
-  settings = Convenience.getSettings();
+  ExtensionUtils.initTranslations();
+  imports.gettext.textdomain(Me.metadata["gettext-domain"]);
+  settings = ExtensionUtils.getSettings();
 }
 
 const templateComponents = {
