@@ -509,6 +509,7 @@ const ShutdownTimer = GObject.registerClass(
       this._updateSelectedModeItems();
       timer.setTickCallback(this._updateShutdownInfo.bind(this));
       this._onInternalShutdownTimestampChanged();
+      this._updateSwitcherState();
 
       // start root mode update loop
       rootMode.startScheduleInfoLoop(
