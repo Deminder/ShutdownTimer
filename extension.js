@@ -347,9 +347,10 @@ function stopSchedule() {
 
 function startSchedule() {
   const maxTimerMinutes = _getSliderMinutes("shutdown");
+  const seconds = maxTimerMinutes * 60;
   settings.set_int(
     "shutdown-timestamp-value",
-    GLib.DateTime.new_now_utc().to_unix() + maxTimerMinutes * 60
+    GLib.DateTime.new_now_utc().to_unix() + Math.max(1, seconds)
   );
   _showTextbox(
     `${_("System will shutdown in")} ${maxTimerMinutes} ${_(
