@@ -25,6 +25,8 @@ gnome-extensions pack \
     --extra-source="bin" \
     --extra-source="lib" \
     --extra-source="ui" \
+    --extra-source="tool" \
+    --extra-source="polkit" \
     --extra-source="LICENSE" \
     --extra-source="README.md" \
     --extra-source="CHANGELOG.md"

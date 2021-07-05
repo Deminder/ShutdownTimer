@@ -7,7 +7,7 @@
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
-const { RootMode, Timer, Convenience } = Me.imports.lib;
+const { InfoFetcher, RootMode, Timer, Convenience } = Me.imports.lib;
 const logDebug = Convenience.logDebug;
 
 /* IMPORTS */
@@ -27,13 +27,7 @@ const Gettext = imports.gettext.domain("ShutdownTimer");
 const _ = Gettext.gettext;
 
 /* GLOBAL VARIABLES */
-let textbox,
-  shutdowTimerMenu,
-  separator,
-  settings,
-  checkCancel,
-  rootMode,
-  idleMonitor;
+let textbox, shutdowTimerMenu, separator, settings, checkCancel, idleMonitor;
 
 const MutterIdleMonitorInf =
   '<node>\
@@ -159,7 +153,7 @@ async function maybeStopRootModeProtection(info, stopScheduled = false) {
       switch (info.mode) {
         case "poweroff":
         case "reboot":
-          await rootMode.shutdownCancel();
+          await RootMode.shutdownCancel();
           break;
         default:
           logDebug("No root mode protection stopped for: " + info.mode);
@@ -176,7 +170,7 @@ async function maybeStopRootModeProtection(info, stopScheduled = false) {
 /**
  *
  * Insure that shutdown is executed even if the GLib timer fails by running
- * shutdown in rootMode delayed by 1 minute. Suspend is not insured.
+ * the `shutdown` command delayed by 1 minute. Suspend is not insured.
  *
  */
 async function maybeStartRootModeProtection(info) {
@@ -185,10 +179,10 @@ async function maybeStartRootModeProtection(info) {
     try {
       switch (info.mode) {
         case "poweroff":
-          await rootMode.shutdown(info.minutes + 1);
+          await RootMode.shutdown(info.minutes + 1);
           break;
         case "reboot":
-          await rootMode.shutdown(info.minutes + 1, true);
+          await RootMode.shutdown(info.minutes + 1, true);
           break;
         default:
           logDebug("No root mode protection started for: " + info.mode);
@@ -213,10 +207,10 @@ function serveInernalSchedule(mode) {
       logError(err, "CheckError");
       // check failed: cancel shutdown
       if (settings.get_boolean("root-mode-value")) {
-        rootMode.shutdownCancel();
+        RootMode.shutdownCancel();
       }
       if (settings.get_boolean("auto-wake-value")) {
-        rootMode.wakeCancel();
+        RootMode.wakeCancel();
       }
     })
     .finally(() => {
@@ -245,7 +239,7 @@ async function maybeDoCheck() {
     settings.get_boolean("enable-root-mode-cancel-value")
   ) {
     // avoid shutting down (with root mode protection) before check command is done
-    rootMode.shutdownCancel();
+    RootMode.shutdownCancel();
   }
   guiIdle(() => {
     shutdowTimerMenu._updateShutdownInfo();
@@ -275,9 +269,9 @@ async function maybeDoCheck() {
 async function wakeAction(mode) {
   switch (mode) {
     case "wake":
-      return await rootMode.wake(_getSliderMinutes("wake"));
+      return await RootMode.wake(_getSliderMinutes("wake"));
     case "no-wake":
-      return await rootMode.wakeCancel();
+      return await RootMode.wakeCancel();
     default:
       logError(new Error("Unknown wake mode: " + mode));
       return false;
@@ -302,6 +296,25 @@ function shutdown(mode) {
       // Util.spawnCommandLine('poweroff');	// shutdown immediately
       break;
   }
+}
+
+async function toggleInstall() {
+  const prefix = settings.get_string("install-policy-prefix-value");
+  try {
+    if (settings.get_boolean("install-policy-value")) {
+      await RootMode.installScript(prefix);
+    } else {
+      await RootMode.uninstallScript(prefix);
+    }
+  } catch (err) {
+    logError(err, "InstallError");
+    guiIdle(() => {
+      _showTextbox("Install Failed!\n" + err);
+    });
+  }
+  guiIdle(() => {
+    shutdowTimerMenu._updateInstalledStatus();
+  });
 }
 
 // Derived values
@@ -363,8 +376,8 @@ function _disconnectOnDestroy(item, connections) {
   const handlerIds = connections.map(([label, func]) =>
     item.connect(label, func)
   );
-  const destoryId = item.connect("destroy", () => {
-    handlerIds.concat(destoryId).forEach((handlerId) => {
+  const destroyId = item.connect("destroy", () => {
+    handlerIds.concat(destroyId).forEach((handlerId) => {
       item.disconnect(handlerId);
     });
   });
@@ -405,6 +418,8 @@ const ShutdownTimer = GObject.registerClass(
   class ShutdownTimer extends PopupMenu.PopupSubMenuMenuItem {
     _init() {
       super._init("", true);
+      // track external schutdown and wake schedule
+      this.infoFetcher = new InfoFetcher.InfoFetcher();
       this.idleSourceIds = {};
       this.externalScheduleInfo = new ScheduleInfo({ external: true });
       this.externalWakeInfo = new ScheduleInfo({
@@ -427,7 +442,9 @@ const ShutdownTimer = GObject.registerClass(
         this._onShowSliderChanged(prefix);
       });
       this.switcher = new PopupMenu.PopupSwitchMenuItem("", false);
-      _disconnectOnDestroy(this.switcher, [["toggled", this._onToggle.bind(this)]]);
+      _disconnectOnDestroy(this.switcher, [
+        ["toggled", this._onToggle.bind(this)],
+      ]);
       this.switcherSettingsButton = new St.Button({
         reactive: true,
         can_focus: true,
@@ -491,7 +508,7 @@ const ShutdownTimer = GObject.registerClass(
                 wakeAction(mode).then((success) => {
                   if (success) {
                     guiIdle(() => {
-                      rootMode.updateScheduleInfo();
+                      this.infoFetcher.updateScheduleInfo();
                     });
                   }
                 });
@@ -512,10 +529,11 @@ const ShutdownTimer = GObject.registerClass(
       this._onInternalShutdownTimestampChanged();
       this._updateSwitcherState();
 
+      this._updateInstalledStatus();
+
       // start root mode update loop
-      rootMode.startScheduleInfoLoop(
-        this._externalScheduleInfoTick.bind(this),
-        this._onRootActiveChanged.bind(this)
+      this.infoFetcher.startScheduleInfoLoop(
+        this._externalScheduleInfoTick.bind(this)
       );
 
       // handlers for changed values in settings
@@ -546,7 +564,11 @@ const ShutdownTimer = GObject.registerClass(
         ["show-wake-items-value", this._updateShownWakeItems.bind(this)],
         ["show-shutdown-mode-value", this._updateShownModeItems.bind(this)],
         ["shutdown-mode-value", this._onModeChange.bind(this)],
-        ["shutdown-timestamp-value", this._onInternalShutdownTimestampChanged.bind(this)],
+        [
+          "shutdown-timestamp-value",
+          this._onInternalShutdownTimestampChanged.bind(this),
+        ],
+        ["install-policy-value", toggleInstall],
       ].map(([label, func]) => settings.connect("changed::" + label, func));
     }
 
@@ -560,14 +582,11 @@ const ShutdownTimer = GObject.registerClass(
     }
 
     _onRootModeChanged() {
-      if (!settings.get_boolean("root-mode-value")) {
-        rootMode.stopRootProc();
-      }
       Promise.all([
         maybeStopRootModeProtection(this.internalScheduleInfo),
         maybeStartRootModeProtection(this.internalScheduleInfo),
       ]).then(() => {
-        rootMode.updateScheduleInfo();
+        this.infoFetcher.updateScheduleInfo();
         this._updateSwitchLabel();
       });
     }
@@ -580,7 +599,7 @@ const ShutdownTimer = GObject.registerClass(
           logDebug("Shutdown mode: " + this.internalScheduleInfo.mode);
           this.guiIdle(() => {
             this._updateSelectedModeItems();
-            rootMode.updateScheduleInfo();
+            this.infoFetcher.updateScheduleInfo();
           });
         })
         .then(() => maybeStartRootModeProtection(this.internalScheduleInfo));
@@ -609,10 +628,6 @@ const ShutdownTimer = GObject.registerClass(
       this.guiIdle(() => {
         this._updateShutdownInfo();
       });
-    }
-
-    _onRootActiveChanged() {
-      this._updateSwitchLabel();
     }
 
     _updateSwitcherState() {
@@ -669,8 +684,8 @@ const ShutdownTimer = GObject.registerClass(
 
     _updateSwitchLabel() {
       let label = `${_getSliderMinutes("shutdown")} ${_("min")}`;
-      if (rootMode.isActive()) {
-        label += " " + _("(root)");
+      if (settings.get_boolean("root-mode-value")) {
+        label += " " + _("(protect)");
       }
       this.switcher.label.text = label;
     }
@@ -718,9 +733,9 @@ const ShutdownTimer = GObject.registerClass(
         maybeStartRootModeProtection(this.internalScheduleInfo).then(
           async () => {
             if (settings.get_boolean("auto-wake-value")) {
-              await rootMode.wake(_getSliderMinutes("wake"));
+              await RootMode.wake(_getSliderMinutes("wake"));
             }
-            rootMode.updateScheduleInfo();
+            this.infoFetcher.updateScheduleInfo();
           }
         );
       } else {
@@ -729,18 +744,37 @@ const ShutdownTimer = GObject.registerClass(
         maybeStopRootModeProtection(this.internalScheduleInfo).then(
           async () => {
             if (settings.get_boolean("auto-wake-value")) {
-              await rootMode.wakeCancel();
+              await RootMode.wakeCancel();
             }
-            rootMode.updateScheduleInfo();
+            this.infoFetcher.updateScheduleInfo();
           }
         );
       }
     }
 
+    _updateInstalledStatus() {
+      const scriptPath = RootMode.installedScriptPath(
+        settings.get_string("install-policy-prefix-value")
+      );
+      let installed = false;
+      if (scriptPath !== null) {
+        try {
+          settings.set_string(
+            "install-policy-prefix-value",
+            RootMode.scriptPathPrefix(scriptPath)
+          );
+          installed = true;
+        } catch (err) {
+          logError(err, "LocateInstallation");
+        }
+      }
+      settings.set_boolean("install-policy-value", installed);
+    }
+
     destroy() {
       timer.setTickCallback(null);
       timer.stopGLibTimer();
-      rootMode.stopScheduleInfoLoop();
+      this.infoFetcher.stopScheduleInfoLoop();
       this.settingsHandlerIds.forEach((handlerId) => {
         settings.disconnect(handlerId);
       });
@@ -765,9 +799,6 @@ function enable() {
 
     // check for shutdown may run in background and can be canceled by user
     checkCancel = null;
-    // track external schutdown and wake schedule
-    // keeps track of priviledged process (for root mode)
-    rootMode = new RootMode.RootMode();
     // starts internal shutdown schedule if ready
     timer = new Timer.Timer(serveInernalSchedule);
 
@@ -818,8 +849,6 @@ function disable() {
             checkCancel.cancel();
             checkCancel = null;
           }
-          rootMode.stopRootProc();
-          rootMode = null;
           idleMonitor = null;
           initialized = false;
           logDebug(`Completly disabled. User idled for ${userIdle} ms.`);

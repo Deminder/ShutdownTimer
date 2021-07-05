@@ -103,6 +103,17 @@
       <summary>Enable check command</summary>
       <description>Check command is skipped if disabled.</description>
     </key>
-    
+
+    <key type="b" name="install-policy-value">
+      <default>true</default>
+      <summary>Privileged script and polkit policies enabled/disabled</summary>
+      <description>Indicates the state of installation of the privileged script and polkit policies.</description>
+    </key>
+
+    <key type="s" name="install-policy-prefix-value">
+      <default>"/usr"</default>
+      <summary>Prefix of script and policy installation</summary>
+      <description>Prefix is derived from the location of the script or the last specified value.</description>
+    </key>
   </schema>
 </schemalist>

@@ -3,6 +3,7 @@
 <interface>
   <requires lib="gtk+" version="3.24"/>
   <object class="GtkEntryBuffer" id="check-command-buffer"/>
+  <object class="GtkEntryBuffer" id="install-policy-prefix-buffer"/>
   <object class="GtkEntryBuffer" id="show-shutdown-mode-buffer"/>
   <object class="GtkAdjustment" id="shutdown-max-timer-adjustment">
     <property name="upper">10000</property>
@@ -35,6 +36,123 @@
       <object class="GtkNotebook">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
+        <child>
+          <object class="GtkListBox">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="margin-start">10</property>
+            <property name="margin-end">10</property>
+            <property name="margin-top">10</property>
+            <property name="margin-bottom">10</property>
+            <property name="selection-mode">none</property>
+            <child>
+              <object class="GtkListBoxRow">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="tooltip-text" translatable="yes">Setup a privileged script and give user access via polkit</property>
+                        <property name="halign">start</property>
+                        <property name="label" translatable="yes">Install/Uninstall privileges for this user</property>
+                        <property name="use-markup">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSwitch" id="install-policy-switch">
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkListBoxRow">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">3</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="label" translatable="yes">Prefix of installation </property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkEntry" id="install-policy-prefix-entry">
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="buffer">install-policy-prefix-buffer</property>
+                        <property name="primary-icon-activatable">False</property>
+                        <property name="primary-icon-sensitive">False</property>
+                        <property name="placeholder-text">/home/username/.local</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">Hint: if "/usr" is read-only use "/var/home/username/.local"</property>
+                        <attributes>
+                          <attribute name="style" value="italic"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child type="tab">
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Install</property>
+          </object>
+          <packing>
+            <property name="tab-fill">False</property>
+          </packing>
+        </child>
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
@@ -262,14 +380,18 @@
               </packing>
             </child>
           </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
         </child>
         <child type="tab">
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="label" translatable="yes">Mode</property>
+            <property name="label" translatable="yes">Shutdown</property>
           </object>
           <packing>
+            <property name="position">1</property>
             <property name="tab-fill">False</property>
           </packing>
         </child>
@@ -458,7 +580,7 @@
             </child>
           </object>
           <packing>
-            <property name="position">1</property>
+            <property name="position">2</property>
           </packing>
         </child>
         <child type="tab">
@@ -468,7 +590,7 @@
             <property name="label" translatable="yes">Wake</property>
           </object>
           <packing>
-            <property name="position">1</property>
+            <property name="position">2</property>
             <property name="tab-fill">False</property>
           </packing>
         </child>
@@ -732,7 +854,7 @@
             </child>
           </object>
           <packing>
-            <property name="position">2</property>
+            <property name="position">3</property>
           </packing>
         </child>
         <child type="tab">
@@ -742,7 +864,7 @@
             <property name="label" translatable="yes">Display</property>
           </object>
           <packing>
-            <property name="position">2</property>
+            <property name="position">3</property>
             <property name="tab-fill">False</property>
           </packing>
         </child>
@@ -877,7 +999,7 @@
             </child>
           </object>
           <packing>
-            <property name="position">3</property>
+            <property name="position">4</property>
           </packing>
         </child>
         <child type="tab">
@@ -887,7 +1009,7 @@
             <property name="label" translatable="yes">Check</property>
           </object>
           <packing>
-            <property name="position">3</property>
+            <property name="position">4</property>
             <property name="tab-fill">False</property>
           </packing>
         </child>
