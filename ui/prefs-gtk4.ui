@@ -124,10 +124,8 @@ DONE test</property>
                     <property name="child">
                       <object class="GtkScrolledWindow">
                         <property name="vadjustment">installer-scrollbar-adjustment</property>
-                        <property name="vscrollbar-policy">always</property>
                         <property name="min-content-width">500</property>
-                        <property name="min-content-height">150</property>
-                        <property name="propagate-natural-height">1</property>
+                        <property name="min-content-height">200</property>
                         <property name="child">
                           <object class="GtkTextView">
                             <property name="height-request">40</property>

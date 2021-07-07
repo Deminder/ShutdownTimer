@@ -5,6 +5,7 @@
 # This file is part of the gnome-shell extension ShutdownTimer@Deminder.
 
 SHUTDOWN_BIN=/usr/sbin/shutdown
+RTCWAKE_BIN=/usr/sbin/rtcwake
 
 SHUTDOWN_MODE="-P"
 if [ ! -z "$2" ] && [ "$2" -gt 0 ];then
@@ -33,7 +34,14 @@ case "$1" in
 		$SHUTDOWN_BIN -c
 		;;
 	wake|wake-cancel)
-		echo "${POSITIVE_VALUE:-0}" > /sys/class/rtc/rtc0/wakealarm
+		if [ -z "$POSITIVE_VALUE" ];then
+			$RTCWAKE_BIN --mode disable
+		else
+			$RTCWAKE_BIN --date +${POSITIVE_VALUE}min --mode on &
+			PID=$!
+			sleep 0.2
+			kill $PID
+		fi
 		;;
 	-h|help)
 		print_help

@@ -208,6 +208,7 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
       const errorTag = new Gtk.TextTag({ foreground: "red" });
       const successTag = new Gtk.TextTag({ foreground: "green" });
       logTextBuffer.get_tag_table().add(errorTag);
+      logTextBuffer.get_tag_table().add(successTag);
       const updateText = () => {
         const text = settings.get_string("install-log-text-value");
         logTextBuffer.set_text(text, -1);

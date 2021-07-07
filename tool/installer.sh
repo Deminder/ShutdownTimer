@@ -301,6 +301,7 @@ fi
 if [ "$ACTION" = "uninstall" ]
 then
     if [[ "$PREFIX" == '/usr' ]] && which rpm-ostree >/dev/null; then
+        echo "Uninstall ${DIST_PKG_NAME}.rpm with rpm-ostree..."
         rpm-ostree uninstall "$DIST_PKG_NAME" >/dev/null || fail
         echo "Success: "$DIST_PKG_NAME" uninstalled"
         echo "Restart required for changes to take effect." >&2
