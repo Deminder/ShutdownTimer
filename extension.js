@@ -275,9 +275,9 @@ async function maybeDoCheck() {
 async function wakeAction(mode) {
   switch (mode) {
     case "wake":
-      return await RootMode.wake(_getSliderMinutes("wake"));
+      return RootMode.wake(_getSliderMinutes("wake"));
     case "no-wake":
-      return await RootMode.wakeCancel();
+      return RootMode.wakeCancel();
     default:
       logError(new Error("Unknown wake mode: " + mode));
       return false;
@@ -539,13 +539,17 @@ const ShutdownTimer = GObject.registerClass(
             [
               "activate",
               () => {
-                wakeAction(mode).then((success) => {
-                  if (success) {
+                wakeAction(mode)
+                  .then(() => {
                     guiIdle(() => {
                       this.infoFetcher.updateScheduleInfo();
                     });
-                  }
-                });
+                  })
+                  .catch((err) => {
+                    guiIdle(() => {
+                      _showTextbox(_("Wake action failed!") + "\n" + err);
+                    });
+                  });
               },
             ],
           ]);
