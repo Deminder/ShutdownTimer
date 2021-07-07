@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-04 23:13+0200\n"
+"POT-Creation-Date: 2021-07-07 15:54+0200\n"
 "PO-Revision-Date: 2021-07-04 23:14+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: Roberto Alegro \"Kasama\"\n"
@@ -20,111 +20,131 @@ msgstr ""
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: ui/prefs.ui:67
+#: ui/prefs.ui:82
+msgid "Setup a privileged script and give user access via polkit"
+msgstr ""
+
+#: ui/prefs.ui:84
+msgid "Install/Uninstall privileges for this user"
+msgstr ""
+
+#: ui/prefs.ui:123
+msgid "Prefix of installation "
+msgstr ""
+
+#: ui/prefs.ui:149
+msgid "Hint: use \"/usr\" to install with rpm-ostree"
+msgstr ""
+
+#: ui/prefs.ui:198
+msgid "Install"
+msgstr ""
+
+#: ui/prefs.ui:233
 msgid "Use mode"
 msgstr ""
 
-#: ui/prefs.ui:111 ui/prefs.ui:304
+#: ui/prefs.ui:277 ui/prefs.ui:474
 msgid ""
 "uses 'pkexec shutdown' command, no interruption of timer, but needs root "
 "password"
 msgstr ""
 
-#: ui/prefs.ui:113
+#: ui/prefs.ui:279
 msgid "Root mode protection"
 msgstr ""
 
-#: ui/prefs.ui:168
+#: ui/prefs.ui:334
 msgid "Shutdown slider position (in &#37;)"
 msgstr "Posição do seletor (em %)"
 
-#: ui/prefs.ui:227 ui/prefs.ui:421
+#: ui/prefs.ui:393 ui/prefs.ui:591
 msgid "Maximum timer value (in minutes)"
 msgstr "Valor máximo do temporizador (em minutos)"
 
-#: ui/prefs.ui:270
-msgid "Mode"
-msgstr ""
+#: ui/prefs.ui:439
+msgid "Shutdown"
+msgstr "Desligamento"
 
-#: ui/prefs.ui:306
+#: ui/prefs.ui:476
 msgid "Toggle wake with shutdown timer"
 msgstr ""
 
-#: ui/prefs.ui:361
+#: ui/prefs.ui:531
 msgid "Wake slider position (in &#37;)"
 msgstr "Posição do seletor (em %)"
 
-#: ui/prefs.ui:468
+#: ui/prefs.ui:638
 msgid "Wake"
 msgstr ""
 
-#: ui/prefs.ui:498
+#: ui/prefs.ui:668
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:43
 msgid "Show settings button"
 msgstr ""
 
-#: ui/prefs.ui:536
+#: ui/prefs.ui:706
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:80
 msgid "Comma-separated shutdown modes which are shown in the popup menu."
 msgstr ""
 
-#: ui/prefs.ui:538
+#: ui/prefs.ui:708
 msgid "Show shutdown items"
 msgstr ""
 
-#: ui/prefs.ui:577
+#: ui/prefs.ui:747
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:49
 msgid "Show shutdown slider"
 msgstr "Temporizador de desligamento."
 
-#: ui/prefs.ui:615
+#: ui/prefs.ui:785
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:67
 msgid "Show notification text boxes"
 msgstr ""
 
-#: ui/prefs.ui:657
+#: ui/prefs.ui:827
 msgid "Show wake items"
 msgstr ""
 
-#: ui/prefs.ui:705
+#: ui/prefs.ui:875
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:55
 msgid "Show wake slider"
 msgstr ""
 
-#: ui/prefs.ui:742
+#: ui/prefs.ui:912
 msgid "Display"
 msgstr ""
 
-#: ui/prefs.ui:772
+#: ui/prefs.ui:942
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:103
 msgid "Enable check command"
 msgstr ""
 
-#: ui/prefs.ui:810
+#: ui/prefs.ui:980
 msgid ""
 "Run check command after timer runs out. Only proceeds if check command "
 "terminates successfully."
 msgstr ""
 
-#: ui/prefs.ui:812
+#: ui/prefs.ui:982
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:91
 msgid "Check command"
 msgstr ""
 
-#: ui/prefs.ui:826
+#: ui/prefs.ui:996
 msgid "command run in user shell"
 msgstr ""
 
-#: ui/prefs.ui:852
+#: ui/prefs.ui:1022
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:98
 msgid "Cancel the root mode protection before check command is run if enabled."
 msgstr ""
 
-#: ui/prefs.ui:854
+#: ui/prefs.ui:1024
 msgid "Cancel root mode protection"
 msgstr ""
 
-#: ui/prefs.ui:887
+#: ui/prefs.ui:1057
 msgid "Check"
 msgstr ""
 
@@ -168,7 +188,7 @@ msgstr ""
 msgid "Root mode protection failed!"
 msgstr ""
 
-#: extension.js:252 extension.js:642
+#: extension.js:252 extension.js:696
 msgid "Waiting for confirmation"
 msgstr ""
 
@@ -176,40 +196,44 @@ msgstr ""
 msgid "Shutdown aborted"
 msgstr ""
 
-#: extension.js:312 extension.js:680
+#: extension.js:358 extension.js:734
 msgid "hours"
 msgstr ""
 
-#: extension.js:315
+#: extension.js:361
 msgid "seconds"
 msgstr ""
 
-#: extension.js:317 extension.js:356 extension.js:683
+#: extension.js:363 extension.js:403 extension.js:737
 msgid "minutes"
 msgstr "minutos."
 
-#: extension.js:340
+#: extension.js:386
 msgid "Shutdown Timer stopped"
 msgstr "Temporizador desativado."
 
-#: extension.js:343
+#: extension.js:389
 msgid "Confirmation canceled"
 msgstr ""
 
-#: extension.js:355
+#: extension.js:402
 msgid "System will shutdown in"
 msgstr "O sistema se desligará em"
 
-#: extension.js:434
+#: extension.js:485
 msgid "Settings"
 msgstr "Configurações"
 
-#: extension.js:670
+#: extension.js:550
+msgid "Wake action failed!"
+msgstr ""
+
+#: extension.js:724
 msgid "min"
 msgstr "minutos."
 
-#: extension.js:672
-msgid "(root)"
+#: extension.js:726
+msgid "(protect)"
 msgstr ""
 
 #: prefs.js:13
@@ -341,5 +365,32 @@ msgstr ""
 msgid "Check command is skipped if disabled."
 msgstr ""
 
-#~ msgid "Shutdown"
-#~ msgstr "Desligamento"
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:109
+msgid "Privileged script and polkit policies enabled/disabled"
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:110
+msgid ""
+"Indicates the state of installation of the privileged script and polkit "
+"policies."
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:115
+msgid "Prefix of script and policy installation"
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:116
+msgid ""
+"Prefix is derived from the location of the script or the last specified "
+"value."
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:121
+msgid "Log text for installation info"
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:122
+msgid ""
+"Text that is displayed to user when installing/uninstalling privileged "
+"script."
+msgstr ""
