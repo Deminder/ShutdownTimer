@@ -4,6 +4,6 @@
   "name": "Shutdown Timer",
   "gettext-domain": "ShutdownTimer",
   "settings-schema": "org.gnome.shell.extensions.shutdowntimer-deminder",
-  "description": "Shutdown/reboot/suspend the device after a specific time or wake with a rtc alarm.\n\n Additionally a check command may be configured before shutdown. The screen saver will not interrupt the timer.",
+  "description": "Shutdown/reboot/suspend the device after a specific time or wake with a rtc alarm.\n\nThe screen saver will not interrupt the timer. A privileged control script may be installed to control shutdown and rtcwake as user. Additionally a check command may be configured before shutdown.",
   "url": "https://github.com/Deminder/ShutdownTimer"
 }
