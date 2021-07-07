@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-07 15:54+0200\n"
-"PO-Revision-Date: 2021-07-07 16:05+0200\n"
+"POT-Creation-Date: 2021-07-07 16:28+0200\n"
+"PO-Revision-Date: 2021-07-07 16:28+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: GERMAN Jonatan Zeidler <jonatan_zeidler@gmx.de>\n"
 "Language: de\n"
@@ -153,103 +153,103 @@ msgstr "Stoppt die Root-Modus-Absicherung"
 msgid "Check"
 msgstr "Prüfung"
 
-#: extension.js:52
-msgid "Wake after"
-msgstr "Wecke nach"
-
-#: extension.js:53
-msgid "No Wake"
-msgstr "Kein Wecken"
-
-#: extension.js:56
-msgid "suspend"
-msgstr "Ruhezustand"
-
-#: extension.js:57
-msgid "shutdown"
-msgstr "Herunterfahren"
-
-#: extension.js:58
-msgid "reboot"
-msgstr "Neustart"
-
-#: extension.js:59
-msgid "wakeup"
-msgstr "Wecken"
-
-#: extension.js:102
+#: extension.js:94
 msgid "Shutdown Timer"
 msgstr "Ausschaltuhr"
 
-#: extension.js:105
+#: extension.js:97
 msgid "until"
 msgstr "bis zum"
 
-#: extension.js:106
+#: extension.js:98
 msgid "(sys)"
 msgstr "(sys)"
 
-#: extension.js:169 extension.js:198
+#: extension.js:161 extension.js:190
 msgid "Root mode protection failed!"
 msgstr "Root-Modus-Absicherung fehlgeschlagen!"
 
-#: extension.js:252 extension.js:696
+#: extension.js:244 extension.js:688
 msgid "Waiting for confirmation"
 msgstr "Warte auf Bestätigung"
 
-#: extension.js:266
+#: extension.js:258
 msgid "Shutdown aborted"
 msgstr "Auschalten abgebrochen"
 
-#: extension.js:358 extension.js:734
+#: extension.js:350 extension.js:726
 msgid "hours"
 msgstr "Stunden"
 
-#: extension.js:361
+#: extension.js:353
 msgid "seconds"
 msgstr "Sekunden"
 
-#: extension.js:363 extension.js:403 extension.js:737
+#: extension.js:355 extension.js:395 extension.js:729
 msgid "minutes"
 msgstr "Minuten"
 
-#: extension.js:386
+#: extension.js:378
 msgid "Shutdown Timer stopped"
 msgstr "Ausschaltuhr gestoppt"
 
-#: extension.js:389
+#: extension.js:381
 msgid "Confirmation canceled"
 msgstr "Prüfung abgebrochen"
 
-#: extension.js:402
+#: extension.js:394
 msgid "System will shutdown in"
 msgstr "System wird herunterfahren in"
 
-#: extension.js:485
+#: extension.js:477
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: extension.js:550
+#: extension.js:542
 msgid "Wake action failed!"
 msgstr "Wecker-Befehl fehlgeschlagen!"
 
-#: extension.js:724
+#: extension.js:716
 msgid "min"
 msgstr "min"
 
-#: extension.js:726
+#: extension.js:718
 msgid "(protect)"
-msgstr "(abgesichert)"
+msgstr "(sicher)"
 
-#: prefs.js:13
+#: extension.js:832
+msgid "Wake after"
+msgstr "Wecke nach"
+
+#: extension.js:833
+msgid "No Wake"
+msgstr "Kein Wecken"
+
+#: extension.js:836
+msgid "suspend"
+msgstr "Ruhezustand"
+
+#: extension.js:837
+msgid "shutdown"
+msgstr "Herunterfahren"
+
+#: extension.js:838
+msgid "reboot"
+msgstr "Neustart"
+
+#: extension.js:839
+msgid "wakeup"
+msgstr "Wecken"
+
+#: prefs.js:259
 msgid "Suspend"
 msgstr "Ruhezustand"
 
-#: prefs.js:14
+#: prefs.js:260
 msgid "Power Off"
-msgstr "Herunterfahren"
+msgstr "Ausschalten"
 
-#: prefs.js:15
+#: prefs.js:261
 msgid "Restart"
 msgstr "Neustart"
 

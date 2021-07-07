@@ -47,17 +47,9 @@ const MutterIdleMonitorProxy =
   Gio.DBusProxy.makeProxyWrapper(MutterIdleMonitorInf);
 
 let initialized = false;
-const MODE_LABELS = Me.imports.prefs.MODE_LABELS;
-const WAKE_MODE_LABELS = {
-  wake: _("Wake after"),
-  "no-wake": _("No Wake"),
-};
-const MODE_TEXTS = {
-  suspend: _("suspend"),
-  poweroff: _("shutdown"),
-  reboot: _("reboot"),
-  wake: _("wakeup"),
-};
+var MODE_LABELS;
+var WAKE_MODE_LABELS;
+var MODE_TEXTS;
 
 class ScheduleInfo {
   constructor({ mode = "?", deadline = -1, external = false }) {
@@ -835,6 +827,17 @@ function init() {
 }
 
 function enable() {
+  MODE_LABELS = Me.imports.prefs.init_mode_labels();
+  WAKE_MODE_LABELS = {
+    wake: _("Wake after"),
+    "no-wake": _("No Wake"),
+  };
+  MODE_TEXTS = {
+    suspend: _("suspend"),
+    poweroff: _("shutdown"),
+    reboot: _("reboot"),
+    wake: _("wakeup"),
+  };
   if (!initialized) {
     // initialize settings
     settings = ExtensionUtils.getSettings();

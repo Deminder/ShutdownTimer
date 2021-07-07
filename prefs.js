@@ -9,12 +9,7 @@ const Gettext = imports.gettext.domain("ShutdownTimer");
 const _ = Gettext.gettext;
 
 var settings;
-var MODE_LABELS = {
-  suspend: _("Suspend"),
-  poweroff: _("Power Off"),
-  reboot: _("Restart"),
-};
-
+var MODE_LABELS;
 function init() {
   ExtensionUtils.initTranslations();
   imports.gettext.textdomain(Me.metadata["gettext-domain"]);
@@ -259,7 +254,17 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
   }
 );
 
+function init_mode_labels() {
+  return {
+    suspend: _("Suspend"),
+    poweroff: _("Power Off"),
+    reboot: _("Restart"),
+  };
+}
+
 function buildPrefsWidget() {
+  MODE_LABELS = init_mode_labels();
+
   let widget = new ShutdownTimerPrefsWidget();
   if (Gtk.get_major_version() < 4) {
     if (widget.show_all) {
