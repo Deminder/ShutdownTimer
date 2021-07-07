@@ -115,5 +115,11 @@
       <summary>Prefix of script and policy installation</summary>
       <description>Prefix is derived from the location of the script or the last specified value.</description>
     </key>
+
+    <key type="s" name="install-log-text-value">
+      <default>""</default>
+      <summary>Log text for installation info</summary>
+      <description>Text that is displayed to user when installing/uninstalling privileged script.</description>
+    </key>
   </schema>
 </schemalist>

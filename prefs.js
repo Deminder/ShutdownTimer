@@ -61,12 +61,18 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
             ]
           : [[b, c]]
       )
-      .map((n) => n.join("-")),
+      .map((n) => n.join("-"))
+      .concat(
+        "rpm-ostree-hint-label",
+        "install-log-text-buffer",
+        "installer-scrollbar-adjustment"
+      ),
   },
   class ShutdownTimerPrefsWidget extends Gtk.Grid {
     _init(params = {}) {
       super._init(params);
       this.handlers = [];
+      this.settingsHandlerIds = [];
 
       const connectFuncs = {
         adjustment: [
@@ -186,28 +192,67 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
             });
           }
         );
-        this.handlers.push([
-          comp,
-          handlerId,
-          () => {
-            settings.disconnect(settingsHandlerId);
-          },
-        ]);
+        this.handlers.push([comp, handlerId]);
+        this.settingsHandlerIds.push(settingsHandlerId);
       };
 
       Object.entries(templateComponents).forEach(([k, v]) => {
         connect_comp(k, v);
       });
 
+      // install log text buffer updates
+      const logTextBuffer =
+        this[fieldNameByInteralID("install-log-text-buffer")];
+      const scrollAdj =
+        this[fieldNameByInteralID("installer-scrollbar-adjustment")];
+      const errorTag = new Gtk.TextTag({ foreground: "red" });
+      const successTag = new Gtk.TextTag({ foreground: "green" });
+      logTextBuffer.get_tag_table().add(errorTag);
+      const updateText = () => {
+        const text = settings.get_string("install-log-text-value");
+        logTextBuffer.set_text(text, -1);
+        for (const match of text.matchAll(/^# .+?$/gms)) {
+          logTextBuffer.apply_tag(
+            errorTag,
+            logTextBuffer.get_iter_at_offset(match.index),
+            logTextBuffer.get_iter_at_offset(match.index + match[0].length)
+          );
+        }
+        for (const match of text.matchAll(/^ success.*?$/gims)) {
+          logTextBuffer.apply_tag(
+            successTag,
+            logTextBuffer.get_iter_at_offset(match.index),
+            logTextBuffer.get_iter_at_offset(match.index + match[0].length)
+          );
+        }
+        GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+          scrollAdj.set_value(1000000);
+          return GLib.SOURCE_REMOVE;
+        });
+      };
+
+      const settingsHandlerId = settings.connect(
+        "changed::install-log-text-value",
+        updateText
+      );
+      this.settingsHandlerIds.push(settingsHandlerId);
+      updateText();
+
+      // show hint if rpm-ostree is installed
+      this[fieldNameByInteralID("rpm-ostree-hint-label")].visible =
+        GLib.find_program_in_path("rpm-ostree") !== null;
+
       ensurePrefixEntrySensitivity();
     }
 
     destroy() {
-      this.handlers.forEach(([comp, handlerId, onDisconnect]) => {
+      logTextBuffer = null;
+      this.handlers.forEach(([comp, handlerId]) => {
         comp.disconnect(handlerId);
-        onDisconnect();
       });
-      this.handlers = [];
+      this.settingsHandlerIds.forEach((handlerId) => {
+        settings.disconnect(handlerId);
+      });
       super.destroy();
     }
   }

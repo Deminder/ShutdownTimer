@@ -1,0 +1,11 @@
+FROM fedora:latest
+
+RUN dnf -y install rpmdevtools rpmlint
+RUN rpmdev-setuptree
+ARG TARFILE
+ARG SPECFILE
+COPY $TARFILE /root/rpmbuild/SOURCES/
+COPY $SPECFILE /root/rpmbuild/SPECS/
+RUN rpmlint /root/rpmbuild/SPECS/*
+
+ENTRYPOINT ["rpmbuild"]

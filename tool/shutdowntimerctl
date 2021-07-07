@@ -7,7 +7,7 @@
 SHUTDOWN_BIN=/usr/sbin/shutdown
 
 SHUTDOWN_MODE="-P"
-if [ "$2" -gt 0 ];then
+if [ ! -z "$2" ] && [ "$2" -gt 0 ];then
 	POSITIVE_VALUE="$2"
 fi
 
@@ -16,6 +16,11 @@ function print_help() {
 	echo "[shutdown|reboot] {MINUTES}" >&2
 	echo "[wake|wake-cancel] {UNIX_TIMESTAMP} (default: 0)" >&2
 }
+
+if [ "$#" -lt 1 ]; then
+	print_help
+	exit
+fi
 
 case "$1" in
 	shutdown|reboot)

@@ -27,7 +27,13 @@ const Gettext = imports.gettext.domain("ShutdownTimer");
 const _ = Gettext.gettext;
 
 /* GLOBAL VARIABLES */
-let textbox, shutdowTimerMenu, separator, settings, checkCancel, idleMonitor;
+let textbox,
+  shutdowTimerMenu,
+  separator,
+  settings,
+  checkCancel,
+  installCancel,
+  idleMonitor;
 
 const MutterIdleMonitorInf =
   '<node>\
@@ -298,23 +304,50 @@ function shutdown(mode) {
   }
 }
 
-async function toggleInstall() {
+function logInstallClear() {
+  settings.set_string("install-log-text-value", "");
+}
+
+function logInstall(message) {
+  message = ["[", "#"].includes(message[0]) ? message : " " + message;
+  settings.set_string(
+    "install-log-text-value",
+    settings.get_string("install-log-text-value") + message + "\n"
+  );
+}
+
+function toggleInstall() {
   const prefix = settings.get_string("install-policy-prefix-value");
-  try {
-    if (settings.get_boolean("install-policy-value")) {
-      await RootMode.installScript(prefix);
-    } else {
-      await RootMode.uninstallScript(prefix);
-    }
-  } catch (err) {
-    logError(err, "InstallError");
-    guiIdle(() => {
-      _showTextbox("Install Failed!\n" + err);
+  const action = settings.get_boolean("install-policy-value")
+    ? "install"
+    : "uninstall";
+  if (installCancel !== null) {
+    installCancel.cancel();
+  } else {
+    installCancel = new Gio.Cancellable();
+    installAction(action, prefix, installCancel).finally(() => {
+      installCancel = null;
+      guiIdle(() => {
+        shutdowTimerMenu._updateInstalledStatus();
+      });
     });
   }
-  guiIdle(() => {
-    shutdowTimerMenu._updateInstalledStatus();
-  });
+}
+
+async function installAction(action, prefix, cancel) {
+  RootMode.setInstallPrefix(prefix);
+  logInstall(`[START ${action} ${prefix}]`);
+  try {
+    if (action === "install") {
+      await RootMode.installScript(cancel, logInstall);
+    } else {
+      await RootMode.uninstallScript(cancel, logInstall);
+    }
+    logInstall(`[DONE ${action} ${prefix}]`);
+  } catch (err) {
+    logInstall(`[FAIL ${action} ${prefix}]\n# ${err}`);
+    logError(err, "InstallError");
+  }
 }
 
 // Derived values
@@ -460,6 +493,7 @@ const ShutdownTimer = GObject.registerClass(
         [
           "clicked",
           () => {
+            logInstallClear();
             ExtensionUtils.openPrefs();
           },
         ],
@@ -753,12 +787,14 @@ const ShutdownTimer = GObject.registerClass(
     }
 
     _updateInstalledStatus() {
-      const scriptPath = RootMode.installedScriptPath(
+      RootMode.setInstallPrefix(
         settings.get_string("install-policy-prefix-value")
       );
+      const scriptPath = RootMode.installedScriptPath();
       let installed = false;
       if (scriptPath !== null) {
         try {
+          logDebug("Existing installation at: " + scriptPath);
           settings.set_string(
             "install-policy-prefix-value",
             RootMode.scriptPathPrefix(scriptPath)
@@ -799,6 +835,7 @@ function enable() {
 
     // check for shutdown may run in background and can be canceled by user
     checkCancel = null;
+    installCancel = null;
     // starts internal shutdown schedule if ready
     timer = new Timer.Timer(serveInernalSchedule);
 

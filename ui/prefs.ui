@@ -3,7 +3,28 @@
 <interface>
   <requires lib="gtk+" version="3.24"/>
   <object class="GtkEntryBuffer" id="check-command-buffer"/>
+  <object class="GtkTextBuffer" id="install-log-text-buffer">
+    <property name="text">START test
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+DONE test</property>
+  </object>
   <object class="GtkEntryBuffer" id="install-policy-prefix-buffer"/>
+  <object class="GtkAdjustment" id="installer-scrollbar-adjustment">
+    <property name="upper">1000000</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
   <object class="GtkEntryBuffer" id="show-shutdown-mode-buffer"/>
   <object class="GtkAdjustment" id="shutdown-max-timer-adjustment">
     <property name="upper">10000</property>
@@ -123,10 +144,9 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
+                      <object class="GtkLabel" id="rpm-ostree-hint-label">
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">Hint: if "/usr" is read-only use "/var/home/username/.local"</property>
+                        <property name="label" translatable="yes">Hint: use "/usr" to install with rpm-ostree</property>
                         <attributes>
                           <attribute name="style" value="italic"/>
                         </attributes>
@@ -136,6 +156,34 @@
                         <property name="fill">True</property>
                         <property name="position">2</property>
                       </packing>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkListBoxRow">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <child>
+                  <object class="GtkScrolledWindow">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="vadjustment">installer-scrollbar-adjustment</property>
+                    <property name="min-content-width">500</property>
+                    <property name="min-content-height">200</property>
+                    <child>
+                      <object class="GtkTextView">
+                        <property name="height-request">40</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="editable">False</property>
+                        <property name="wrap-mode">char</property>
+                        <property name="cursor-visible">False</property>
+                        <property name="buffer">install-log-text-buffer</property>
+                        <property name="accepts-tab">False</property>
+                        <property name="monospace">True</property>
+                      </object>
                     </child>
                   </object>
                 </child>
