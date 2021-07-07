@@ -28,7 +28,7 @@ const _ = Gettext.gettext;
 
 /* GLOBAL VARIABLES */
 let textbox,
-  shutdowTimerMenu,
+  shutdownTimerMenu,
   separator,
   settings,
   checkCancel,
@@ -223,7 +223,7 @@ function serveInernalSchedule(mode) {
       // reset schedule timestamp
       settings.set_int("shutdown-timestamp-value", -1);
       guiIdle(() => {
-        shutdowTimerMenu._updateSwitcherState();
+        shutdownTimerMenu._updateSwitcherState();
       });
     });
 }
@@ -248,7 +248,7 @@ async function maybeDoCheck() {
     RootMode.shutdownCancel();
   }
   guiIdle(() => {
-    shutdowTimerMenu._updateShutdownInfo();
+    shutdownTimerMenu._updateShutdownInfo();
     _showTextbox(_("Waiting for confirmation") + maybeCheckCmdString(true));
   });
   return RootMode.execCheck(checkCmd, checkCancel)
@@ -328,7 +328,7 @@ function toggleInstall() {
     installAction(action, prefix, installCancel).finally(() => {
       installCancel = null;
       guiIdle(() => {
-        shutdowTimerMenu._updateInstalledStatus();
+        shutdownTimerMenu._updateInstalledStatus();
       });
     });
   }
@@ -417,8 +417,8 @@ function _disconnectOnDestroy(item, connections) {
 }
 
 function guiIdle(func) {
-  if (shutdowTimerMenu !== null) {
-    shutdowTimerMenu.guiIdle(func);
+  if (shutdownTimerMenu !== null) {
+    shutdownTimerMenu.guiIdle(func);
   }
 }
 
@@ -812,8 +812,10 @@ const ShutdownTimer = GObject.registerClass(
     }
 
     destroy() {
-      timer.setTickCallback(null);
-      timer.stopGLibTimer();
+      if (timer != null) {
+        timer.setTickCallback(null);
+        timer.stopGLibTimer();
+      }
       this.infoFetcher.stopScheduleInfoLoop();
       this.settingsHandlerIds.forEach((handlerId) => {
         settings.disconnect(handlerId);
@@ -862,41 +864,58 @@ function enable() {
   }
 
   // add separator line and submenu in status area menu
-  separator = new PopupMenu.PopupSeparatorMenuItem();
   const statusMenu = Main.panel.statusArea["aggregateMenu"];
-  statusMenu.menu.addMenuItem(separator);
-  shutdowTimerMenu = new ShutdownTimer();
-  statusMenu.menu.addMenuItem(shutdowTimerMenu);
+  if (separator == null) {
+    separator = new PopupMenu.PopupSeparatorMenuItem();
+    statusMenu.menu.addMenuItem(separator);
+  }
+  if (shutdownTimerMenu == null) {
+    shutdownTimerMenu = new ShutdownTimer();
+    statusMenu.menu.addMenuItem(shutdownTimerMenu);
+  }
 }
 
 function disable() {
-  shutdowTimerMenu.destroy();
-  shutdowTimerMenu = null;
-  separator.destroy();
-  separator = null;
+  if (shutdownTimerMenu != null) {
+    shutdownTimerMenu.destroy();
+  }
+  shutdownTimerMenu = undefined;
+  if (separator != null) {
+    separator.destroy();
+  }
+  separator = undefined;
 
-  idleMonitor
-    .then((proxy) =>
-      proxy.GetIdletimeRemote(([userIdle], error) => {
-        if (error || userIdle > 1000) {
-          logDebug(
-            `Partially disabled. User idled for ${userIdle} ms or Error: ${error}.`
-          );
-        } else {
-          // user active in last 10 sec => probably the user disabled the extension
-          timer.stopTimer();
-          timer = null;
-          if (checkCancel !== null) {
-            checkCancel.cancel();
-            checkCancel = null;
+  if (idleMonitor != null) {
+    idleMonitor
+      .then((proxy) =>
+        proxy.GetIdletimeRemote(([userIdle], error) => {
+          if (error || userIdle > 1000) {
+            logDebug(
+              `Partially disabled. User idled for ${userIdle} ms or Error: ${error}.`
+            );
+          } else {
+            // user active in last 10 sec => probably the user disabled the extension
+            if (shutdownTimerMenu != null) {
+              logDebug("Abort complete disable. Leave extension enabled.");
+              return;
+            }
+
+            if (timer != null) {
+              timer.stopTimer();
+              timer = undefined;
+            }
+            if (checkCancel != null) {
+              checkCancel.cancel();
+              checkCancel = undefined;
+            }
+            idleMonitor = undefined;
+            initialized = false;
+            logDebug(`Completly disabled. User idled for ${userIdle} ms.`);
           }
-          idleMonitor = null;
-          initialized = false;
-          logDebug(`Completly disabled. User idled for ${userIdle} ms.`);
-        }
-      })
-    )
-    .catch((err) => {
-      logError(err, "MissingIdleMonitor");
-    });
+        })
+      )
+      .catch((err) => {
+        logError(err, "MissingIdleMonitor");
+      });
+  }
 }
