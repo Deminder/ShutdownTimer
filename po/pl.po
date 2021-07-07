@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-07 16:28+0200\n"
+"POT-Creation-Date: 2021-07-07 17:26+0200\n"
 "PO-Revision-Date: 2021-07-04 23:14+0200\n"
 "Last-Translator: Jakub Żywiec <jakub.zywiec@gmail.com>\n"
 "Language-Team: POLISH <jakub.zywiec@gmail.com>\n"
@@ -29,7 +29,7 @@ msgid "Install/Uninstall privileges for this user"
 msgstr ""
 
 #: ui/prefs.ui:123
-msgid "Prefix of installation "
+msgid "Prefix of installation"
 msgstr ""
 
 #: ui/prefs.ui:149

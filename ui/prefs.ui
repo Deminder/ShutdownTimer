@@ -120,7 +120,7 @@ DONE test</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="halign">start</property>
-                        <property name="label" translatable="yes">Prefix of installation </property>
+                        <property name="label" translatable="yes">Prefix of installation</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
