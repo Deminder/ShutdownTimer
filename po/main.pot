@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer v31\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-07 17:28+0200\n"
+"POT-Creation-Date: 2021-07-07 17:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -169,16 +169,16 @@ msgstr ""
 msgid "Shutdown aborted"
 msgstr ""
 
-#: extension.js:350 extension.js:726
-msgid "hours"
+#: extension.js:350
+msgid "hour"
 msgstr ""
 
 #: extension.js:353
-msgid "seconds"
+msgid "sec"
 msgstr ""
 
-#: extension.js:355 extension.js:395 extension.js:729
-msgid "minutes"
+#: extension.js:355 extension.js:716
+msgid "min"
 msgstr ""
 
 #: extension.js:378
@@ -193,6 +193,10 @@ msgstr ""
 msgid "System will shutdown in"
 msgstr ""
 
+#: extension.js:395 extension.js:729
+msgid "minutes"
+msgstr ""
+
 #: extension.js:477
 msgid "Settings"
 msgstr ""
@@ -201,12 +205,12 @@ msgstr ""
 msgid "Wake action failed!"
 msgstr ""
 
-#: extension.js:716
-msgid "min"
-msgstr ""
-
 #: extension.js:718
 msgid "(protect)"
+msgstr ""
+
+#: extension.js:726
+msgid "hours"
 msgstr ""
 
 #: extension.js:832

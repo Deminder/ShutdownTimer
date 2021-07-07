@@ -347,12 +347,12 @@ function durationString(seconds) {
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
   if (hours >= 3) {
-    return `${hours} ${_("hours")}`;
+    return `${hours} ${_("hour")}`;
   }
   if (minutes === 0) {
-    return `${seconds} ${_("seconds")}`;
+    return `${seconds} ${_("sec")}`;
   }
-  return `${minutes} ${_("minutes")}`;
+  return `${minutes} ${_("min")}`;
 }
 
 function _getSliderMinutes(prefix) {
