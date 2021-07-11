@@ -309,7 +309,6 @@ function logInstall(message) {
 }
 
 function toggleInstall() {
-  const prefix = settings.get_string("install-policy-prefix-value");
   const action = settings.get_boolean("install-policy-value")
     ? "install"
     : "uninstall";
@@ -317,7 +316,7 @@ function toggleInstall() {
     installCancel.cancel();
   } else {
     installCancel = new Gio.Cancellable();
-    installAction(action, prefix, installCancel).finally(() => {
+    installAction(action, installCancel).finally(() => {
       installCancel = null;
       guiIdle(() => {
         shutdownTimerMenu._updateInstalledStatus();
@@ -326,18 +325,17 @@ function toggleInstall() {
   }
 }
 
-async function installAction(action, prefix, cancel) {
-  RootMode.setInstallPrefix(prefix);
-  logInstall(`[START ${action} ${prefix}]`);
+async function installAction(action, cancel) {
+  logInstall(`[START ${action} "/usr"]`);
   try {
     if (action === "install") {
       await RootMode.installScript(cancel, logInstall);
     } else {
       await RootMode.uninstallScript(cancel, logInstall);
     }
-    logInstall(`[DONE ${action} ${prefix}]`);
+    logInstall(`[DONE ${action} "/usr"]`);
   } catch (err) {
-    logInstall(`[FAIL ${action} ${prefix}]\n# ${err}`);
+    logInstall(`[FAIL ${action} "/usr"]\n# ${err}`);
     logError(err, "InstallError");
   }
 }
@@ -783,24 +781,11 @@ const ShutdownTimer = GObject.registerClass(
     }
 
     _updateInstalledStatus() {
-      RootMode.setInstallPrefix(
-        settings.get_string("install-policy-prefix-value")
-      );
       const scriptPath = RootMode.installedScriptPath();
-      let installed = false;
       if (scriptPath !== null) {
-        try {
-          logDebug("Existing installation at: " + scriptPath);
-          settings.set_string(
-            "install-policy-prefix-value",
-            RootMode.scriptPathPrefix(scriptPath)
-          );
-          installed = true;
-        } catch (err) {
-          logError(err, "LocateInstallation");
-        }
+        logDebug("Existing installation at: " + scriptPath);
       }
-      settings.set_boolean("install-policy-value", installed);
+      settings.set_boolean("install-policy-value", scriptPath !== null);
     }
 
     destroy() {

@@ -32,7 +32,6 @@ const templateComponents = {
   "wake-slider": "adjustment",
   "show-wake-slider": "switch",
   "show-wake-items": "switch",
-  "install-policy-prefix": "buffer",
   "install-policy": "switch",
 };
 
@@ -112,13 +111,6 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
         return fieldName;
       };
 
-      const ensurePrefixEntrySensitivity = () => {
-        // Ensure insensitive prefix entry if already installed
-        this[fieldNameByInteralID("install-policy-prefix-entry")].set_sensitive(
-          !settings.get_boolean("install-policy-value")
-        );
-      };
-
       const connect_comp = (baseName, component) => {
         const [
           fieldGetter,
@@ -176,9 +168,6 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
         const settingsHandlerId = settings.connect(
           "changed::" + settingsName,
           () => {
-            if (settingsName === "install-policy-value") {
-              ensurePrefixEntrySensitivity();
-            }
             maybeUpdate("external", () => {
               const val = settingsGetter(settingsName);
               if (val !== fieldGetter(comp)) {
@@ -237,8 +226,6 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
       // show hint if rpm-ostree is installed
       this[fieldNameByInteralID("rpm-ostree-hint-label")].visible =
         GLib.find_program_in_path("rpm-ostree") !== null;
-
-      ensurePrefixEntrySensitivity();
     }
 
     destroy() {

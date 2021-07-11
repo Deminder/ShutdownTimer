@@ -87,34 +87,13 @@ DONE test</property>
                 <child>
                   <object class="GtkListBoxRow">
                     <property name="child">
-                      <object class="GtkBox">
-                        <property name="orientation">vertical</property>
-                        <property name="spacing">3</property>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="can-focus">0</property>
-                            <property name="halign">start</property>
-                            <property name="label" translatable="yes">Prefix of installation</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkEntry" id="install-policy-prefix-entry">
-                            <property name="buffer">install-policy-prefix-buffer</property>
-                            <property name="primary-icon-activatable">0</property>
-                            <property name="primary-icon-sensitive">0</property>
-                            <property name="placeholder-text">/home/username/.local</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="rpm-ostree-hint-label">
-                            <property name="visible">0</property>
-                            <property name="can-focus">0</property>
-                            <property name="label" translatable="yes">Hint: use &quot;/usr&quot; to install with rpm-ostree</property>
-                            <attributes>
-                              <attribute name="style" value="italic"></attribute>
-                            </attributes>
-                          </object>
-                        </child>
+                      <object class="GtkLabel" id="rpm-ostree-hint-label">
+                        <property name="visible">0</property>
+                        <property name="can-focus">0</property>
+                        <property name="label" translatable="yes">Hint: installed to &quot;/usr&quot; with rpm-ostree</property>
+                        <attributes>
+                          <attribute name="style" value="italic"></attribute>
+                        </attributes>
                       </object>
                     </property>
                   </object>

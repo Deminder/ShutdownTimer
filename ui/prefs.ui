@@ -110,53 +110,12 @@ DONE test</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="orientation">vertical</property>
-                    <property name="spacing">3</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="halign">start</property>
-                        <property name="label" translatable="yes">Prefix of installation</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkEntry" id="install-policy-prefix-entry">
-                        <property name="visible">True</property>
-                        <property name="can-focus">True</property>
-                        <property name="buffer">install-policy-prefix-buffer</property>
-                        <property name="primary-icon-activatable">False</property>
-                        <property name="primary-icon-sensitive">False</property>
-                        <property name="placeholder-text">/home/username/.local</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="rpm-ostree-hint-label">
-                        <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">Hint: use "/usr" to install with rpm-ostree</property>
-                        <attributes>
-                          <attribute name="style" value="italic"/>
-                        </attributes>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">2</property>
-                      </packing>
-                    </child>
+                  <object class="GtkLabel" id="rpm-ostree-hint-label">
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">Hint: installed to "/usr" with rpm-ostree</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
                   </object>
                 </child>
               </object>

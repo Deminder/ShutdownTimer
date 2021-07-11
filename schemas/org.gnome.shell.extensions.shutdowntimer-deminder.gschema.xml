@@ -110,12 +110,6 @@
       <description>Indicates the state of installation of the privileged script and polkit policies.</description>
     </key>
 
-    <key type="s" name="install-policy-prefix-value">
-      <default>"/usr"</default>
-      <summary>Prefix of script and policy installation</summary>
-      <description>Prefix is derived from the location of the script or the last specified value.</description>
-    </key>
-
     <key type="s" name="install-log-text-value">
       <default>""</default>
       <summary>Log text for installation info</summary>
