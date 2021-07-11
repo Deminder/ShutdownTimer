@@ -14,7 +14,7 @@ xgettext \
     --from-code=UTF-8 \
     --copyright-holder="Shutdown Timer" \
     --package-name="Shutdown Timer" \
-    --package-version="v31" \
+    --package-version="$(git describe --tags --abbrev=0)" \
     --output="po/main.pot" \
     ui/prefs.ui lib/*.js *.js schemas/*.xml
 
