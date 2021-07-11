@@ -31,14 +31,16 @@ gnome-extensions pack \
     --extra-source="README.md" \
     --extra-source="CHANGELOG.md"
 
+UUID=$(grep uuid metadata.json | cut -d\" -f 4)
+ZIPFILE="$UUID".shell-extension.zip
+zip -d "$ZIPFILE" bin/icon.png ui/prefs.ui~ || true
 echo "Packing Done!"
 
-UUID=$(grep uuid metadata.json | cut -d\" -f 4)
 
 while getopts i flag; do
     case $flag in
         i)  gnome-extensions install \
-            --force "$UUID".shell-extension.zip && \
+            --force "$ZIPFILE"  && \
             echo "Extension is installed. Now restart the GNOME Shell." || \
             { echo "ERROR: Could not install the extension!"; exit 1; };;
 
