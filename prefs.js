@@ -221,11 +221,14 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
         updateText
       );
       this.settingsHandlerIds.push(settingsHandlerId);
-      updateText();
 
-      // show hint if rpm-ostree is installed
-      this[fieldNameByInteralID("rpm-ostree-hint-label")].visible =
-        GLib.find_program_in_path("rpm-ostree") !== null;
+      GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+        updateText();
+        // show hint if rpm-ostree is installed
+        this[fieldNameByInteralID("rpm-ostree-hint-label")].visible =
+          GLib.find_program_in_path("rpm-ostree") !== null;
+        return GLib.SOURCE_REMOVE;
+      });
     }
 
     destroy() {

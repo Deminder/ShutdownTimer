@@ -782,10 +782,13 @@ const ShutdownTimer = GObject.registerClass(
 
     _updateInstalledStatus() {
       const scriptPath = RootMode.installedScriptPath();
-      if (scriptPath !== null) {
+      const isInstalled = scriptPath !== null;
+      if (isInstalled) {
         logDebug("Existing installation at: " + scriptPath);
       }
-      settings.set_boolean("install-policy-value", scriptPath !== null);
+      if (isInstalled !== settings.get_boolean("install-policy-value")) {
+        settings.set_boolean("install-policy-value", isInstalled);
+      }
     }
 
     destroy() {

@@ -272,7 +272,7 @@ EOF
         exit ${EXIT_MUST_BE_ROOT}
     fi
 
-    echo -n "Installing ${TOOL_NAME}) tool... "
+    echo -n "Installing ${TOOL_NAME} tool... "
     mkdir -p "${CFC_DIR}"
     install "${CFC_IN}" "${CFC_OUT}" || fail
     echo "Success"

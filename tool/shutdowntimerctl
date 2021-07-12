@@ -15,7 +15,7 @@ fi
 function print_help() {
 	echo "[help] (show this help)" >&2
 	echo "[shutdown|reboot] {MINUTES}" >&2
-	echo "[wake|wake-cancel] {UNIX_TIMESTAMP} (default: 0)" >&2
+	echo "[wake|wake-cancel] {MINUTES} (default: 0)" >&2
 }
 
 if [ "$#" -lt 1 ]; then
