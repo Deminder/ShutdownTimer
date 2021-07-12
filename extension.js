@@ -226,7 +226,6 @@ async function maybeDoCheck() {
       "Confirmation canceled: attempted to start a second check command!"
     );
   }
-  checkCancel = new Gio.Cancellable();
 
   const checkCmd = maybeCheckCmdString();
   if (checkCmd === "") {
@@ -239,6 +238,8 @@ async function maybeDoCheck() {
     // avoid shutting down (with root mode protection) before check command is done
     RootMode.shutdownCancel();
   }
+
+  checkCancel = new Gio.Cancellable();
   guiIdle(() => {
     shutdownTimerMenu._updateShutdownInfo();
     _showTextbox(_("Waiting for confirmation") + maybeCheckCmdString(true));
