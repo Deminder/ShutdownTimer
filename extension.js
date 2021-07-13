@@ -349,7 +349,7 @@ function durationString(seconds) {
     return `${hours} ${_("hour")}`;
   }
   if (minutes === 0) {
-    return `${seconds} ${_("sec")}`;
+    return `${Math.floor(seconds)} ${_("sec")}`;
   }
   return `${minutes} ${_("min")}`;
 }

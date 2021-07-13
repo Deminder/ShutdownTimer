@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-11 11:25+0200\n"
-"PO-Revision-Date: 2021-07-11 11:26+0200\n"
+"POT-Creation-Date: 2021-07-13 11:42+0200\n"
+"PO-Revision-Date: 2021-07-13 11:43+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -40,7 +40,7 @@ msgstr "Install"
 msgid "Use mode"
 msgstr "Use mode"
 
-#: ui/prefs.ui:236 ui/prefs.ui:433
+#: ui/prefs.ui:236
 msgid ""
 "uses 'pkexec shutdown' command, no interruption of timer, but needs root "
 "password"
@@ -56,7 +56,7 @@ msgstr "Root mode protection"
 msgid "Shutdown slider position (in &#37;)"
 msgstr "Shutdown slider position (in %)"
 
-#: ui/prefs.ui:352 ui/prefs.ui:550
+#: ui/prefs.ui:352 ui/prefs.ui:549
 msgid "Maximum timer value (in minutes)"
 msgstr "Maximum timer value (in minutes)"
 
@@ -64,61 +64,61 @@ msgstr "Maximum timer value (in minutes)"
 msgid "Shutdown"
 msgstr "Shutdown"
 
-#: ui/prefs.ui:435
+#: ui/prefs.ui:434
 msgid "Toggle wake with shutdown timer"
 msgstr "Toggle wake with shutdown timer"
 
-#: ui/prefs.ui:490
+#: ui/prefs.ui:489
 msgid "Wake slider position (in &#37;)"
 msgstr "Wake slider position (in %)"
 
-#: ui/prefs.ui:597
+#: ui/prefs.ui:596
 msgid "Wake"
 msgstr "Wake"
 
-#: ui/prefs.ui:627
+#: ui/prefs.ui:626
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:43
 msgid "Show settings button"
 msgstr "Show settings button"
 
-#: ui/prefs.ui:665
+#: ui/prefs.ui:664
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:80
 msgid "Comma-separated shutdown modes which are shown in the popup menu."
 msgstr "Comma-separated shutdown modes which are shown in the popup menu."
 
-#: ui/prefs.ui:667
+#: ui/prefs.ui:666
 msgid "Show shutdown items"
 msgstr "Show shutdown items"
 
-#: ui/prefs.ui:706
+#: ui/prefs.ui:705
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:49
 msgid "Show shutdown slider"
 msgstr "Show shutdown slider"
 
-#: ui/prefs.ui:744
+#: ui/prefs.ui:743
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:67
 msgid "Show notification text boxes"
 msgstr "Show notification text boxes"
 
-#: ui/prefs.ui:786
+#: ui/prefs.ui:785
 msgid "Show wake items"
 msgstr "Show wake items"
 
-#: ui/prefs.ui:834
+#: ui/prefs.ui:833
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:55
 msgid "Show wake slider"
 msgstr "Show wake slider"
 
-#: ui/prefs.ui:871
+#: ui/prefs.ui:870
 msgid "Display"
 msgstr "Display"
 
-#: ui/prefs.ui:901
+#: ui/prefs.ui:900
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:103
 msgid "Enable check command"
 msgstr "Enable check command"
 
-#: ui/prefs.ui:939
+#: ui/prefs.ui:938
 msgid ""
 "Run check command after timer runs out. Only proceeds if check command "
 "terminates successfully."
@@ -126,26 +126,26 @@ msgstr ""
 "Run check command after timer runs out. Only proceeds if check command "
 "terminates successfully."
 
-#: ui/prefs.ui:941
+#: ui/prefs.ui:940
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:91
 msgid "Check command"
 msgstr "Check command"
 
-#: ui/prefs.ui:955
+#: ui/prefs.ui:954
 msgid "command run in user shell"
 msgstr "command run in user shell"
 
-#: ui/prefs.ui:981
+#: ui/prefs.ui:980
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:98
 msgid "Cancel the root mode protection before check command is run if enabled."
 msgstr ""
 "Cancel the root mode protection before check command is run if enabled."
 
-#: ui/prefs.ui:983
-msgid "Cancel root mode protection"
-msgstr "Cancel root mode protection"
+#: ui/prefs.ui:982
+msgid "Cancel root mode protection before check"
+msgstr "Cancel root mode protection before check"
 
-#: ui/prefs.ui:1016
+#: ui/prefs.ui:1015
 msgid "Check"
 msgstr "Check"
 
@@ -165,91 +165,91 @@ msgstr "(sys)"
 msgid "Root mode protection failed!"
 msgstr "Root mode protection failed!"
 
-#: extension.js:244 extension.js:686
+#: extension.js:245 extension.js:687
 msgid "Waiting for confirmation"
 msgstr "Waiting for confirmation"
 
-#: extension.js:258
+#: extension.js:259
 msgid "Shutdown aborted"
 msgstr "Shutdown aborted"
 
-#: extension.js:348
+#: extension.js:349
 msgid "hour"
 msgstr "hour"
 
-#: extension.js:351
+#: extension.js:352
 msgid "sec"
 msgstr "sec"
 
-#: extension.js:353 extension.js:714
+#: extension.js:354 extension.js:715
 msgid "min"
 msgstr "min"
 
-#: extension.js:376
+#: extension.js:377
 msgid "Shutdown Timer stopped"
 msgstr "Shutdown Timer stopped"
 
-#: extension.js:379
+#: extension.js:380
 msgid "Confirmation canceled"
 msgstr "Confirmation canceled"
 
-#: extension.js:392
+#: extension.js:393
 msgid "System will shutdown in"
 msgstr "System will shutdown in"
 
-#: extension.js:393 extension.js:727
+#: extension.js:394 extension.js:728
 msgid "minutes"
 msgstr "minutes"
 
-#: extension.js:475
+#: extension.js:476
 msgid "Settings"
 msgstr "Settings"
 
-#: extension.js:540
+#: extension.js:541
 msgid "Wake action failed!"
 msgstr "Wake action failed!"
 
-#: extension.js:716
+#: extension.js:717
 msgid "(protect)"
 msgstr "(protect)"
 
-#: extension.js:724
+#: extension.js:725
 msgid "hours"
 msgstr "hours"
 
-#: extension.js:817
+#: extension.js:821
 msgid "Wake after"
 msgstr "Wake after"
 
-#: extension.js:818
+#: extension.js:822
 msgid "No Wake"
 msgstr "No Wake"
 
-#: extension.js:821
+#: extension.js:825
 msgid "suspend"
 msgstr "suspend"
 
-#: extension.js:822
+#: extension.js:826
 msgid "shutdown"
 msgstr "shutdown"
 
-#: extension.js:823
+#: extension.js:827
 msgid "reboot"
 msgstr "reboot"
 
-#: extension.js:824
+#: extension.js:828
 msgid "wakeup"
 msgstr "wakeup"
 
-#: prefs.js:246
+#: prefs.js:249
 msgid "Suspend"
 msgstr "Suspend"
 
-#: prefs.js:247
+#: prefs.js:250
 msgid "Power Off"
 msgstr "Power Off"
 
-#: prefs.js:248
+#: prefs.js:251
 msgid "Restart"
 msgstr "Restart"
 

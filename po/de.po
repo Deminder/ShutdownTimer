@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-11 11:25+0200\n"
-"PO-Revision-Date: 2021-07-11 11:26+0200\n"
+"POT-Creation-Date: 2021-07-13 11:42+0200\n"
+"PO-Revision-Date: 2021-07-13 11:44+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: GERMAN Jonatan Zeidler <jonatan_zeidler@gmx.de>\n"
 "Language: de\n"
@@ -41,7 +41,7 @@ msgstr "Installieren"
 msgid "Use mode"
 msgstr "Verwende Option"
 
-#: ui/prefs.ui:236 ui/prefs.ui:433
+#: ui/prefs.ui:236
 msgid ""
 "uses 'pkexec shutdown' command, no interruption of timer, but needs root "
 "password"
@@ -57,7 +57,7 @@ msgstr "Root-Modus-Absicherung"
 msgid "Shutdown slider position (in &#37;)"
 msgstr "Standardposition des Ausschalt-Schiebereglers (in %)"
 
-#: ui/prefs.ui:352 ui/prefs.ui:550
+#: ui/prefs.ui:352 ui/prefs.ui:549
 msgid "Maximum timer value (in minutes)"
 msgstr "Maximaler Uhrenwert (in Minuten)"
 
@@ -65,61 +65,61 @@ msgstr "Maximaler Uhrenwert (in Minuten)"
 msgid "Shutdown"
 msgstr "Abschalten"
 
-#: ui/prefs.ui:435
+#: ui/prefs.ui:434
 msgid "Toggle wake with shutdown timer"
 msgstr "Schalte den Wecker zusammen mit der Ausschaltuhr"
 
-#: ui/prefs.ui:490
+#: ui/prefs.ui:489
 msgid "Wake slider position (in &#37;)"
 msgstr "Standardposition des Wecker-Schiebereglers (in %)"
 
-#: ui/prefs.ui:597
+#: ui/prefs.ui:596
 msgid "Wake"
 msgstr "Wecker"
 
-#: ui/prefs.ui:627
+#: ui/prefs.ui:626
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:43
 msgid "Show settings button"
 msgstr "Zeige Einstellungsbutton"
 
-#: ui/prefs.ui:665
+#: ui/prefs.ui:664
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:80
 msgid "Comma-separated shutdown modes which are shown in the popup menu."
 msgstr "Kommagetrennt Ausschaltoptionen, die im Menü erscheinen."
 
-#: ui/prefs.ui:667
+#: ui/prefs.ui:666
 msgid "Show shutdown items"
 msgstr "Zeige Ausschaltoptionen"
 
-#: ui/prefs.ui:706
+#: ui/prefs.ui:705
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:49
 msgid "Show shutdown slider"
 msgstr "Zeige Ausschalt-Schieber"
 
-#: ui/prefs.ui:744
+#: ui/prefs.ui:743
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:67
 msgid "Show notification text boxes"
 msgstr "Zeige Textbox-Notifikationen"
 
-#: ui/prefs.ui:786
+#: ui/prefs.ui:785
 msgid "Show wake items"
 msgstr "Zeige Wecker-Optionen"
 
-#: ui/prefs.ui:834
+#: ui/prefs.ui:833
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:55
 msgid "Show wake slider"
 msgstr "Zeige Wecker-Schieber"
 
-#: ui/prefs.ui:871
+#: ui/prefs.ui:870
 msgid "Display"
 msgstr "Anzeige"
 
-#: ui/prefs.ui:901
+#: ui/prefs.ui:900
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:103
 msgid "Enable check command"
 msgstr "Prüfbefehl verwenden"
 
-#: ui/prefs.ui:939
+#: ui/prefs.ui:938
 msgid ""
 "Run check command after timer runs out. Only proceeds if check command "
 "terminates successfully."
@@ -127,25 +127,25 @@ msgstr ""
 "Führt den Prüfbefehl nach dem auslaufen der Ausschaltuhr aus. Nur wenn der "
 "Prüfbefehl erfolgreich terminiert, wird vorangeschritten."
 
-#: ui/prefs.ui:941
+#: ui/prefs.ui:940
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:91
 msgid "Check command"
 msgstr "Prüfbefehl"
 
-#: ui/prefs.ui:955
+#: ui/prefs.ui:954
 msgid "command run in user shell"
 msgstr "Befehl wird mit der Benutzer-Shell ausgeführt"
 
-#: ui/prefs.ui:981
+#: ui/prefs.ui:980
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:98
 msgid "Cancel the root mode protection before check command is run if enabled."
 msgstr "Stoppe die Root-Mode-Absicherung bevor der Prüfbefehl ausgeführt wird."
 
-#: ui/prefs.ui:983
-msgid "Cancel root mode protection"
-msgstr "Stoppt die Root-Modus-Absicherung"
+#: ui/prefs.ui:982
+msgid "Cancel root mode protection before check"
+msgstr "Stoppt die Root-Modus-Absicherung vor dem Prüfbefehl"
 
-#: ui/prefs.ui:1016
+#: ui/prefs.ui:1015
 msgid "Check"
 msgstr "Prüfung"
 
@@ -165,91 +165,91 @@ msgstr "(sys)"
 msgid "Root mode protection failed!"
 msgstr "Root-Modus-Absicherung fehlgeschlagen!"
 
-#: extension.js:244 extension.js:686
+#: extension.js:245 extension.js:687
 msgid "Waiting for confirmation"
 msgstr "Warte auf Bestätigung"
 
-#: extension.js:258
+#: extension.js:259
 msgid "Shutdown aborted"
 msgstr "Auschalten abgebrochen"
 
-#: extension.js:348
+#: extension.js:349
 msgid "hour"
 msgstr "Std."
 
-#: extension.js:351
+#: extension.js:352
 msgid "sec"
 msgstr "Sek."
 
-#: extension.js:353 extension.js:714
+#: extension.js:354 extension.js:715
 msgid "min"
 msgstr "Min."
 
-#: extension.js:376
+#: extension.js:377
 msgid "Shutdown Timer stopped"
 msgstr "Ausschaltuhr gestoppt"
 
-#: extension.js:379
+#: extension.js:380
 msgid "Confirmation canceled"
 msgstr "Prüfung abgebrochen"
 
-#: extension.js:392
+#: extension.js:393
 msgid "System will shutdown in"
 msgstr "System wird herunterfahren in"
 
-#: extension.js:393 extension.js:727
+#: extension.js:394 extension.js:728
 msgid "minutes"
 msgstr "Minuten"
 
-#: extension.js:475
+#: extension.js:476
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: extension.js:540
+#: extension.js:541
 msgid "Wake action failed!"
 msgstr "Wecker-Befehl fehlgeschlagen!"
 
-#: extension.js:716
+#: extension.js:717
 msgid "(protect)"
 msgstr "(sicher)"
 
-#: extension.js:724
+#: extension.js:725
 msgid "hours"
 msgstr "Stdunden"
 
-#: extension.js:817
+#: extension.js:821
 msgid "Wake after"
 msgstr "Wecke nach"
 
-#: extension.js:818
+#: extension.js:822
 msgid "No Wake"
 msgstr "Kein Wecken"
 
-#: extension.js:821
+#: extension.js:825
 msgid "suspend"
 msgstr "Ruhezustand"
 
-#: extension.js:822
+#: extension.js:826
 msgid "shutdown"
 msgstr "Abschalten"
 
-#: extension.js:823
+#: extension.js:827
 msgid "reboot"
 msgstr "Neustart"
 
-#: extension.js:824
+#: extension.js:828
 msgid "wakeup"
 msgstr "Wecken"
 
-#: prefs.js:246
+#: prefs.js:249
 msgid "Suspend"
 msgstr "Ruhezustand"
 
-#: prefs.js:247
+#: prefs.js:250
 msgid "Power Off"
 msgstr "Ausschalten"
 
-#: prefs.js:248
+#: prefs.js:251
 msgid "Restart"
 msgstr "Neustart"
 

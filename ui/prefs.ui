@@ -430,7 +430,6 @@ DONE test</property>
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="tooltip-text" translatable="yes">uses 'pkexec shutdown' command, no interruption of timer, but needs root password</property>
                             <property name="halign">start</property>
                             <property name="label" translatable="yes">Toggle wake with shutdown timer</property>
                             <property name="use-markup">True</property>
@@ -980,7 +979,7 @@ DONE test</property>
                         <property name="can-focus">False</property>
                         <property name="tooltip-text" translatable="yes">Cancel the root mode protection before check command is run if enabled.</property>
                         <property name="halign">start</property>
-                        <property name="label" translatable="yes">Cancel root mode protection</property>
+                        <property name="label" translatable="yes">Cancel root mode protection before check</property>
                         <property name="use-markup">True</property>
                       </object>
                       <packing>
