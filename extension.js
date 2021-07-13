@@ -119,6 +119,8 @@ function _showTextbox(textmsg) {
       text: "Hello, world!",
     });
     Main.uiGroup.add_actor(textbox);
+  } else {
+    _cancelHideTimeout();
   }
   textbox.text = textmsg;
   textbox.opacity = 255;
@@ -127,18 +129,36 @@ function _showTextbox(textmsg) {
     Math.floor(monitor.width / 2 - textbox.width / 2),
     Math.floor(monitor.height / 2 - textbox.height / 2)
   );
-  textbox.ease({
-    opacity: 0,
-    delay: 3000,
-    duration: 1000,
-    mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-    onComplete: _hideTextbox,
-  });
+  textbox["_sourceId"] = GLib.timeout_add_seconds(
+    GLib.PRIORITY_DEFAULT,
+    3,
+    () => {
+      textbox.ease({
+        opacity: 0,
+        // delay: 3000,  // delay does not work for shell 3.38
+        duration: 1000,
+        mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+        onComplete: _hideTextbox,
+      });
+      delete textbox["_sourceId"];
+      return GLib.SOURCE_REMOVE;
+    }
+  );
+}
+
+function _cancelHideTimeout() {
+  if (textbox != null && "_sourceId" in textbox) {
+    GLib.Source.remove(textbox["_sourceId"]);
+    delete textbox["_sourceId"];
+  }
 }
 
 function _hideTextbox() {
-  Main.uiGroup.remove_actor(textbox);
-  textbox = null;
+  _cancelHideTimeout();
+  if (textbox != null) {
+    Main.uiGroup.remove_actor(textbox);
+    textbox = null;
+  }
 }
 
 async function maybeStopRootModeProtection(info, stopScheduled = false) {
@@ -863,6 +883,7 @@ function enable() {
 }
 
 function disable() {
+  _hideTextbox();
   if (shutdownTimerMenu != null) {
     shutdownTimerMenu.destroy();
   }
