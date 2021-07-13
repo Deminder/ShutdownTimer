@@ -254,6 +254,8 @@ function init_mode_labels() {
 
 function buildPrefsWidget() {
   MODE_LABELS = init_mode_labels();
+  // clear install log
+  settings.set_string("install-log-text-value", "");
 
   let widget = new ShutdownTimerPrefsWidget();
   if (Gtk.get_major_version() < 4) {

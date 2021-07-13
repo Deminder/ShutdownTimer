@@ -297,10 +297,6 @@ function shutdown(mode) {
   }
 }
 
-function logInstallClear() {
-  settings.set_string("install-log-text-value", "");
-}
-
 function logInstall(message) {
   message = ["[", "#"].includes(message[0]) ? message : " " + message;
   settings.set_string(
@@ -484,7 +480,6 @@ const ShutdownTimer = GObject.registerClass(
         [
           "clicked",
           () => {
-            logInstallClear();
             ExtensionUtils.openPrefs();
           },
         ],
