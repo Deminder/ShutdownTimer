@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-14 22:39+0200\n"
+"POT-Creation-Date: 2021-07-14 23:19+0200\n"
 "PO-Revision-Date: 2021-07-14 22:46+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: \n"
@@ -61,7 +61,7 @@ msgstr "policykit rule"
 msgid "Bundling sources"
 msgstr "Bundling sources"
 
-#: tool/installer.sh:257
+#: tool/installer.sh:257 tool/installer.sh:270
 msgid "podman image"
 msgstr "podman image"
 
@@ -88,10 +88,6 @@ msgstr "Removing"
 #: tool/installer.sh:267
 msgid "container"
 msgstr "container"
-
-#: tool/installer.sh:270
-msgid "image"
-msgstr "image"
 
 #: tool/installer.sh:273 tool/installer.sh:288 tool/installer.sh:293
 #: tool/installer.sh:298
@@ -549,6 +545,9 @@ msgid ""
 msgstr ""
 "Text that is displayed to user when installing/uninstalling privileged "
 "script."
+
+#~ msgid "image"
+#~ msgstr "image"
 
 #~ msgid "hours"
 #~ msgstr "hours"

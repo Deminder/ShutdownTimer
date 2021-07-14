@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-14 22:39+0200\n"
-"PO-Revision-Date: 2021-07-14 22:40+0200\n"
+"POT-Creation-Date: 2021-07-14 23:19+0200\n"
+"PO-Revision-Date: 2021-07-14 23:20+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: GERMAN Jonatan Zeidler <jonatan_zeidler@gmx.de>\n"
 "Language: de\n"
@@ -22,7 +22,7 @@ msgstr ""
 
 #: tool/installer.sh:53
 msgid "Failed"
-msgstr "Fehlschlag"
+msgstr "Fehlgeschlagen"
 
 #: tool/installer.sh:55
 msgid "Success"
@@ -61,9 +61,9 @@ msgstr "PolicyKit-Regel"
 msgid "Bundling sources"
 msgstr "Bündele Quelldateien"
 
-#: tool/installer.sh:257
+#: tool/installer.sh:257 tool/installer.sh:270
 msgid "podman image"
-msgstr "Podman Image"
+msgstr "Podman-Image"
 
 #: tool/installer.sh:257
 msgid "for building rpm-package"
@@ -89,10 +89,6 @@ msgstr "Entferne"
 msgid "container"
 msgstr "Container"
 
-#: tool/installer.sh:270
-msgid "image"
-msgstr "Image"
-
 #: tool/installer.sh:273 tool/installer.sh:288 tool/installer.sh:293
 #: tool/installer.sh:298
 msgid "Installing"
@@ -108,7 +104,7 @@ msgstr "Erfolgreich installiert"
 
 #: tool/installer.sh:278 tool/installer.sh:320
 msgid "Restart required for changes to take effect."
-msgstr "Neustart erforderlich, sodass die Änderungen in Kraft treten"
+msgstr "Neustart erforderlich, sodass die Änderungen in Kraft treten."
 
 #: tool/installer.sh:288 tool/installer.sh:323 tool/installer.sh:328
 msgid "tool"
@@ -555,6 +551,11 @@ msgstr ""
 "Text der dem Benutzer angezeigt wird, wenn das privilegierte Skript "
 "installiert/deinstalliert wird."
 
+#~ msgid "cause: rpmbuild not successful"
+#~ msgstr "Ursache: RPM-Erstellung fehlgeschlagen"
+
+#~ msgid "image"
+#~ msgstr "Image"
 
 #~ msgid "Mode"
 #~ msgstr "Modus"

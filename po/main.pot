@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer r7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-14 22:52+0200\n"
+"POT-Creation-Date: 2021-07-14 23:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,7 +59,7 @@ msgstr ""
 msgid "Bundling sources"
 msgstr ""
 
-#: tool/installer.sh:257
+#: tool/installer.sh:257 tool/installer.sh:270
 msgid "podman image"
 msgstr ""
 
@@ -85,10 +85,6 @@ msgstr ""
 
 #: tool/installer.sh:267
 msgid "container"
-msgstr ""
-
-#: tool/installer.sh:270
-msgid "image"
 msgstr ""
 
 #: tool/installer.sh:273 tool/installer.sh:288 tool/installer.sh:293

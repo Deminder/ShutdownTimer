@@ -179,7 +179,7 @@ DIST_PKG_NAME=${VPKG_NAME}-${RELEASE}.noarch
 if [ "$ACTION" = "install" ]
 then
     if which rpm-ostree >/dev/null; then
-        # install must be an rpm package (rpm-ostree may run without root)
+        # install must be a rpm package (rpm-ostree may run without root)
         which podman >/dev/null || fail " - $(gtxt 'podman required to build package')"
 
         TEMP_DIR=$(mktemp -d)
@@ -259,7 +259,7 @@ EOF
 
         echo "$(gtxt 'Building') $DIST_PKG_NAME $(gtxt 'rpm-package in container')..."
         CONATINER_ID=$(podman run -d "localhost/$IMAGE_TAG" --target=noarch -bb "/root/rpmbuild/SPECS/$SPECFILE")
-        [[ $(podman container wait "$CONATINER_ID") == 0 ]] || fail " - cause: rpmbuild not successful"
+        [[ $(podman container wait "$CONATINER_ID") == 0 ]] || fail
 
         echo "$(gtxt 'Copying') $DIST_PKG_NAME.rpm $(gtxt 'from container')..."
         podman cp "$CONATINER_ID:/root/rpmbuild/RPMS/noarch/${DIST_PKG_NAME}.rpm" ./ >/dev/null || fail
@@ -267,10 +267,10 @@ EOF
         echo "$(gtxt 'Removing') $(gtxt 'container')..."
         podman container rm "$CONATINER_ID" >/dev/null
 
-        echo "$(gtxt 'Removing') $(gtxt 'image')..."
+        echo "$(gtxt 'Removing') $(gtxt 'podman image')..."
         podman image rm "localhost/$IMAGE_TAG" >/dev/null
 
-        echo "$(gtxt 'Installing') $(gtxt 'with rpm-ostree') ${DIST_PKG_NAME}.rpm... ($(gtxt 'this may take a minute'))"
+        echo "$(gtxt 'Installing') ${DIST_PKG_NAME}.rpm $(gtxt 'with rpm-ostree')... ($(gtxt 'this may take a minute'))"
         rpm-ostree install "${DIST_PKG_NAME}.rpm" >/dev/null || fail
 
         success "$(gtxt 'Successfully installed') ${DIST_PKG_NAME}.rpm"
