@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 11:42+0200\n"
-"PO-Revision-Date: 2021-07-13 11:44+0200\n"
+"POT-Creation-Date: 2021-07-14 22:39+0200\n"
+"PO-Revision-Date: 2021-07-14 22:40+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: GERMAN Jonatan Zeidler <jonatan_zeidler@gmx.de>\n"
 "Language: de\n"
@@ -19,6 +19,125 @@ msgstr ""
 "X-Poedit-Basepath: ../../..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SearchPath-0: .\n"
+
+#: tool/installer.sh:53
+msgid "Failed"
+msgstr "Fehlschlag"
+
+#: tool/installer.sh:55
+msgid "Success"
+msgstr "Erfolg"
+
+#: tool/installer.sh:183
+msgid "podman required to build package"
+msgstr "podman notwendig für den RPM-Paket-Erstellung"
+
+#: tool/installer.sh:186
+msgid "creating temporary directory"
+msgstr "Erstellung vom temporären Verzeichnis"
+
+#: tool/installer.sh:191 tool/installer.sh:257 tool/installer.sh:260
+msgid "Building"
+msgstr "Erstelle"
+
+#: tool/installer.sh:191
+msgid "rpm-package in temporary directory"
+msgstr "RPM-Paket im temporären Verzeichnis"
+
+#: tool/installer.sh:196 tool/installer.sh:199 tool/installer.sh:202
+#: tool/installer.sh:264
+msgid "Copying"
+msgstr "Kopiere"
+
+#: tool/installer.sh:196 tool/installer.sh:293 tool/installer.sh:331
+msgid "policykit action"
+msgstr "PolicyKit-Aktion"
+
+#: tool/installer.sh:199 tool/installer.sh:298 tool/installer.sh:339
+msgid "policykit rule"
+msgstr "PolicyKit-Regel"
+
+#: tool/installer.sh:206
+msgid "Bundling sources"
+msgstr "Bündele Quelldateien"
+
+#: tool/installer.sh:257
+msgid "podman image"
+msgstr "Podman Image"
+
+#: tool/installer.sh:257
+msgid "for building rpm-package"
+msgstr "für die Erstellung des RPM-Paketes"
+
+#: tool/installer.sh:257 tool/installer.sh:273 tool/installer.sh:317
+msgid "this may take a minute"
+msgstr "dies dauert gewöhnlich einen Moment"
+
+#: tool/installer.sh:260
+msgid "rpm-package in container"
+msgstr "RPM-Paket im Container"
+
+#: tool/installer.sh:264
+msgid "from container"
+msgstr "vom Container"
+
+#: tool/installer.sh:267 tool/installer.sh:270
+msgid "Removing"
+msgstr "Entferne"
+
+#: tool/installer.sh:267
+msgid "container"
+msgstr "Container"
+
+#: tool/installer.sh:270
+msgid "image"
+msgstr "Image"
+
+#: tool/installer.sh:273 tool/installer.sh:288 tool/installer.sh:293
+#: tool/installer.sh:298
+msgid "Installing"
+msgstr "Installiere"
+
+#: tool/installer.sh:273 tool/installer.sh:317
+msgid "with rpm-ostree"
+msgstr "mit rpm-ostree"
+
+#: tool/installer.sh:276
+msgid "Successfully installed"
+msgstr "Erfolgreich installiert"
+
+#: tool/installer.sh:278 tool/installer.sh:320
+msgid "Restart required for changes to take effect."
+msgstr "Neustart erforderlich, sodass die Änderungen in Kraft treten"
+
+#: tool/installer.sh:288 tool/installer.sh:323 tool/installer.sh:328
+msgid "tool"
+msgstr "Werkzeug"
+
+#: tool/installer.sh:317 tool/installer.sh:323 tool/installer.sh:331
+#: tool/installer.sh:339
+msgid "Uninstalling"
+msgstr "Deinstalliere"
+
+#: tool/installer.sh:319
+msgid "Successfully uninstalled"
+msgstr "Erfolgreich deinstalliert"
+
+#: tool/installer.sh:326 tool/installer.sh:334 tool/installer.sh:342
+msgid "cannot remove"
+msgstr "entfernen nicht möglich"
+
+#: tool/installer.sh:328 tool/installer.sh:336 tool/installer.sh:344
+msgid "not installed at"
+msgstr "nicht installiert in"
+
+#: tool/installer.sh:336
+msgid "policy action"
+msgstr "Policy-Aktion"
+
+#: tool/installer.sh:344
+msgid "policy rule"
+msgstr "Policy-Regel"
 
 #: ui/prefs.ui:82
 msgid "Setup a privileged script and give user access via polkit"
@@ -149,107 +268,131 @@ msgstr "Stoppt die Root-Modus-Absicherung vor dem Prüfbefehl"
 msgid "Check"
 msgstr "Prüfung"
 
-#: extension.js:94
+#: extension.js:96
 msgid "Shutdown Timer"
 msgstr "Ausschaltuhr"
 
-#: extension.js:97
+#: extension.js:99
 msgid "until"
 msgstr "bis z."
 
-#: extension.js:98
+#: extension.js:100
 msgid "(sys)"
 msgstr "(sys)"
 
-#: extension.js:161 extension.js:190
+#: extension.js:183 extension.js:212
 msgid "Root mode protection failed!"
 msgstr "Root-Modus-Absicherung fehlgeschlagen!"
 
-#: extension.js:245 extension.js:687
+#: extension.js:267 extension.js:706
 msgid "Waiting for confirmation"
 msgstr "Warte auf Bestätigung"
 
-#: extension.js:259
+#: extension.js:281
 msgid "Shutdown aborted"
 msgstr "Auschalten abgebrochen"
 
-#: extension.js:349
+#: extension.js:348
+msgid "START"
+msgstr "START"
+
+#: extension.js:355
+msgid "END"
+msgstr "ENDE"
+
+#: extension.js:357
+msgid "FAIL"
+msgstr "FEHLER"
+
+#: extension.js:367 extension.js:745
 msgid "hour"
-msgstr "Std."
+msgid_plural "hours"
+msgstr[0] "Std."
+msgstr[1] "Stdn."
 
-#: extension.js:352
+#: extension.js:370
 msgid "sec"
-msgstr "Sek."
+msgid_plural "secs"
+msgstr[0] "Sek."
+msgstr[1] "Sek."
 
-#: extension.js:354 extension.js:715
+#: extension.js:372 extension.js:735
 msgid "min"
-msgstr "Min."
+msgid_plural "mins"
+msgstr[0] "Min."
+msgstr[1] "Min."
 
-#: extension.js:377
+#: extension.js:395
 msgid "Shutdown Timer stopped"
 msgstr "Ausschaltuhr gestoppt"
 
-#: extension.js:380
+#: extension.js:398
 msgid "Confirmation canceled"
 msgstr "Prüfung abgebrochen"
 
-#: extension.js:393
+#: extension.js:411
 msgid "System will shutdown in"
 msgstr "System wird herunterfahren in"
 
-#: extension.js:394 extension.js:728
-msgid "minutes"
-msgstr "Minuten"
+#: extension.js:412 extension.js:748
+msgid "minute"
+msgid_plural "minutes"
+msgstr[0] "Minute"
+msgstr[1] "Minuten"
 
-#: extension.js:476
+#: extension.js:496
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: extension.js:541
+#: extension.js:560
 msgid "Wake action failed!"
 msgstr "Wecker-Befehl fehlgeschlagen!"
 
-#: extension.js:717
+#: extension.js:737
 msgid "(protect)"
 msgstr "(sicher)"
 
-#: extension.js:725
-msgid "hours"
-msgstr "Stdunden"
+#: extension.js:841
+msgid "install"
+msgstr "Installieren"
 
-#: extension.js:821
+#: extension.js:842
+msgid "uninstall"
+msgstr "Deinstallieren"
+
+#: extension.js:845
 msgid "Wake after"
 msgstr "Wecke nach"
 
-#: extension.js:822
+#: extension.js:846
 msgid "No Wake"
 msgstr "Kein Wecken"
 
-#: extension.js:825
+#: extension.js:849
 msgid "suspend"
 msgstr "Ruhezustand"
 
-#: extension.js:826
+#: extension.js:850
 msgid "shutdown"
 msgstr "Abschalten"
 
-#: extension.js:827
+#: extension.js:851
 msgid "reboot"
 msgstr "Neustart"
 
-#: extension.js:828
+#: extension.js:852
 msgid "wakeup"
 msgstr "Wecken"
 
-#: prefs.js:249
+#: prefs.js:251
 msgid "Suspend"
 msgstr "Ruhezustand"
 
-#: prefs.js:250
+#: prefs.js:252
 msgid "Power Off"
 msgstr "Ausschalten"
 
-#: prefs.js:251
+#: prefs.js:253
 msgid "Restart"
 msgstr "Neustart"
 
@@ -412,18 +555,6 @@ msgstr ""
 "Text der dem Benutzer angezeigt wird, wenn das privilegierte Skript "
 "installiert/deinstalliert wird."
 
-#~ msgid "Prefix of installation"
-#~ msgstr "Präfix der Installation"
-
-#~ msgid "Prefix of script and policy installation"
-#~ msgstr "Präfix der Skript- und Regel-Installation"
-
-#~ msgid ""
-#~ "Prefix is derived from the location of the script or the last specified "
-#~ "value."
-#~ msgstr ""
-#~ "Präfix wird von der Lokation des Skripts abgeleitet oder ist der zuletzt "
-#~ "spezifizierter Wert."
 
 #~ msgid "Mode"
 #~ msgstr "Modus"
@@ -433,13 +564,3 @@ msgstr ""
 
 #~ msgid "Reboot"
 #~ msgstr "Neustart"
-
-#~ msgid "command run in user shell "
-#~ msgstr "Befehl wird mit der Benutzer-Shell ausgeführt"
-
-#~ msgid ""
-#~ "Run command before shutdown command. Proceed with shutdown only if "
-#~ "command succeedes."
-#~ msgstr ""
-#~ "Führt Prüfbefehl nach dem auslaufen der Ausschaltuhr aus. Nur wenn der "
-#~ "Prüfbefehl erfolgreich terminiert, wird vorangeschritten."
