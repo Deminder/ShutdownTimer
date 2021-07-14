@@ -1,7 +1,12 @@
-![icon](bin/icon.svg) 
-# Shutdown Timer
-
-Shutdown/reboot/suspend your device after a specific time or wake with a rtc alarm. The timer will not be interrupted by the screen saver. This extension adds a submenu to the status area.
+<h1 align="center">Shutdown Timer for Gnome Shell</h1>
+<p align="center">
+  <img alt="Shutdown Timer Icon" width="228" src="bin/icon.svg"/>
+  <a href="https://extensions.gnome.org/extension/4372/shutdowntimer/">
+    <img alt="Get it on GNOME Extensions" width="228" src="https://raw.githubusercontent.com/andyholmes/gnome-shell-extensions-badge/master/get-it-on-ego.svg?sanitize=true"/>
+  </a>
+  <br/>
+  <b>Shutdown/reboot/suspend your device after a specific time or wake with a rtc alarm.</b>
+</p>
 
 ![Screenshot](screenshot.png)
 
@@ -29,11 +34,6 @@ Shutdown/reboot/suspend your device after a specific time or wake with a rtc ala
 - Check command
   - Runs a shell command and will only continue shutdown if command succeeds
   - Check command can be canceled
-
-## Official Installation
-
-Visit [https://extensions.gnome.org/extension/4372/shutdowntimer/](https://extensions.gnome.org/extension/4372/shutdowntimer/) and follow browser extension install instructions.
-
 
 ## Manual Installation
 
