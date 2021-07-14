@@ -32,6 +32,12 @@ EXIT_MUST_BE_ROOT=6
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" #stackoverflow 59895
 PREFIX="/usr" # install prefix is /usr
 
+export TEXTDOMAINDIR="$DIR/../locale"
+export TEXTDOMAIN="ShutdownTimer"
+function gtxt() {
+    gettext "$1"
+}
+
 function check_support() {
     if [ -f /sys/class/rtc/rtc0/wakealarm ]
     then
@@ -44,7 +50,13 @@ function check_support() {
 }
 
 function fail() {
-    echo "Failed${1}" >&2 && exit ${EXIT_FAILED}
+    echo "$(gtxt "Failed")${1}" >&2 && exit ${EXIT_FAILED}
+}
+DEFAULT_SUCCESS_MSG=$(gtxt 'Success')
+
+function success() {
+    echo -n "${1:-$DEFAULT_SUCCESS_MSG}"
+    echo -e "\U1F7E2"
 }
 
 
@@ -168,30 +180,30 @@ if [ "$ACTION" = "install" ]
 then
     if which rpm-ostree >/dev/null; then
         # install must be an rpm package (rpm-ostree may run without root)
-        which podman >/dev/null || fail " - podman required to build package"
+        which podman >/dev/null || fail " - $(gtxt 'podman required to build package')"
 
         TEMP_DIR=$(mktemp -d)
-        [ -d "$TEMP_DIR" ] || fail " - creating temporary directory"
+        [ -d "$TEMP_DIR" ] || fail " - $(gtxt 'creating temporary directory')"
         trap "rm -rf $TEMP_DIR" EXIT
         ACTION_NAME=$(basename ${ACTION_OUT})
         RULE_NAME=$(basename ${RULE_OUT})
 
-        echo "Building package ${VPKG_NAME}..."
+        echo "$(gtxt 'Building') ${VPKG_NAME} $(gtxt 'rpm-package in temporary directory') ..."
         SOURCES_DIR="${TEMP_DIR}/${VPKG_NAME}"
         mkdir -p "${SOURCES_DIR}"
         cp "${CFC_IN}" "${SOURCES_DIR}/${TOOL_NAME}" || fail
 
-        echo "Copying policykit action... "
+        echo "$(gtxt 'Copying') $(gtxt 'policykit action')... "
         print_policy_xml > "${SOURCES_DIR}/${ACTION_NAME}" 2>/dev/null || fail
 
-        echo "Copying policykit rule... "
+        echo "$(gtxt 'Copying') $(gtxt 'policykit rule')... "
         print_rules_javascript > "${SOURCES_DIR}/${RULE_NAME}" 2>/dev/null || fail
 
-        echo "Copying Containerfile... "
+        echo "$(gtxt 'Copying') Containerfile... "
         cp "${DIR}/${RPM_BUILD_CONTAINERFILE}" "${TEMP_DIR}/Containerfile" || fail
 
         SOURCES_BASE="$(basename ${SOURCES_DIR})"
-        echo "Bundling sources ${SOURCES_DIR}..."
+        echo "$(gtxt 'Bundling sources') ${SOURCES_DIR}..."
 
         cd "${TEMP_DIR}" || fail
         TARFILE="${SOURCES_BASE}.tar.gz"
@@ -242,27 +254,28 @@ rm -rf %{bulidroot}
 EOF
         IMAGE_TAG=${PACKAGE_NAME}-builder
 
-        echo "Building podman image for rpmbuild: $IMAGE_TAG... (this may take a minute)"
+        echo "$(gtxt 'Building') $(gtxt 'podman image') $IMAGE_TAG $(gtxt 'for building rpm-package')... ($(gtxt 'this may take a minute'))"
         podman build --build-arg=TARFILE=$TARFILE --build-arg=SPECFILE=$SPECFILE -t "$IMAGE_TAG" . 2>&1 >/dev/null || fail
 
-        echo "Running rpmbuild for $DIST_PKG_NAME in container..."
+        echo "$(gtxt 'Building') $DIST_PKG_NAME $(gtxt 'rpm-package in container')..."
         CONATINER_ID=$(podman run -d "localhost/$IMAGE_TAG" --target=noarch -bb "/root/rpmbuild/SPECS/$SPECFILE")
         [[ $(podman container wait "$CONATINER_ID") == 0 ]] || fail " - cause: rpmbuild not successful"
 
-        echo "Copying $DIST_PKG_NAME.rpm from container..."
+        echo "$(gtxt 'Copying') $DIST_PKG_NAME.rpm $(gtxt 'from container')..."
         podman cp "$CONATINER_ID:/root/rpmbuild/RPMS/noarch/${DIST_PKG_NAME}.rpm" ./ >/dev/null || fail
 
-        echo "Removing container..."
+        echo "$(gtxt 'Removing') $(gtxt 'container')..."
         podman container rm "$CONATINER_ID" >/dev/null
 
-        echo "Removing image..."
+        echo "$(gtxt 'Removing') $(gtxt 'image')..."
         podman image rm "localhost/$IMAGE_TAG" >/dev/null
 
-        echo "Install ${DIST_PKG_NAME}.rpm with rpm-ostree... (this may take a minute)"
+        echo "$(gtxt 'Installing') $(gtxt 'with rpm-ostree') ${DIST_PKG_NAME}.rpm... ($(gtxt 'this may take a minute'))"
         rpm-ostree install "${DIST_PKG_NAME}.rpm" >/dev/null || fail
 
-        echo "Success: "$DIST_PKG_NAME" installed"
-        echo "Restart required for changes to take effect." >&2
+        success "$(gtxt 'Successfully installed') ${DIST_PKG_NAME}.rpm"
+
+        echo "$(gtxt 'Restart required for changes to take effect.')" >&2
         exit ${EXIT_SUCCESS}
     fi
     if [ "${EUID}" -ne 0 ]; then
@@ -272,20 +285,20 @@ EOF
         exit ${EXIT_MUST_BE_ROOT}
     fi
 
-    echo -n "Installing ${TOOL_NAME} tool... "
+    echo -n "$(gtxt 'Installing') ${TOOL_NAME} $(gtxt 'tool')... "
     mkdir -p "${CFC_DIR}"
     install "${CFC_IN}" "${CFC_OUT}" || fail
-    echo "Success"
+    success
 
-    echo -n "Installing policykit action... "
+    echo -n "$(gtxt 'Installing') $(gtxt 'policykit action')... "
     mkdir -p "${ACTION_DIR}"
     (print_policy_xml > "${ACTION_OUT}" 2>/dev/null && chmod 0644 "${ACTION_OUT}") || fail
-    echo "Success"
+    success
 
-    echo -n "Installing policykit rule... "
+    echo -n "$(gtxt 'Installing') $(gtxt 'policykit rule')... "
     mkdir -p "${RULE_DIR}"
     (print_rules_javascript > "${RULE_OUT}" 2>/dev/null && chmod 0644 "${RULE_OUT}")  || fail
-    echo "Success"
+    success
 
     exit ${EXIT_SUCCESS}
 fi
@@ -301,34 +314,34 @@ fi
 if [ "$ACTION" = "uninstall" ]
 then
     if which rpm-ostree >/dev/null; then
-        echo "Uninstall ${DIST_PKG_NAME}.rpm with rpm-ostree... (this may take a minute)"
+        echo "$(gtxt 'Uninstalling') ${DIST_PKG_NAME}.rpm $(gtxt 'with rpm-ostree')... ($(gtxt 'this may take a minute'))"
         rpm-ostree uninstall "$DIST_PKG_NAME" >/dev/null || fail
-        echo "Success: "$DIST_PKG_NAME" uninstalled"
-        echo "Restart required for changes to take effect." >&2
+        success "$(gtxt 'Successfully uninstalled') ${DIST_PKG_NAME}.rpm"
+        echo "$(gtxt 'Restart required for changes to take effect.')" >&2
         exit ${EXIT_SUCCESS}
     fi
-    echo -n "Uninstalling $(basename $CFC_OUT) tool... "
+    echo -n "$(gtxt 'Uninstalling') $(basename $CFC_OUT) $(gtxt 'tool')... "
     if [ -f "${CFC_OUT}" ]
     then
-        rm "${CFC_OUT}" || fail " - cannot remove ${CFC_OUT}" && echo "Success"
+        rm "${CFC_OUT}" || fail " - $(gtxt 'cannot remove') ${CFC_OUT}" && success
     else
-        echo "tool not installed at ${CFC_OUT}"
+        echo "$(gtxt 'tool') $(gtxt 'not installed at') ${CFC_OUT}"
     fi
 
-    echo -n "Uninstalling policykit action... "
+    echo -n "$(gtxt 'Uninstalling') $(gtxt 'policykit action')... "
     if [ -f "${ACTION_OUT}" ]
     then
-        rm "${ACTION_OUT}" || fail " - cannot remove ${ACTION_OUT}" && echo "Success"
+        rm "${ACTION_OUT}" || fail " - $(gtxt 'cannot remove') ${ACTION_OUT}" && success
     else
-        echo "policy action not installed at ${ACTION_OUT}"
+        echo "$(gtxt 'policy action') $(gtxt 'not installed at') ${ACTION_OUT}"
     fi
 
-    echo -n "Uninstalling policykit rule... "
+    echo -n "$(gtxt 'Uninstalling') $(gtxt 'policykit rule')... "
     if [ -f "${RULE_OUT}" ]
     then
-        rm "${RULE_OUT}" || fail " - cannot remove ${RULE_OUT}" && echo "Success"
+        rm "${RULE_OUT}" || fail " - $(gtxt 'cannot remove') ${RULE_OUT}" && success
     else
-        echo "policy rule not installed at ${RULE_OUT}"
+        echo "$(gtxt 'policy rule') $(gtxt 'not installed at') ${RULE_OUT}"
     fi
 
     exit ${EXIT_SUCCESS}

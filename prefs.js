@@ -196,19 +196,21 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
       const updateText = () => {
         const text = settings.get_string("install-log-text-value");
         logTextBuffer.set_text(text, -1);
-        for (const match of text.matchAll(/^# .+?$/gms)) {
-          logTextBuffer.apply_tag(
-            errorTag,
-            logTextBuffer.get_iter_at_offset(match.index),
-            logTextBuffer.get_iter_at_offset(match.index + match[0].length)
-          );
-        }
-        for (const match of text.matchAll(/^ success.*?$/gims)) {
-          logTextBuffer.apply_tag(
-            successTag,
-            logTextBuffer.get_iter_at_offset(match.index),
-            logTextBuffer.get_iter_at_offset(match.index + match[0].length)
-          );
+        let lineIndex = 0;
+        for (const line of text.split("\n")) {
+          const applyTag = (tag) => {
+            logTextBuffer.apply_tag(
+              tag,
+              logTextBuffer.get_iter_at_line(lineIndex),
+              logTextBuffer.get_iter_at_line(lineIndex +1)
+            );
+          };
+          if (line.startsWith("# ")) {
+            applyTag(errorTag);
+          } else if (line.endsWith("🟢")) {
+            applyTag(successTag);
+          }
+          lineIndex++;
         }
         GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
           scrollAdj.set_value(1000000);
