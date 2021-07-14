@@ -15,8 +15,10 @@ xgettext \
     --copyright-holder="Shutdown Timer" \
     --package-name="Shutdown Timer" \
     --package-version="$(git describe --tags --abbrev=0)" \
+    --keyword="gtxt" \
+    --keyword="_n:1,2" \
     --output="po/main.pot" \
-    ui/prefs.ui lib/*.js *.js schemas/*.xml
+    tool/*.sh ui/prefs.ui lib/*.js *.js schemas/*.xml
 
 for file in po/*.po
 do

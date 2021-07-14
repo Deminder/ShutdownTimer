@@ -25,6 +25,7 @@ const PadOsd = imports.ui.padOsd;
 // translations
 const Gettext = imports.gettext.domain("ShutdownTimer");
 const _ = Gettext.gettext;
+const _n = Gettext.ngettext;
 
 /* GLOBAL VARIABLES */
 let textbox,
@@ -50,6 +51,7 @@ let initialized = false;
 var MODE_LABELS;
 var WAKE_MODE_LABELS;
 var MODE_TEXTS;
+var INSTALL_ACTIONS;
 
 class ScheduleInfo {
   constructor({ mode = "?", deadline = -1, external = false }) {
@@ -343,16 +345,16 @@ function toggleInstall() {
 }
 
 async function installAction(action, cancel) {
-  logInstall(`[START ${action} "/usr"]`);
+  logInstall(`[${_("START")} ${INSTALL_ACTIONS[action]}]`);
   try {
     if (action === "install") {
       await RootMode.installScript(cancel, logInstall);
     } else {
       await RootMode.uninstallScript(cancel, logInstall);
     }
-    logInstall(`[DONE ${action} "/usr"]`);
+    logInstall(`[${_("END")} ${INSTALL_ACTIONS[action]}]`);
   } catch (err) {
-    logInstall(`[FAIL ${action} "/usr"]\n# ${err}`);
+    logInstall(`[${_("FAIL")} ${INSTALL_ACTIONS[action]}]\n# ${err}`);
     logError(err, "InstallError");
   }
 }
@@ -362,12 +364,12 @@ function durationString(seconds) {
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
   if (hours >= 3) {
-    return `${hours} ${_("hour")}`;
+    return `${hours} ${_n("hour", "hours", hours)}`;
   }
   if (minutes === 0) {
-    return `${Math.floor(seconds)} ${_("sec")}`;
+    return `${Math.floor(seconds)} ${_n("sec", "secs", seconds)}`;
   }
-  return `${minutes} ${_("min")}`;
+  return `${minutes} ${_n("min", "mins", minutes)}`;
 }
 
 function _getSliderMinutes(prefix) {
@@ -406,8 +408,10 @@ function startSchedule() {
     GLib.DateTime.new_now_utc().to_unix() + Math.max(1, seconds)
   );
   _showTextbox(
-    `${_("System will shutdown in")} ${maxTimerMinutes} ${_(
-      "minutes"
+    `${_("System will shutdown in")} ${maxTimerMinutes} ${_n(
+      "minute",
+      "minutes",
+      maxTimerMinutes
     )}${maybeCheckCmdString(true)}`
   );
 }
@@ -727,7 +731,8 @@ const ShutdownTimer = GObject.registerClass(
     }
 
     _updateSwitchLabel() {
-      let label = `${_getSliderMinutes("shutdown")} ${_("min")}`;
+      const minutes = _getSliderMinutes("shutdown");
+      let label = `${minutes} ${_n("min", "mins", minutes)}`;
       if (settings.get_boolean("root-mode-value")) {
         label += " " + _("(protect)");
       }
@@ -737,10 +742,10 @@ const ShutdownTimer = GObject.registerClass(
     _updateWakeModeItem() {
       const minutes = _getSliderMinutes("wake");
       const hours = Math.floor(minutes / 60);
-      const hoursStr = hours !== 0 ? `${hours} ${_("hours")} ` : "";
+      const hoursStr = hours !== 0 ? `${hours} ${_n("hour", "hours", hours)} ` : "";
       this.wakeModeItem.label.text =
         WAKE_MODE_LABELS["wake"] +
-        ` ${hoursStr}${minutes % 60} ${_("minutes")}`;
+        ` ${hoursStr}${minutes % 60} ${_n("minute", "minutes", minutes)}`;
     }
 
     _onShowSettingsButtonChanged() {
@@ -832,6 +837,10 @@ function init() {
 
 function enable() {
   MODE_LABELS = Me.imports.prefs.init_mode_labels();
+  INSTALL_ACTIONS = {
+    install: _("install"),
+    uninstall: _("uninstall"),
+  };
   WAKE_MODE_LABELS = {
     wake: _("Wake after"),
     "no-wake": _("No Wake"),
