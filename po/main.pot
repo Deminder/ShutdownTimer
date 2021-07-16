@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer r7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-17 01:03+0200\n"
+"POT-Creation-Date: 2021-07-17 01:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -315,6 +315,10 @@ msgstr ""
 
 #: lib/RootMode.js:76
 msgid "CANCEL"
+msgstr ""
+
+#: lib/RootMode.js:215
+msgid "Privileged script installation required!"
 msgstr ""
 
 #: lib/ScheduleInfo.js:46

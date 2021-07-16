@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-17 00:56+0200\n"
+"POT-Creation-Date: 2021-07-17 01:14+0200\n"
 "PO-Revision-Date: 2021-07-14 20:08+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: Russian <LL@li.org>\n"
@@ -321,6 +321,10 @@ msgstr ""
 
 #: lib/RootMode.js:76
 msgid "CANCEL"
+msgstr ""
+
+#: lib/RootMode.js:215
+msgid "Privileged script installation required!"
 msgstr ""
 
 #: lib/ScheduleInfo.js:46

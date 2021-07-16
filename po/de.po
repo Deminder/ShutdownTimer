@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-17 00:56+0200\n"
-"PO-Revision-Date: 2021-07-17 01:02+0200\n"
+"POT-Creation-Date: 2021-07-17 01:14+0200\n"
+"PO-Revision-Date: 2021-07-17 01:15+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: GERMAN Jonatan Zeidler <jonatan_zeidler@gmx.de>\n"
 "Language: de\n"
@@ -321,6 +321,10 @@ msgstr "Root-Prozess kann nicht abgebrochen werden."
 #: lib/RootMode.js:76
 msgid "CANCEL"
 msgstr "ABBRUCH"
+
+#: lib/RootMode.js:215
+msgid "Privileged script installation required!"
+msgstr "Installation des privilegierten Skriptes erforderlich!"
 
 #: lib/ScheduleInfo.js:46
 msgid "suspend"
