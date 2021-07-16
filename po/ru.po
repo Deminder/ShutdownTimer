@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-14 23:19+0200\n"
+"POT-Creation-Date: 2021-07-17 00:56+0200\n"
 "PO-Revision-Date: 2021-07-14 20:08+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: Russian <LL@li.org>\n"
@@ -157,21 +157,19 @@ msgid "Use mode"
 msgstr ""
 
 #: ui/prefs.ui:236
-msgid ""
-"uses 'pkexec shutdown' command, no interruption of timer, but needs root "
-"password"
+msgid "persistent shutdown or reboot by using 'shutdown -P/-r' command"
 msgstr ""
 
 #: ui/prefs.ui:238
-msgid "Root mode protection"
+msgid "Toggle root shutdown with shutdown timer"
 msgstr ""
 
 #: ui/prefs.ui:293
 msgid "Shutdown slider position (in &#37;)"
 msgstr ""
 
-#: ui/prefs.ui:352 ui/prefs.ui:549
-msgid "Maximum timer value (in minutes)"
+#: ui/prefs.ui:352
+msgid "Maximum shutdown timer value (in minutes)"
 msgstr ""
 
 #: ui/prefs.ui:398
@@ -184,6 +182,10 @@ msgstr ""
 
 #: ui/prefs.ui:489
 msgid "Wake slider position (in &#37;)"
+msgstr ""
+
+#: ui/prefs.ui:549
+msgid "Maximum wake timer value (in minutes)"
 msgstr ""
 
 #: ui/prefs.ui:596
@@ -260,136 +262,144 @@ msgstr ""
 msgid "Check"
 msgstr ""
 
-#: extension.js:96
-msgid "Shutdown Timer"
-msgstr "Таймер выключения"
-
-#: extension.js:99
-msgid "until"
-msgstr "осталось до"
-
-#: extension.js:100
-msgid "(sys)"
-msgstr ""
-
-#: extension.js:183 extension.js:212
-msgid "Root mode protection failed!"
-msgstr ""
-
-#: extension.js:267 extension.js:706
-msgid "Waiting for confirmation"
-msgstr ""
-
-#: extension.js:281
-msgid "Shutdown aborted"
-msgstr ""
-
-#: extension.js:348
+#: lib/Install.js:50
 msgid "START"
 msgstr ""
 
-#: extension.js:355
+#: lib/Install.js:57
 msgid "END"
 msgstr ""
 
-#: extension.js:357
+#: lib/Install.js:59
 msgid "FAIL"
 msgstr ""
 
-#: extension.js:367 extension.js:745
-msgid "hour"
-msgid_plural "hours"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+#: lib/Install.js:65
+msgid "install"
+msgstr ""
 
-#: extension.js:370
-msgid "sec"
-msgid_plural "secs"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+#: lib/Install.js:65
+msgid "uninstall"
+msgstr ""
 
-#: extension.js:372 extension.js:735
+#: lib/MenuItem.js:65
+msgid "Settings"
+msgstr ""
+
+#: lib/MenuItem.js:264 extension.js:157
+msgid "Waiting for confirmation"
+msgstr ""
+
+#: lib/MenuItem.js:293 lib/ScheduleInfo.js:83
 msgid "min"
 msgid_plural "mins"
 msgstr[0] "мин."
 msgstr[1] "мин."
 msgstr[2] "мин."
 
-#: extension.js:395
-msgid "Shutdown Timer stopped"
-msgstr "Таймер выключения остановлен"
-
-#: extension.js:398
-msgid "Confirmation canceled"
+#: lib/MenuItem.js:295
+msgid "(protect)"
 msgstr ""
 
-#: extension.js:411
-msgid "System will shutdown in"
-msgstr "Система будет выключена через"
+#: lib/MenuItem.js:304 lib/ScheduleInfo.js:78
+msgid "hour"
+msgid_plural "hours"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
-#: extension.js:412 extension.js:748
+#: lib/MenuItem.js:307 extension.js:241
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "мин."
 msgstr[1] "мин."
 msgstr[2] "мин."
 
-#: extension.js:496
-msgid "Settings"
+#: lib/RootMode.js:74
+msgid "Can not cancel root process!"
 msgstr ""
 
-#: extension.js:560
-msgid "Wake action failed!"
+#: lib/RootMode.js:76
+msgid "CANCEL"
 msgstr ""
 
-#: extension.js:737
-msgid "(protect)"
-msgstr ""
-
-#: extension.js:841
-msgid "install"
-msgstr ""
-
-#: extension.js:842
-msgid "uninstall"
-msgstr ""
-
-#: extension.js:845
-msgid "Wake after"
-msgstr ""
-
-#: extension.js:846
-msgid "No Wake"
-msgstr ""
-
-#: extension.js:849
+#: lib/ScheduleInfo.js:46
 msgid "suspend"
 msgstr ""
 
-#: extension.js:850
+#: lib/ScheduleInfo.js:47
 msgid "shutdown"
 msgstr "выключения"
 
-#: extension.js:851
+#: lib/ScheduleInfo.js:48
 msgid "reboot"
 msgstr ""
 
-#: extension.js:852
+#: lib/ScheduleInfo.js:49
 msgid "wakeup"
 msgstr ""
 
-#: prefs.js:251
+#: lib/ScheduleInfo.js:55
+msgid "Shutdown Timer"
+msgstr "Таймер выключения"
+
+#: lib/ScheduleInfo.js:58
+msgid "until"
+msgstr "осталось до"
+
+#: lib/ScheduleInfo.js:59
+msgid "(sys)"
+msgstr ""
+
+#: lib/ScheduleInfo.js:81
+msgid "sec"
+msgid_plural "secs"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: extension.js:66 extension.js:93
+msgid "Root mode protection failed!"
+msgstr ""
+
+#: extension.js:169
+msgid "Shutdown aborted"
+msgstr ""
+
+#: extension.js:219
+msgid "Wake action failed!"
+msgstr ""
+
+#: extension.js:225
+msgid "Shutdown Timer stopped"
+msgstr "Таймер выключения остановлен"
+
+#: extension.js:228
+msgid "Confirmation canceled"
+msgstr ""
+
+#: extension.js:240
+msgid "System will shutdown in"
+msgstr "Система будет выключена через"
+
+#: prefs.js:17
 msgid "Suspend"
 msgstr ""
 
-#: prefs.js:252
+#: prefs.js:18
 msgid "Power Off"
 msgstr ""
 
-#: prefs.js:253
+#: prefs.js:19
 msgid "Restart"
+msgstr ""
+
+#: prefs.js:20
+msgid "Wake after"
+msgstr ""
+
+#: prefs.js:21
+msgid "No Wake"
 msgstr ""
 
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:7

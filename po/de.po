@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-14 23:19+0200\n"
-"PO-Revision-Date: 2021-07-14 23:20+0200\n"
+"POT-Creation-Date: 2021-07-17 00:56+0200\n"
+"PO-Revision-Date: 2021-07-17 01:02+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: GERMAN Jonatan Zeidler <jonatan_zeidler@gmx.de>\n"
 "Language: de\n"
@@ -157,24 +157,20 @@ msgid "Use mode"
 msgstr "Verwende Option"
 
 #: ui/prefs.ui:236
-msgid ""
-"uses 'pkexec shutdown' command, no interruption of timer, but needs root "
-"password"
-msgstr ""
-"Verwendet den 'pkexec shutdown' Befehl, keine Unterbrechung der Ausschaltuhr "
-"möglich, aber benötigt das Root-Passwort"
+msgid "persistent shutdown or reboot by using 'shutdown -P/-r' command"
+msgstr "persistierendes Abschalten oder Neustarten via 'shutdown -P/-r' Befehl"
 
 #: ui/prefs.ui:238
-msgid "Root mode protection"
-msgstr "Root-Modus-Absicherung"
+msgid "Toggle root shutdown with shutdown timer"
+msgstr "Schalte die Root-Absicherung zusammen mit der Ausschaltuhr"
 
 #: ui/prefs.ui:293
 msgid "Shutdown slider position (in &#37;)"
 msgstr "Standardposition des Ausschalt-Schiebereglers (in %)"
 
-#: ui/prefs.ui:352 ui/prefs.ui:549
-msgid "Maximum timer value (in minutes)"
-msgstr "Maximaler Uhrenwert (in Minuten)"
+#: ui/prefs.ui:352
+msgid "Maximum shutdown timer value (in minutes)"
+msgstr "Maximaler Ausschalt-Uhrenwert (in Minuten)"
 
 #: ui/prefs.ui:398
 msgid "Shutdown"
@@ -187,6 +183,10 @@ msgstr "Schalte den Wecker zusammen mit der Ausschaltuhr"
 #: ui/prefs.ui:489
 msgid "Wake slider position (in &#37;)"
 msgstr "Standardposition des Wecker-Schiebereglers (in %)"
+
+#: ui/prefs.ui:549
+msgid "Maximum wake timer value (in minutes)"
+msgstr "Maximaler Wecker-Uhrenwert (in Minuten)"
 
 #: ui/prefs.ui:596
 msgid "Wake"
@@ -264,133 +264,141 @@ msgstr "Stoppt die Root-Modus-Absicherung vor dem Prüfbefehl"
 msgid "Check"
 msgstr "Prüfung"
 
-#: extension.js:96
-msgid "Shutdown Timer"
-msgstr "Ausschaltuhr"
-
-#: extension.js:99
-msgid "until"
-msgstr "bis z."
-
-#: extension.js:100
-msgid "(sys)"
-msgstr "(sys)"
-
-#: extension.js:183 extension.js:212
-msgid "Root mode protection failed!"
-msgstr "Root-Modus-Absicherung fehlgeschlagen!"
-
-#: extension.js:267 extension.js:706
-msgid "Waiting for confirmation"
-msgstr "Warte auf Bestätigung"
-
-#: extension.js:281
-msgid "Shutdown aborted"
-msgstr "Auschalten abgebrochen"
-
-#: extension.js:348
+#: lib/Install.js:50
 msgid "START"
 msgstr "START"
 
-#: extension.js:355
+#: lib/Install.js:57
 msgid "END"
 msgstr "ENDE"
 
-#: extension.js:357
+#: lib/Install.js:59
 msgid "FAIL"
 msgstr "FEHLER"
 
-#: extension.js:367 extension.js:745
-msgid "hour"
-msgid_plural "hours"
-msgstr[0] "Std."
-msgstr[1] "Stdn."
+#: lib/Install.js:65
+msgid "install"
+msgstr "Installieren"
 
-#: extension.js:370
-msgid "sec"
-msgid_plural "secs"
-msgstr[0] "Sek."
-msgstr[1] "Sek."
+#: lib/Install.js:65
+msgid "uninstall"
+msgstr "Deinstallieren"
 
-#: extension.js:372 extension.js:735
+#: lib/MenuItem.js:65
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: lib/MenuItem.js:264 extension.js:157
+msgid "Waiting for confirmation"
+msgstr "Warte auf Bestätigung"
+
+#: lib/MenuItem.js:293 lib/ScheduleInfo.js:83
 msgid "min"
 msgid_plural "mins"
 msgstr[0] "Min."
 msgstr[1] "Min."
 
-#: extension.js:395
-msgid "Shutdown Timer stopped"
-msgstr "Ausschaltuhr gestoppt"
+#: lib/MenuItem.js:295
+msgid "(protect)"
+msgstr "(sicher)"
 
-#: extension.js:398
-msgid "Confirmation canceled"
-msgstr "Prüfung abgebrochen"
+#: lib/MenuItem.js:304 lib/ScheduleInfo.js:78
+msgid "hour"
+msgid_plural "hours"
+msgstr[0] "Std."
+msgstr[1] "Stdn."
 
-#: extension.js:411
-msgid "System will shutdown in"
-msgstr "System wird herunterfahren in"
-
-#: extension.js:412 extension.js:748
+#: lib/MenuItem.js:307 extension.js:241
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "Minute"
 msgstr[1] "Minuten"
 
-#: extension.js:496
-msgid "Settings"
-msgstr "Einstellungen"
+#: lib/RootMode.js:74
+msgid "Can not cancel root process!"
+msgstr "Root-Prozess kann nicht abgebrochen werden."
 
-#: extension.js:560
-msgid "Wake action failed!"
-msgstr "Wecker-Befehl fehlgeschlagen!"
+#: lib/RootMode.js:76
+msgid "CANCEL"
+msgstr "ABBRUCH"
 
-#: extension.js:737
-msgid "(protect)"
-msgstr "(sicher)"
-
-#: extension.js:841
-msgid "install"
-msgstr "Installieren"
-
-#: extension.js:842
-msgid "uninstall"
-msgstr "Deinstallieren"
-
-#: extension.js:845
-msgid "Wake after"
-msgstr "Wecke nach"
-
-#: extension.js:846
-msgid "No Wake"
-msgstr "Kein Wecken"
-
-#: extension.js:849
+#: lib/ScheduleInfo.js:46
 msgid "suspend"
 msgstr "Ruhezustand"
 
-#: extension.js:850
+#: lib/ScheduleInfo.js:47
 msgid "shutdown"
 msgstr "Abschalten"
 
-#: extension.js:851
+#: lib/ScheduleInfo.js:48
 msgid "reboot"
 msgstr "Neustart"
 
-#: extension.js:852
+#: lib/ScheduleInfo.js:49
 msgid "wakeup"
 msgstr "Wecken"
 
-#: prefs.js:251
+#: lib/ScheduleInfo.js:55
+msgid "Shutdown Timer"
+msgstr "Ausschaltuhr"
+
+#: lib/ScheduleInfo.js:58
+msgid "until"
+msgstr "bis z."
+
+#: lib/ScheduleInfo.js:59
+msgid "(sys)"
+msgstr "(sys)"
+
+#: lib/ScheduleInfo.js:81
+msgid "sec"
+msgid_plural "secs"
+msgstr[0] "Sek."
+msgstr[1] "Sek."
+
+#: extension.js:66 extension.js:93
+msgid "Root mode protection failed!"
+msgstr "Root-Modus-Absicherung fehlgeschlagen!"
+
+#: extension.js:169
+msgid "Shutdown aborted"
+msgstr "Auschalten abgebrochen"
+
+#: extension.js:219
+msgid "Wake action failed!"
+msgstr "Wecker-Befehl fehlgeschlagen!"
+
+#: extension.js:225
+msgid "Shutdown Timer stopped"
+msgstr "Ausschaltuhr gestoppt"
+
+#: extension.js:228
+msgid "Confirmation canceled"
+msgstr "Prüfung abgebrochen"
+
+#: extension.js:240
+msgid "System will shutdown in"
+msgstr "System wird herunterfahren in"
+
+#: prefs.js:17
 msgid "Suspend"
 msgstr "Ruhezustand"
 
-#: prefs.js:252
+#: prefs.js:18
 msgid "Power Off"
 msgstr "Ausschalten"
 
-#: prefs.js:253
+#: prefs.js:19
 msgid "Restart"
 msgstr "Neustart"
+
+#: prefs.js:20
+msgid "Wake after"
+msgstr "Wecke nach"
+
+#: prefs.js:21
+msgid "No Wake"
+msgstr "Kein Wecken"
 
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:7
 msgid "Maximum shutdown time (in minutes)"
@@ -550,6 +558,16 @@ msgid ""
 msgstr ""
 "Text der dem Benutzer angezeigt wird, wenn das privilegierte Skript "
 "installiert/deinstalliert wird."
+
+#~ msgid ""
+#~ "uses 'pkexec shutdown' command, no interruption of timer, but needs root "
+#~ "password"
+#~ msgstr ""
+#~ "Verwendet den 'pkexec shutdown' Befehl, keine Unterbrechung der "
+#~ "Ausschaltuhr möglich, aber benötigt das Root-Passwort"
+
+#~ msgid "Root mode protection"
+#~ msgstr "Root-Modus-Absicherung"
 
 #~ msgid "cause: rpmbuild not successful"
 #~ msgstr "Ursache: RPM-Erstellung fehlgeschlagen"
