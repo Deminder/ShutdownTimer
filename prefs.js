@@ -26,6 +26,7 @@ const templateComponents = {
   "show-textboxes": "switch",
   "check-command": "buffer",
   "enable-check-command": "switch",
+  "enable-root-mode-cancel": "switch",
   "shutdown-mode": "combo",
   "auto-wake": "switch",
   "wake-max-timer": "adjustment",
@@ -67,6 +68,7 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
       super._init(params);
       this.handlers = [];
       this.settingsHandlerIds = [];
+      this.idleSourceIds = {};
 
       const connectFuncs = {
         adjustment: [
@@ -212,9 +214,8 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
           }
           lineIndex++;
         }
-        GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+        this.guiIdle(() => {
           scrollAdj.set_value(1000000);
-          return GLib.SOURCE_REMOVE;
         });
       };
 
@@ -224,24 +225,38 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
       );
       this.settingsHandlerIds.push(settingsHandlerId);
 
-      GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+      this.guiIdle(() => {
         updateText();
         // show hint if rpm-ostree is installed
         this[fieldNameByInteralID("rpm-ostree-hint-label")].visible =
           GLib.find_program_in_path("rpm-ostree") !== null;
-        return GLib.SOURCE_REMOVE;
+      });
+      const destroyId = this.connect("destroy", () => {
+        this._releaseEverything();
+        this.disconnect(destroyId);
       });
     }
 
-    destroy() {
-      logTextBuffer = null;
+    guiIdle(func) {
+      const sourceId = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+        func();
+        delete this.idleSourceIds[sourceId];
+        return GLib.SOURCE_REMOVE;
+      });
+      this.idleSourceIds[sourceId] = 1;
+    }
+
+    _releaseEverything() {
+      Object.keys(this.idleSourceIds).forEach((sourceId) => {
+        GLib.Source.remove(sourceId);
+      });
       this.handlers.forEach(([comp, handlerId]) => {
         comp.disconnect(handlerId);
       });
       this.settingsHandlerIds.forEach((handlerId) => {
         settings.disconnect(handlerId);
       });
-      super.destroy();
+      Install.reset();
     }
   }
 );
