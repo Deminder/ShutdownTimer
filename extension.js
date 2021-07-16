@@ -208,9 +208,9 @@ async function wakeAction(mode, minutes) {
   try {
     switch (mode) {
       case "wake":
-        return RootMode.wake(minutes);
+        return await RootMode.wake(minutes);
       case "no-wake":
-        return RootMode.wakeCancel();
+        return await RootMode.wakeCancel();
       default:
         logError(new Error("Unknown wake mode: " + mode));
         return false;
