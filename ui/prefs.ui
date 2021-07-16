@@ -233,9 +233,9 @@ DONE test</property>
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="tooltip-text" translatable="yes">uses 'pkexec shutdown' command, no interruption of timer, but needs root password</property>
+                            <property name="tooltip-text" translatable="yes">persistent shutdown or reboot by using 'shutdown -P/-r' command</property>
                             <property name="halign">start</property>
-                            <property name="label" translatable="yes">Root mode protection</property>
+                            <property name="label" translatable="yes">Toggle root shutdown with shutdown timer</property>
                             <property name="use-markup">True</property>
                           </object>
                           <packing>
@@ -349,7 +349,7 @@ DONE test</property>
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="halign">start</property>
-                            <property name="label" translatable="yes">Maximum timer value (in minutes)</property>
+                            <property name="label" translatable="yes">Maximum shutdown timer value (in minutes)</property>
                             <property name="use-markup">True</property>
                           </object>
                           <packing>
@@ -546,7 +546,7 @@ DONE test</property>
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="halign">start</property>
-                            <property name="label" translatable="yes">Maximum timer value (in minutes)</property>
+                            <property name="label" translatable="yes">Maximum wake timer value (in minutes)</property>
                             <property name="use-markup">True</property>
                           </object>
                           <packing>
