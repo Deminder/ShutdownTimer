@@ -1,7 +1,7 @@
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const Convenience = Me.imports.lib.Convenience;
+const { Install, Convenience } = Me.imports.lib;
 
 const { GLib, GObject, Gtk } = imports.gi;
 
@@ -9,11 +9,24 @@ const Gettext = imports.gettext.domain("ShutdownTimer");
 const _ = Gettext.gettext;
 
 var settings;
-var MODE_LABELS;
+var MODES = ["suspend", "poweroff", "reboot"];
+var WAKE_MODES = ["wake", "no-wake"];
+
+function modeLabel(mode) {
+  return {
+    suspend: _("Suspend"),
+    poweroff: _("Power Off"),
+    reboot: _("Restart"),
+    wake: _("Wake after"),
+    "no-wake": _("No Wake"),
+  }[mode];
+}
+
 function init() {
   ExtensionUtils.initTranslations();
   imports.gettext.textdomain(Me.metadata["gettext-domain"]);
   settings = ExtensionUtils.getSettings();
+  Install.init(settings);
 }
 
 const templateComponents = {
@@ -128,8 +141,8 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
         if (baseName === "shutdown-mode") {
           // update combo box entries
           comp.remove_all();
-          Object.entries(MODE_LABELS).forEach(([mode, label]) => {
-            comp.append(mode, label);
+          MODES.forEach((mode) => {
+            comp.append(mode, modeLabel(mode));
           });
         }
         fieldSetter(comp, fieldValue);
@@ -138,9 +151,7 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
           const entry = this[fieldNameByInteralID(`${baseName}-entry`)];
           const placeholder =
             baseName === "show-shutdown-mode"
-              ? `${Object.keys(MODE_LABELS).join(",")}  (${Object.values(
-                  MODE_LABELS
-                ).join(", ")})`
+              ? `${MODES.map(modeLabel).join(",")}  (${MODES.join(", ")})`
               : entry.get_placeholder_text();
           entry.set_placeholder_text(fieldValue === "" ? placeholder : "");
           const changedId = entry.connect("changed", () => {
@@ -163,7 +174,11 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
         const handlerId = comp.connect(signal, (w) => {
           maybeUpdate("internal", () => {
             const val = fieldGetter(w);
-            settingsSetter(settingsName, val);
+            if (settingsName === "install-policy-value") {
+              Install.installAction(val ? "install" : "uninstall");
+            } else {
+              settingsSetter(settingsName, val);
+            }
           });
         });
         // update ui if values change externally
@@ -204,7 +219,7 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
             logTextBuffer.apply_tag(
               tag,
               logTextBuffer.get_iter_at_line(lineIndex),
-              logTextBuffer.get_iter_at_line(lineIndex +1)
+              logTextBuffer.get_iter_at_line(lineIndex + 1)
             );
           };
           if (line.startsWith("# ")) {
@@ -261,19 +276,7 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
   }
 );
 
-function init_mode_labels() {
-  return {
-    suspend: _("Suspend"),
-    poweroff: _("Power Off"),
-    reboot: _("Restart"),
-  };
-}
-
 function buildPrefsWidget() {
-  MODE_LABELS = init_mode_labels();
-  // clear install log
-  settings.set_string("install-log-text-value", "");
-
   let widget = new ShutdownTimerPrefsWidget();
   if (Gtk.get_major_version() < 4) {
     if (widget.show_all) {
