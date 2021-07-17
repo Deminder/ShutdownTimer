@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-17 01:14+0200\n"
+"POT-Creation-Date: 2021-07-17 13:44+0200\n"
 "PO-Revision-Date: 2021-07-17 01:15+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: GERMAN Jonatan Zeidler <jonatan_zeidler@gmx.de>\n"
@@ -264,23 +264,23 @@ msgstr "Stoppt die Root-Modus-Absicherung vor dem Prüfbefehl"
 msgid "Check"
 msgstr "Prüfung"
 
-#: lib/Install.js:50
+#: lib/Install.js:41
 msgid "START"
 msgstr "START"
 
-#: lib/Install.js:57
+#: lib/Install.js:48
 msgid "END"
 msgstr "ENDE"
 
-#: lib/Install.js:59
+#: lib/Install.js:50
 msgid "FAIL"
 msgstr "FEHLER"
 
-#: lib/Install.js:65
+#: lib/Install.js:56
 msgid "install"
 msgstr "Installieren"
 
-#: lib/Install.js:65
+#: lib/Install.js:56
 msgid "uninstall"
 msgstr "Deinstallieren"
 
@@ -322,7 +322,7 @@ msgstr "Root-Prozess kann nicht abgebrochen werden."
 msgid "CANCEL"
 msgstr "ABBRUCH"
 
-#: lib/RootMode.js:215
+#: lib/RootMode.js:197
 msgid "Privileged script installation required!"
 msgstr "Installation des privilegierten Skriptes erforderlich!"
 
@@ -384,23 +384,23 @@ msgstr "Prüfung abgebrochen"
 msgid "System will shutdown in"
 msgstr "System wird herunterfahren in"
 
-#: prefs.js:17
+#: prefs.js:25
 msgid "Suspend"
 msgstr "Ruhezustand"
 
-#: prefs.js:18
+#: prefs.js:26
 msgid "Power Off"
 msgstr "Ausschalten"
 
-#: prefs.js:19
+#: prefs.js:27
 msgid "Restart"
 msgstr "Neustart"
 
-#: prefs.js:20
+#: prefs.js:28
 msgid "Wake after"
 msgstr "Wecke nach"
 
-#: prefs.js:21
+#: prefs.js:29
 msgid "No Wake"
 msgstr "Kein Wecken"
 
@@ -539,29 +539,25 @@ msgstr "Vor dem Prüfbefehl wird Root-Modus-Absicherung gestoppt"
 msgid "Check command is skipped if disabled."
 msgstr "Prüfbefehl wird übersprungen, wenn er deaktiviert ist."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:109
-msgid "Privileged script and polkit policies enabled/disabled"
-msgstr "Privilegiertes Skript und Polkit-Regeln einschalten/auschalten"
+#~ msgid "Privileged script and polkit policies enabled/disabled"
+#~ msgstr "Privilegiertes Skript und Polkit-Regeln einschalten/auschalten"
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:110
-msgid ""
-"Indicates the state of installation of the privileged script and polkit "
-"policies."
-msgstr ""
-"Zeigt den Status der Installation des privilegierten Skripts und der Polkit-"
-"Regeln an."
+#~ msgid ""
+#~ "Indicates the state of installation of the privileged script and polkit "
+#~ "policies."
+#~ msgstr ""
+#~ "Zeigt den Status der Installation des privilegierten Skripts und der "
+#~ "Polkit-Regeln an."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:115
-msgid "Log text for installation info"
-msgstr "Log-Text für die Installations-Info"
+#~ msgid "Log text for installation info"
+#~ msgstr "Log-Text für die Installations-Info"
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:116
-msgid ""
-"Text that is displayed to user when installing/uninstalling privileged "
-"script."
-msgstr ""
-"Text der dem Benutzer angezeigt wird, wenn das privilegierte Skript "
-"installiert/deinstalliert wird."
+#~ msgid ""
+#~ "Text that is displayed to user when installing/uninstalling privileged "
+#~ "script."
+#~ msgstr ""
+#~ "Text der dem Benutzer angezeigt wird, wenn das privilegierte Skript "
+#~ "installiert/deinstalliert wird."
 
 #~ msgid ""
 #~ "uses 'pkexec shutdown' command, no interruption of timer, but needs root "

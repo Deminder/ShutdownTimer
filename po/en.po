@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-17 01:14+0200\n"
+"POT-Creation-Date: 2021-07-17 13:44+0200\n"
 "PO-Revision-Date: 2021-07-17 00:58+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: \n"
@@ -264,23 +264,23 @@ msgstr "Cancel root mode protection before check"
 msgid "Check"
 msgstr "Check"
 
-#: lib/Install.js:50
+#: lib/Install.js:41
 msgid "START"
 msgstr "START"
 
-#: lib/Install.js:57
+#: lib/Install.js:48
 msgid "END"
 msgstr "END"
 
-#: lib/Install.js:59
+#: lib/Install.js:50
 msgid "FAIL"
 msgstr "FAIL"
 
-#: lib/Install.js:65
+#: lib/Install.js:56
 msgid "install"
 msgstr "install"
 
-#: lib/Install.js:65
+#: lib/Install.js:56
 msgid "uninstall"
 msgstr "uninstall"
 
@@ -322,7 +322,7 @@ msgstr "Can not cancel root process!"
 msgid "CANCEL"
 msgstr "CANCEL"
 
-#: lib/RootMode.js:215
+#: lib/RootMode.js:197
 msgid "Privileged script installation required!"
 msgstr ""
 
@@ -384,23 +384,23 @@ msgstr "Confirmation canceled"
 msgid "System will shutdown in"
 msgstr "System will shutdown in"
 
-#: prefs.js:17
+#: prefs.js:25
 msgid "Suspend"
 msgstr "Suspend"
 
-#: prefs.js:18
+#: prefs.js:26
 msgid "Power Off"
 msgstr "Power Off"
 
-#: prefs.js:19
+#: prefs.js:27
 msgid "Restart"
 msgstr "Restart"
 
-#: prefs.js:20
+#: prefs.js:28
 msgid "Wake after"
 msgstr "Wake after"
 
-#: prefs.js:21
+#: prefs.js:29
 msgid "No Wake"
 msgstr "No Wake"
 
@@ -534,29 +534,25 @@ msgstr "Allow cancel root mode protection"
 msgid "Check command is skipped if disabled."
 msgstr "Check command is skipped if disabled."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:109
-msgid "Privileged script and polkit policies enabled/disabled"
-msgstr "Privileged script and polkit policies enabled/disabled"
+#~ msgid "Privileged script and polkit policies enabled/disabled"
+#~ msgstr "Privileged script and polkit policies enabled/disabled"
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:110
-msgid ""
-"Indicates the state of installation of the privileged script and polkit "
-"policies."
-msgstr ""
-"Indicates the state of installation of the privileged script and polkit "
-"policies."
+#~ msgid ""
+#~ "Indicates the state of installation of the privileged script and polkit "
+#~ "policies."
+#~ msgstr ""
+#~ "Indicates the state of installation of the privileged script and polkit "
+#~ "policies."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:115
-msgid "Log text for installation info"
-msgstr "Log text for installation info"
+#~ msgid "Log text for installation info"
+#~ msgstr "Log text for installation info"
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:116
-msgid ""
-"Text that is displayed to user when installing/uninstalling privileged "
-"script."
-msgstr ""
-"Text that is displayed to user when installing/uninstalling privileged "
-"script."
+#~ msgid ""
+#~ "Text that is displayed to user when installing/uninstalling privileged "
+#~ "script."
+#~ msgstr ""
+#~ "Text that is displayed to user when installing/uninstalling privileged "
+#~ "script."
 
 #~ msgid ""
 #~ "uses 'pkexec shutdown' command, no interruption of timer, but needs root "

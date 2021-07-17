@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-17 01:14+0200\n"
+"POT-Creation-Date: 2021-07-17 13:44+0200\n"
 "PO-Revision-Date: 2021-07-17 00:58+0200\n"
 "Last-Translator: Gianni Lerro <squall77it@gmail.com>\n"
 "Language-Team: Italiano <>\n"
@@ -262,23 +262,23 @@ msgstr ""
 msgid "Check"
 msgstr ""
 
-#: lib/Install.js:50
+#: lib/Install.js:41
 msgid "START"
 msgstr ""
 
-#: lib/Install.js:57
+#: lib/Install.js:48
 msgid "END"
 msgstr ""
 
-#: lib/Install.js:59
+#: lib/Install.js:50
 msgid "FAIL"
 msgstr ""
 
-#: lib/Install.js:65
+#: lib/Install.js:56
 msgid "install"
 msgstr ""
 
-#: lib/Install.js:65
+#: lib/Install.js:56
 msgid "uninstall"
 msgstr ""
 
@@ -320,7 +320,7 @@ msgstr ""
 msgid "CANCEL"
 msgstr ""
 
-#: lib/RootMode.js:215
+#: lib/RootMode.js:197
 msgid "Privileged script installation required!"
 msgstr ""
 
@@ -382,23 +382,23 @@ msgstr ""
 msgid "System will shutdown in"
 msgstr "Il sistema si spegnerà in"
 
-#: prefs.js:17
+#: prefs.js:25
 msgid "Suspend"
 msgstr ""
 
-#: prefs.js:18
+#: prefs.js:26
 msgid "Power Off"
 msgstr ""
 
-#: prefs.js:19
+#: prefs.js:27
 msgid "Restart"
 msgstr ""
 
-#: prefs.js:20
+#: prefs.js:28
 msgid "Wake after"
 msgstr ""
 
-#: prefs.js:21
+#: prefs.js:29
 msgid "No Wake"
 msgstr ""
 
@@ -517,26 +517,6 @@ msgstr ""
 
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:104
 msgid "Check command is skipped if disabled."
-msgstr ""
-
-#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:109
-msgid "Privileged script and polkit policies enabled/disabled"
-msgstr ""
-
-#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:110
-msgid ""
-"Indicates the state of installation of the privileged script and polkit "
-"policies."
-msgstr ""
-
-#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:115
-msgid "Log text for installation info"
-msgstr ""
-
-#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:116
-msgid ""
-"Text that is displayed to user when installing/uninstalling privileged "
-"script."
 msgstr ""
 
 #~ msgid ""
