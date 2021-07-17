@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="ShutdownTimer">
   <schema path="/org/gnome/shell/extensions/shutdowntimer-deminder/" id="org.gnome.shell.extensions.shutdowntimer-deminder">
-    
+
     <key type="i" name="shutdown-max-timer-value">
       <default>180</default>
       <summary>Maximum shutdown time (in minutes)</summary>
@@ -67,7 +67,7 @@
       <summary>Show notification text boxes</summary>
       <description>Show/hide notification text boxes on screen.</description>
     </key>
-    
+
     <key type="b" name="root-mode-value">
       <default>false</default>
       <summary>Root mode</summary>
