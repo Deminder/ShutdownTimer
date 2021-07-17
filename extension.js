@@ -245,6 +245,12 @@ function startSchedule(maxTimerMinutes) {
   );
 }
 
+function onShutdownScheduleChange(info) {
+  if (timer != null) {
+    timer.adjustTo(info);
+  }
+}
+
 function guiIdle(func) {
   if (shutdownTimerMenu != null) {
     shutdownTimerMenu.guiIdle(func);
@@ -269,6 +275,7 @@ function enable() {
       maybeStartRootModeProtection,
       maybeStartWake,
       maybeStopWake,
+      onShutdownScheduleChange,
     });
 
     // check for shutdown may run in background and can be canceled by user
@@ -302,6 +309,7 @@ function enable() {
   }
   if (shutdownTimerMenu == null) {
     shutdownTimerMenu = new MenuItem.ShutdownTimer();
+    timer.setTickCallback(() => shutdownTimerMenu._updateShutdownInfo());
     statusMenu.menu.addMenuItem(shutdownTimerMenu);
   }
 }
@@ -310,6 +318,11 @@ function disable() {
   Textbox._hideTextbox();
   if (shutdownTimerMenu != null) {
     shutdownTimerMenu.destroy();
+    if (timer != null) {
+      timer.setTickCallback(null);
+      // keep sleep process alive
+      timer.stopGLibTimer();
+    }
   }
   shutdownTimerMenu = undefined;
   if (separator != null) {
