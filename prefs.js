@@ -230,7 +230,6 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
           return iter;
         };
         const applyTag = (tag) => {
-          logDebug(`apply tag on ${lastLineIndex}`);
           logTextBuffer.apply_tag(
             tag,
             lineIter(lastLineIndex - 1),
