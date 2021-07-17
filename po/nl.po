@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-28 22:47+0200\n"
-"PO-Revision-Date: 2021-07-12 14:00+0200\n"
+"POT-Creation-Date: 2021-07-17 13:44+0200\n"
+"PO-Revision-Date: 2021-07-17 13:56+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch\n"
 "Language: nl\n"
@@ -14,100 +14,487 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 2.4.3\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _\n"
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: extension.js:82 extension.js:105
-msgid "min"
-msgstr "min."
+#: tool/installer.sh:53
+msgid "Failed"
+msgstr ""
 
-#: extension.js:85 extension.js:107
-msgid "min (root)"
-msgstr "min. (root)"
+#: tool/installer.sh:55
+msgid "Success"
+msgstr ""
 
-#: extension.js:93
-msgid "System will shutdown in"
-msgstr "Het systeem wordt afgesloten over"
+#: tool/installer.sh:183
+msgid "podman required to build package"
+msgstr ""
 
-#: extension.js:94
-msgid "minutes"
-msgstr "minuten"
+#: tool/installer.sh:186
+msgid "creating temporary directory"
+msgstr ""
 
-#: extension.js:97
-msgid "Shutdown Timer stopped"
-msgstr "Afsluitklok is gestopt"
+#: tool/installer.sh:191 tool/installer.sh:257 tool/installer.sh:260
+msgid "Building"
+msgstr ""
 
-#: extension.js:98 extension.js:188
-msgid "Shutdown Timer"
-msgstr "Afsluitklok"
+#: tool/installer.sh:191
+msgid "rpm-package in temporary directory"
+msgstr ""
 
-#: extension.js:116
-msgid "Settings"
-msgstr "Voorkeuren"
+#: tool/installer.sh:196 tool/installer.sh:199 tool/installer.sh:202
+#: tool/installer.sh:264
+msgid "Copying"
+msgstr ""
 
-#: prefs.js:35
-msgid "Maximum timer value (in minutes)"
+#: tool/installer.sh:196 tool/installer.sh:293 tool/installer.sh:331
+msgid "policykit action"
+msgstr ""
+
+#: tool/installer.sh:199 tool/installer.sh:298 tool/installer.sh:339
+msgid "policykit rule"
+msgstr ""
+
+#: tool/installer.sh:206
+msgid "Bundling sources"
+msgstr ""
+
+#: tool/installer.sh:257 tool/installer.sh:270
+msgid "podman image"
+msgstr ""
+
+#: tool/installer.sh:257
+msgid "for building rpm-package"
+msgstr ""
+
+#: tool/installer.sh:257 tool/installer.sh:273 tool/installer.sh:317
+msgid "this may take a minute"
+msgstr ""
+
+#: tool/installer.sh:260
+msgid "rpm-package in container"
+msgstr ""
+
+#: tool/installer.sh:264
+msgid "from container"
+msgstr ""
+
+#: tool/installer.sh:267 tool/installer.sh:270
+msgid "Removing"
+msgstr ""
+
+#: tool/installer.sh:267
+msgid "container"
+msgstr ""
+
+#: tool/installer.sh:273 tool/installer.sh:288 tool/installer.sh:293
+#: tool/installer.sh:298
+msgid "Installing"
+msgstr ""
+
+#: tool/installer.sh:273 tool/installer.sh:317
+msgid "with rpm-ostree"
+msgstr ""
+
+#: tool/installer.sh:276
+msgid "Successfully installed"
+msgstr ""
+
+#: tool/installer.sh:278 tool/installer.sh:320
+msgid "Restart required for changes to take effect."
+msgstr ""
+
+#: tool/installer.sh:288 tool/installer.sh:323 tool/installer.sh:328
+msgid "tool"
+msgstr ""
+
+#: tool/installer.sh:317 tool/installer.sh:323 tool/installer.sh:331
+#: tool/installer.sh:339
+msgid "Uninstalling"
+msgstr ""
+
+#: tool/installer.sh:319
+msgid "Successfully uninstalled"
+msgstr ""
+
+#: tool/installer.sh:326 tool/installer.sh:334 tool/installer.sh:342
+msgid "cannot remove"
+msgstr ""
+
+#: tool/installer.sh:328 tool/installer.sh:336 tool/installer.sh:344
+msgid "not installed at"
+msgstr ""
+
+#: tool/installer.sh:336
+msgid "policy action"
+msgstr ""
+
+#: tool/installer.sh:344
+msgid "policy rule"
+msgstr ""
+
+#: ui/prefs.ui:82
+msgid "Setup a privileged script and give user access via polkit"
+msgstr ""
+
+#: ui/prefs.ui:84
+msgid "Install/Uninstall privileges for this user"
+msgstr ""
+
+#: ui/prefs.ui:115
+msgid "Hint: installed to \"/usr\" with rpm-ostree"
+msgstr ""
+
+#: ui/prefs.ui:157
+msgid "Install"
+msgstr ""
+
+#: ui/prefs.ui:192
+msgid "Use mode"
+msgstr ""
+
+#: ui/prefs.ui:236
+msgid "persistent shutdown or reboot by using 'shutdown -P/-r' command"
+msgstr ""
+
+#: ui/prefs.ui:238
+msgid "Toggle root shutdown with shutdown timer"
+msgstr ""
+
+#: ui/prefs.ui:293
+msgid "Shutdown slider position (in &#37;)"
+msgstr "Schuifbalkpositie"
+
+#: ui/prefs.ui:352
+msgid "Maximum shutdown timer value (in minutes)"
 msgstr "Maximale tijdklokwaarde (in minuten)"
 
-#: prefs.js:52
-#, javascript-format
-msgid "Slider position (in % from 0 to 100)"
-msgstr "Schuifbalkpositie (in %, van 0 tot 100)"
+#: ui/prefs.ui:398
+msgid "Shutdown"
+msgstr "Afsluitklok"
 
-#: prefs.js:70
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:19
+#: ui/prefs.ui:434
+msgid "Toggle wake with shutdown timer"
+msgstr ""
+
+#: ui/prefs.ui:489
+msgid "Wake slider position (in &#37;)"
+msgstr "Schuifbalkpositie"
+
+#: ui/prefs.ui:549
+msgid "Maximum wake timer value (in minutes)"
+msgstr "Maximale tijdklokwaarde (in minuten)"
+
+#: ui/prefs.ui:596
+msgid "Wake"
+msgstr ""
+
+#: ui/prefs.ui:626
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:43
 msgid "Show settings button"
 msgstr "Voorkeurenknop tonen"
 
-#: prefs.js:83
-msgid ""
-"Root mode (uses 'pkexec shutdown' command,\n"
-"no interruption of timer, but needs root password)"
+#: ui/prefs.ui:664
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:80
+msgid "Comma-separated shutdown modes which are shown in the popup menu."
 msgstr ""
-"Rootmodus (gebruikt de opdracht ‘pkexec shutdown’, onder-\n"
-"breekt de tijdklok niet, maar vereist wel het rootwachtwoord)"
 
-#: prefs.js:96
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:31
-msgid "Use suspend"
-msgstr "Pauzestand gebruiken"
+#: ui/prefs.ui:666
+msgid "Show shutdown items"
+msgstr ""
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:7
-msgid "Maximum time (in minutes)"
+#: ui/prefs.ui:705
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:49
+msgid "Show shutdown slider"
+msgstr ""
+
+#: ui/prefs.ui:743
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:67
+msgid "Show notification text boxes"
+msgstr ""
+
+#: ui/prefs.ui:785
+msgid "Show wake items"
+msgstr ""
+
+#: ui/prefs.ui:833
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:55
+msgid "Show wake slider"
+msgstr ""
+
+#: ui/prefs.ui:870
+msgid "Display"
+msgstr ""
+
+#: ui/prefs.ui:900
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:103
+msgid "Enable check command"
+msgstr ""
+
+#: ui/prefs.ui:938
+msgid ""
+"Run check command after timer runs out. Only proceeds if check command "
+"terminates successfully."
+msgstr ""
+
+#: ui/prefs.ui:940
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:91
+msgid "Check command"
+msgstr ""
+
+#: ui/prefs.ui:954
+msgid "command run in user shell"
+msgstr ""
+
+#: ui/prefs.ui:980
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:98
+msgid "Cancel the root mode protection before check command is run if enabled."
+msgstr ""
+
+#: ui/prefs.ui:982
+msgid "Cancel root mode protection before check"
+msgstr ""
+
+#: ui/prefs.ui:1015
+msgid "Check"
+msgstr ""
+
+#: lib/Install.js:41
+msgid "START"
+msgstr ""
+
+#: lib/Install.js:48
+msgid "END"
+msgstr ""
+
+#: lib/Install.js:50
+msgid "FAIL"
+msgstr ""
+
+#: lib/Install.js:56
+msgid "install"
+msgstr ""
+
+#: lib/Install.js:56
+msgid "uninstall"
+msgstr ""
+
+#: lib/MenuItem.js:65
+msgid "Settings"
+msgstr "Voorkeuren"
+
+#: lib/MenuItem.js:264 extension.js:157
+msgid "Waiting for confirmation"
+msgstr ""
+
+#: lib/MenuItem.js:293 lib/ScheduleInfo.js:83
+msgid "min"
+msgid_plural "mins"
+msgstr[0] "min."
+msgstr[1] "min."
+
+#: lib/MenuItem.js:295
+msgid "(protect)"
+msgstr ""
+
+#: lib/MenuItem.js:304 lib/ScheduleInfo.js:78
+msgid "hour"
+msgid_plural "hours"
+msgstr[0] "uur"
+msgstr[1] "uren"
+
+#: lib/MenuItem.js:307 extension.js:241
+msgid "minute"
+msgid_plural "minutes"
+msgstr[0] "minuut"
+msgstr[1] "minuten"
+
+#: lib/RootMode.js:74
+msgid "Can not cancel root process!"
+msgstr ""
+
+#: lib/RootMode.js:76
+msgid "CANCEL"
+msgstr ""
+
+#: lib/RootMode.js:197
+msgid "Privileged script installation required!"
+msgstr ""
+
+#: lib/ScheduleInfo.js:46
+msgid "suspend"
+msgstr "Pauzestand"
+
+#: lib/ScheduleInfo.js:47
+msgid "shutdown"
+msgstr "afsluiten"
+
+#: lib/ScheduleInfo.js:48
+msgid "reboot"
+msgstr ""
+
+#: lib/ScheduleInfo.js:49
+msgid "wakeup"
+msgstr ""
+
+#: lib/ScheduleInfo.js:55
+msgid "Shutdown Timer"
+msgstr "Afsluitklok"
+
+#: lib/ScheduleInfo.js:58
+msgid "until"
+msgstr "tot"
+
+#: lib/ScheduleInfo.js:59
+msgid "(sys)"
+msgstr ""
+
+#: lib/ScheduleInfo.js:81
+msgid "sec"
+msgid_plural "secs"
+msgstr[0] ""
+msgstr[1] ""
+
+#: extension.js:66 extension.js:93
+msgid "Root mode protection failed!"
+msgstr ""
+
+#: extension.js:169
+msgid "Shutdown aborted"
+msgstr ""
+
+#: extension.js:219
+msgid "Wake action failed!"
+msgstr ""
+
+#: extension.js:225
+msgid "Shutdown Timer stopped"
+msgstr "Afsluitklok is gestopt"
+
+#: extension.js:228
+msgid "Confirmation canceled"
+msgstr ""
+
+#: extension.js:240
+msgid "System will shutdown in"
+msgstr "Het systeem wordt afgesloten over"
+
+#: prefs.js:25
+msgid "Suspend"
+msgstr "Pauzestand"
+
+#: prefs.js:26
+msgid "Power Off"
+msgstr ""
+
+#: prefs.js:27
+msgid "Restart"
+msgstr ""
+
+#: prefs.js:28
+msgid "Wake after"
+msgstr ""
+
+#: prefs.js:29
+msgid "No Wake"
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:7
+msgid "Maximum shutdown time (in minutes)"
 msgstr "Maximale tijdklokwaarde (in minuten)"
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:8
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:8
 msgid ""
-"Set maximum selectable time of the slider (in minutes). Use only values "
+"Set maximum selectable shutdown time of the slider (in minutes). Use only "
+"values greater zero."
+msgstr ""
+"Stel de maximale tijdwaarde van de schuifbalkpositie in (in minuten). "
+"Nulwaarden zijn ongeldig."
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:13
+msgid "Maximum wake time (in minutes)"
+msgstr "Maximale tijdklokwaarde (in minuten)"
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:14
+msgid ""
+"Set maximum selectable wake time of the slider (in minutes). Use only values "
 "greater zero."
 msgstr ""
 "Stel de maximale tijdwaarde van de schuifbalkpositie in (in minuten). "
 "Nulwaarden zijn ongeldig."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:13
-msgid "Slider position"
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:19
+msgid "Automatically start and stop wake on shutdown timer toggle"
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:20
+msgid ""
+"Enable/Disable the wake alarm when the shutdown timer is started/stopped."
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:25
+msgid "Scheduled shutdown timestamp."
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:26
+msgid "Unix time in seconds of scheduled shutdown or -1 if disabled."
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:31
+msgid "Wake slider position"
+msgstr "Wakkerbalkpositie"
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:32
+msgid ""
+"Set wake slider position as percent of the maximum time. Must be in range 0 "
+"and 100."
+msgstr ""
+"Stel de wakkerbalkpositie in als procent van de maximale tijd. De waarde "
+"moet tussen de 0 en 100 liggen."
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:37
+msgid "Shutdown slider position"
 msgstr "Schuifbalkpositie"
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:14
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:38
 msgid ""
-"Set slider position as percent of the maximum time. Must be in range 0 and "
-"100."
+"Set shutdown slider position as percent of the maximum time. Must be in "
+"range 0 and 100."
 msgstr ""
 "Stel de schuifbalkpositie in als procent van de maximale tijd. De waarde "
 "moet tussen de 0 en 100 liggen."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:20
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:44
 msgid "Show/hide settings button in widget."
 msgstr "Toon/Verberg de voorkeurenknop op de widget."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:25
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:50
+msgid "Show/hide shutdown slider in widget."
+msgstr "Toon/Verberg de schuifbalk op de widget."
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:56
+msgid "Show/hide wake slider in widget."
+msgstr "Toon/Verberg de wakkerbalk op de widget."
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:61
+msgid "Show all wake items"
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:62
+msgid "Show/hide all wake items in widget."
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:68
+msgid "Show/hide notification text boxes on screen."
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:73
 msgid "Root mode"
 msgstr "Rootmodus"
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:26
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:74
 msgid ""
 "Set root mode on/off. In root mode powering off is done via 'pkexec' and "
 "'shutdown' terminal command."
@@ -115,10 +502,42 @@ msgstr ""
 "Schakel de rootmodus in/uit. In de rootmodus wordt het uitschakelen van de "
 "computer uitgevoerd met de opdrachten ‘pkexec’ en ‘shutdown’."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-neumann.gschema.xml:32
-msgid "Use suspend instead of shutdown command."
-msgstr "Zet de computer in de pauzestand in plaats van deze af te sluiten."
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:79
+msgid "Shown shutdown modes"
+msgstr ""
 
-#: timer.js:44 timer.js:64
-msgid "min till shutdown"
-msgstr "aantal min. tot afsluiten"
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:85
+msgid "Shutdown mode"
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:86
+msgid "Mode to use for shutdown command."
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:92
+msgid ""
+"Run command before shutdown command. Proceed with shutdown only if check "
+"command succeedes."
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:97
+msgid "Allow cancel root mode protection"
+msgstr ""
+
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:104
+msgid "Check command is skipped if disabled."
+msgstr ""
+
+#~ msgid "min (root)"
+#~ msgstr "min. (root)"
+
+#, javascript-format
+#~ msgid "Slider position (in % from 0 to 100)"
+#~ msgstr "Schuifbalkpositie (in %, van 0 tot 100)"
+
+#~ msgid ""
+#~ "Root mode (uses 'pkexec shutdown' command,\n"
+#~ "no interruption of timer, but needs root password)"
+#~ msgstr ""
+#~ "Rootmodus (gebruikt de opdracht ‘pkexec shutdown’, onder-\n"
+#~ "breekt de tijdklok niet, maar vereist wel het rootwachtwoord)"
