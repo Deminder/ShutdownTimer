@@ -41,20 +41,27 @@
 
 Requires `gnome-shell-extensions` and `gtk4-builder-tool`:
 ```(shell)
-$ ./scripts/build.sh -i
+./scripts/build.sh -i
 ```
 Then a new login is required.
+
+### Tool installation
+Requires root:
+```(shell)
+sudo ./tool/installer.sh --tool-suffix $USER install
+```
+If available also supports `rpm-ostree` installation which may work without root.
 
 ### For GNOME 40+
 Install `org.gnome.Extensions` via flatpak
 ```(shell)
-$ flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-$ flatpak install flathub org.gnome.Extensions
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak install flathub org.gnome.Extensions
 ```
 
 Open GNOME shell extension tool
 ```(shell)
-$ flatpak run org.gnome.Extensions
+flatpak run org.gnome.Extensions
 ```
 
 ## Development
@@ -64,7 +71,7 @@ Press `ALT+F2`, type `r` and press `Enter`
 
 ### Start nested GNOME-Shell (Wayland)
 ```(shell)
-$ dbus-run-session -- gnome-shell --nested --wayland
+dbus-run-session -- gnome-shell --nested --wayland
 ```
 ### See Errors and Logs
 * Press `ALT+F2`, type `lg` and press `Enter`

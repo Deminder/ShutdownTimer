@@ -2,6 +2,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const { Install, Convenience } = Me.imports.lib;
+const logDebug = Convenience.logDebug;
 
 const { GLib, GObject, Gtk } = imports.gi;
 
@@ -11,6 +12,13 @@ const _ = Gettext.gettext;
 var settings;
 var MODES = ["suspend", "poweroff", "reboot"];
 var WAKE_MODES = ["wake", "no-wake"];
+
+function logInstall(message) {
+  settings.set_string(
+    "install-log-text-value",
+    settings.get_string("install-log-text-value") + message + "\n"
+  );
+}
 
 function modeLabel(mode) {
   return {
@@ -46,7 +54,6 @@ const templateComponents = {
   "wake-slider": "adjustment",
   "show-wake-slider": "switch",
   "show-wake-items": "switch",
-  "install-policy": "switch",
 };
 
 const templateFile = Me.dir
@@ -73,7 +80,8 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
       .concat(
         "rpm-ostree-hint-label",
         "install-log-text-buffer",
-        "installer-scrollbar-adjustment"
+        "installer-scrollbar-adjustment",
+        "install-policy-switch"
       ),
   },
   class ShutdownTimerPrefsWidget extends Gtk.Grid {
@@ -174,11 +182,7 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
         const handlerId = comp.connect(signal, (w) => {
           maybeUpdate("internal", () => {
             const val = fieldGetter(w);
-            if (settingsName === "install-policy-value") {
-              Install.installAction(val ? "install" : "uninstall");
-            } else {
-              settingsSetter(settingsName, val);
-            }
+            settingsSetter(settingsName, val);
           });
         });
         // update ui if values change externally
@@ -210,55 +214,59 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
       const successTag = new Gtk.TextTag({ foreground: "green" });
       logTextBuffer.get_tag_table().add(errorTag);
       logTextBuffer.get_tag_table().add(successTag);
-      const updateText = () => {
-        const text = settings.get_string("install-log-text-value");
-        logTextBuffer.set_text(text, -1);
-        let lineIndex = 0;
-        for (const line of text.split("\n")) {
-          const applyTag = (tag) => {
-            logTextBuffer.apply_tag(
-              tag,
-              logTextBuffer.get_iter_at_line(lineIndex),
-              logTextBuffer.get_iter_at_line(lineIndex + 1)
-            );
-          };
-          if (line.startsWith("# ")) {
-            applyTag(errorTag);
-          } else if (line.endsWith("🟢")) {
-            applyTag(successTag);
-          }
-          lineIndex++;
+      const appendLogLine = async (line) => {
+        await this.guiIdle();
+        line = ["[", "#"].includes(line[0]) ? line : " " + line;
+        logTextBuffer.insert(logTextBuffer.get_end_iter(), line + "\n", -1);
+        const applyTag = (tag) => {
+          logTextBuffer.apply_tag(
+            tag,
+            logTextBuffer.get_iter_at_line(logTextBuffer.get_line_count() - 2),
+            logTextBuffer.get_end_iter()
+          );
+        };
+        if (line.startsWith("# ")) {
+          applyTag(errorTag);
+        } else if (line.endsWith("🟢")) {
+          applyTag(successTag);
         }
-        this.guiIdle(() => {
-          scrollAdj.set_value(1000000);
-        });
+        await this.guiIdle();
+        scrollAdj.set_value(1000000);
       };
 
-      const settingsHandlerId = settings.connect(
-        "changed::install-log-text-value",
-        updateText
+      const installSwitch = this[fieldNameByInteralID("install-policy-switch")];
+      installSwitch.set_active(Install.checkInstalled());
+      const switchHandlerId = installSwitch.connect("notify::active", () =>
+        Install.installAction(
+          installSwitch.get_active() ? "install" : "uninstall",
+          (message) => message.split("\n").forEach(appendLogLine)
+        )
       );
-      this.settingsHandlerIds.push(settingsHandlerId);
+      this.handlers.push([installSwitch, switchHandlerId]);
 
-      this.guiIdle(() => {
-        updateText();
+      this.guiIdle().then(() => {
+        // clear log
+        logTextBuffer.set_text("", -1);
         // show hint if rpm-ostree is installed
         this[fieldNameByInteralID("rpm-ostree-hint-label")].visible =
           GLib.find_program_in_path("rpm-ostree") !== null;
       });
+
       const destroyId = this.connect("destroy", () => {
         this._releaseEverything();
         this.disconnect(destroyId);
       });
     }
 
-    guiIdle(func) {
-      const sourceId = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
-        func();
-        delete this.idleSourceIds[sourceId];
-        return GLib.SOURCE_REMOVE;
+    guiIdle() {
+      return new Promise((resolve, _) => {
+        const sourceId = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+          resolve();
+          delete this.idleSourceIds[sourceId];
+          return GLib.SOURCE_REMOVE;
+        });
+        this.idleSourceIds[sourceId] = 1;
       });
-      this.idleSourceIds[sourceId] = 1;
     }
 
     _releaseEverything() {
