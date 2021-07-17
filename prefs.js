@@ -214,15 +214,27 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
       const successTag = new Gtk.TextTag({ foreground: "green" });
       logTextBuffer.get_tag_table().add(errorTag);
       logTextBuffer.get_tag_table().add(successTag);
-      const appendLogLine = async (line) => {
-        await this.guiIdle();
+      const appendLogLine = (line) => {
         line = ["[", "#"].includes(line[0]) ? line : " " + line;
         logTextBuffer.insert(logTextBuffer.get_end_iter(), line + "\n", -1);
+        const lastLineIndex = logTextBuffer.get_line_count() - 1;
+        const lineIter = (lineIndex) => {
+          const res = logTextBuffer.get_iter_at_line(lineIndex);
+          if (Gtk.get_major_version() < 4) {
+            return res;
+          }
+          const [ok, iter] = res;
+          if (!ok) {
+            throw new Error(`Line ${lineIndex} not found!`);
+          }
+          return iter;
+        };
         const applyTag = (tag) => {
+          logDebug(`apply tag on ${lastLineIndex}`);
           logTextBuffer.apply_tag(
             tag,
-            logTextBuffer.get_iter_at_line(logTextBuffer.get_line_count() - 2),
-            logTextBuffer.get_end_iter()
+            lineIter(lastLineIndex - 1),
+            lineIter(lastLineIndex)
           );
         };
         if (line.startsWith("# ")) {
@@ -230,8 +242,11 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
         } else if (line.endsWith("🟢")) {
           applyTag(successTag);
         }
-        await this.guiIdle();
-        scrollAdj.set_value(1000000);
+        this.guiIdle()
+          .then(() => {
+            scrollAdj.set_value(1000000);
+          })
+          .catch(() => {});
       };
 
       const installSwitch = this[fieldNameByInteralID("install-policy-switch")];
@@ -239,7 +254,12 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
       const switchHandlerId = installSwitch.connect("notify::active", () =>
         Install.installAction(
           installSwitch.get_active() ? "install" : "uninstall",
-          (message) => message.split("\n").forEach(appendLogLine)
+          (message) =>
+            this.guiIdle()
+              .then(() => message.split("\n").forEach(appendLogLine))
+              .catch((err) => {
+                logDebug(`${err}...\nMissed message: ${message}`);
+              })
         )
       );
       this.handlers.push([installSwitch, switchHandlerId]);
@@ -259,13 +279,17 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
     }
 
     guiIdle() {
-      return new Promise((resolve, _) => {
-        const sourceId = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
-          resolve();
-          delete this.idleSourceIds[sourceId];
-          return GLib.SOURCE_REMOVE;
-        });
-        this.idleSourceIds[sourceId] = 1;
+      return new Promise((resolve, reject) => {
+        try {
+          const sourceId = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+            resolve();
+            delete this.idleSourceIds[sourceId];
+            return GLib.SOURCE_REMOVE;
+          });
+          this.idleSourceIds[sourceId] = 1;
+        } catch (err) {
+          reject(err);
+        }
       });
     }
 
