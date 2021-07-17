@@ -152,7 +152,8 @@ async function maybeDoCheck() {
 
   checkCancel = new Gio.Cancellable();
   guiIdle(() => {
-    shutdownTimerMenu._updateShutdownInfo(true);
+    shutdownTimerMenu.checkRunning = true;
+    shutdownTimerMenu._updateShutdownInfo();
   });
   _showTextbox(_("Waiting for confirmation") + maybeCheckCmdString(true));
   return RootMode.execCheck(checkCmd, checkCancel)
@@ -171,6 +172,10 @@ async function maybeDoCheck() {
     })
     .finally(() => {
       checkCancel = null;
+      guiIdle(() => {
+        shutdownTimerMenu.checkRunning = false;
+        shutdownTimerMenu._updateShutdownInfo();
+      });
     });
 }
 
