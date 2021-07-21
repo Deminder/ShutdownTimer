@@ -60,7 +60,7 @@ If available, also supports `rpm-ostree` installation.
 ### Debug
 Install on a Xorg virtual/remote host for debugging:
 ```(shell)
-./scripts/install_on_guest.sh
+./scripts/install_on_guest.sh $GUEST_SSH_ADDRESS
 ```
 Install locally with debug output enabled:
 ```(shell)
