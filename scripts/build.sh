@@ -60,7 +60,7 @@ gnome-extensions pack \
 
 UUID=$(grep uuid metadata.json | cut -d\" -f 4)
 ZIPFILE="$UUID".shell-extension.zip
-zip -d "$ZIPFILE" bin/icon.png ui/prefs.ui~ || true
+zip -d "$ZIPFILE" bin/*.png ui/prefs.ui~ || true
 echo "Packing Done!"
 
 if [ ! -z "$INSTALL" ]; then
