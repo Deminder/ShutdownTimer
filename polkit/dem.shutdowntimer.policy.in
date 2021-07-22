@@ -6,9 +6,9 @@
 
         <action id="{{ACTION_ID}}">
                 <description>Control shutdown and rtc wake alarm schedule</description>
-                <description xml:lang="de">Steuerung der Ausschalt-Planers und des RTC-Weck-Alarms</description>
-                <message>No Authorization required to control shutdown or rtc alarm.</message>
-                <message xml:lang="de">Keine Autorisierung zur Steuerung Ausschalt-Planers oder RTC-Alarms notwendig.</message>
+                <description xml:lang="de">Steuerung des Ausschalt-Planers und des RTC-Weck-Alarms</description>
+                <message>No Authorization required to control shutdown or rtc wake alarm.</message>
+                <message xml:lang="de">Keine Autorisierung zur Steuerung des Ausschalt-Planers oder RTC-Weck-Alarms notwendig.</message>
                 <defaults>
                         <allow_any>yes</allow_any>
                         <allow_inactive>yes</allow_inactive>
