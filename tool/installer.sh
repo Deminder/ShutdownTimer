@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# installer.sh - This script installs a policykit action for the Shutdown Timer gnome-shell extension.
+# installer.sh - This script installs a policykit rule for the Shutdown Timer gnome-shell extension.
 #
 # This file is part of the gnome-shell extension ShutdownTimer@Deminder.
 
-# Authors: Martin Koppehel <psl.kontakt@gmail.com>, Fin Christensen <christensen.fin@gmail.com> (cpupower extension)
+# Authors: Martin Koppehel <psl.kontakt@gmail.com>, Fin Christensen <christensen.fin@gmail.com> (cpupower extension), Deminder <tremminder@gmail.com>
 
 set -e
 
@@ -16,7 +16,6 @@ EXTENSION_NAME="Shutdown Timer"
 ACTION_BASE="dem.shutdowntimer"
 RULE_BASE="$ACTION_BASE.settimers"
 CFC_BASE="shutdowntimerctl"
-RPM_BUILD_CONTAINERFILE="rpmbuild_Containerfile"
 POLKIT_DIR="polkit"
 VERSION=1
 
@@ -30,7 +29,6 @@ EXIT_NOT_INSTALLED=5
 EXIT_MUST_BE_ROOT=6
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" #stackoverflow 59895
-PREFIX="/usr" # install prefix is /usr
 
 export TEXTDOMAINDIR="$DIR/../locale"
 export TEXTDOMAIN="ShutdownTimer"
@@ -39,12 +37,12 @@ function gtxt() {
 }
 
 function check_support() {
-    if [ -f /sys/class/rtc/rtc0/wakealarm ]
+    if which rtcwake >/dev/null
     then
-        echo "Supported"
+        echo "rtcwake supported"
         exit ${EXIT_SUCCESS}
     else
-        echo "Unsupported"
+        echo "rtcwake unsupported"
         exit ${EXIT_FAILED}
     fi
 }
@@ -69,7 +67,7 @@ function usage() {
     echo "Usage: installer.sh [options] {supported,install,check,update,uninstall}"
     echo
     echo "Available options:"
-    echo "  --tool-suffix SUFFIX   Set the tool name suffix (default: <empty>)"
+    echo "  --tool-user USER   Set the user of the tool (default: \$USER)"
     echo
     exit ${EXIT_INVALID_ARG}
 }
@@ -80,6 +78,7 @@ then
 fi
 
 ACTION=""
+TOOL_USER="$USER"
 while [[ $# -gt 0 ]]
 do
     key="$1"
@@ -87,8 +86,8 @@ do
     # we have to use command line arguments here as pkexec does not support
     # setting environment variables
     case $key in
-        --tool-suffix)
-            TOOL_SUFFIX="$2"
+        --tool-user)
+            TOOL_USER="$2"
             shift
             shift
             ;;
@@ -110,41 +109,19 @@ do
 done
 
 
-ACTION_IN="${DIR}/../${POLKIT_DIR}/$ACTION_BASE.policy.in"
-ACTION_DIR="${PREFIX}/share/polkit-1/actions"
-RULE_IN="${DIR}/../${POLKIT_DIR}/10-$RULE_BASE.rules"
-RULE_DIR="${PREFIX}/share/polkit-1/rules.d"
-RULE_OUT="${RULE_DIR}/10-$RULE_BASE.rules"
-CFC_IN="${DIR}/$CFC_BASE"
+CFC_DIR="/usr/local/bin"
+RULE_DIR="/etc/polkit-1/rules.d"
 
-function print_policy_xml() {
-    sed -e "s:{{PATH}}:${CFC_OUT}:g" \
-        -e "s:{{ACTION_BASE}}:${ACTION_BASE}:g" \
-        -e "s:{{ACTION_ID}}:${ACTION_ID}:g" "${ACTION_IN}"
-}
+RULE_IN="${DIR}/../${POLKIT_DIR}/10-$RULE_BASE.rules"
+TOOL_IN="${DIR}/$CFC_BASE"
+
+TOOL_OUT="${CFC_DIR}/${CFC_BASE}-${TOOL_USER}"
+RULE_OUT="${RULE_DIR}/10-${RULE_BASE}-${TOOL_USER}.rules"
 
 function print_rules_javascript() {
-    sed -e "s:{{RULE_BASE}}:${RULE_BASE}:g" "${RULE_IN}"
+    sed -e "s:{{TOOL_OUT}}:${TOOL_OUT}:g" \
+        -e "s:{{TOOL_USER}}:${TOOL_USER}:g" "${RULE_IN}"
 }
-
-# if TOOL_SUFFIX is provided, install to .../local/bin
-# see https://github.com/martin31821/cpupower/issues/102
-# the TOOL_SUFFIX enables per-user installations on a multi-user system
-# see https://github.com/martin31821/cpupower/issues/84
-
-# use no suffix by default: system wide install
-CFC_DIR="${PREFIX}/bin"
-CFC_OUT="${CFC_DIR}/$CFC_BASE"
-ACTION_ID="$RULE_BASE"
-if [ ! -z "${TOOL_SUFFIX}" ]; then
-    # use suffix: local install
-    if [[ "$PREFIX" != *local ]]; then
-        CFC_DIR="${PREFIX}/local/bin"
-    fi
-    CFC_OUT="${CFC_OUT}-${TOOL_SUFFIX}"
-    ACTION_ID="${ACTION_ID}.${TOOL_SUFFIX}"
-fi
-ACTION_OUT="${ACTION_DIR}/${ACTION_ID}.policy"
 
 if [ "$ACTION" = "supported" ]
 then
@@ -153,7 +130,7 @@ fi
 
 if [ "$ACTION" = "check" ]
 then
-    if ! print_policy_xml | cmp --silent "${ACTION_OUT}"
+    if ! print_rules_javascript | cmp --silent "${RULE_OUT}"
     then
         if [ -f "${ACTION_OUT}" ]
         then
@@ -169,115 +146,10 @@ then
     exit ${EXIT_SUCCESS}
 fi
 
-# used for rpm-ostree install / uninstall
-TOOL_NAME=$(basename ${CFC_OUT})
-PACKAGE_NAME="${TOOL_NAME}-tool"
-RELEASE=local
-VPKG_NAME="${PACKAGE_NAME}-${VERSION}"
-DIST_PKG_NAME=${VPKG_NAME}-${RELEASE}.noarch
+TOOL_NAME=$(basename ${TOOL_OUT})
 
 if [ "$ACTION" = "install" ]
 then
-    if which rpm-ostree >/dev/null; then
-        # install must be a rpm package (rpm-ostree may run without root)
-        which podman >/dev/null || fail " - $(gtxt 'podman required to build package')"
-
-        TEMP_DIR=$(mktemp -d)
-        [ -d "$TEMP_DIR" ] || fail " - $(gtxt 'creating temporary directory')"
-        trap "rm -rf $TEMP_DIR" EXIT
-        ACTION_NAME=$(basename ${ACTION_OUT})
-        RULE_NAME=$(basename ${RULE_OUT})
-
-        echo "$(gtxt 'Building') ${VPKG_NAME} $(gtxt 'rpm-package in temporary directory') ..."
-        SOURCES_DIR="${TEMP_DIR}/${VPKG_NAME}"
-        mkdir -p "${SOURCES_DIR}"
-        cp "${CFC_IN}" "${SOURCES_DIR}/${TOOL_NAME}" || fail
-
-        echo "$(gtxt 'Copying') $(gtxt 'policykit action')... "
-        print_policy_xml > "${SOURCES_DIR}/${ACTION_NAME}" 2>/dev/null || fail
-
-        echo "$(gtxt 'Copying') $(gtxt 'policykit rule')... "
-        print_rules_javascript > "${SOURCES_DIR}/${RULE_NAME}" 2>/dev/null || fail
-
-        echo "$(gtxt 'Copying') Containerfile... "
-        cp "${DIR}/${RPM_BUILD_CONTAINERFILE}" "${TEMP_DIR}/Containerfile" || fail
-
-        SOURCES_BASE="$(basename ${SOURCES_DIR})"
-        echo "$(gtxt 'Bundling sources') ${SOURCES_DIR}..."
-
-        cd "${TEMP_DIR}" || fail
-        TARFILE="${SOURCES_BASE}.tar.gz"
-        tar zcvf "$TARFILE" "${SOURCES_BASE}" >/dev/null || fail
-
-        SPECFILE="${VPKG_NAME}.spec"
-        cat > "$SPECFILE" << EOF
-Name:           ${PACKAGE_NAME}
-Version:        ${VERSION}
-Release:        ${RELEASE}
-Summary:        Tool and polkit configuration for the ShutdownTimer@deminder gnome-shell-extension
-BuildArch:      noarch
-
-License:        GPLv3
-URL:            https://github.com/Deminder/ShutdownTimer
-Source0:        %{name}-%{version}.tar.gz
-
-#BuildRequires:
-Requires:       bash
-
-%description
-The tool is a bash script which allows control of the shutdown schedule and the rtc wake alarm. The polkit action ${ACTION_ID} is available to ${TOOL_SUFFIX:-all users}.
-
-%prep
-%setup -q
-
-%build
-
-%install
-mkdir -p "%{buildroot}%{_bindir}"
-install "${TOOL_NAME}" "%{buildroot}%{_bindir}"
-mkdir -p "%{buildroot}%{_datadir}/polkit-1/actions"
-install -m 0644 "${ACTION_NAME}" "%{buildroot}%{_datadir}/polkit-1/actions"
-mkdir -p "%{buildroot}%{_datadir}/polkit-1/rules.d"
-install -m 0644 "${RULE_NAME}" "%{buildroot}%{_datadir}/polkit-1/rules.d"
-
-%clean
-rm -rf %{bulidroot}
-
-%files
-%{_bindir}/${TOOL_NAME}
-%{_datadir}/polkit-1/actions/${ACTION_NAME}
-%{_datadir}/polkit-1/rules.d/${RULE_NAME}
-
-%changelog
-* $(LC_ALL=en date +"%a %b %e %Y") Deminder <tremminder@gmail.com>
-- Generated by tool/installer.sh
-EOF
-        IMAGE_TAG=${PACKAGE_NAME}-builder
-
-        echo "$(gtxt 'Building') $(gtxt 'podman image') $IMAGE_TAG $(gtxt 'for building rpm-package')... ($(gtxt 'this may take a minute'))"
-        podman build --build-arg=TARFILE=$TARFILE --build-arg=SPECFILE=$SPECFILE -t "$IMAGE_TAG" . 2>&1 >/dev/null || fail
-
-        echo "$(gtxt 'Building') $DIST_PKG_NAME $(gtxt 'rpm-package in container')..."
-        CONATINER_ID=$(podman run -d "localhost/$IMAGE_TAG" --target=noarch -bb "/root/rpmbuild/SPECS/$SPECFILE")
-        [[ $(podman container wait "$CONATINER_ID") == 0 ]] || fail
-
-        echo "$(gtxt 'Copying') $DIST_PKG_NAME.rpm $(gtxt 'from container')..."
-        podman cp "$CONATINER_ID:/root/rpmbuild/RPMS/noarch/${DIST_PKG_NAME}.rpm" ./ >/dev/null || fail
-
-        echo "$(gtxt 'Removing') $(gtxt 'container')..."
-        podman container rm "$CONATINER_ID" >/dev/null
-
-        echo "$(gtxt 'Removing') $(gtxt 'podman image')..."
-        podman image rm "localhost/$IMAGE_TAG" >/dev/null
-
-        echo "$(gtxt 'Installing') ${DIST_PKG_NAME}.rpm $(gtxt 'with rpm-ostree')... ($(gtxt 'this may take a minute'))"
-        rpm-ostree install "${DIST_PKG_NAME}.rpm" >/dev/null || fail
-
-        success "$(gtxt 'Successfully installed') ${DIST_PKG_NAME}.rpm"
-
-        echo "$(gtxt 'Restart required for changes to take effect.')" >&2
-        exit ${EXIT_SUCCESS}
-    fi
     if [ "${EUID}" -ne 0 ]; then
         echo "The install action must be run as root for security reasons!"
         echo "Please have a look at https://github.com/martin31821/cpupower/issues/102"
@@ -287,12 +159,7 @@ EOF
 
     echo -n "$(gtxt 'Installing') ${TOOL_NAME} $(gtxt 'tool')... "
     mkdir -p "${CFC_DIR}"
-    install "${CFC_IN}" "${CFC_OUT}" || fail
-    success
-
-    echo -n "$(gtxt 'Installing') $(gtxt 'policykit action')... "
-    mkdir -p "${ACTION_DIR}"
-    (print_policy_xml > "${ACTION_OUT}" 2>/dev/null && chmod 0644 "${ACTION_OUT}") || fail
+    install "${TOOL_IN}" "${TOOL_OUT}" || fail
     success
 
     echo -n "$(gtxt 'Installing') $(gtxt 'policykit rule')... "
@@ -305,35 +172,43 @@ fi
 
 if [ "$ACTION" = "update" ]
 then
-    "${BASH_SOURCE[0]}" --tool-suffix "${TOOL_SUFFIX}" uninstall || exit $?
-    "${BASH_SOURCE[0]}" --tool-suffix "${TOOL_SUFFIX}" install || exit $?
+    "${BASH_SOURCE[0]}" --tool-user "${TOOL_USER}" uninstall || exit $?
+    "${BASH_SOURCE[0]}" --tool-user "${TOOL_USER}" install || exit $?
 
     exit ${EXIT_SUCCESS}
 fi
 
 if [ "$ACTION" = "uninstall" ]
 then
-    if which rpm-ostree >/dev/null; then
-        echo "$(gtxt 'Uninstalling') ${DIST_PKG_NAME}.rpm $(gtxt 'with rpm-ostree')... ($(gtxt 'this may take a minute'))"
-        rpm-ostree uninstall "$DIST_PKG_NAME" >/dev/null || fail
-        success "$(gtxt 'Successfully uninstalled') ${DIST_PKG_NAME}.rpm"
-        echo "$(gtxt 'Restart required for changes to take effect.')" >&2
-        exit ${EXIT_SUCCESS}
-    fi
-    echo -n "$(gtxt 'Uninstalling') $(basename $CFC_OUT) $(gtxt 'tool')... "
-    if [ -f "${CFC_OUT}" ]
+    LEG_CFG_OUT="/usr/bin/shutdowntimerctl-$TOOL_USER"
+    if [ -f "$LEG_CFG_OUT" ]
     then
-        rm "${CFC_OUT}" || fail " - $(gtxt 'cannot remove') ${CFC_OUT}" && success
-    else
-        echo "$(gtxt 'tool') $(gtxt 'not installed at') ${CFC_OUT}"
+        # remove legacy "tool" install
+        echo -n "$(gtxt 'Uninstalling') $(gtxt 'tool')..."
+        rm "${LEG_CFG_OUT}" || fail " - $(gtxt 'cannot remove') ${LEG_CFG_OUT}" && success
     fi
 
-    echo -n "$(gtxt 'Uninstalling') $(gtxt 'policykit action')... "
-    if [ -f "${ACTION_OUT}" ]
+    ACTION_OUT="/usr/share/polkit-1/actions/dem.shutdowntimer.settimers.$TOOL_USER.policy"
+    if [ -f "$ACTION_OUT" ]
     then
+        # remove legacy "policykit action" install
+        echo -n "$(gtxt 'Uninstalling') $(gtxt 'policykit action')..."
         rm "${ACTION_OUT}" || fail " - $(gtxt 'cannot remove') ${ACTION_OUT}" && success
+    fi
+    LEG_RULE_OUT="/usr/share/polkit-1/rules.d/10-dem.shutdowntimer.settimers.rules"
+    if [ -f "$LEG_RULE_OUT" ]
+    then
+        # remove legacy "policykit action" install
+        echo -n "$(gtxt 'Uninstalling') $(gtxt 'policykit rule')..."
+        rm "${LEG_RULE_OUT}" || fail " - $(gtxt 'cannot remove') ${LEG_RULE_OUT}" && success
+    fi
+    echo -n "$(gtxt 'Uninstalling') ${TOOL_NAME} $(gtxt 'tool')... "
+
+    if [ -f "${TOOL_OUT}" ]
+    then
+        rm "${TOOL_OUT}" || fail " - $(gtxt 'cannot remove') ${TOOL_OUT}" && success
     else
-        echo "$(gtxt 'policy action') $(gtxt 'not installed at') ${ACTION_OUT}"
+        echo "$(gtxt 'tool') $(gtxt 'not installed at') ${TOOL_OUT}"
     fi
 
     echo -n "$(gtxt 'Uninstalling') $(gtxt 'policykit rule')... "

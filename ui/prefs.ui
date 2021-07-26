@@ -110,21 +110,6 @@ DONE test</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <child>
-                  <object class="GtkLabel" id="rpm-ostree-hint-label">
-                    <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">Hint: installed to "/usr" with rpm-ostree</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkListBoxRow">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <child>
                   <object class="GtkScrolledWindow">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>

@@ -1,12 +1,8 @@
-polkit.addRule(function (action, subject) {
-  var idx = action.id.lastIndexOf(".");
-  var username_stripped = action.id.substring(0, idx);
-  var username = action.id.substring(idx + 1);
-  if (username_stripped === "{{RULE_BASE}}") {
-    if (subject.user === username) {
-      return polkit.Result.YES;
-    } else {
-      return polkit.Result.NO;
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.freedesktop.policykit.exec" &&
+        action.lookup("program") == "{{TOOL_OUT}}" &&
+        subject.isInGroup("{{TOOL_USER}}"))
+    {
+        return polkit.Result.YES;
     }
-  }
 });

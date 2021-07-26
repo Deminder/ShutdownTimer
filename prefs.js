@@ -78,7 +78,6 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
       )
       .map((n) => n.join("-"))
       .concat(
-        "rpm-ostree-hint-label",
         "install-log-text-buffer",
         "installer-scrollbar-adjustment",
         "install-policy-switch"
@@ -266,9 +265,6 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
       this.guiIdle().then(() => {
         // clear log
         logTextBuffer.set_text("", -1);
-        // show hint if rpm-ostree is installed
-        this[fieldNameByInteralID("rpm-ostree-hint-label")].visible =
-          GLib.find_program_in_path("rpm-ostree") !== null;
       });
 
       const destroyId = this.connect("destroy", () => {

@@ -23,7 +23,6 @@
 
 - Install privileged control script: `shutdowntimerctl`
   - Control `rtcwake` and `shutdown` as user
-  - Support for `rpm-ostree` installation
 
 - Wake alarm
   - Set a real-time-clock (rtc) alarm which wakes the system after shutdown
@@ -50,11 +49,10 @@ Requires `gnome-shell-extensions` and `gtk4-builder-tool`:
 Then a new login is required to restart gnome-shell.
 
 ### Tool installation
-Requires root:
+Manually install privileged script for rtcwake and shutdown with:
 ```(shell)
-sudo ./tool/installer.sh --tool-suffix $USER install
+sudo ./tool/installer.sh --tool-user $USER install
 ```
-If available, also supports `rpm-ostree` installation.
 
 ## Development
 ### Debug
