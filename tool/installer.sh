@@ -36,13 +36,23 @@ function gtxt() {
     gettext "$1"
 }
 
+function recent_polkit() {
+    printf -v versions '%s\n%s' "$(pkaction --version | cut -d' ' -f3)" "0.106"
+    if [[ $versions != "$(sort -V <<< "$versions")" ]];then
+        echo "available"
+    else
+        echo "unavailable"
+    fi
+}
+
 function check_support() {
+    RECENT_STR=", stand-alone polkit rules $(recent_polkit)"
     if which rtcwake >/dev/null
     then
-        echo "rtcwake supported"
+        echo "rtcwake supported${RECENT_STR}"
         exit ${EXIT_SUCCESS}
     else
-        echo "rtcwake unsupported"
+        echo "rtcwake unsupported${RECENT_STR}"
         exit ${EXIT_FAILED}
     fi
 }
@@ -113,14 +123,31 @@ CFC_DIR="/usr/local/bin"
 RULE_DIR="/etc/polkit-1/rules.d"
 
 RULE_IN="${DIR}/../${POLKIT_DIR}/10-$RULE_BASE.rules"
+if [[ "$(recent_polkit)" != "available" ]];then
+    RULE_IN="${RULE_IN}.legacy"
+    ACTION_IN="${DIR}/../${POLKIT_DIR}/${ACTION_BASE}.policy.in"
+fi
 TOOL_IN="${DIR}/$CFC_BASE"
 
 TOOL_OUT="${CFC_DIR}/${CFC_BASE}-${TOOL_USER}"
 RULE_OUT="${RULE_DIR}/10-${RULE_BASE}-${TOOL_USER}.rules"
+ACTION_ID="${RULE_BASE}.${TOOL_USER}"
+ACTION_OUT="/usr/share/polkit-1/actions/${ACTION_ID}.policy"
+
+function print_policy_xml() {
+    sed -e "s:{{PATH}}:${TOOL_OUT}:g" \
+        -e "s:{{ACTION_BASE}}:${ACTION_BASE}:g" \
+        -e "s:{{ACTION_ID}}:${ACTION_ID}:g" "${ACTION_IN}"
+}
 
 function print_rules_javascript() {
-    sed -e "s:{{TOOL_OUT}}:${TOOL_OUT}:g" \
-        -e "s:{{TOOL_USER}}:${TOOL_USER}:g" "${RULE_IN}"
+    if [[ "$RULE_IN" == *.legacy ]]; then
+        sed -e "s:{{RULE_BASE}}:${RULE_BASE}:g" "${RULE_IN}"
+    else
+        sed -e "s:{{TOOL_OUT}}:${TOOL_OUT}:g" \
+            -e "s:{{TOOL_USER}}:${TOOL_USER}:g" "${RULE_IN}"
+    fi
+
 }
 
 if [ "$ACTION" = "supported" ]
@@ -162,7 +189,14 @@ then
     install "${TOOL_IN}" "${TOOL_OUT}" || fail
     success
 
-    echo -n "$(gtxt 'Installing') $(gtxt 'policykit rule')... "
+    if [ ! -z "$ACTION_IN" ];then
+        echo "$(gtxt 'Using legacy policykit install')..."
+        echo -n "$(gtxt 'Installing') $(gtxt 'policykit action')..."
+        (print_policy_xml > "${ACTION_OUT}" 2>/dev/null && chmod 0644 "${ACTION_OUT}") || fail
+        success
+    fi
+
+    echo -n "$(gtxt 'Installing') $(gtxt 'policykit rule')..."
     mkdir -p "${RULE_DIR}"
     (print_rules_javascript > "${RULE_OUT}" 2>/dev/null && chmod 0644 "${RULE_OUT}")  || fail
     success
@@ -188,7 +222,6 @@ then
         rm "${LEG_CFG_OUT}" || fail " - $(gtxt 'cannot remove') ${LEG_CFG_OUT}" && success
     fi
 
-    ACTION_OUT="/usr/share/polkit-1/actions/dem.shutdowntimer.settimers.$TOOL_USER.policy"
     if [ -f "$ACTION_OUT" ]
     then
         # remove legacy "policykit action" install
@@ -202,8 +235,8 @@ then
         echo -n "$(gtxt 'Uninstalling') $(gtxt 'policykit rule')..."
         rm "${LEG_RULE_OUT}" || fail " - $(gtxt 'cannot remove') ${LEG_RULE_OUT}" && success
     fi
-    echo -n "$(gtxt 'Uninstalling') ${TOOL_NAME} $(gtxt 'tool')... "
 
+    echo -n "$(gtxt 'Uninstalling') ${TOOL_NAME} $(gtxt 'tool')... "
     if [ -f "${TOOL_OUT}" ]
     then
         rm "${TOOL_OUT}" || fail " - $(gtxt 'cannot remove') ${TOOL_OUT}" && success
