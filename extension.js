@@ -338,14 +338,10 @@ function screenSaverGetActive() {
 }
 
 async function maybeCompleteDisable() {
-  const maybeAbort = () => {
-    if (shutdownTimerMenu != null) {
-      throw new Error("Extension is enabled. Complete disable aborted!");
-    }
-  };
-  maybeAbort();
   await RootMode.execCheck(["sleep", "1"]);
-  maybeAbort();
+  if (shutdownTimerMenu != null) {
+    throw new Error("Extension is enabled. Complete disable aborted!");
+  }
   const active = await screenSaverGetActive();
   if (!active) {
     // screen saver inactive => the user probably disabled the extension

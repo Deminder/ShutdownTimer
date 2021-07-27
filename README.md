@@ -55,7 +55,7 @@ sudo ./tool/installer.sh --tool-user $USER install
 
 ## Development
 ### Debug
-Install on a Xorg virtual/remote host for debugging:
+Install on a virtual/remote host for debugging:
 ```(shell)
 ./scripts/install_on_guest.sh $GUEST_SSH_ADDRESS
 ```
@@ -64,8 +64,8 @@ Install locally with debug output enabled:
 ./scripts/build.sh -d -i
 ```
 
-### Update Translation Template
-Extract text from source to translation template file `po/main.pot`:
+### Update Translations
+Extract transalable text from sources to template file `po/main.pot` and update `.po` files:
 ```(shell)
 ./scripts/update-pod.sh
 ```
@@ -74,3 +74,4 @@ Extract text from source to translation template file `po/main.pot`:
 - https://gjs.guide/extensions/
 - https://gjs.guide/guides/
 - https://gjs-docs.gnome.org/
+- [D-Bus and Polkit (Introduction)](https://venam.nixers.net/blog/unix/2020/07/06/dbus-polkit.html)
