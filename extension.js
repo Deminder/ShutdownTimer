@@ -338,7 +338,7 @@ function screenSaverGetActive() {
 }
 
 async function maybeCompleteDisable() {
-  await RootMode.execCheck(["sleep", "1"]);
+  await RootMode.execCheck(["sleep", "3"]);
   if (shutdownTimerMenu != null) {
     throw new Error("Extension is enabled. Complete disable aborted!");
   }
