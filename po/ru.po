@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-17 13:44+0200\n"
+"POT-Creation-Date: 2021-07-27 11:51+0200\n"
 "PO-Revision-Date: 2021-07-14 20:08+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: Russian <LL@li.org>\n"
@@ -21,118 +21,50 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: tool/installer.sh:53
+#: tool/installer.sh:61
 msgid "Failed"
 msgstr ""
 
-#: tool/installer.sh:55
+#: tool/installer.sh:63
 msgid "Success"
 msgstr ""
 
-#: tool/installer.sh:183
-msgid "podman required to build package"
-msgstr ""
-
-#: tool/installer.sh:186
-msgid "creating temporary directory"
-msgstr ""
-
-#: tool/installer.sh:191 tool/installer.sh:257 tool/installer.sh:260
-msgid "Building"
-msgstr ""
-
-#: tool/installer.sh:191
-msgid "rpm-package in temporary directory"
-msgstr ""
-
-#: tool/installer.sh:196 tool/installer.sh:199 tool/installer.sh:202
-#: tool/installer.sh:264
-msgid "Copying"
-msgstr ""
-
-#: tool/installer.sh:196 tool/installer.sh:293 tool/installer.sh:331
-msgid "policykit action"
-msgstr ""
-
-#: tool/installer.sh:199 tool/installer.sh:298 tool/installer.sh:339
-msgid "policykit rule"
-msgstr ""
-
-#: tool/installer.sh:206
-msgid "Bundling sources"
-msgstr ""
-
-#: tool/installer.sh:257 tool/installer.sh:270
-msgid "podman image"
-msgstr ""
-
-#: tool/installer.sh:257
-msgid "for building rpm-package"
-msgstr ""
-
-#: tool/installer.sh:257 tool/installer.sh:273 tool/installer.sh:317
-msgid "this may take a minute"
-msgstr ""
-
-#: tool/installer.sh:260
-msgid "rpm-package in container"
-msgstr ""
-
-#: tool/installer.sh:264
-msgid "from container"
-msgstr ""
-
-#: tool/installer.sh:267 tool/installer.sh:270
-msgid "Removing"
-msgstr ""
-
-#: tool/installer.sh:267
-msgid "container"
-msgstr ""
-
-#: tool/installer.sh:273 tool/installer.sh:288 tool/installer.sh:293
-#: tool/installer.sh:298
+#: tool/installer.sh:187 tool/installer.sh:194 tool/installer.sh:199
 msgid "Installing"
 msgstr ""
 
-#: tool/installer.sh:273 tool/installer.sh:317
-msgid "with rpm-ostree"
-msgstr ""
-
-#: tool/installer.sh:276
-msgid "Successfully installed"
-msgstr ""
-
-#: tool/installer.sh:278 tool/installer.sh:320
-msgid "Restart required for changes to take effect."
-msgstr ""
-
-#: tool/installer.sh:288 tool/installer.sh:323 tool/installer.sh:328
+#: tool/installer.sh:187 tool/installer.sh:221 tool/installer.sh:239
+#: tool/installer.sh:244
 msgid "tool"
 msgstr ""
 
-#: tool/installer.sh:317 tool/installer.sh:323 tool/installer.sh:331
-#: tool/installer.sh:339
+#: tool/installer.sh:193
+msgid "Using legacy policykit install"
+msgstr ""
+
+#: tool/installer.sh:194 tool/installer.sh:228
+msgid "policykit action"
+msgstr ""
+
+#: tool/installer.sh:199 tool/installer.sh:235 tool/installer.sh:247
+msgid "policykit rule"
+msgstr ""
+
+#: tool/installer.sh:221 tool/installer.sh:228 tool/installer.sh:235
+#: tool/installer.sh:239 tool/installer.sh:247
 msgid "Uninstalling"
 msgstr ""
 
-#: tool/installer.sh:319
-msgid "Successfully uninstalled"
-msgstr ""
-
-#: tool/installer.sh:326 tool/installer.sh:334 tool/installer.sh:342
+#: tool/installer.sh:222 tool/installer.sh:229 tool/installer.sh:236
+#: tool/installer.sh:242 tool/installer.sh:250
 msgid "cannot remove"
 msgstr ""
 
-#: tool/installer.sh:328 tool/installer.sh:336 tool/installer.sh:344
+#: tool/installer.sh:244 tool/installer.sh:252
 msgid "not installed at"
 msgstr ""
 
-#: tool/installer.sh:336
-msgid "policy action"
-msgstr ""
-
-#: tool/installer.sh:344
+#: tool/installer.sh:252
 msgid "policy rule"
 msgstr ""
 
@@ -144,141 +76,137 @@ msgstr ""
 msgid "Install/Uninstall privileges for this user"
 msgstr ""
 
-#: ui/prefs.ui:115
-msgid "Hint: installed to \"/usr\" with rpm-ostree"
-msgstr ""
-
-#: ui/prefs.ui:157
+#: ui/prefs.ui:142
 msgid "Install"
 msgstr ""
 
-#: ui/prefs.ui:192
+#: ui/prefs.ui:177
 msgid "Use mode"
 msgstr ""
 
-#: ui/prefs.ui:236
+#: ui/prefs.ui:221
 msgid "persistent shutdown or reboot by using 'shutdown -P/-r' command"
 msgstr ""
 
-#: ui/prefs.ui:238
+#: ui/prefs.ui:223
 msgid "Toggle root shutdown with shutdown timer"
 msgstr ""
 
-#: ui/prefs.ui:293
+#: ui/prefs.ui:278
 msgid "Shutdown slider position (in &#37;)"
 msgstr ""
 
-#: ui/prefs.ui:352
+#: ui/prefs.ui:337
 msgid "Maximum shutdown timer value (in minutes)"
 msgstr ""
 
-#: ui/prefs.ui:398
+#: ui/prefs.ui:383
 msgid "Shutdown"
 msgstr "выключения"
 
-#: ui/prefs.ui:434
+#: ui/prefs.ui:419
 msgid "Toggle wake with shutdown timer"
 msgstr ""
 
-#: ui/prefs.ui:489
+#: ui/prefs.ui:474
 msgid "Wake slider position (in &#37;)"
 msgstr ""
 
-#: ui/prefs.ui:549
+#: ui/prefs.ui:534
 msgid "Maximum wake timer value (in minutes)"
 msgstr ""
 
-#: ui/prefs.ui:596
+#: ui/prefs.ui:581
 msgid "Wake"
 msgstr ""
 
-#: ui/prefs.ui:626
+#: ui/prefs.ui:611
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:43
 msgid "Show settings button"
 msgstr ""
 
-#: ui/prefs.ui:664
+#: ui/prefs.ui:649
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:80
 msgid "Comma-separated shutdown modes which are shown in the popup menu."
 msgstr ""
 
-#: ui/prefs.ui:666
+#: ui/prefs.ui:651
 msgid "Show shutdown items"
 msgstr ""
 
-#: ui/prefs.ui:705
+#: ui/prefs.ui:690
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:49
 msgid "Show shutdown slider"
 msgstr "Таймер выключения"
 
-#: ui/prefs.ui:743
+#: ui/prefs.ui:728
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:67
 msgid "Show notification text boxes"
 msgstr ""
 
-#: ui/prefs.ui:785
+#: ui/prefs.ui:770
 msgid "Show wake items"
 msgstr ""
 
-#: ui/prefs.ui:833
+#: ui/prefs.ui:818
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:55
 msgid "Show wake slider"
 msgstr ""
 
-#: ui/prefs.ui:870
+#: ui/prefs.ui:855
 msgid "Display"
 msgstr ""
 
-#: ui/prefs.ui:900
+#: ui/prefs.ui:885
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:103
 msgid "Enable check command"
 msgstr ""
 
-#: ui/prefs.ui:938
+#: ui/prefs.ui:923
 msgid ""
 "Run check command after timer runs out. Only proceeds if check command "
 "terminates successfully."
 msgstr ""
 
-#: ui/prefs.ui:940
+#: ui/prefs.ui:925
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:91
 msgid "Check command"
 msgstr ""
 
-#: ui/prefs.ui:954
+#: ui/prefs.ui:939
 msgid "command run in user shell"
 msgstr ""
 
-#: ui/prefs.ui:980
+#: ui/prefs.ui:965
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:98
 msgid "Cancel the root mode protection before check command is run if enabled."
 msgstr ""
 
-#: ui/prefs.ui:982
+#: ui/prefs.ui:967
 msgid "Cancel root mode protection before check"
 msgstr ""
 
-#: ui/prefs.ui:1015
+#: ui/prefs.ui:1000
 msgid "Check"
 msgstr ""
 
-#: lib/Install.js:41
+#: lib/Install.js:40
 msgid "START"
 msgstr ""
 
-#: lib/Install.js:48
+#: lib/Install.js:47
 msgid "END"
 msgstr ""
 
-#: lib/Install.js:50
+#: lib/Install.js:49
 msgid "FAIL"
 msgstr ""
 
-#: lib/Install.js:56
+#: lib/Install.js:55
 msgid "install"
 msgstr ""
 
-#: lib/Install.js:56
+#: lib/Install.js:55
 msgid "uninstall"
 msgstr ""
 
@@ -286,29 +214,29 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: lib/MenuItem.js:264 extension.js:157
+#: lib/MenuItem.js:265 extension.js:158
 msgid "Waiting for confirmation"
 msgstr ""
 
-#: lib/MenuItem.js:293 lib/ScheduleInfo.js:83
+#: lib/MenuItem.js:294 lib/ScheduleInfo.js:83
 msgid "min"
 msgid_plural "mins"
 msgstr[0] "мин."
 msgstr[1] "мин."
 msgstr[2] "мин."
 
-#: lib/MenuItem.js:295
+#: lib/MenuItem.js:296
 msgid "(protect)"
 msgstr ""
 
-#: lib/MenuItem.js:304 lib/ScheduleInfo.js:78
+#: lib/MenuItem.js:305 lib/ScheduleInfo.js:78
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: lib/MenuItem.js:307 extension.js:241
+#: lib/MenuItem.js:309 extension.js:246
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "мин."
@@ -323,7 +251,7 @@ msgstr ""
 msgid "CANCEL"
 msgstr ""
 
-#: lib/RootMode.js:197
+#: lib/RootMode.js:196
 msgid "Privileged script installation required!"
 msgstr ""
 
@@ -366,23 +294,23 @@ msgstr[2] ""
 msgid "Root mode protection failed!"
 msgstr ""
 
-#: extension.js:169
+#: extension.js:170
 msgid "Shutdown aborted"
 msgstr ""
 
-#: extension.js:219
+#: extension.js:224
 msgid "Wake action failed!"
 msgstr ""
 
-#: extension.js:225
+#: extension.js:230
 msgid "Shutdown Timer stopped"
 msgstr "Таймер выключения остановлен"
 
-#: extension.js:228
+#: extension.js:233
 msgid "Confirmation canceled"
 msgstr ""
 
-#: extension.js:240
+#: extension.js:245
 msgid "System will shutdown in"
 msgstr "Система будет выключена через"
 

@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-17 13:44+0200\n"
-"PO-Revision-Date: 2021-07-17 01:15+0200\n"
+"POT-Creation-Date: 2021-07-27 11:51+0200\n"
+"PO-Revision-Date: 2021-07-27 11:57+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: GERMAN Jonatan Zeidler <jonatan_zeidler@gmx.de>\n"
 "Language: de\n"
@@ -20,118 +20,50 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: tool/installer.sh:53
+#: tool/installer.sh:61
 msgid "Failed"
 msgstr "Fehlgeschlagen"
 
-#: tool/installer.sh:55
+#: tool/installer.sh:63
 msgid "Success"
 msgstr "Erfolg"
 
-#: tool/installer.sh:183
-msgid "podman required to build package"
-msgstr "podman notwendig für den RPM-Paket-Erstellung"
-
-#: tool/installer.sh:186
-msgid "creating temporary directory"
-msgstr "Erstellung vom temporären Verzeichnis"
-
-#: tool/installer.sh:191 tool/installer.sh:257 tool/installer.sh:260
-msgid "Building"
-msgstr "Erstelle"
-
-#: tool/installer.sh:191
-msgid "rpm-package in temporary directory"
-msgstr "RPM-Paket im temporären Verzeichnis"
-
-#: tool/installer.sh:196 tool/installer.sh:199 tool/installer.sh:202
-#: tool/installer.sh:264
-msgid "Copying"
-msgstr "Kopiere"
-
-#: tool/installer.sh:196 tool/installer.sh:293 tool/installer.sh:331
-msgid "policykit action"
-msgstr "PolicyKit-Aktion"
-
-#: tool/installer.sh:199 tool/installer.sh:298 tool/installer.sh:339
-msgid "policykit rule"
-msgstr "PolicyKit-Regel"
-
-#: tool/installer.sh:206
-msgid "Bundling sources"
-msgstr "Bündele Quelldateien"
-
-#: tool/installer.sh:257 tool/installer.sh:270
-msgid "podman image"
-msgstr "Podman-Image"
-
-#: tool/installer.sh:257
-msgid "for building rpm-package"
-msgstr "für die Erstellung des RPM-Paketes"
-
-#: tool/installer.sh:257 tool/installer.sh:273 tool/installer.sh:317
-msgid "this may take a minute"
-msgstr "dies dauert gewöhnlich einen Moment"
-
-#: tool/installer.sh:260
-msgid "rpm-package in container"
-msgstr "RPM-Paket im Container"
-
-#: tool/installer.sh:264
-msgid "from container"
-msgstr "vom Container"
-
-#: tool/installer.sh:267 tool/installer.sh:270
-msgid "Removing"
-msgstr "Entferne"
-
-#: tool/installer.sh:267
-msgid "container"
-msgstr "Container"
-
-#: tool/installer.sh:273 tool/installer.sh:288 tool/installer.sh:293
-#: tool/installer.sh:298
+#: tool/installer.sh:187 tool/installer.sh:194 tool/installer.sh:199
 msgid "Installing"
 msgstr "Installiere"
 
-#: tool/installer.sh:273 tool/installer.sh:317
-msgid "with rpm-ostree"
-msgstr "mit rpm-ostree"
-
-#: tool/installer.sh:276
-msgid "Successfully installed"
-msgstr "Erfolgreich installiert"
-
-#: tool/installer.sh:278 tool/installer.sh:320
-msgid "Restart required for changes to take effect."
-msgstr "Neustart erforderlich, sodass die Änderungen in Kraft treten."
-
-#: tool/installer.sh:288 tool/installer.sh:323 tool/installer.sh:328
+#: tool/installer.sh:187 tool/installer.sh:221 tool/installer.sh:239
+#: tool/installer.sh:244
 msgid "tool"
 msgstr "Werkzeug"
 
-#: tool/installer.sh:317 tool/installer.sh:323 tool/installer.sh:331
-#: tool/installer.sh:339
+#: tool/installer.sh:193
+msgid "Using legacy policykit install"
+msgstr "Verwende PolicyKit-Installation für alte PolicyKit-Version"
+
+#: tool/installer.sh:194 tool/installer.sh:228
+msgid "policykit action"
+msgstr "PolicyKit-Aktion"
+
+#: tool/installer.sh:199 tool/installer.sh:235 tool/installer.sh:247
+msgid "policykit rule"
+msgstr "PolicyKit-Regel"
+
+#: tool/installer.sh:221 tool/installer.sh:228 tool/installer.sh:235
+#: tool/installer.sh:239 tool/installer.sh:247
 msgid "Uninstalling"
 msgstr "Deinstalliere"
 
-#: tool/installer.sh:319
-msgid "Successfully uninstalled"
-msgstr "Erfolgreich deinstalliert"
-
-#: tool/installer.sh:326 tool/installer.sh:334 tool/installer.sh:342
+#: tool/installer.sh:222 tool/installer.sh:229 tool/installer.sh:236
+#: tool/installer.sh:242 tool/installer.sh:250
 msgid "cannot remove"
 msgstr "entfernen nicht möglich"
 
-#: tool/installer.sh:328 tool/installer.sh:336 tool/installer.sh:344
+#: tool/installer.sh:244 tool/installer.sh:252
 msgid "not installed at"
 msgstr "nicht installiert in"
 
-#: tool/installer.sh:336
-msgid "policy action"
-msgstr "Policy-Aktion"
-
-#: tool/installer.sh:344
+#: tool/installer.sh:252
 msgid "policy rule"
 msgstr "Policy-Regel"
 
@@ -144,97 +76,93 @@ msgstr ""
 msgid "Install/Uninstall privileges for this user"
 msgstr "Installiere/Deinstalliere privilegiertes Skript für den Benutzer"
 
-#: ui/prefs.ui:115
-msgid "Hint: installed to \"/usr\" with rpm-ostree"
-msgstr "Hinweis: installiert in \"/usr\" mit rpm-ostree"
-
-#: ui/prefs.ui:157
+#: ui/prefs.ui:142
 msgid "Install"
 msgstr "Installieren"
 
-#: ui/prefs.ui:192
+#: ui/prefs.ui:177
 msgid "Use mode"
 msgstr "Verwende Option"
 
-#: ui/prefs.ui:236
+#: ui/prefs.ui:221
 msgid "persistent shutdown or reboot by using 'shutdown -P/-r' command"
 msgstr "persistierendes Abschalten oder Neustarten via 'shutdown -P/-r' Befehl"
 
-#: ui/prefs.ui:238
+#: ui/prefs.ui:223
 msgid "Toggle root shutdown with shutdown timer"
 msgstr "Schalte die Root-Absicherung zusammen mit der Ausschaltuhr"
 
-#: ui/prefs.ui:293
+#: ui/prefs.ui:278
 msgid "Shutdown slider position (in &#37;)"
 msgstr "Standardposition des Ausschalt-Schiebereglers (in %)"
 
-#: ui/prefs.ui:352
+#: ui/prefs.ui:337
 msgid "Maximum shutdown timer value (in minutes)"
 msgstr "Maximaler Ausschalt-Uhrenwert (in Minuten)"
 
-#: ui/prefs.ui:398
+#: ui/prefs.ui:383
 msgid "Shutdown"
 msgstr "Abschalten"
 
-#: ui/prefs.ui:434
+#: ui/prefs.ui:419
 msgid "Toggle wake with shutdown timer"
 msgstr "Schalte den Wecker zusammen mit der Ausschaltuhr"
 
-#: ui/prefs.ui:489
+#: ui/prefs.ui:474
 msgid "Wake slider position (in &#37;)"
 msgstr "Standardposition des Wecker-Schiebereglers (in %)"
 
-#: ui/prefs.ui:549
+#: ui/prefs.ui:534
 msgid "Maximum wake timer value (in minutes)"
 msgstr "Maximaler Wecker-Uhrenwert (in Minuten)"
 
-#: ui/prefs.ui:596
+#: ui/prefs.ui:581
 msgid "Wake"
 msgstr "Wecker"
 
-#: ui/prefs.ui:626
+#: ui/prefs.ui:611
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:43
 msgid "Show settings button"
 msgstr "Zeige Einstellungsbutton"
 
-#: ui/prefs.ui:664
+#: ui/prefs.ui:649
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:80
 msgid "Comma-separated shutdown modes which are shown in the popup menu."
 msgstr "Kommagetrennt Ausschaltoptionen, die im Menü erscheinen."
 
-#: ui/prefs.ui:666
+#: ui/prefs.ui:651
 msgid "Show shutdown items"
 msgstr "Zeige Ausschaltoptionen"
 
-#: ui/prefs.ui:705
+#: ui/prefs.ui:690
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:49
 msgid "Show shutdown slider"
 msgstr "Zeige Ausschalt-Schieber"
 
-#: ui/prefs.ui:743
+#: ui/prefs.ui:728
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:67
 msgid "Show notification text boxes"
 msgstr "Zeige Textbox-Notifikationen"
 
-#: ui/prefs.ui:785
+#: ui/prefs.ui:770
 msgid "Show wake items"
 msgstr "Zeige Wecker-Optionen"
 
-#: ui/prefs.ui:833
+#: ui/prefs.ui:818
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:55
 msgid "Show wake slider"
 msgstr "Zeige Wecker-Schieber"
 
-#: ui/prefs.ui:870
+#: ui/prefs.ui:855
 msgid "Display"
 msgstr "Anzeige"
 
-#: ui/prefs.ui:900
+#: ui/prefs.ui:885
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:103
 msgid "Enable check command"
 msgstr "Prüfbefehl verwenden"
 
-#: ui/prefs.ui:938
+#: ui/prefs.ui:923
 msgid ""
 "Run check command after timer runs out. Only proceeds if check command "
 "terminates successfully."
@@ -242,45 +170,45 @@ msgstr ""
 "Führt den Prüfbefehl nach dem auslaufen der Ausschaltuhr aus. Nur wenn der "
 "Prüfbefehl erfolgreich terminiert, wird vorangeschritten."
 
-#: ui/prefs.ui:940
+#: ui/prefs.ui:925
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:91
 msgid "Check command"
 msgstr "Prüfbefehl"
 
-#: ui/prefs.ui:954
+#: ui/prefs.ui:939
 msgid "command run in user shell"
 msgstr "Befehl wird mit der Benutzer-Shell ausgeführt"
 
-#: ui/prefs.ui:980
+#: ui/prefs.ui:965
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:98
 msgid "Cancel the root mode protection before check command is run if enabled."
 msgstr "Stoppe die Root-Mode-Absicherung bevor der Prüfbefehl ausgeführt wird."
 
-#: ui/prefs.ui:982
+#: ui/prefs.ui:967
 msgid "Cancel root mode protection before check"
 msgstr "Stoppt die Root-Modus-Absicherung vor dem Prüfbefehl"
 
-#: ui/prefs.ui:1015
+#: ui/prefs.ui:1000
 msgid "Check"
 msgstr "Prüfung"
 
-#: lib/Install.js:41
+#: lib/Install.js:40
 msgid "START"
 msgstr "START"
 
-#: lib/Install.js:48
+#: lib/Install.js:47
 msgid "END"
 msgstr "ENDE"
 
-#: lib/Install.js:50
+#: lib/Install.js:49
 msgid "FAIL"
 msgstr "FEHLER"
 
-#: lib/Install.js:56
+#: lib/Install.js:55
 msgid "install"
 msgstr "Installieren"
 
-#: lib/Install.js:56
+#: lib/Install.js:55
 msgid "uninstall"
 msgstr "Deinstallieren"
 
@@ -288,27 +216,27 @@ msgstr "Deinstallieren"
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: lib/MenuItem.js:264 extension.js:157
+#: lib/MenuItem.js:265 extension.js:158
 msgid "Waiting for confirmation"
 msgstr "Warte auf Bestätigung"
 
-#: lib/MenuItem.js:293 lib/ScheduleInfo.js:83
+#: lib/MenuItem.js:294 lib/ScheduleInfo.js:83
 msgid "min"
 msgid_plural "mins"
 msgstr[0] "Min."
 msgstr[1] "Min."
 
-#: lib/MenuItem.js:295
+#: lib/MenuItem.js:296
 msgid "(protect)"
 msgstr "(sicher)"
 
-#: lib/MenuItem.js:304 lib/ScheduleInfo.js:78
+#: lib/MenuItem.js:305 lib/ScheduleInfo.js:78
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "Std."
 msgstr[1] "Stdn."
 
-#: lib/MenuItem.js:307 extension.js:241
+#: lib/MenuItem.js:309 extension.js:246
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "Minute"
@@ -322,7 +250,7 @@ msgstr "Root-Prozess kann nicht abgebrochen werden."
 msgid "CANCEL"
 msgstr "ABBRUCH"
 
-#: lib/RootMode.js:197
+#: lib/RootMode.js:196
 msgid "Privileged script installation required!"
 msgstr "Installation des privilegierten Skriptes erforderlich!"
 
@@ -364,23 +292,23 @@ msgstr[1] "Sek."
 msgid "Root mode protection failed!"
 msgstr "Root-Modus-Absicherung fehlgeschlagen!"
 
-#: extension.js:169
+#: extension.js:170
 msgid "Shutdown aborted"
 msgstr "Auschalten abgebrochen"
 
-#: extension.js:219
+#: extension.js:224
 msgid "Wake action failed!"
 msgstr "Wecker-Befehl fehlgeschlagen!"
 
-#: extension.js:225
+#: extension.js:230
 msgid "Shutdown Timer stopped"
 msgstr "Ausschaltuhr gestoppt"
 
-#: extension.js:228
+#: extension.js:233
 msgid "Confirmation canceled"
 msgstr "Prüfung abgebrochen"
 
-#: extension.js:240
+#: extension.js:245
 msgid "System will shutdown in"
 msgstr "System wird herunterfahren in"
 
@@ -538,6 +466,63 @@ msgstr "Vor dem Prüfbefehl wird Root-Modus-Absicherung gestoppt"
 #: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:104
 msgid "Check command is skipped if disabled."
 msgstr "Prüfbefehl wird übersprungen, wenn er deaktiviert ist."
+
+#~ msgid "podman required to build package"
+#~ msgstr "podman notwendig für den RPM-Paket-Erstellung"
+
+#~ msgid "creating temporary directory"
+#~ msgstr "Erstellung vom temporären Verzeichnis"
+
+#~ msgid "Building"
+#~ msgstr "Erstelle"
+
+#~ msgid "rpm-package in temporary directory"
+#~ msgstr "RPM-Paket im temporären Verzeichnis"
+
+#~ msgid "Copying"
+#~ msgstr "Kopiere"
+
+#~ msgid "Bundling sources"
+#~ msgstr "Bündele Quelldateien"
+
+#~ msgid "podman image"
+#~ msgstr "Podman-Image"
+
+#~ msgid "for building rpm-package"
+#~ msgstr "für die Erstellung des RPM-Paketes"
+
+#~ msgid "this may take a minute"
+#~ msgstr "dies dauert gewöhnlich einen Moment"
+
+#~ msgid "rpm-package in container"
+#~ msgstr "RPM-Paket im Container"
+
+#~ msgid "from container"
+#~ msgstr "vom Container"
+
+#~ msgid "Removing"
+#~ msgstr "Entferne"
+
+#~ msgid "container"
+#~ msgstr "Container"
+
+#~ msgid "with rpm-ostree"
+#~ msgstr "mit rpm-ostree"
+
+#~ msgid "Successfully installed"
+#~ msgstr "Erfolgreich installiert"
+
+#~ msgid "Restart required for changes to take effect."
+#~ msgstr "Neustart erforderlich, sodass die Änderungen in Kraft treten."
+
+#~ msgid "Successfully uninstalled"
+#~ msgstr "Erfolgreich deinstalliert"
+
+#~ msgid "policy action"
+#~ msgstr "Policy-Aktion"
+
+#~ msgid "Hint: installed to \"/usr\" with rpm-ostree"
+#~ msgstr "Hinweis: installiert in \"/usr\" mit rpm-ostree"
 
 #~ msgid "Privileged script and polkit policies enabled/disabled"
 #~ msgstr "Privilegiertes Skript und Polkit-Regeln einschalten/auschalten"
