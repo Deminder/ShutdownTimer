@@ -13,8 +13,7 @@
 ## Features
 - Timer for *Poweroff*, *Reboot*, *Suspend* 
   - Options may be reordered or hidden
-  - Disabling the extension leaves a timer process alive if the user was inactive for more than a second 
-  - Note: `org.gnome.Mutter.IdleMonitor.GetIdletime > 1000` is expected when the screen saver disables the extension
+  - Disabling the extension leaves a timer process alive. The extension is only completely disabled if the screen saver is not active after one second. 
 
 - Show scheduled shutdown info as *(sys)*
   - Fetched from `/run/systemd/shutdown/scheduled` 
@@ -33,7 +32,7 @@
 
 - Root shutdown protection
   - Toggle `shutdown ${REQUESTED_MINUTES + 1}` command with shutdown timer (for *Poweroff* and *Reboot*)
-  - Protection against gnome-shell terminating, e.g. when logging out
+  - Protection against gnome-shell terminating, e.g., when logging out
   - If privileged script is not installed, `shutdown` command is run as user
 
 - Check command

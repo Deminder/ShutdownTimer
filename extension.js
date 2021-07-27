@@ -23,18 +23,18 @@ const _ = Gettext.gettext;
 const _n = Gettext.ngettext;
 
 /* GLOBAL VARIABLES */
-let shutdownTimerMenu, separator, settings, checkCancel, idleMonitor;
+let shutdownTimerMenu, separator, settings, checkCancel, screenSaver;
 
-const MutterIdleMonitorInf =
+const ScreenSaverInf =
   '<node>\
-  <interface name="org.gnome.Mutter.IdleMonitor">\
-    <method name="GetIdletime">\
-      <arg type="t" name="idletime" direction="out"/>\
+  <interface name="org.gnome.ScreenSaver">\
+    <method name="GetActive"> \
+      <arg type="b" name="active" direction="out">\
+      </arg>\
     </method>\
   </interface>\
 </node>';
-const MutterIdleMonitorProxy =
-  Gio.DBusProxy.makeProxyWrapper(MutterIdleMonitorInf);
+const ScreenSaverProxy = Gio.DBusProxy.makeProxyWrapper(ScreenSaverInf);
 
 let initialized = false;
 var INSTALL_ACTIONS;
@@ -288,11 +288,11 @@ function enable() {
     // starts internal shutdown schedule if ready
     timer = new Timer.Timer(serveInernalSchedule);
 
-    idleMonitor = new Promise((resolve, reject) => {
-      new MutterIdleMonitorProxy(
+    screenSaver = new Promise((resolve, reject) => {
+      new ScreenSaverProxy(
         Gio.DBus.session,
-        "org.gnome.Mutter.IdleMonitor",
-        "/org/gnome/Mutter/IdleMonitor/Core",
+        "org.gnome.ScreenSaver",
+        "/org/gnome/ScreenSaver",
         (proxy, error) => {
           if (error) {
             reject(error);
@@ -319,6 +319,53 @@ function enable() {
   }
 }
 
+function screenSaverGetActive() {
+  return new Promise((resolve, reject) => {
+    if (screenSaver != null) {
+      screenSaver.then((proxy) => {
+        proxy.GetActiveRemote(([active], error) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(active);
+          }
+        });
+      });
+    } else {
+      reject(new Error("Already completely disabled!"));
+    }
+  });
+}
+
+async function maybeCompleteDisable() {
+  const maybeAbort = () => {
+    if (shutdownTimerMenu != null) {
+      throw new Error("Extension is enabled. Complete disable aborted!");
+    }
+  };
+  maybeAbort();
+  await RootMode.execCheck(["sleep", "1"]);
+  maybeAbort();
+  const active = await screenSaverGetActive();
+  if (!active) {
+    // screen saver inactive => the user probably disabled the extension
+
+    if (timer != null) {
+      timer.stopTimer();
+      timer = undefined;
+    }
+    if (checkCancel != null) {
+      checkCancel.cancel();
+      checkCancel = undefined;
+    }
+    screenSaver = undefined;
+    initialized = false;
+    logDebug("Completly disabled. Screen saver is disabled.");
+  } else {
+    logDebug("Partially disabled. Screen saver is enabled.");
+  }
+}
+
 function disable() {
   Textbox._hideTextbox();
   if (shutdownTimerMenu != null) {
@@ -335,37 +382,9 @@ function disable() {
   }
   separator = undefined;
 
-  if (idleMonitor != null) {
-    idleMonitor
-      .then((proxy) =>
-        proxy.GetIdletimeRemote(([userIdle], error) => {
-          if (error || userIdle > 1000) {
-            logDebug(
-              `Partially disabled. User idled for ${userIdle} ms or Error: ${error}.`
-            );
-          } else {
-            // user active in last 10 sec => probably the user disabled the extension
-            if (shutdownTimerMenu != null) {
-              logDebug("Abort complete disable. Leave extension enabled.");
-              return;
-            }
-
-            if (timer != null) {
-              timer.stopTimer();
-              timer = undefined;
-            }
-            if (checkCancel != null) {
-              checkCancel.cancel();
-              checkCancel = undefined;
-            }
-            idleMonitor = undefined;
-            initialized = false;
-            logDebug(`Completly disabled. User idled for ${userIdle} ms.`);
-          }
-        })
-      )
-      .catch((err) => {
-        logError(err, "MissingIdleMonitor");
-      });
+  if (screenSaver != null) {
+    maybeCompleteDisable().catch((error) => {
+      logDebug(`Partially disabled. ${error}`);
+    });
   }
 }
