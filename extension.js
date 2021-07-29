@@ -32,6 +32,10 @@ const ScreenSaverInf =
       <arg type="b" name="active" direction="out">\
       </arg>\
     </method>\
+    <signal name="ActiveChanged">\
+      <arg name="new_value" type="b">\
+      </arg>\
+    </signal>\
   </interface>\
 </node>';
 const ScreenSaverProxy = Gio.DBusProxy.makeProxyWrapper(ScreenSaverInf);
@@ -337,12 +341,53 @@ function screenSaverGetActive() {
   });
 }
 
+function screenSaverTurnsActive(durationSeconds, sleepCancel) {
+  return new Promise((resolve, reject) => {
+    if (screenSaver != null) {
+      screenSaver.then((proxy) => {
+        let done = false;
+        const changeSignalId = proxy.connectSignal(
+          "ActiveChanged",
+          (proxy, _sender, [active]) => {
+            if (active && !done) {
+              done = true;
+              proxy.disconnectSignal(changeSignalId);
+              resolve(true);
+            }
+          }
+        );
+        RootMode.execCheck(
+          ["sleep", `${durationSeconds}`],
+          sleepCancel
+        ).finally(() => {
+          if (!done) {
+            done = true;
+            proxy.disconnectSignal(changeSignalId);
+            resolve(false);
+          }
+        });
+      });
+    } else {
+      reject(new Error("Already completely disabled!"));
+    }
+  });
+}
+
 async function maybeCompleteDisable() {
-  await RootMode.execCheck(["sleep", "3"]);
+  const sleepCancel = new Gio.Cancellable();
+  const changePromise = screenSaverTurnsActive(3, sleepCancel);
+  let active = await screenSaverGetActive();
+  if (!active) {
+    active = await changePromise;
+  } else {
+    sleepCancel.cancel();
+  }
+  if (!initialized) {
+    throw new Error("Already completely disabled!");
+  }
   if (shutdownTimerMenu != null) {
     throw new Error("Extension is enabled. Complete disable aborted!");
   }
-  const active = await screenSaverGetActive();
   if (!active) {
     // screen saver inactive => the user probably disabled the extension
 

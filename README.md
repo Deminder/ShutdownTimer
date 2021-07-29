@@ -13,7 +13,7 @@
 ## Features
 - Timer for *Poweroff*, *Reboot*, *Suspend* 
   - Options may be reordered or hidden
-  - Disabling the extension leaves a timer process alive. The extension is only completely disabled if the screen saver is not active after three seconds.
+  - Disabling the extension leaves a timer process alive. The extension is only completely disabled if the screen saver does not activate within three seconds.
 
 - Show scheduled shutdown info as *(sys)*
   - Fetched from `/run/systemd/shutdown/scheduled` 
