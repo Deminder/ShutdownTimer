@@ -7,7 +7,9 @@
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
-const { MenuItem, Textbox, RootMode, Timer, Convenience } = Me.imports.lib;
+const { ScheduleInfo, MenuItem, Textbox, RootMode, Timer, Convenience } =
+  Me.imports.lib;
+const modeLabel = Me.imports.prefs.modeLabel;
 const logDebug = Convenience.logDebug;
 
 /* IMPORTS */
@@ -111,9 +113,9 @@ async function maybeStartRootModeProtection(info) {
   }
 }
 
-async function maybeStartWake() {
+async function maybeStartWake(wakeMinutes) {
   if (settings.get_boolean("auto-wake-value")) {
-    await RootMode.wake(_getSliderMinutes("wake"));
+    await RootMode.wake(wakeMinutes);
   }
 }
 
@@ -125,7 +127,7 @@ async function maybeStopWake() {
 
 // timer action (shutdown/reboot/suspend)
 function serveInernalSchedule(mode) {
-  maybeDoCheck()
+  maybeDoCheck(mode)
     .then(() => {
       // check succeeded: do shutdown
       shutdown(mode);
@@ -146,7 +148,7 @@ function serveInernalSchedule(mode) {
     });
 }
 
-async function maybeDoCheck() {
+async function maybeDoCheck(mode) {
   if (checkCancel != null) {
     throw new Error(
       "Confirmation canceled: attempted to start a second check command!"
@@ -165,15 +167,13 @@ async function maybeDoCheck() {
   });
   _showTextbox(
     C_("CheckCommand", "%s\n'%s'").format(
-      _("Waiting for %s confirmation").format(
-        timer != null ? timer.info.modeText : "?"
-      ),
+      _("Waiting for %s confirmation").format(modeLabel(mode)),
       checkCmd
     )
   );
   checkSuccess = false;
   const checkWatchCancel = new Gio.Cancellable();
-  continueRootProtectionDuringCheck(checkWatchCancel);
+  continueRootProtectionDuringCheck(mode, checkWatchCancel);
   return RootMode.execCheck(checkCmd, checkCancel)
     .then(() => {
       checkSuccess = true;
@@ -184,12 +184,12 @@ async function maybeDoCheck() {
       let code = "?";
       if ("code" in err) {
         code = `${err.code}`;
-        logDebug("Check command aborted shutdown. Code: " + code);
+        logDebug(`Check command aborted ${mode}. Code: ${code}`);
       }
       _showTextbox(
         C_("CheckCommand", "%s (Code: %s)").format(
           C_("CheckCommand", "%s\n'%s'").format(
-            _("Aborted %s").format(timer != null ? timer.info.modeText : "?"),
+            _("%s aborted").format(modeLabel(mode)),
             checkCmd
           ),
           code
@@ -207,20 +207,19 @@ async function maybeDoCheck() {
     });
 }
 
-async function continueRootProtectionDuringCheck(cancellable) {
+async function continueRootProtectionDuringCheck(mode, cancellable) {
   await RootMode.execCheck(["sleep", "30"], cancellable, false).catch(() => {});
-  if (checkCancel != null && !checkCancel.is_cancelled() && timer != null) {
+  const dueInfo = new ScheduleInfo.ScheduleInfo({ mode, deadline: 0 });
+  if (checkCancel != null && !checkCancel.is_cancelled()) {
     logDebug("RootProtection during check: Continue");
-    await maybeStartRootModeProtection(timer.info);
-    await continueRootProtectionDuringCheck();
+    await maybeStartRootModeProtection(dueInfo);
+    await continueRootProtectionDuringCheck(mode, cancellable);
   } else {
     logDebug("RootProtection during check: Done");
-    if (timer != null) {
-      if (checkSuccess) {
-        await maybeStartRootModeProtection(timer.info);
-      } else {
-        await maybeStopRootModeProtection(timer.info, true);
-      }
+    if (checkSuccess) {
+      await maybeStartRootModeProtection(dueInfo);
+    } else {
+      await maybeStopRootModeProtection(dueInfo, true);
     }
   }
 }
@@ -277,16 +276,28 @@ function stopSchedule() {
     showText = _("Confirmation canceled");
   }
   _showTextbox(showText);
+
+  // stop root protection
+  const info = timer != null ? timer.info : new ScheduleInfo.ScheduleInfo();
+  return Promise.all([maybeStopRootModeProtection(info), maybeStopWake()]);
 }
 
-function startSchedule(maxTimerMinutes) {
+async function startSchedule(maxTimerMinutes, wakeMinutes) {
+  if (checkCancel != null) {
+    // cancel running check command
+    if (!checkCancel.is_cancelled()) {
+      checkCancel.cancel();
+      await RootMode.execCheck(["sleep", "0.1"], null, false).catch(() => {});
+    }
+  }
   const seconds = maxTimerMinutes * 60;
-  settings.set_int(
-    "shutdown-timestamp-value",
-    GLib.DateTime.new_now_utc().to_unix() + Math.max(1, seconds)
-  );
+  const info = new ScheduleInfo.ScheduleInfo({
+    mode: settings.get_string("shutdown-mode-value"),
+    deadline: GLib.DateTime.new_now_utc().to_unix() + Math.max(1, seconds),
+  });
+  settings.set_int("shutdown-timestamp-value", info.deadline);
   let startPopupText = C_("StartSchedulePopup", "System will %s in %s").format(
-    timer != null ? timer.info.modeText : "?",
+    modeLabel(info.mode),
     _n("%s minute", "%s minutes", maxTimerMinutes).format(maxTimerMinutes)
   );
   const checkCmd = maybeCheckCmdString();
@@ -297,6 +308,12 @@ function startSchedule(maxTimerMinutes) {
     );
   }
   _showTextbox(startPopupText);
+
+  // start root protection
+  await Promise.all([
+    maybeStartRootModeProtection(info),
+    maybeStartWake(wakeMinutes),
+  ]);
 }
 
 function onShutdownScheduleChange(info) {
@@ -327,8 +344,6 @@ function enable() {
       stopSchedule,
       maybeStopRootModeProtection,
       maybeStartRootModeProtection,
-      maybeStartWake,
-      maybeStopWake,
       onShutdownScheduleChange,
     });
 
