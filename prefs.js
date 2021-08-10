@@ -47,7 +47,6 @@ const templateComponents = {
   "show-textboxes": "switch",
   "check-command": "buffer",
   "enable-check-command": "switch",
-  "enable-root-mode-cancel": "switch",
   "shutdown-mode": "combo",
   "auto-wake": "switch",
   "wake-max-timer": "adjustment",

@@ -146,13 +146,6 @@ async function maybeDoCheck() {
   if (checkCmd === "") {
     return;
   }
-  if (
-    settings.get_boolean("root-mode-value") &&
-    settings.get_boolean("enable-root-mode-cancel-value")
-  ) {
-    // avoid shutting down (with root mode protection) before check command is done
-    RootMode.shutdownCancel();
-  }
 
   checkCancel = new Gio.Cancellable();
   guiIdle(() => {

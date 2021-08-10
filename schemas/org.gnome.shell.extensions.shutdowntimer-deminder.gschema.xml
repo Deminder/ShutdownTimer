@@ -92,12 +92,6 @@
       <description>Run command before shutdown command. Proceed with shutdown only if check command succeedes.</description>
     </key>
 
-    <key type="b" name="enable-root-mode-cancel-value">
-      <default>true</default>
-      <summary>Allow cancel root mode protection</summary>
-      <description>Cancel the root mode protection before check command is run if enabled.</description>
-    </key>
-
     <key type="b" name="enable-check-command-value">
       <default>true</default>
       <summary>Enable check command</summary>
