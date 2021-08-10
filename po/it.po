@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-10 16:25+0200\n"
+"POT-Creation-Date: 2021-08-10 19:25+0200\n"
 "PO-Revision-Date: 2021-08-10 16:45+0200\n"
 "Last-Translator: Gianni Lerro <squall77it@gmail.com>\n"
 "Language-Team: Italiano <>\n"
@@ -210,7 +210,7 @@ msgstr "Impostazioni"
 msgid "Check %s for %s"
 msgstr ""
 
-#: lib/MenuItem.js:299 lib/ScheduleInfo.js:86
+#: lib/MenuItem.js:299 lib/ScheduleInfo.js:89
 #, javascript-format
 msgid "%s min"
 msgid_plural "%s mins"
@@ -228,14 +228,14 @@ msgctxt "WakeButtonText"
 msgid "%s %s"
 msgstr ""
 
-#: lib/MenuItem.js:310 lib/ScheduleInfo.js:82
+#: lib/MenuItem.js:310 lib/ScheduleInfo.js:85
 #, javascript-format
 msgid "%s hour"
 msgid_plural "%s hours"
 msgstr[0] "%s ora"
 msgstr[1] "%s ore"
 
-#: lib/MenuItem.js:312 extension.js:290
+#: lib/MenuItem.js:312 extension.js:301
 #, javascript-format
 msgid "%s minute"
 msgid_plural "%s minutes"
@@ -284,14 +284,14 @@ msgstr "%s allo %s"
 msgid "%s (sys)"
 msgstr ""
 
-#: lib/ScheduleInfo.js:84
+#: lib/ScheduleInfo.js:87
 #, javascript-format
 msgid "%s sec"
 msgid_plural "%s secs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: extension.js:77 extension.js:107 extension.js:268
+#: extension.js:79 extension.js:109 extension.js:267
 #, javascript-format
 msgctxt "Error"
 msgid ""
@@ -299,11 +299,11 @@ msgid ""
 "%s"
 msgstr ""
 
-#: extension.js:77 extension.js:107
+#: extension.js:79 extension.js:109
 msgid "Root mode protection failed!"
 msgstr ""
 
-#: extension.js:167 extension.js:191 extension.js:294
+#: extension.js:169 extension.js:191 extension.js:305
 #, javascript-format
 msgctxt "CheckCommand"
 msgid ""
@@ -311,7 +311,7 @@ msgid ""
 "'%s'"
 msgstr ""
 
-#: extension.js:168
+#: extension.js:170
 #, javascript-format
 msgid "Waiting for %s confirmation"
 msgstr ""
@@ -324,22 +324,22 @@ msgstr ""
 
 #: extension.js:192
 #, javascript-format
-msgid "Aborted %s"
+msgid "%s aborted"
 msgstr ""
 
-#: extension.js:268
+#: extension.js:267
 msgid "Wake action failed!"
 msgstr ""
 
-#: extension.js:274
+#: extension.js:273
 msgid "Shutdown Timer stopped"
 msgstr "Timer di spegnimento interrotto"
 
-#: extension.js:277
+#: extension.js:276
 msgid "Confirmation canceled"
 msgstr ""
 
-#: extension.js:288
+#: extension.js:299
 #, javascript-format
 msgctxt "StartSchedulePopup"
 msgid "System will %s in %s"
