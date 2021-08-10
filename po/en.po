@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-27 11:51+0200\n"
-"PO-Revision-Date: 2021-07-27 12:01+0200\n"
+"POT-Creation-Date: 2021-08-10 16:25+0200\n"
+"PO-Revision-Date: 2021-08-10 16:43+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -157,7 +157,7 @@ msgid "Display"
 msgstr "Display"
 
 #: ui/prefs.ui:885
-#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:103
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:97
 msgid "Enable check command"
 msgstr "Enable check command"
 
@@ -178,17 +178,7 @@ msgstr "Check command"
 msgid "command run in user shell"
 msgstr "command run in user shell"
 
-#: ui/prefs.ui:965
-#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:98
-msgid "Cancel the root mode protection before check command is run if enabled."
-msgstr ""
-"Cancel the root mode protection before check command is run if enabled."
-
-#: ui/prefs.ui:967
-msgid "Cancel root mode protection before check"
-msgstr "Cancel root mode protection before check"
-
-#: ui/prefs.ui:1000
+#: ui/prefs.ui:961
 msgid "Check"
 msgstr "Check"
 
@@ -216,31 +206,42 @@ msgstr "uninstall"
 msgid "Settings"
 msgstr "Settings"
 
-#: lib/MenuItem.js:265 extension.js:158
-msgid "Waiting for confirmation"
-msgstr "Waiting for confirmation"
+#: lib/MenuItem.js:267
+#, javascript-format
+msgid "Check %s for %s"
+msgstr "Check %s for %s"
 
-#: lib/MenuItem.js:294 lib/ScheduleInfo.js:83
-msgid "min"
-msgid_plural "mins"
-msgstr[0] "min"
-msgstr[1] "mins"
+#: lib/MenuItem.js:299 lib/ScheduleInfo.js:86
+#, javascript-format
+msgid "%s min"
+msgid_plural "%s mins"
+msgstr[0] "%s min"
+msgstr[1] "%s mins"
 
-#: lib/MenuItem.js:296
-msgid "(protect)"
-msgstr "(protect)"
+#: lib/MenuItem.js:301
+#, javascript-format
+msgid "%s (protect)"
+msgstr "%s (protect)"
 
-#: lib/MenuItem.js:305 lib/ScheduleInfo.js:78
-msgid "hour"
-msgid_plural "hours"
-msgstr[0] "hour"
-msgstr[1] "hours"
+#: lib/MenuItem.js:308
+#, javascript-format
+msgctxt "WakeButtonText"
+msgid "%s %s"
+msgstr "%s %s"
 
-#: lib/MenuItem.js:309 extension.js:246
-msgid "minute"
-msgid_plural "minutes"
-msgstr[0] "minute"
-msgstr[1] "minutes"
+#: lib/MenuItem.js:310 lib/ScheduleInfo.js:82
+#, javascript-format
+msgid "%s hour"
+msgid_plural "%s hours"
+msgstr[0] "%s hour"
+msgstr[1] "%s hours"
+
+#: lib/MenuItem.js:312 extension.js:290
+#, javascript-format
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] "%s minute"
+msgstr[1] "%s minutes"
 
 #: lib/RootMode.js:74
 msgid "Can not cancel root process!"
@@ -252,7 +253,7 @@ msgstr "CANCEL"
 
 #: lib/RootMode.js:196
 msgid "Privileged script installation required!"
-msgstr ""
+msgstr "Privileged script installation required!"
 
 #: lib/ScheduleInfo.js:46
 msgid "suspend"
@@ -274,43 +275,76 @@ msgstr "wakeup"
 msgid "Shutdown Timer"
 msgstr "Shutdown Timer"
 
-#: lib/ScheduleInfo.js:58
-msgid "until"
-msgstr "until"
+#: lib/ScheduleInfo.js:57
+#, javascript-format
+msgid "%s until %s"
+msgstr "%s until %s"
 
-#: lib/ScheduleInfo.js:59
-msgid "(sys)"
-msgstr "(sys)"
+#: lib/ScheduleInfo.js:62
+#, javascript-format
+msgid "%s (sys)"
+msgstr "%s (sys)"
 
-#: lib/ScheduleInfo.js:81
-msgid "sec"
-msgid_plural "secs"
-msgstr[0] "sec"
-msgstr[1] "secs"
+#: lib/ScheduleInfo.js:84
+#, javascript-format
+msgid "%s sec"
+msgid_plural "%s secs"
+msgstr[0] "%s sec"
+msgstr[1] "%s secs"
 
-#: extension.js:66 extension.js:93
+#: extension.js:77 extension.js:107 extension.js:268
+#, javascript-format
+msgctxt "Error"
+msgid ""
+"%s\n"
+"%s"
+msgstr ""
+
+#: extension.js:77 extension.js:107
 msgid "Root mode protection failed!"
 msgstr "Root mode protection failed!"
 
-#: extension.js:170
-msgid "Shutdown aborted"
-msgstr "Shutdown aborted"
+#: extension.js:167 extension.js:191 extension.js:294
+#, javascript-format
+msgctxt "CheckCommand"
+msgid ""
+"%s\n"
+"'%s'"
+msgstr ""
 
-#: extension.js:224
+#: extension.js:168
+#, javascript-format
+msgid "Waiting for %s confirmation"
+msgstr "Waiting for %s confirmation"
+
+#: extension.js:190
+#, javascript-format
+msgctxt "CheckCommand"
+msgid "%s (Code: %s)"
+msgstr ""
+
+#: extension.js:192
+#, javascript-format
+msgid "Aborted %s"
+msgstr "Aborted %s"
+
+#: extension.js:268
 msgid "Wake action failed!"
 msgstr "Wake action failed!"
 
-#: extension.js:230
+#: extension.js:274
 msgid "Shutdown Timer stopped"
 msgstr "Shutdown Timer stopped"
 
-#: extension.js:233
+#: extension.js:277
 msgid "Confirmation canceled"
 msgstr "Confirmation canceled"
 
-#: extension.js:245
-msgid "System will shutdown in"
-msgstr "System will shutdown in"
+#: extension.js:288
+#, javascript-format
+msgctxt "StartSchedulePopup"
+msgid "System will %s in %s"
+msgstr "System will %s in %s"
 
 #: prefs.js:25
 msgid "Suspend"
@@ -454,13 +488,53 @@ msgstr ""
 "Run command before shutdown command. Proceed with shutdown only if check "
 "command succeedes."
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:97
-msgid "Allow cancel root mode protection"
-msgstr "Allow cancel root mode protection"
-
-#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:104
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:98
 msgid "Check command is skipped if disabled."
 msgstr "Check command is skipped if disabled."
+
+#, javascript-format
+#~ msgctxt "StartSchedulePopup"
+#~ msgid "%s in %s"
+#~ msgstr "%s in %s"
+
+#, javascript-format
+#~ msgid ""
+#~ "Shutdown aborted\n"
+#~ "'%s' (Code: %s)"
+#~ msgstr ""
+#~ "Shutdown aborted\n"
+#~ "'%s' (Code: %s)"
+
+#~ msgid "hour"
+#~ msgid_plural "hours"
+#~ msgstr[0] "hour"
+#~ msgstr[1] "hours"
+
+#~ msgid "minute"
+#~ msgid_plural "minutes"
+#~ msgstr[0] "minute"
+#~ msgstr[1] "minutes"
+
+#~ msgid "min"
+#~ msgid_plural "mins"
+#~ msgstr[0] "min"
+#~ msgstr[1] "mins"
+
+#~ msgid "sec"
+#~ msgid_plural "secs"
+#~ msgstr[0] "sec"
+#~ msgstr[1] "secs"
+
+#~ msgid ""
+#~ "Cancel the root mode protection before check command is run if enabled."
+#~ msgstr ""
+#~ "Cancel the root mode protection before check command is run if enabled."
+
+#~ msgid "Cancel root mode protection before check"
+#~ msgstr "Cancel root mode protection before check"
+
+#~ msgid "Allow cancel root mode protection"
+#~ msgstr "Allow cancel root mode protection"
 
 #~ msgid "podman required to build package"
 #~ msgstr "podman required to build package"

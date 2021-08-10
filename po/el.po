@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-27 11:51+0200\n"
-"PO-Revision-Date: 2021-07-17 00:59+0200\n"
+"POT-Creation-Date: 2021-08-10 16:25+0200\n"
+"PO-Revision-Date: 2021-08-10 16:43+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: \n"
 "Language: el\n"
@@ -157,7 +157,7 @@ msgid "Display"
 msgstr ""
 
 #: ui/prefs.ui:885
-#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:103
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:97
 msgid "Enable check command"
 msgstr ""
 
@@ -176,16 +176,7 @@ msgstr ""
 msgid "command run in user shell"
 msgstr ""
 
-#: ui/prefs.ui:965
-#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:98
-msgid "Cancel the root mode protection before check command is run if enabled."
-msgstr ""
-
-#: ui/prefs.ui:967
-msgid "Cancel root mode protection before check"
-msgstr ""
-
-#: ui/prefs.ui:1000
+#: ui/prefs.ui:961
 msgid "Check"
 msgstr ""
 
@@ -213,31 +204,42 @@ msgstr ""
 msgid "Settings"
 msgstr "Ρυθμίσεις"
 
-#: lib/MenuItem.js:265 extension.js:158
-msgid "Waiting for confirmation"
+#: lib/MenuItem.js:267
+#, javascript-format
+msgid "Check %s for %s"
 msgstr ""
 
-#: lib/MenuItem.js:294 lib/ScheduleInfo.js:83
-msgid "min"
-msgid_plural "mins"
-msgstr[0] "λεπτό"
-msgstr[1] "λεπτά"
+#: lib/MenuItem.js:299 lib/ScheduleInfo.js:86
+#, javascript-format
+msgid "%s min"
+msgid_plural "%s mins"
+msgstr[0] ""
+msgstr[1] ""
 
-#: lib/MenuItem.js:296
-msgid "(protect)"
+#: lib/MenuItem.js:301
+#, javascript-format
+msgid "%s (protect)"
 msgstr ""
 
-#: lib/MenuItem.js:305 lib/ScheduleInfo.js:78
-msgid "hour"
-msgid_plural "hours"
-msgstr[0] "ώρα"
-msgstr[1] "ώρες"
+#: lib/MenuItem.js:308
+#, javascript-format
+msgctxt "WakeButtonText"
+msgid "%s %s"
+msgstr ""
 
-#: lib/MenuItem.js:309 extension.js:246
-msgid "minute"
-msgid_plural "minutes"
-msgstr[0] "λεπτό"
-msgstr[1] "λεπτά"
+#: lib/MenuItem.js:310 lib/ScheduleInfo.js:82
+#, javascript-format
+msgid "%s hour"
+msgid_plural "%s hours"
+msgstr[0] "%s ώρα"
+msgstr[1] "%s ώρες"
+
+#: lib/MenuItem.js:312 extension.js:290
+#, javascript-format
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] "%s λεπτό"
+msgstr[1] "%s λεπτά"
 
 #: lib/RootMode.js:74
 msgid "Can not cancel root process!"
@@ -271,43 +273,76 @@ msgstr ""
 msgid "Shutdown Timer"
 msgstr "Αυτόματη Απενεργοποίηση "
 
-#: lib/ScheduleInfo.js:58
-msgid "until"
-msgstr "μέχρι την"
+#: lib/ScheduleInfo.js:57
+#, javascript-format
+msgid "%s until %s"
+msgstr "%s μέχρι την %s"
 
-#: lib/ScheduleInfo.js:59
-msgid "(sys)"
+#: lib/ScheduleInfo.js:62
+#, javascript-format
+msgid "%s (sys)"
 msgstr ""
 
-#: lib/ScheduleInfo.js:81
-msgid "sec"
-msgid_plural "secs"
+#: lib/ScheduleInfo.js:84
+#, javascript-format
+msgid "%s sec"
+msgid_plural "%s secs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: extension.js:66 extension.js:93
+#: extension.js:77 extension.js:107 extension.js:268
+#, javascript-format
+msgctxt "Error"
+msgid ""
+"%s\n"
+"%s"
+msgstr ""
+
+#: extension.js:77 extension.js:107
 msgid "Root mode protection failed!"
 msgstr ""
 
-#: extension.js:170
-msgid "Shutdown aborted"
+#: extension.js:167 extension.js:191 extension.js:294
+#, javascript-format
+msgctxt "CheckCommand"
+msgid ""
+"%s\n"
+"'%s'"
 msgstr ""
 
-#: extension.js:224
+#: extension.js:168
+#, javascript-format
+msgid "Waiting for %s confirmation"
+msgstr ""
+
+#: extension.js:190
+#, javascript-format
+msgctxt "CheckCommand"
+msgid "%s (Code: %s)"
+msgstr ""
+
+#: extension.js:192
+#, javascript-format
+msgid "Aborted %s"
+msgstr ""
+
+#: extension.js:268
 msgid "Wake action failed!"
 msgstr ""
 
-#: extension.js:230
+#: extension.js:274
 msgid "Shutdown Timer stopped"
 msgstr "Η Αυτόματη Απενεργοποίηση σταμάτησε"
 
-#: extension.js:233
+#: extension.js:277
 msgid "Confirmation canceled"
 msgstr ""
 
-#: extension.js:245
-msgid "System will shutdown in"
-msgstr "Ο υπολογιστής θα κλείσει σε"
+#: extension.js:288
+#, javascript-format
+msgctxt "StartSchedulePopup"
+msgid "System will %s in %s"
+msgstr "%s σε %s"
 
 #: prefs.js:25
 msgid "Suspend"
@@ -438,13 +473,24 @@ msgid ""
 "command succeedes."
 msgstr ""
 
-#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:97
-msgid "Allow cancel root mode protection"
-msgstr ""
-
-#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:104
+#: schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:98
 msgid "Check command is skipped if disabled."
 msgstr ""
+
+#~ msgid "hour"
+#~ msgid_plural "hours"
+#~ msgstr[0] "ώρα"
+#~ msgstr[1] "ώρες"
+
+#~ msgid "minute"
+#~ msgid_plural "minutes"
+#~ msgstr[0] "λεπτό"
+#~ msgstr[1] "λεπτά"
+
+#~ msgid "min"
+#~ msgid_plural "mins"
+#~ msgstr[0] "λεπτό"
+#~ msgstr[1] "λεπτά"
 
 #~ msgid ""
 #~ "uses 'pkexec shutdown' command, no interruption of timer, but needs root "
@@ -452,6 +498,3 @@ msgstr ""
 #~ msgstr ""
 #~ "χρησιμποποιεί την 'pkexec shutdown' εντολή, η αντίστροφη μέτρηση δεν "
 #~ "διακόπτεται, αλλά απαιτείται κωδικός διαχειριστή"
-
-#~ msgid "Root mode protection"
-#~ msgstr "Λειτουργία διαχειριστή"
