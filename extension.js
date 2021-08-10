@@ -23,7 +23,7 @@ const _ = Gettext.gettext;
 const _n = Gettext.ngettext;
 
 /* GLOBAL VARIABLES */
-let shutdownTimerMenu, separator, settings, checkCancel, screenSaver;
+let shutdownTimerMenu, separator, settings, checkCancel, checkSuccess, screenSaver;
 
 const ScreenSaverInf =
   '<node>\
@@ -83,12 +83,13 @@ async function maybeStartRootModeProtection(info) {
   if (info.scheduled && settings.get_boolean("root-mode-value")) {
     logDebug("Start root mode protection for: " + info.label);
     try {
+      const minutes = Math.max(0, info.minutes) + 1;
       switch (info.mode) {
         case "poweroff":
-          await RootMode.shutdown(info.minutes + 1);
+          await RootMode.shutdown(minutes);
           break;
         case "reboot":
-          await RootMode.shutdown(info.minutes + 1, true);
+          await RootMode.shutdown(minutes, true);
           break;
         default:
           logDebug("No root mode protection started for: " + info.mode);
@@ -153,8 +154,11 @@ async function maybeDoCheck() {
     shutdownTimerMenu._updateShutdownInfo();
   });
   _showTextbox(_("Waiting for confirmation") + maybeCheckCmdString(true));
+  checkSuccess = false;
+  continueRootProtectionDuringCheck();
   return RootMode.execCheck(checkCmd, checkCancel)
     .then(() => {
+      checkSuccess = true;
       logDebug(`Check command "${checkCmd}" confirmed shutdown.`);
       return;
     })
@@ -174,6 +178,24 @@ async function maybeDoCheck() {
         shutdownTimerMenu._updateShutdownInfo();
       });
     });
+}
+
+async function continueRootProtectionDuringCheck() {
+  await RootMode.execCheck(["sleep", "5"], checkCancel, false).catch(() => {});
+  if (checkCancel != null && !checkCancel.is_cancelled() && timer != null) {
+    logDebug("RootProtection during check: Continue");
+    await maybeStartRootModeProtection(timer.info);
+    await continueRootProtectionDuringCheck();
+  } else {
+    logDebug("RootProtection during check: Done");
+    if (timer != null) {
+      if (checkSuccess) {
+        await maybeStartRootModeProtection(timer.info);
+      } else {
+        await maybeStopRootModeProtection(timer.info, true);
+      }
+    }
+  }
 }
 
 function shutdown(mode) {
