@@ -17,6 +17,7 @@ xgettext \
     --package-version="$(git describe --tags --abbrev=0)" \
     --keyword="gtxt" \
     --keyword="_n:1,2" \
+    --keyword="C_:1c,2" \
     --output="po/main.pot" \
     tool/*.sh ui/prefs.ui lib/*.js *.js schemas/*.xml
 

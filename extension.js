@@ -20,10 +20,16 @@ const PopupMenu = imports.ui.popupMenu;
 // translations
 const Gettext = imports.gettext.domain("ShutdownTimer");
 const _ = Gettext.gettext;
+const C_ = Gettext.pgettext;
 const _n = Gettext.ngettext;
 
 /* GLOBAL VARIABLES */
-let shutdownTimerMenu, separator, settings, checkCancel, checkSuccess, screenSaver;
+let shutdownTimerMenu,
+  separator,
+  settings,
+  checkCancel,
+  checkSuccess,
+  screenSaver;
 
 const ScreenSaverInf =
   '<node>\
@@ -67,7 +73,9 @@ async function maybeStopRootModeProtection(info, stopScheduled = false) {
           logDebug("No root mode protection stopped for: " + info.mode);
       }
     } catch (err) {
-      _showTextbox(_("Root mode protection failed!") + "\n" + err);
+      _showTextbox(
+        C_("Error", "%s\n%s").format(_("Root mode protection failed!"), err)
+      );
       logErr(err, "DisableRootModeProtection");
     }
   }
@@ -95,7 +103,9 @@ async function maybeStartRootModeProtection(info) {
           logDebug("No root mode protection started for: " + info.mode);
       }
     } catch (err) {
-      _showTextbox(_("Root mode protection failed!") + "\n" + err);
+      _showTextbox(
+        C_("Error", "%s\n%s").format(_("Root mode protection failed!"), err)
+      );
       logErr(err, "EnableRootModeProtection");
     }
   }
@@ -153,9 +163,17 @@ async function maybeDoCheck() {
     shutdownTimerMenu.checkRunning = true;
     shutdownTimerMenu._updateShutdownInfo();
   });
-  _showTextbox(_("Waiting for confirmation") + maybeCheckCmdString(true));
+  _showTextbox(
+    C_("CheckCommand", "%s\n'%s'").format(
+      _("Waiting for %s confirmation").format(
+        timer != null ? timer.info.modeText : "?"
+      ),
+      checkCmd
+    )
+  );
   checkSuccess = false;
-  continueRootProtectionDuringCheck();
+  const checkWatchCancel = new Gio.Cancellable();
+  continueRootProtectionDuringCheck(checkWatchCancel);
   return RootMode.execCheck(checkCmd, checkCancel)
     .then(() => {
       checkSuccess = true;
@@ -168,11 +186,20 @@ async function maybeDoCheck() {
         code = `${err.code}`;
         logDebug("Check command aborted shutdown. Code: " + code);
       }
-      _showTextbox(_("Shutdown aborted") + `\n${checkCmd} (Code: ${code})`);
+      _showTextbox(
+        C_("CheckCommand", "%s (Code: %s)").format(
+          C_("CheckCommand", "%s\n'%s'").format(
+            _("Aborted %s").format(timer != null ? timer.info.modeText : "?"),
+            checkCmd
+          ),
+          code
+        )
+      );
       throw err;
     })
     .finally(() => {
       checkCancel = null;
+      checkWatchCancel.cancel();
       guiIdle(() => {
         shutdownTimerMenu.checkRunning = false;
         shutdownTimerMenu._updateShutdownInfo();
@@ -180,8 +207,8 @@ async function maybeDoCheck() {
     });
 }
 
-async function continueRootProtectionDuringCheck() {
-  await RootMode.execCheck(["sleep", "5"], checkCancel, false).catch(() => {});
+async function continueRootProtectionDuringCheck(cancellable) {
+  await RootMode.execCheck(["sleep", "30"], cancellable, false).catch(() => {});
   if (checkCancel != null && !checkCancel.is_cancelled() && timer != null) {
     logDebug("RootProtection during check: Continue");
     await maybeStartRootModeProtection(timer.info);
@@ -218,11 +245,9 @@ function shutdown(mode) {
   }
 }
 
-function maybeCheckCmdString(nl = false) {
+function maybeCheckCmdString() {
   const cmd = settings.get_string("check-command-value");
-  return settings.get_boolean("enable-check-command-value") && cmd !== ""
-    ? (nl ? "\n" : "") + cmd
-    : "";
+  return settings.get_boolean("enable-check-command-value") ? cmd : "";
 }
 
 /* --- GUI main loop ---- */
@@ -240,7 +265,7 @@ async function wakeAction(mode, minutes) {
         return false;
     }
   } catch (err) {
-    _showTextbox(_("Wake action failed!") + "\n" + err);
+    _showTextbox(C_("Error", "%s\n%s").format(_("Wake action failed!"), err));
   }
 }
 
@@ -260,13 +285,18 @@ function startSchedule(maxTimerMinutes) {
     "shutdown-timestamp-value",
     GLib.DateTime.new_now_utc().to_unix() + Math.max(1, seconds)
   );
-  _showTextbox(
-    `${_("System will shutdown in")} ${maxTimerMinutes} ${_n(
-      "minute",
-      "minutes",
-      maxTimerMinutes
-    )}${maybeCheckCmdString(true)}`
+  let startPopupText = C_("StartSchedulePopup", "System will %s in %s").format(
+    timer != null ? timer.info.modeText : "?",
+    _n("%s minute", "%s minutes", maxTimerMinutes).format(maxTimerMinutes)
   );
+  const checkCmd = maybeCheckCmdString();
+  if (checkCmd !== "") {
+    startPopupText = C_("CheckCommand", "%s\n'%s'").format(
+      startPopupText,
+      checkCmd
+    );
+  }
+  _showTextbox(startPopupText);
 }
 
 function onShutdownScheduleChange(info) {
@@ -333,6 +363,7 @@ function enable() {
   }
   if (shutdownTimerMenu == null) {
     shutdownTimerMenu = new MenuItem.ShutdownTimer();
+    shutdownTimerMenu.checkRunning = checkCancel != null;
     timer.setTickCallback(() => shutdownTimerMenu._updateShutdownInfo());
     statusMenu.menu.addMenuItem(shutdownTimerMenu);
   }
