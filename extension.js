@@ -27,6 +27,7 @@ const _n = Gettext.ngettext;
 
 /* GLOBAL VARIABLES */
 let shutdownTimerMenu,
+  timer,
   separator,
   settings,
   checkCancel,

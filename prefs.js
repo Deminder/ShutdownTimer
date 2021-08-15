@@ -121,6 +121,7 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
       };
 
       const fieldNameByInteralID = (internalID) => {
+        logDebug('Proto: ' + internalID.__proto__);
         const fieldName = "_" + internalID.replaceAll("-", "_");
         if (!(fieldName in this) || this[fieldName] === null) {
           throw new Error(
