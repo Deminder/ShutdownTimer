@@ -297,7 +297,7 @@ async function startSchedule(maxTimerMinutes, wakeMinutes) {
     deadline: GLib.DateTime.new_now_utc().to_unix() + Math.max(1, seconds),
   });
   settings.set_int("shutdown-timestamp-value", info.deadline);
-  let startPopupText = C_("StartSchedulePopup", "System will %s in %s").format(
+  let startPopupText = C_("StartSchedulePopup", "%s in %s").format(
     modeLabel(info.mode),
     _n("%s minute", "%s minutes", maxTimerMinutes).format(maxTimerMinutes)
   );

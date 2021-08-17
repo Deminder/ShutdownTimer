@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-10 19:25+0200\n"
+"POT-Creation-Date: 2021-08-17 10:39+0200\n"
 "PO-Revision-Date: 2021-08-15 18:31+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: \n"
@@ -236,7 +236,7 @@ msgid_plural "%s hours"
 msgstr[0] "%s hour"
 msgstr[1] "%s hours"
 
-#: lib/MenuItem.js:312 extension.js:301
+#: lib/MenuItem.js:312 extension.js:302
 #, javascript-format
 msgid "%s minute"
 msgid_plural "%s minutes"
@@ -251,7 +251,7 @@ msgstr "Can not cancel root process!"
 msgid "CANCEL"
 msgstr "CANCEL"
 
-#: lib/RootMode.js:196
+#: lib/RootMode.js:203
 msgid "Privileged script installation required!"
 msgstr "Privileged script installation required!"
 
@@ -292,7 +292,7 @@ msgid_plural "%s secs"
 msgstr[0] "%s sec"
 msgstr[1] "%s secs"
 
-#: extension.js:79 extension.js:109 extension.js:267
+#: extension.js:74 extension.js:104 extension.js:261
 #, javascript-format
 msgctxt "Error"
 msgid ""
@@ -300,11 +300,11 @@ msgid ""
 "%s"
 msgstr ""
 
-#: extension.js:79 extension.js:109
+#: extension.js:74 extension.js:104
 msgid "Root mode protection failed!"
 msgstr "Root mode protection failed!"
 
-#: extension.js:169 extension.js:191 extension.js:305
+#: extension.js:164 extension.js:186 extension.js:306
 #, javascript-format
 msgctxt "CheckCommand"
 msgid ""
@@ -312,38 +312,38 @@ msgid ""
 "'%s'"
 msgstr ""
 
-#: extension.js:170
+#: extension.js:165
 #, javascript-format
 msgid "Waiting for %s confirmation"
 msgstr "Waiting for %s confirmation"
 
-#: extension.js:190
+#: extension.js:185
 #, javascript-format
 msgctxt "CheckCommand"
 msgid "%s (Code: %s)"
 msgstr ""
 
-#: extension.js:192
+#: extension.js:187
 #, javascript-format
 msgid "%s aborted"
 msgstr "%s aborted"
 
-#: extension.js:267
+#: extension.js:261
 msgid "Wake action failed!"
 msgstr "Wake action failed!"
 
-#: extension.js:273
+#: extension.js:272
 msgid "Shutdown Timer stopped"
 msgstr "Shutdown Timer stopped"
 
-#: extension.js:276
+#: extension.js:275
 msgid "Confirmation canceled"
 msgstr "Confirmation canceled"
 
-#: extension.js:299
+#: extension.js:300
 #, javascript-format
 msgctxt "StartSchedulePopup"
-msgid "System will %s in %s"
+msgid "%s in %s"
 msgstr "%s in %s"
 
 #: prefs.js:25
@@ -494,7 +494,7 @@ msgstr "Check command is skipped if disabled."
 
 #, javascript-format
 #~ msgctxt "StartSchedulePopup"
-#~ msgid "%s in %s"
+#~ msgid "System will %s in %s"
 #~ msgstr "%s in %s"
 
 #, javascript-format
