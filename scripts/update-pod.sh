@@ -14,7 +14,7 @@ xgettext \
     --from-code=UTF-8 \
     --copyright-holder="Shutdown Timer" \
     --package-name="Shutdown Timer" \
-    --package-version="$(git describe --tags --abbrev=0)" \
+    --package-version="r`grep -oP '^ *?\"version\": *?\K(\d+)' metadata.json`" \
     --keyword="gtxt" \
     --keyword="_n:1,2" \
     --keyword="C_:1c,2" \
