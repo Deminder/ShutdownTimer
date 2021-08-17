@@ -8,28 +8,29 @@ assignees: ''
 ---
 
 **Describe the bug**
-A clear and concise description of what the bug is.
-- If applicable, show log appropriate output `journalctl /usr/bin/gnome-shell -o cat`
+_A clear and concise description of what the bug is._
+- If applicable, show log appropriate output `journalctl -o cat /usr/bin/gnome-shell`
 - Does the bug only occur in with an additional gnome shell extension enabled or with only the "Shutdown Timer" extension enabled ?
 
 **To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error 
+_Steps to reproduce the behavior:_
+1. _Go to '...'_
+2. _Select '....'_
+3. _Click on ' ....'_
+4. _See error_
 
 **Expected behavior**
-A clear and concise description of what you expected to happen.
+_A clear and concise description of what you expected to happen._
 
 **Screenshots**
-If applicable, add screenshots to help explain your problem.
+_If applicable, add screenshots to help explain your problem._
 
-**System specifications (please complete the following information):**
- - Extension version
- - GNOME shell version `gnome-shell --version`
- - Ubuntu 18.04, Fedora 31, Manjaro 19.02, Arch, Debian 10.3, openSUSE Leap 15.1, etc.
+**System**
+- Extension version: `gnome-extensions info ShutdownTimer@deminder | grep -i version`
+- GNOME shell version: `gnome-shell --version`
+- Distro: _Ubuntu 20.04, Fedora 34, etc._
+
 
 
 **Additional context**
-Add any other context about the problem here.
+_Add any other context about the problem here._
