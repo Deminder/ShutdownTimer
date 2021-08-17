@@ -10,10 +10,12 @@ const Me = ExtensionUtils.getCurrentExtension();
 const { ScheduleInfo, MenuItem, Textbox, RootMode, Timer, Convenience } =
   Me.imports.lib;
 const modeLabel = Me.imports.prefs.modeLabel;
-const logDebug = Convenience.logDebug;
+const { proxyPromise, logDebug } = Convenience;
 
 /* IMPORTS */
 const { GObject, GLib, Gio } = imports.gi;
+const { loadInterfaceXML } = imports.misc.fileUtils;
+const LoginManager = imports.misc.loginManager;
 
 // screen and main functionality
 const Main = imports.ui.main;
@@ -48,6 +50,11 @@ const ScreenSaverInf =
   </interface>\
 </node>';
 const ScreenSaverProxy = Gio.DBusProxy.makeProxyWrapper(ScreenSaverInf);
+const EndSessionDialogInf = loadInterfaceXML(
+  "org.gnome.SessionManager.EndSessionDialog"
+);
+const EndSessionDialogProxy =
+  Gio.DBusProxy.makeProxyWrapper(EndSessionDialogInf);
 
 let initialized = false;
 var INSTALL_ACTIONS;
@@ -227,20 +234,19 @@ async function continueRootProtectionDuringCheck(mode, cancellable) {
 
 function shutdown(mode) {
   Main.overview.hide();
-  const session = new imports.misc.gnomeSession.SessionManager();
-  const LoginManager = imports.misc.loginManager;
-  const loginManager = LoginManager.getLoginManager();
+  const getSession = () => new imports.misc.gnomeSession.SessionManager();
 
   switch (mode) {
     case "reboot":
-      session.RebootRemote(0);
+      EndSessionDialogAware.register();
+      getSession().RebootRemote(0);
       break;
     case "suspend":
-      loginManager.suspend();
+      LoginManager.getLoginManager().suspend();
+      break;
     default:
-      session.ShutdownRemote(0); // shutdown after 60s
-      // const Util = imports.misc.util;
-      // Util.spawnCommandLine('poweroff');	// shutdown immediately
+      EndSessionDialogAware.register();
+      getSession().ShutdownRemote(0); // shutdown after 60s
       break;
   }
 }
@@ -270,13 +276,19 @@ async function wakeAction(mode, minutes) {
 }
 
 function stopSchedule() {
-  settings.set_int("shutdown-timestamp-value", -1);
-  let showText = _("Shutdown Timer stopped");
-  if (checkCancel != null) {
-    checkCancel.cancel();
-    showText = _("Confirmation canceled");
+  EndSessionDialogAware.unregister();
+  if (
+    checkCancel != null ||
+    settings.get_int("shutdown-timestamp-value") > -1
+  ) {
+    settings.set_int("shutdown-timestamp-value", -1);
+    let showText = _("Shutdown Timer stopped");
+    if (checkCancel != null) {
+      checkCancel.cancel();
+      showText = _("Confirmation canceled");
+    }
+    _showTextbox(showText);
   }
-  _showTextbox(showText);
 
   // stop root protection
   const info = timer != null ? timer.info : new ScheduleInfo.ScheduleInfo();
@@ -284,6 +296,7 @@ function stopSchedule() {
 }
 
 async function startSchedule(maxTimerMinutes, wakeMinutes) {
+  EndSessionDialogAware.unregister();
   if (checkCancel != null) {
     // cancel running check command
     if (!checkCancel.is_cancelled()) {
@@ -353,20 +366,14 @@ function enable() {
     // starts internal shutdown schedule if ready
     timer = new Timer.Timer(serveInernalSchedule);
 
-    screenSaver = new Promise((resolve, reject) => {
-      new ScreenSaverProxy(
-        Gio.DBus.session,
-        "org.gnome.ScreenSaver",
-        "/org/gnome/ScreenSaver",
-        (proxy, error) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(proxy);
-          }
-        }
-      );
-    });
+    screenSaver = proxyPromise(
+      ScreenSaverProxy,
+      Gio.DBus.session,
+      "org.gnome.ScreenSaver",
+      "/org/gnome/ScreenSaver"
+    );
+
+    EndSessionDialogAware.load(stopSchedule);
 
     initialized = true;
   }
@@ -461,6 +468,8 @@ async function maybeCompleteDisable() {
       checkCancel.cancel();
       checkCancel = undefined;
     }
+    EndSessionDialogAware.unload();
+
     screenSaver = undefined;
     initialized = false;
     logDebug("Completly disabled. Screen saver is disabled.");
