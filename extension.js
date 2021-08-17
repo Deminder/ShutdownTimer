@@ -7,14 +7,21 @@
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
-const { ScheduleInfo, MenuItem, Textbox, RootMode, Timer, Convenience } =
-  Me.imports.lib;
+const {
+  ScheduleInfo,
+  MenuItem,
+  Textbox,
+  RootMode,
+  Timer,
+  Convenience,
+  ScreenSaverAware,
+  EndSessionDialogAware,
+} = Me.imports.lib;
 const modeLabel = Me.imports.prefs.modeLabel;
-const { proxyPromise, logDebug } = Convenience;
+const { logDebug } = Convenience;
 
 /* IMPORTS */
 const { GObject, GLib, Gio } = imports.gi;
-const { loadInterfaceXML } = imports.misc.fileUtils;
 const LoginManager = imports.misc.loginManager;
 
 // screen and main functionality
@@ -35,26 +42,6 @@ let shutdownTimerMenu,
   checkCancel,
   checkSuccess,
   screenSaver;
-
-const ScreenSaverInf =
-  '<node>\
-  <interface name="org.gnome.ScreenSaver">\
-    <method name="GetActive"> \
-      <arg type="b" name="active" direction="out">\
-      </arg>\
-    </method>\
-    <signal name="ActiveChanged">\
-      <arg name="new_value" type="b">\
-      </arg>\
-    </signal>\
-  </interface>\
-</node>';
-const ScreenSaverProxy = Gio.DBusProxy.makeProxyWrapper(ScreenSaverInf);
-const EndSessionDialogInf = loadInterfaceXML(
-  "org.gnome.SessionManager.EndSessionDialog"
-);
-const EndSessionDialogProxy =
-  Gio.DBusProxy.makeProxyWrapper(EndSessionDialogInf);
 
 let initialized = false;
 var INSTALL_ACTIONS;
@@ -366,12 +353,7 @@ function enable() {
     // starts internal shutdown schedule if ready
     timer = new Timer.Timer(serveInernalSchedule);
 
-    screenSaver = proxyPromise(
-      ScreenSaverProxy,
-      Gio.DBus.session,
-      "org.gnome.ScreenSaver",
-      "/org/gnome/ScreenSaver"
-    );
+    ScreenSaverAware.load();
 
     EndSessionDialogAware.load(stopSchedule);
 
@@ -392,60 +374,10 @@ function enable() {
   }
 }
 
-function screenSaverGetActive() {
-  return new Promise((resolve, reject) => {
-    if (screenSaver != null) {
-      screenSaver.then((proxy) => {
-        proxy.GetActiveRemote(([active], error) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(active);
-          }
-        });
-      });
-    } else {
-      reject(new Error("Already completely disabled!"));
-    }
-  });
-}
-
-function screenSaverTurnsActive(durationSeconds, sleepCancel) {
-  return new Promise((resolve, reject) => {
-    if (screenSaver != null) {
-      screenSaver.then((proxy) => {
-        let done = false;
-        const changeSignalId = proxy.connectSignal(
-          "ActiveChanged",
-          (proxy, _sender, [active]) => {
-            if (active && !done) {
-              done = true;
-              proxy.disconnectSignal(changeSignalId);
-              resolve(true);
-            }
-          }
-        );
-        RootMode.execCheck(
-          ["sleep", `${durationSeconds}`],
-          sleepCancel
-        ).finally(() => {
-          if (!done) {
-            done = true;
-            proxy.disconnectSignal(changeSignalId);
-            resolve(false);
-          }
-        });
-      });
-    } else {
-      reject(new Error("Already completely disabled!"));
-    }
-  });
-}
-
 async function maybeCompleteDisable() {
   const sleepCancel = new Gio.Cancellable();
-  const changePromise = screenSaverTurnsActive(3, sleepCancel);
-  let active = await screenSaverGetActive();
+  const changePromise = ScreenSaverAware.screenSaverTurnsActive(3, sleepCancel);
+  let active = await ScreenSaverAware.screenSaverGetActive();
   if (!active) {
     active = await changePromise;
   } else {
@@ -468,9 +400,9 @@ async function maybeCompleteDisable() {
       checkCancel.cancel();
       checkCancel = undefined;
     }
+    ScreenSaverAware.unload();
     EndSessionDialogAware.unload();
 
-    screenSaver = undefined;
     initialized = false;
     logDebug("Completly disabled. Screen saver is disabled.");
   } else {
@@ -494,7 +426,7 @@ function disable() {
   }
   separator = undefined;
 
-  if (screenSaver != null) {
+  if (initialized) {
     maybeCompleteDisable().catch((error) => {
       logDebug(`Partially disabled. ${error}`);
     });
