@@ -4,6 +4,7 @@
     BUILD: ./scripts/build.sh
     UPDATE TRANSLATIONS: ./scripts/update-pod.sh
 **/
+/* exported INSTALL_ACTIONS, init, enable, disable */
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -21,7 +22,7 @@ const modeLabel = Me.imports.prefs.modeLabel;
 const { logDebug } = Convenience;
 
 /* IMPORTS */
-const { GObject, GLib, Gio } = imports.gi;
+const { GLib, Gio } = imports.gi;
 const LoginManager = imports.misc.loginManager;
 
 // screen and main functionality
@@ -29,25 +30,19 @@ const Main = imports.ui.main;
 const PopupMenu = imports.ui.popupMenu;
 
 // translations
-const Gettext = imports.gettext.domain("ShutdownTimer");
+const Gettext = imports.gettext.domain('ShutdownTimer');
 const _ = Gettext.gettext;
 const C_ = Gettext.pgettext;
 const _n = Gettext.ngettext;
 
 /* GLOBAL VARIABLES */
-let shutdownTimerMenu,
-  timer,
-  separator,
-  settings,
-  checkCancel,
-  checkSuccess,
-  screenSaver;
+let shutdownTimerMenu, timer, separator, settings, checkCancel, checkSuccess;
 
 let initialized = false;
 var INSTALL_ACTIONS;
 
 function _showTextbox(textmsg) {
-  if (settings.get_boolean("show-textboxes-value")) {
+  if (settings.get_boolean('show-textboxes-value')) {
     guiIdle(() => {
       Textbox.showTextbox(textmsg);
     });
@@ -57,23 +52,23 @@ function _showTextbox(textmsg) {
 async function maybeStopRootModeProtection(info, stopScheduled = false) {
   if (
     (stopScheduled || !info.scheduled) &&
-    settings.get_boolean("root-mode-value")
+    settings.get_boolean('root-mode-value')
   ) {
-    logDebug("Stop root mode protection for: " + info.mode);
+    logDebug('Stop root mode protection for: ' + info.mode);
     try {
       switch (info.mode) {
-        case "poweroff":
-        case "reboot":
-          await RootMode.shutdownCancel();
-          break;
-        default:
-          logDebug("No root mode protection stopped for: " + info.mode);
+      case 'poweroff':
+      case 'reboot':
+        await RootMode.shutdownCancel();
+        break;
+      default:
+        logDebug('No root mode protection stopped for: ' + info.mode);
       }
     } catch (err) {
       _showTextbox(
-        C_("Error", "%s\n%s").format(_("Root mode protection failed!"), err)
+        C_('Error', '%s\n%s').format(_('Root mode protection failed!'), err)
       );
-      logErr(err, "DisableRootModeProtection");
+      logError(err, 'DisableRootModeProtection');
     }
   }
 }
@@ -85,37 +80,37 @@ async function maybeStopRootModeProtection(info, stopScheduled = false) {
  *
  */
 async function maybeStartRootModeProtection(info) {
-  if (info.scheduled && settings.get_boolean("root-mode-value")) {
-    logDebug("Start root mode protection for: " + info.label);
+  if (info.scheduled && settings.get_boolean('root-mode-value')) {
+    logDebug('Start root mode protection for: ' + info.label);
     try {
       const minutes = Math.max(0, info.minutes) + 1;
       switch (info.mode) {
-        case "poweroff":
-          await RootMode.shutdown(minutes);
-          break;
-        case "reboot":
-          await RootMode.shutdown(minutes, true);
-          break;
-        default:
-          logDebug("No root mode protection started for: " + info.mode);
+      case 'poweroff':
+        await RootMode.shutdown(minutes);
+        break;
+      case 'reboot':
+        await RootMode.shutdown(minutes, true);
+        break;
+      default:
+        logDebug('No root mode protection started for: ' + info.mode);
       }
     } catch (err) {
       _showTextbox(
-        C_("Error", "%s\n%s").format(_("Root mode protection failed!"), err)
+        C_('Error', '%s\n%s').format(_('Root mode protection failed!'), err)
       );
-      logErr(err, "EnableRootModeProtection");
+      logError(err, 'EnableRootModeProtection');
     }
   }
 }
 
 async function maybeStartWake(wakeMinutes) {
-  if (settings.get_boolean("auto-wake-value")) {
+  if (settings.get_boolean('auto-wake-value')) {
     await RootMode.wake(wakeMinutes);
   }
 }
 
 async function maybeStopWake() {
-  if (settings.get_boolean("auto-wake-value")) {
+  if (settings.get_boolean('auto-wake-value')) {
     await RootMode.wakeCancel();
   }
 }
@@ -127,31 +122,31 @@ function serveInernalSchedule(mode) {
       // check succeeded: do shutdown
       shutdown(mode);
     })
-    .catch((err) => {
-      logError(err, "CheckError");
+    .catch(err => {
+      logError(err, 'CheckError');
       // check failed: cancel shutdown
-      if (settings.get_boolean("root-mode-value")) {
+      if (settings.get_boolean('root-mode-value')) {
         RootMode.shutdownCancel();
       }
-      if (settings.get_boolean("auto-wake-value")) {
+      if (settings.get_boolean('auto-wake-value')) {
         RootMode.wakeCancel();
       }
     })
     .finally(() => {
       // reset schedule timestamp
-      settings.set_int("shutdown-timestamp-value", -1);
+      settings.set_int('shutdown-timestamp-value', -1);
     });
 }
 
-async function maybeDoCheck(mode) {
-  if (checkCancel != null) {
+function maybeDoCheck(mode) {
+  if (checkCancel !== undefined) {
     throw new Error(
-      "Confirmation canceled: attempted to start a second check command!"
+      'Confirmation canceled: attempted to start a second check command!'
     );
   }
 
   const checkCmd = maybeCheckCmdString();
-  if (checkCmd === "") {
+  if (checkCmd === '') {
     return;
   }
 
@@ -161,8 +156,8 @@ async function maybeDoCheck(mode) {
     shutdownTimerMenu._updateShutdownInfo();
   });
   _showTextbox(
-    C_("CheckCommand", "%s\n'%s'").format(
-      _("Waiting for %s confirmation").format(modeLabel(mode)),
+    C_('CheckCommand', "%s\n'%s'").format(
+      _('Waiting for %s confirmation').format(modeLabel(mode)),
       checkCmd
     )
   );
@@ -175,16 +170,16 @@ async function maybeDoCheck(mode) {
       logDebug(`Check command "${checkCmd}" confirmed shutdown.`);
       return;
     })
-    .catch((err) => {
-      let code = "?";
-      if ("code" in err) {
+    .catch(err => {
+      let code = '?';
+      if ('code' in err) {
         code = `${err.code}`;
         logDebug(`Check command aborted ${mode}. Code: ${code}`);
       }
       _showTextbox(
-        C_("CheckCommand", "%s (Code: %s)").format(
-          C_("CheckCommand", "%s\n'%s'").format(
-            _("%s aborted").format(modeLabel(mode)),
+        C_('CheckCommand', '%s (Code: %s)').format(
+          C_('CheckCommand', "%s\n'%s'").format(
+            _('%s aborted').format(modeLabel(mode)),
             checkCmd
           ),
           code
@@ -193,7 +188,7 @@ async function maybeDoCheck(mode) {
       throw err;
     })
     .finally(() => {
-      checkCancel = null;
+      checkCancel = undefined;
       checkWatchCancel.cancel();
       guiIdle(() => {
         shutdownTimerMenu.checkRunning = false;
@@ -203,14 +198,14 @@ async function maybeDoCheck(mode) {
 }
 
 async function continueRootProtectionDuringCheck(mode, cancellable) {
-  await RootMode.execCheck(["sleep", "30"], cancellable, false).catch(() => {});
+  await RootMode.execCheck(['sleep', '30'], cancellable, false).catch(() => {});
   const dueInfo = new ScheduleInfo.ScheduleInfo({ mode, deadline: 0 });
-  if (checkCancel != null && !checkCancel.is_cancelled()) {
-    logDebug("RootProtection during check: Continue");
+  if (checkCancel !== undefined && !checkCancel.is_cancelled()) {
+    logDebug('RootProtection during check: Continue');
     await maybeStartRootModeProtection(dueInfo);
     await continueRootProtectionDuringCheck(mode, cancellable);
   } else {
-    logDebug("RootProtection during check: Done");
+    logDebug('RootProtection during check: Done');
     if (checkSuccess) {
       await maybeStartRootModeProtection(dueInfo);
     } else {
@@ -224,23 +219,23 @@ function shutdown(mode) {
   const getSession = () => new imports.misc.gnomeSession.SessionManager();
 
   switch (mode) {
-    case "reboot":
-      EndSessionDialogAware.register();
-      getSession().RebootRemote(0);
-      break;
-    case "suspend":
-      LoginManager.getLoginManager().suspend();
-      break;
-    default:
-      EndSessionDialogAware.register();
-      getSession().ShutdownRemote(0); // shutdown after 60s
-      break;
+  case 'reboot':
+    EndSessionDialogAware.register();
+    getSession().RebootRemote(0);
+    break;
+  case 'suspend':
+    LoginManager.getLoginManager().suspend();
+    break;
+  default:
+    EndSessionDialogAware.register();
+    getSession().ShutdownRemote(0); // shutdown after 60s
+    break;
   }
 }
 
 function maybeCheckCmdString() {
-  const cmd = settings.get_string("check-command-value");
-  return settings.get_boolean("enable-check-command-value") ? cmd : "";
+  const cmd = settings.get_string('check-command-value');
+  return settings.get_boolean('enable-check-command-value') ? cmd : '';
 }
 
 /* --- GUI main loop ---- */
@@ -249,61 +244,61 @@ function maybeCheckCmdString() {
 async function wakeAction(mode, minutes) {
   try {
     switch (mode) {
-      case "wake":
-        return await RootMode.wake(minutes);
-      case "no-wake":
-        return await RootMode.wakeCancel();
-      default:
-        logError(new Error("Unknown wake mode: " + mode));
-        return false;
+    case 'wake':
+      return await RootMode.wake(minutes);
+    case 'no-wake':
+      return await RootMode.wakeCancel();
+    default:
+      logError(new Error('Unknown wake mode: ' + mode));
+      return false;
     }
   } catch (err) {
-    _showTextbox(C_("Error", "%s\n%s").format(_("Wake action failed!"), err));
+    _showTextbox(C_('Error', '%s\n%s').format(_('Wake action failed!'), err));
   }
 }
 
 function stopSchedule() {
   EndSessionDialogAware.unregister();
   if (
-    checkCancel != null ||
-    settings.get_int("shutdown-timestamp-value") > -1
+    checkCancel !== undefined ||
+    settings.get_int('shutdown-timestamp-value') > -1
   ) {
-    settings.set_int("shutdown-timestamp-value", -1);
-    let showText = _("Shutdown Timer stopped");
-    if (checkCancel != null) {
+    settings.set_int('shutdown-timestamp-value', -1);
+    let showText = _('Shutdown Timer stopped');
+    if (checkCancel !== undefined) {
       checkCancel.cancel();
-      showText = _("Confirmation canceled");
+      showText = _('Confirmation canceled');
     }
     _showTextbox(showText);
   }
 
   // stop root protection
-  const info = timer != null ? timer.info : new ScheduleInfo.ScheduleInfo();
+  const info = timer !== undefined ? timer.info : new ScheduleInfo.ScheduleInfo();
   return Promise.all([maybeStopRootModeProtection(info), maybeStopWake()]);
 }
 
 async function startSchedule(maxTimerMinutes, wakeMinutes) {
   EndSessionDialogAware.unregister();
-  if (checkCancel != null) {
+  if (checkCancel !== undefined) {
     // cancel running check command
     if (!checkCancel.is_cancelled()) {
       checkCancel.cancel();
-      await RootMode.execCheck(["sleep", "0.1"], null, false).catch(() => {});
+      await RootMode.execCheck(['sleep', '0.1'], null, false).catch(() => {});
     }
   }
   const seconds = maxTimerMinutes * 60;
   const info = new ScheduleInfo.ScheduleInfo({
-    mode: settings.get_string("shutdown-mode-value"),
+    mode: settings.get_string('shutdown-mode-value'),
     deadline: GLib.DateTime.new_now_utc().to_unix() + Math.max(1, seconds),
   });
-  settings.set_int("shutdown-timestamp-value", info.deadline);
-  let startPopupText = C_("StartSchedulePopup", "%s in %s").format(
+  settings.set_int('shutdown-timestamp-value', info.deadline);
+  let startPopupText = C_('StartSchedulePopup', '%s in %s').format(
     modeLabel(info.mode),
-    _n("%s minute", "%s minutes", maxTimerMinutes).format(maxTimerMinutes)
+    _n('%s minute', '%s minutes', maxTimerMinutes).format(maxTimerMinutes)
   );
   const checkCmd = maybeCheckCmdString();
-  if (checkCmd !== "") {
-    startPopupText = C_("CheckCommand", "%s\n'%s'").format(
+  if (checkCmd !== '') {
+    startPopupText = C_('CheckCommand', "%s\n'%s'").format(
       startPopupText,
       checkCmd
     );
@@ -318,13 +313,13 @@ async function startSchedule(maxTimerMinutes, wakeMinutes) {
 }
 
 function onShutdownScheduleChange(info) {
-  if (timer != null) {
+  if (timer !== undefined) {
     timer.adjustTo(info);
   }
 }
 
 function guiIdle(func) {
-  if (shutdownTimerMenu != null) {
+  if (shutdownTimerMenu !== undefined) {
     shutdownTimerMenu.guiIdle(func);
   }
 }
@@ -349,7 +344,7 @@ function enable() {
     });
 
     // check for shutdown may run in background and can be canceled by user
-    checkCancel = null;
+    checkCancel = undefined;
     // starts internal shutdown schedule if ready
     timer = new Timer.Timer(serveInernalSchedule);
 
@@ -361,14 +356,14 @@ function enable() {
   }
 
   // add separator line and submenu in status area menu
-  const statusMenu = Main.panel.statusArea["aggregateMenu"];
-  if (separator == null) {
+  const statusMenu = Main.panel.statusArea['aggregateMenu'];
+  if (separator === undefined) {
     separator = new PopupMenu.PopupSeparatorMenuItem();
     statusMenu.menu.addMenuItem(separator);
   }
-  if (shutdownTimerMenu == null) {
+  if (shutdownTimerMenu === undefined) {
     shutdownTimerMenu = new MenuItem.ShutdownTimer();
-    shutdownTimerMenu.checkRunning = checkCancel != null;
+    shutdownTimerMenu.checkRunning = checkCancel !== undefined;
     timer.setTickCallback(() => shutdownTimerMenu._updateShutdownInfo());
     statusMenu.menu.addMenuItem(shutdownTimerMenu);
   }
@@ -384,19 +379,19 @@ async function maybeCompleteDisable() {
     sleepCancel.cancel();
   }
   if (!initialized) {
-    throw new Error("Already completely disabled!");
+    throw new Error('Already completely disabled!');
   }
-  if (shutdownTimerMenu != null) {
-    throw new Error("Extension is enabled. Complete disable aborted!");
+  if (shutdownTimerMenu !== undefined) {
+    throw new Error('Extension is enabled. Complete disable aborted!');
   }
   if (!active) {
     // screen saver inactive => the user probably disabled the extension
 
-    if (timer != null) {
+    if (timer !== undefined) {
       timer.stopTimer();
       timer = undefined;
     }
-    if (checkCancel != null) {
+    if (checkCancel !== undefined) {
       checkCancel.cancel();
       checkCancel = undefined;
     }
@@ -404,30 +399,30 @@ async function maybeCompleteDisable() {
     EndSessionDialogAware.unload();
 
     initialized = false;
-    logDebug("Completly disabled. Screen saver is disabled.");
+    logDebug('Completly disabled. Screen saver is disabled.');
   } else {
-    logDebug("Partially disabled. Screen saver is enabled.");
+    logDebug('Partially disabled. Screen saver is enabled.');
   }
 }
 
 function disable() {
   Textbox._hideTextbox();
-  if (shutdownTimerMenu != null) {
+  if (shutdownTimerMenu !== undefined) {
     shutdownTimerMenu.destroy();
-    if (timer != null) {
+    if (timer !== undefined) {
       timer.setTickCallback(null);
       // keep sleep process alive
       timer.stopGLibTimer();
     }
   }
   shutdownTimerMenu = undefined;
-  if (separator != null) {
+  if (separator !== undefined) {
     separator.destroy();
   }
   separator = undefined;
 
   if (initialized) {
-    maybeCompleteDisable().catch((error) => {
+    maybeCompleteDisable().catch(error => {
       logDebug(`Partially disabled. ${error}`);
     });
   }
