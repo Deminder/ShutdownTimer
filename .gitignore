@@ -1,5 +1,5 @@
-/locale
-/schemas/gschemas.compiled
+/src/locale
+/src/schemas/gschemas.compiled
 *~
 *#
 *-gtk4.ui

@@ -1,6 +1,6 @@
 <h1 align="center">Shutdown Timer for Gnome Shell</h1>
 <p align="center">
-  <img alt="Shutdown Timer Icon" width="228" src="bin/icon.svg"/>
+  <img alt="Shutdown Timer Icon" width="228" src="data/img/icon.svg"/>
   <a href="https://extensions.gnome.org/extension/4372/shutdowntimer/">
     <img alt="Get it on GNOME Extensions" width="228" src="https://raw.githubusercontent.com/andyholmes/gnome-shell-extensions-badge/master/get-it-on-ego.svg?sanitize=true"/>
   </a>
@@ -8,7 +8,7 @@
   <b>Shutdown/reboot/suspend your device after a specific time or wake with a rtc alarm.</b>
 </p>
 
-![Screenshot](bin/screenshot.png)
+![Screenshot](data/img//screenshot.png)
 
 ## Features
 - Timer for *Poweroff*, *Reboot*, *Suspend* 
@@ -17,7 +17,7 @@
 
 - Show scheduled shutdown info as *(sys)*
   - Fetched from `/run/systemd/shutdown/scheduled` 
-  - Externally run `shutdown 100` displayed in menu: <br/>![externalScheduleMenu](bin/externalScheduleFeature.png)
+  - Externally run `shutdown 100` displayed in menu: <br/>![externalScheduleMenu](data/img/externalScheduleFeature.png)
   - Displays the more urgent (external or interal) timer 
 
 - Install privileged control script: `shutdowntimerctl`
@@ -26,7 +26,7 @@
 - Wake alarm
   - Set a real-time-clock (rtc) alarm which wakes the system after shutdown
   - Wake info from: `/sys/class/rtc/rtc0/wakealarm`
-  - Wake info displayed in menu: <br/>![wakeInfoMenu](bin/wakeInfoFeature.png)
+  - Wake info displayed in menu: <br/>![wakeInfoMenu](data/img/wakeInfoFeature.png)
   - Controlling wake alarm requires installation of privileged script
   - Note: for advanced use-cases there are more suitable tools: e.g. [gnome-schedule](https://gitlab.gnome.org/GNOME/gnome-schedule)
 
