@@ -30,7 +30,7 @@ lint:
 
 $(SCHEMA_OUT): $(SCHEMA_IN)
 	@echo "Compiling schemas..."
-	glib-compile-schemas $($@D)
+	glib-compile-schemas $(@D)
 
 $(UI_OUT): $(UI_IN)
 	@echo "Transforming gtk3 to gtk4..."
