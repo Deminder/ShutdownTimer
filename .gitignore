@@ -1,5 +1,6 @@
 /src/locale
 /src/schemas/gschemas.compiled
+target/
 *~
 *#
 *-gtk4.ui

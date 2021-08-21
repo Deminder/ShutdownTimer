@@ -14,10 +14,11 @@ set -e
 cd "$( cd "$( dirname "$0" )" && pwd )/.."
 
 VPATTERN='^ *?\"version\": *?'
-VERSION=$(( 1 + `grep -oP "$VPATTERN"'\K(\d+)' metadata.json` ))
+METADATA_FILE=src/metadata.json
+VERSION=$(( 1 + `grep -oP "$VPATTERN"'\K(\d+)' "$METADATA_FILE"` ))
 echo "New version: $VERSION"
-sed -Ei "s/($VPATTERN)([0-9]+)(.*)/\1$VERSION\3/" metadata.json
-git add metadata.json
+sed -Ei "s/($VPATTERN)([0-9]+)(.*)/\1$VERSION\3/" "$METADATA_FILE"
+git add "$METADATA_FILE"
 
 # update translations
 ./scripts/update-pod.sh

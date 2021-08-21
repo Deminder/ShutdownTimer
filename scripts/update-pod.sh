@@ -14,12 +14,12 @@ xgettext \
     --from-code=UTF-8 \
     --copyright-holder="Shutdown Timer" \
     --package-name="Shutdown Timer" \
-    --package-version="r`grep -oP '^ *?\"version\": *?\K(\d+)' metadata.json`" \
+    --package-version="r`grep -oP '^ *?\"version\": *?\K(\d+)' src/metadata.json`" \
     --keyword="gtxt" \
     --keyword="_n:1,2" \
     --keyword="C_:1c,2" \
     --output="po/main.pot" \
-    tool/*.sh ui/prefs.ui lib/*.js *.js schemas/*.xml
+    src/*.js src/lib/*.js src/**/*.sh src/ui/prefs.ui src/schemas/*.xml
 
 for file in po/*.po
 do
