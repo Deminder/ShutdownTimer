@@ -1,8 +1,5 @@
 /**
-    AUTHOR: Daniel Neumann, Deminder
-    GJS SOURCES: https://github.com/GNOME/gnome-shell/
-    BUILD: ./scripts/build.sh
-    UPDATE TRANSLATIONS: ./scripts/update-pod.sh
+  AUTHORS: Deminder and Daniel Neumann (ShutdownTimer@neumann)
 **/
 /* exported INSTALL_ACTIONS, init, enable, disable */
 
@@ -19,7 +16,7 @@ const {
   EndSessionDialogAware,
 } = Me.imports.lib;
 const modeLabel = Me.imports.prefs.modeLabel;
-const { logDebug } = Convenience;
+const logDebug = Convenience.logDebug;
 
 /* IMPORTS */
 const { GLib, Gio } = imports.gi;
@@ -273,7 +270,8 @@ function stopSchedule() {
   }
 
   // stop root protection
-  const info = timer !== undefined ? timer.info : new ScheduleInfo.ScheduleInfo();
+  const info =
+    timer !== undefined ? timer.info : new ScheduleInfo.ScheduleInfo();
   return Promise.all([maybeStopRootModeProtection(info), maybeStopWake()]);
 }
 

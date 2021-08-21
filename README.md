@@ -11,19 +11,24 @@
 ![Screenshot](data/img//screenshot.png)
 
 ## Features
-- Timer for *Poweroff*, *Reboot*, *Suspend* 
+
+- Timer for _Poweroff_, _Reboot_, _Suspend_
+
   - Options may be reordered or hidden
   - Disabling the extension leaves a timer process alive. The extension is only completely disabled if the screen saver does not activate within three seconds.
 
-- Show scheduled shutdown info as *(sys)*
-  - Fetched from `/run/systemd/shutdown/scheduled` 
+- Show scheduled shutdown info as _(sys)_
+
+  - Fetched from `/run/systemd/shutdown/scheduled`
   - Externally run `shutdown 100` displayed in menu: <br/>![externalScheduleMenu](data/img/externalScheduleFeature.png)
-  - Displays the more urgent (external or interal) timer 
+  - Displays the more urgent (external or interal) timer
 
 - Install privileged control script: `shutdowntimerctl`
+
   - Control `rtcwake` and `shutdown` as user
 
 - Wake alarm
+
   - Set a real-time-clock (rtc) alarm which wakes the system after shutdown
   - Wake info from: `/sys/class/rtc/rtc0/wakealarm`
   - Wake info displayed in menu: <br/>![wakeInfoMenu](data/img/wakeInfoFeature.png)
@@ -31,7 +36,8 @@
   - Note: for advanced use-cases there are more suitable tools: e.g. [gnome-schedule](https://gitlab.gnome.org/GNOME/gnome-schedule)
 
 - Root shutdown protection
-  - Toggle `shutdown ${REQUESTED_MINUTES + 1}` command with shutdown timer (for *Poweroff* and *Reboot*)
+
+  - Toggle `shutdown ${REQUESTED_MINUTES + 1}` command with shutdown timer (for _Poweroff_ and _Reboot_)
   - Protection against gnome-shell terminating, e.g., when logging out
   - If privileged script is not installed, `shutdown` command is run as user
 
@@ -42,35 +48,47 @@
 ## Manual Installation
 
 Requires `gnome-shell-extensions` and `gtk4-builder-tool`:
+
 ```(shell)
-./scripts/build.sh -i
+make install
 ```
+
 Then a new login is required to restart gnome-shell.
 
 ### Tool installation
+
 Manually install privileged script for rtcwake and shutdown with:
+
 ```(shell)
 sudo ./tool/installer.sh --tool-user $USER install
 ```
 
 ## Development
+
 ### Debug
+
 Install on a virtual/remote host for debugging:
+
 ```(shell)
 ./scripts/install_on_guest.sh $GUEST_SSH_ADDRESS
 ```
+
 Install locally with debug output enabled:
+
 ```(shell)
-./scripts/build.sh -d -i
+make debug-install
 ```
 
 ### Update Translations
+
 Extract transalable text from sources to template file `po/main.pot` and update `.po` files:
+
 ```(shell)
 ./scripts/update-pod.sh
 ```
 
 ### Resources
+
 - https://gjs.guide/extensions/
 - https://gjs.guide/guides/
 - https://gjs-docs.gnome.org/
