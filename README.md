@@ -2,10 +2,11 @@
 <p align="center">
   <img alt="Shutdown Timer Icon" width="228" src="data/img/icon.svg"/>
   <a href="https://extensions.gnome.org/extension/4372/shutdowntimer/">
-    <img alt="Get it on GNOME Extensions" width="228" src="https://raw.githubusercontent.com/andyholmes/gnome-shell-extensions-badge/master/get-it-on-ego.svg?sanitize=true"/>
+    <img alt="Get it on GNOME Extensions" width="228" src="https://raw.githubusercontent.com/andyholmes/gnome-shell-extensions-badge/master/get-it-on-ego.svg?sanitize=true"></img>
   </a>
+  <a href="https://github.com/Deminder/ShutdownTimer/actions/workflows/build.yml"><img alt="CI" src="https://github.com/Deminder/ShutdownTimer/actions/workflows/build.yml/badge.svg"></img></a>
   <br/>
-  <b>Shutdown/reboot/suspend your device after a specific time or wake with a rtc alarm.</b>
+  <b>Shutdown/reboot/suspend your device after a specific time or wake with a rtc alarm.</b> 
 </p>
 
 ![Screenshot](data/img//screenshot.png)
