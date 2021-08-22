@@ -2,7 +2,12 @@ UUID=$(shell grep uuid src/metadata.json | cut -d\" -f 4)
 ZIP_FILE=$(UUID).shell-extension.zip
 
 UI_IN=src/ui/prefs.ui
+GTK4_TOOL=$(shell which gtk4-builder-tool 2>/dev/null)
+ifneq ($(GTK4_TOOL),)
 UI_OUT=src/ui/prefs-gtk4.ui
+else
+$(info Skipping transform gtk3 to gtk4... gtk4-builder-tool not available!)
+endif
 
 SCHEMA_IN=src/schemas/$(shell grep settings-schema src/metadata.json | cut -d\" -f 4).gschema.xml
 SCHEMA_OUT=src/schemas/gschemas.compiled
@@ -17,6 +22,8 @@ SOURCE_FILES=$(filter-out $(OUTPUTS),$(shell find src -type f) LICENSE)
 target-zip=$(patsubst %,target/%/$(ZIP_FILE),$(1))
 DEFAULT_ZIP=$(call target-zip,default)
 DEBUG_ZIP=$(call target-zip,debug)
+
+all: $(DEFAULT_ZIP) $(DEBUG_ZIP)
 
 $(DEFAULT_ZIP) $(DEBUG_ZIP): $(OUTPUTS) $(SOURCE_FILES)
 	@mkdir -p $(@D)
@@ -34,7 +41,7 @@ $(SCHEMA_OUT): $(SCHEMA_IN)
 
 $(UI_OUT): $(UI_IN)
 	@echo "Transforming gtk3 to gtk4..."
-	gtk4-builder-tool simplify --3to4 $(UI_IN) > $(UI_OUT)
+	$(GTK4_TOOL) simplify --3to4 $< > $@
 
 LANGS=$(patsubst po/%.po,%,$(PO_IN))
 $(info Translations: $(LANGS))
