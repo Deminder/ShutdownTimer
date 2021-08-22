@@ -14,13 +14,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.4.0
+      
+      - name: Setup build dependencies
+        run: |
+          npm install -g eslint
+          sudo apt-get install -y gnome-shell-extensions gettext
+
       - uses: actions/checkout@v2
       
       - name: Run linter
         run: make lint
-        
-      - name: Install build dependencies
-        run: sudo apt-get install -y gnome-shell-extensions gettext
-      
+
       - name: Build debug and default zip
         run: make all
