@@ -33,7 +33,7 @@ zip: $(DEFAULT_ZIP)
 debug-zip: $(DEBUG_ZIP)
 
 lint:
-	eslint . --fix
+	eslint src
 
 $(SCHEMA_OUT): $(SCHEMA_IN)
 	@echo "Compiling schemas..."

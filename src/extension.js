@@ -1,7 +1,7 @@
 /**
   AUTHORS: Deminder and Daniel Neumann (ShutdownTimer@neumann)
 **/
-/* exported INSTALL_ACTIONS, init, enable, disable */
+/* exported init, enable, disable */
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -36,7 +36,6 @@ const _n = Gettext.ngettext;
 let shutdownTimerMenu, timer, separator, settings, checkCancel, checkSuccess;
 
 let initialized = false;
-var INSTALL_ACTIONS;
 
 function _showTextbox(textmsg) {
   if (settings.get_boolean('show-textboxes-value')) {
