@@ -14,6 +14,7 @@ const {
   Convenience,
   ScreenSaverAware,
   EndSessionDialogAware,
+  CheckCommand,
 } = Me.imports.lib;
 const modeLabel = Me.imports.prefs.modeLabel;
 const logDebug = Convenience.logDebug;
@@ -33,11 +34,23 @@ const C_ = Gettext.pgettext;
 const _n = Gettext.ngettext;
 
 /* GLOBAL VARIABLES */
-let shutdownTimerMenu, timer, separator, settings, checkCancel, checkSuccess;
+let shutdownTimerMenu, timer, separator, settings;
 
 let initialized = false;
 
-function _showTextbox(textmsg) {
+function guiIdle(func) {
+  if (shutdownTimerMenu !== undefined) {
+    shutdownTimerMenu.guiIdle(func);
+  }
+}
+
+function refreshExternalInfo() {
+  if (shutdownTimerMenu !== undefined) {
+    shutdownTimerMenu.refreshExternalInfo();
+  }
+}
+
+function maybeShowTextbox(textmsg) {
   if (settings.get_boolean('show-textboxes-value')) {
     guiIdle(() => {
       Textbox.showTextbox(textmsg);
@@ -61,7 +74,7 @@ async function maybeStopRootModeProtection(info, stopScheduled = false) {
         logDebug('No root mode protection stopped for: ' + info.mode);
       }
     } catch (err) {
-      _showTextbox(
+      maybeShowTextbox(
         C_('Error', '%s\n%s').format(_('Root mode protection failed!'), err)
       );
       logError(err, 'DisableRootModeProtection');
@@ -91,7 +104,7 @@ async function maybeStartRootModeProtection(info) {
         logDebug('No root mode protection started for: ' + info.mode);
       }
     } catch (err) {
-      _showTextbox(
+      maybeShowTextbox(
         C_('Error', '%s\n%s').format(_('Root mode protection failed!'), err)
       );
       logError(err, 'EnableRootModeProtection');
@@ -101,19 +114,60 @@ async function maybeStartRootModeProtection(info) {
 
 async function maybeStartWake(wakeMinutes) {
   if (settings.get_boolean('auto-wake-value')) {
-    await RootMode.wake(wakeMinutes);
+    await wakeAction('wake', wakeMinutes);
   }
 }
 
 async function maybeStopWake() {
   if (settings.get_boolean('auto-wake-value')) {
-    await RootMode.wakeCancel();
+    await wakeAction('no-wake');
   }
 }
 
 // timer action (shutdown/reboot/suspend)
 function serveInernalSchedule(mode) {
-  maybeDoCheck(mode)
+  const checkCmd = maybeCheckCmdString();
+  CheckCommand.maybeDoCheck(
+    checkCmd,
+    mode,
+    () => {
+      guiIdle(() => {
+        shutdownTimerMenu.checkRunning = true;
+        shutdownTimerMenu._updateShutdownInfo();
+      });
+      maybeShowTextbox(
+        C_('CheckCommand', "%s\n'%s'").format(
+          _('Waiting for %s confirmation').format(modeLabel(mode)),
+          checkCmd
+        )
+      );
+    },
+    code => {
+      maybeShowTextbox(
+        C_('CheckCommand', '%s (Code: %s)').format(
+          C_('CheckCommand', "%s\n'%s'").format(
+            _('%s aborted').format(modeLabel(mode)),
+            checkCmd
+          ),
+          code
+        )
+      );
+    },
+    () =>
+      guiIdle(() => {
+        shutdownTimerMenu.checkRunning = false;
+        shutdownTimerMenu._updateShutdownInfo();
+      }),
+    (done, success) => {
+      const dueInfo = new ScheduleInfo.ScheduleInfo({ mode, deadline: 0 });
+      if (done && !success) {
+        // disable protection if check command failed
+        return maybeStopRootModeProtection(dueInfo, true);
+      }
+      // keep protection
+      return maybeStartRootModeProtection(dueInfo);
+    }
+  )
     .then(() => {
       // check succeeded: do shutdown
       shutdown(mode);
@@ -132,82 +186,6 @@ function serveInernalSchedule(mode) {
       // reset schedule timestamp
       settings.set_int('shutdown-timestamp-value', -1);
     });
-}
-
-function maybeDoCheck(mode) {
-  if (checkCancel !== undefined) {
-    throw new Error(
-      'Confirmation canceled: attempted to start a second check command!'
-    );
-  }
-
-  const checkCmd = maybeCheckCmdString();
-  if (checkCmd === '') {
-    return;
-  }
-
-  checkCancel = new Gio.Cancellable();
-  guiIdle(() => {
-    shutdownTimerMenu.checkRunning = true;
-    shutdownTimerMenu._updateShutdownInfo();
-  });
-  _showTextbox(
-    C_('CheckCommand', "%s\n'%s'").format(
-      _('Waiting for %s confirmation').format(modeLabel(mode)),
-      checkCmd
-    )
-  );
-  checkSuccess = false;
-  const checkWatchCancel = new Gio.Cancellable();
-  continueRootProtectionDuringCheck(mode, checkWatchCancel);
-  return RootMode.execCheck(checkCmd, checkCancel)
-    .then(() => {
-      checkSuccess = true;
-      logDebug(`Check command "${checkCmd}" confirmed shutdown.`);
-      return;
-    })
-    .catch(err => {
-      let code = '?';
-      if ('code' in err) {
-        code = `${err.code}`;
-        logDebug(`Check command aborted ${mode}. Code: ${code}`);
-      }
-      _showTextbox(
-        C_('CheckCommand', '%s (Code: %s)').format(
-          C_('CheckCommand', "%s\n'%s'").format(
-            _('%s aborted').format(modeLabel(mode)),
-            checkCmd
-          ),
-          code
-        )
-      );
-      throw err;
-    })
-    .finally(() => {
-      checkCancel = undefined;
-      checkWatchCancel.cancel();
-      guiIdle(() => {
-        shutdownTimerMenu.checkRunning = false;
-        shutdownTimerMenu._updateShutdownInfo();
-      });
-    });
-}
-
-async function continueRootProtectionDuringCheck(mode, cancellable) {
-  await RootMode.execCheck(['sleep', '30'], cancellable, false).catch(() => {});
-  const dueInfo = new ScheduleInfo.ScheduleInfo({ mode, deadline: 0 });
-  if (checkCancel !== undefined && !checkCancel.is_cancelled()) {
-    logDebug('RootProtection during check: Continue');
-    await maybeStartRootModeProtection(dueInfo);
-    await continueRootProtectionDuringCheck(mode, cancellable);
-  } else {
-    logDebug('RootProtection during check: Done');
-    if (checkSuccess) {
-      await maybeStartRootModeProtection(dueInfo);
-    } else {
-      await maybeStopRootModeProtection(dueInfo, true);
-    }
-  }
 }
 
 function shutdown(mode) {
@@ -229,59 +207,53 @@ function shutdown(mode) {
   }
 }
 
-function maybeCheckCmdString() {
-  const cmd = settings.get_string('check-command-value');
-  return settings.get_boolean('enable-check-command-value') ? cmd : '';
-}
-
-/* --- GUI main loop ---- */
-
 /* ACTION FUNCTIONS */
 async function wakeAction(mode, minutes) {
   try {
     switch (mode) {
     case 'wake':
-      return await RootMode.wake(minutes);
+      await RootMode.wake(minutes);
+      refreshExternalInfo();
+      return;
     case 'no-wake':
-      return await RootMode.wakeCancel();
+      await RootMode.wakeCancel();
+      refreshExternalInfo();
+      return;
     default:
       logError(new Error('Unknown wake mode: ' + mode));
       return false;
     }
   } catch (err) {
-    _showTextbox(C_('Error', '%s\n%s').format(_('Wake action failed!'), err));
+    maybeShowTextbox(
+      C_('Error', '%s\n%s').format(_('Wake action failed!'), err)
+    );
   }
 }
 
-function stopSchedule() {
+function stopSchedule(stopProtection = true) {
   EndSessionDialogAware.unregister();
-  if (
-    checkCancel !== undefined ||
-    settings.get_int('shutdown-timestamp-value') > -1
-  ) {
+  const canceled = CheckCommand.maybeCancel();
+  if (canceled || settings.get_int('shutdown-timestamp-value') > -1) {
     settings.set_int('shutdown-timestamp-value', -1);
-    let showText = _('Shutdown Timer stopped');
-    if (checkCancel !== undefined) {
-      checkCancel.cancel();
-      showText = _('Confirmation canceled');
-    }
-    _showTextbox(showText);
+    maybeShowTextbox(
+      canceled ? _('Confirmation canceled') : _('Shutdown Timer stopped')
+    );
   }
 
-  // stop root protection
-  const info =
-    timer !== undefined ? timer.info : new ScheduleInfo.ScheduleInfo();
-  return Promise.all([maybeStopRootModeProtection(info), maybeStopWake()]);
+  if (stopProtection) {
+    // stop root protection
+    const info =
+      timer !== undefined ? timer.info : new ScheduleInfo.ScheduleInfo();
+    return Promise.all([maybeStopRootModeProtection(info), maybeStopWake()]);
+  }
+  return Promise.resolve();
 }
 
 async function startSchedule(maxTimerMinutes, wakeMinutes) {
   EndSessionDialogAware.unregister();
-  if (checkCancel !== undefined) {
+  if (CheckCommand.maybeCancel()) {
     // cancel running check command
-    if (!checkCancel.is_cancelled()) {
-      checkCancel.cancel();
-      await RootMode.execCheck(['sleep', '0.1'], null, false).catch(() => {});
-    }
+    await RootMode.execCheck(['sleep', '0.1'], null, false).catch(() => {});
   }
   const seconds = maxTimerMinutes * 60;
   const info = new ScheduleInfo.ScheduleInfo({
@@ -300,7 +272,7 @@ async function startSchedule(maxTimerMinutes, wakeMinutes) {
       checkCmd
     );
   }
-  _showTextbox(startPopupText);
+  maybeShowTextbox(startPopupText);
 
   // start root protection
   await Promise.all([
@@ -309,15 +281,14 @@ async function startSchedule(maxTimerMinutes, wakeMinutes) {
   ]);
 }
 
+function maybeCheckCmdString() {
+  const cmd = settings.get_string('check-command-value');
+  return settings.get_boolean('enable-check-command-value') ? cmd : '';
+}
+
 function onShutdownScheduleChange(info) {
   if (timer !== undefined) {
     timer.adjustTo(info);
-  }
-}
-
-function guiIdle(func) {
-  if (shutdownTimerMenu !== undefined) {
-    shutdownTimerMenu.guiIdle(func);
   }
 }
 
@@ -341,7 +312,6 @@ function enable() {
     });
 
     // check for shutdown may run in background and can be canceled by user
-    checkCancel = undefined;
     // starts internal shutdown schedule if ready
     timer = new Timer.Timer(serveInernalSchedule);
 
@@ -360,7 +330,7 @@ function enable() {
   }
   if (shutdownTimerMenu === undefined) {
     shutdownTimerMenu = new MenuItem.ShutdownTimer();
-    shutdownTimerMenu.checkRunning = checkCancel !== undefined;
+    shutdownTimerMenu.checkRunning = CheckCommand.isChecking();
     timer.setTickCallback(() => shutdownTimerMenu._updateShutdownInfo());
     statusMenu.menu.addMenuItem(shutdownTimerMenu);
   }
@@ -388,10 +358,8 @@ async function maybeCompleteDisable() {
       timer.stopTimer();
       timer = undefined;
     }
-    if (checkCancel !== undefined) {
-      checkCancel.cancel();
-      checkCancel = undefined;
-    }
+    // clear internal schedule and keep root protected schedule
+    stopSchedule(false);
     ScreenSaverAware.unload();
     EndSessionDialogAware.unload();
 
