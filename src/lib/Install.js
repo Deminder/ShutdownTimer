@@ -1,6 +1,10 @@
-/*
-  AUTHOR: Deminder
-*/
+/**
+ * Install module
+ *
+ * @author Deminder <tremminder@gmail.com>
+ * @copyright 2021
+ * @license GNU General Public License v3.0
+ */
 /* exported installAction, checkInstalled, reset, actionLabel */
 
 const ExtensionUtils = imports.misc.extensionUtils;

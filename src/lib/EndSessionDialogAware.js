@@ -1,6 +1,10 @@
-/*
-  AUTHOR: Deminder
-*/
+/**
+ * EndSessionDialogAware module
+ *
+ * @author Deminder <tremminder@gmail.com>
+ * @copyright 2021
+ * @license GNU General Public License v3.0
+ */
 /* exported register, unregister, load, unload */
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();

@@ -1,6 +1,10 @@
-/*
-  AUTHOR: Deminder
-*/
+/**
+ * MenuItem module
+ *
+ * @author Deminder <tremminder@gmail.com>
+ * @copyright 2021
+ * @license GNU General Public License v3.0
+ */
 /* exported ShutdownTimer, init */
 
 const ExtensionUtils = imports.misc.extensionUtils;

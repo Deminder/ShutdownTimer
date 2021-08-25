@@ -1,6 +1,10 @@
 /**
-    AUTHOR: Deminder
-**/
+ * Timer module
+ *
+ * @author Deminder <tremminder@gmail.com>
+ * @copyright 2021
+ * @license GNU General Public License v3.0
+ */
 /* exported Timer */
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const { RootMode, ScheduleInfo } = Me.imports.lib;

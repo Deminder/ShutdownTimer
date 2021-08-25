@@ -1,6 +1,10 @@
-/*
-  AUTHOR: Deminder
-*/
+/**
+ * Convenience module
+ *
+ * @author Deminder <tremminder@gmail.com>
+ * @copyright 2021
+ * @license GNU General Public License v3.0
+ */
 /* exported logDebug, proxyPromise */
 
 const Config = imports.misc.config;
@@ -13,6 +17,7 @@ function logDebug(...args) {
     log(...args);
   }
 }
+
 
 function proxyPromise(ProxyType, session, dest, objectPath) {
   return new Promise((resolve, reject) => {

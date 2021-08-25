@@ -1,6 +1,10 @@
-/*
-  AUTHOR: Deminder
-*/
+/**
+ * ScheduleInfo module
+ *
+ * @author Deminder <tremminder@gmail.com>
+ * @copyright 2021
+ * @license GNU General Public License v3.0
+ */
 /* exported ScheduleInfo, durationString */
 const { GLib } = imports.gi;
 

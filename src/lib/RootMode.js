@@ -1,6 +1,10 @@
-/*
-  AUTHOR: Deminder
-*/
+/**
+ * RootMode module
+ *
+ * @author Deminder <tremminder@gmail.com>
+ * @copyright 2021
+ * @license GNU General Public License v3.0
+ */
 /* exported shutdown, shutdownCancel, wake, wakeCancel, installScript, uninstallScript */
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const logDebug = Me.imports.lib.Convenience.logDebug;
