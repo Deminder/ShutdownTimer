@@ -30,6 +30,7 @@ var ShutdownTimer = GObject.registerClass(
       super._init('', true);
       // track external shutdown and wake schedule
       this.infoFetcher = new InfoFetcher.InfoFetcher();
+      this.currentRefreshId = null;
       this.idleSourceIds = {};
       this.checkRunning = false;
       this.externalScheduleInfo = new ScheduleInfo.ScheduleInfo({
@@ -117,13 +118,7 @@ var ShutdownTimer = GObject.registerClass(
           _disconnectOnDestroy(modeItem, [
             [
               'activate',
-              () => {
-                ACTIONS.wakeAction(mode, _getSliderMinutes('wake')).then(() => {
-                  this.guiIdle(() => {
-                    this.infoFetcher.updateScheduleInfo();
-                  });
-                });
-              },
+              () => ACTIONS.wakeAction(mode, _getSliderMinutes('wake')),
             ],
           ]);
           return modeItem;
@@ -185,6 +180,19 @@ var ShutdownTimer = GObject.registerClass(
         return GLib.SOURCE_REMOVE;
       });
       this.idleSourceIds[sourceId] = 1;
+      return sourceId;
+    }
+
+    refreshExternalInfo() {
+      if (this.currentRefreshId !== null) {
+        return;
+      }
+      this.currentRefreshId = GLib.timeout_add(GLib.PRIORITY_LOW, 300, () => {
+        logDebug('Extra external info refresh...');
+        this.infoFetcher.updateScheduleInfo();
+        this.currentRefreshId = null;
+        return GLib.SOURCE_REMOVE;
+      });
     }
 
     _onRootModeChanged() {
@@ -192,7 +200,6 @@ var ShutdownTimer = GObject.registerClass(
         ACTIONS.maybeStopRootModeProtection(this.internalScheduleInfo),
         ACTIONS.maybeStartRootModeProtection(this.internalScheduleInfo),
       ]).then(() => {
-        this.infoFetcher.updateScheduleInfo();
         this._updateSwitchLabel();
       });
     }
@@ -205,7 +212,6 @@ var ShutdownTimer = GObject.registerClass(
           logDebug('Shutdown mode: ' + this.internalScheduleInfo.mode);
           this.guiIdle(() => {
             this._updateSelectedModeItems();
-            this.infoFetcher.updateScheduleInfo();
           });
         })
         .then(() =>
@@ -350,14 +356,10 @@ var ShutdownTimer = GObject.registerClass(
         ACTIONS.startSchedule(
           _getSliderMinutes('shutdown'),
           _getSliderMinutes('wake')
-        ).then(() => {
-          this.infoFetcher.updateScheduleInfo();
-        });
+        );
       } else {
         // stop shutdown timer
-        ACTIONS.stopSchedule().then(() => {
-          this.infoFetcher.updateScheduleInfo();
-        });
+        ACTIONS.stopSchedule();
       }
     }
 

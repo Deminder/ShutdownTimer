@@ -1,6 +1,11 @@
 /**
-  AUTHORS: Deminder and Daniel Neumann (ShutdownTimer@neumann)
-**/
+ * Shutdown Timer Extension for GNOME Shell
+ *
+ * @author Deminder <tremminder@gmail.com>
+ * @author D. Neumann <neumann89@gmail.com>
+ * @copyright 2014-2021
+ * @license GNU General Public License v3.0
+ */
 /* exported init, enable, disable */
 
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -69,6 +74,7 @@ async function maybeStopRootModeProtection(info, stopScheduled = false) {
       case 'poweroff':
       case 'reboot':
         await RootMode.shutdownCancel();
+        refreshExternalInfo();
         break;
       default:
         logDebug('No root mode protection stopped for: ' + info.mode);
@@ -96,9 +102,11 @@ async function maybeStartRootModeProtection(info) {
       switch (info.mode) {
       case 'poweroff':
         await RootMode.shutdown(minutes);
+        refreshExternalInfo();
         break;
       case 'reboot':
         await RootMode.shutdown(minutes, true);
+        refreshExternalInfo();
         break;
       default:
         logDebug('No root mode protection started for: ' + info.mode);
@@ -177,9 +185,11 @@ function serveInernalSchedule(mode) {
       // check failed: cancel shutdown
       if (settings.get_boolean('root-mode-value')) {
         RootMode.shutdownCancel();
+        refreshExternalInfo();
       }
       if (settings.get_boolean('auto-wake-value')) {
         RootMode.wakeCancel();
+        refreshExternalInfo();
       }
     })
     .finally(() => {
