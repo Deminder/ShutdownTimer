@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-22 00:44+0200\n"
+"POT-Creation-Date: 2021-08-25 16:15+0200\n"
 "PO-Revision-Date: 2021-08-10 16:40+0200\n"
 "Last-Translator: 绿色圣光 <lishaohui.qd@163.com>\n"
 "Language-Team: Chinese (Simplified) <>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: src/extension.js:66 src/extension.js:96 src/extension.js:253
+#: src/extension.js:84 src/extension.js:116 src/extension.js:238
 #, javascript-format
 msgctxt "Error"
 msgid ""
@@ -28,11 +28,11 @@ msgid ""
 "%s"
 msgstr ""
 
-#: src/extension.js:66 src/extension.js:96
+#: src/extension.js:84 src/extension.js:116
 msgid "Root mode protection failed!"
 msgstr ""
 
-#: src/extension.js:156 src/extension.js:178 src/extension.js:299
+#: src/extension.js:147 src/extension.js:156 src/extension.js:280
 #, javascript-format
 msgctxt "CheckCommand"
 msgid ""
@@ -40,161 +40,161 @@ msgid ""
 "'%s'"
 msgstr ""
 
-#: src/extension.js:157
+#: src/extension.js:148
 #, javascript-format
 msgid "Waiting for %s confirmation"
 msgstr ""
 
-#: src/extension.js:177
+#: src/extension.js:155
 #, javascript-format
 msgctxt "CheckCommand"
 msgid "%s (Code: %s)"
 msgstr ""
 
-#: src/extension.js:179
+#: src/extension.js:157
 #, javascript-format
 msgid "%s aborted"
 msgstr ""
 
-#: src/extension.js:253
+#: src/extension.js:238
 msgid "Wake action failed!"
 msgstr ""
 
-#: src/extension.js:264
-msgid "Shutdown Timer stopped"
-msgstr "已取消定时关机"
-
-#: src/extension.js:267
+#: src/extension.js:249
 msgid "Confirmation canceled"
 msgstr ""
 
-#: src/extension.js:293
+#: src/extension.js:249
+msgid "Shutdown Timer stopped"
+msgstr "已取消定时关机"
+
+#: src/extension.js:274
 #, javascript-format
 msgctxt "StartSchedulePopup"
 msgid "%s in %s"
 msgstr ""
 
-#: src/extension.js:295 src/lib/MenuItem.js:312
+#: src/extension.js:276 src/lib/MenuItem.js:322
 #, javascript-format
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s分"
 
-#: src/prefs.js:29
+#: src/prefs.js:33
 msgid "Suspend"
 msgstr ""
 
-#: src/prefs.js:30
+#: src/prefs.js:34
 msgid "Power Off"
 msgstr ""
 
-#: src/prefs.js:31
+#: src/prefs.js:35
 msgid "Restart"
 msgstr ""
 
-#: src/prefs.js:32
+#: src/prefs.js:36
 msgid "Wake after"
 msgstr ""
 
-#: src/prefs.js:33
+#: src/prefs.js:37
 msgid "No Wake"
 msgstr ""
 
-#: src/lib/Install.js:41
+#: src/lib/Install.js:45
 msgid "START"
 msgstr ""
 
-#: src/lib/Install.js:48
+#: src/lib/Install.js:52
 msgid "END"
 msgstr ""
 
-#: src/lib/Install.js:50
+#: src/lib/Install.js:54
 msgid "FAIL"
 msgstr ""
 
-#: src/lib/Install.js:56
+#: src/lib/Install.js:60
 msgid "install"
 msgstr ""
 
-#: src/lib/Install.js:56
+#: src/lib/Install.js:60
 msgid "uninstall"
 msgstr ""
 
-#: src/lib/MenuItem.js:65
+#: src/lib/MenuItem.js:70
 msgid "Settings"
 msgstr "设置"
 
-#: src/lib/MenuItem.js:267
+#: src/lib/MenuItem.js:277
 #, javascript-format
 msgid "Check %s for %s"
 msgstr ""
 
-#: src/lib/MenuItem.js:299 src/lib/ScheduleInfo.js:90
+#: src/lib/MenuItem.js:309 src/lib/ScheduleInfo.js:94
 #, javascript-format
 msgid "%s min"
 msgid_plural "%s mins"
 msgstr[0] "%s分"
 
-#: src/lib/MenuItem.js:301
+#: src/lib/MenuItem.js:311
 #, javascript-format
 msgid "%s (protect)"
 msgstr ""
 
-#: src/lib/MenuItem.js:308
+#: src/lib/MenuItem.js:318
 #, javascript-format
 msgctxt "WakeButtonText"
 msgid "%s %s"
 msgstr ""
 
-#: src/lib/MenuItem.js:310 src/lib/ScheduleInfo.js:86
+#: src/lib/MenuItem.js:320 src/lib/ScheduleInfo.js:90
 #, javascript-format
 msgid "%s hour"
 msgid_plural "%s hours"
 msgstr[0] "%s時"
 
-#: src/lib/RootMode.js:70
+#: src/lib/RootMode.js:74
 msgid "Can not cancel root process!"
 msgstr ""
 
-#: src/lib/RootMode.js:72
+#: src/lib/RootMode.js:76
 msgid "CANCEL"
 msgstr ""
 
-#: src/lib/RootMode.js:199
+#: src/lib/RootMode.js:203
 msgid "Privileged script installation required!"
 msgstr ""
 
-#: src/lib/ScheduleInfo.js:47
+#: src/lib/ScheduleInfo.js:51
 msgid "suspend"
 msgstr ""
 
-#: src/lib/ScheduleInfo.js:48
+#: src/lib/ScheduleInfo.js:52
 msgid "shutdown"
 msgstr "关机"
 
-#: src/lib/ScheduleInfo.js:49
+#: src/lib/ScheduleInfo.js:53
 msgid "reboot"
 msgstr ""
 
-#: src/lib/ScheduleInfo.js:50
+#: src/lib/ScheduleInfo.js:54
 msgid "wakeup"
 msgstr ""
 
-#: src/lib/ScheduleInfo.js:56
+#: src/lib/ScheduleInfo.js:60
 msgid "Shutdown Timer"
 msgstr "定时关机"
 
-#: src/lib/ScheduleInfo.js:58
+#: src/lib/ScheduleInfo.js:62
 #, javascript-format
 msgid "%s until %s"
 msgstr "%s钟之后将%s"
 
-#: src/lib/ScheduleInfo.js:63
+#: src/lib/ScheduleInfo.js:67
 #, javascript-format
 msgid "%s (sys)"
 msgstr "%s （制）"
 
-#: src/lib/ScheduleInfo.js:88
+#: src/lib/ScheduleInfo.js:92
 #, javascript-format
 msgid "%s sec"
 msgid_plural "%s secs"

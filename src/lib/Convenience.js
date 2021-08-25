@@ -18,7 +18,6 @@ function logDebug(...args) {
   }
 }
 
-
 function proxyPromise(ProxyType, session, dest, objectPath) {
   return new Promise((resolve, reject) => {
     new ProxyType(session, dest, objectPath, (proxy, error) => {
