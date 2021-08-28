@@ -5,13 +5,12 @@
  * @copyright 2021
  * @license GNU General Public License v3.0
  */
-/* exported ShutdownTimer, init */
+/* exported ShutdownTimer, init, MODES */
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
-const { WAKE_MODES, MODES, modeLabel } = Me.imports.prefs;
 const { Convenience, InfoFetcher, ScheduleInfo } = Me.imports.lib;
-const logDebug = Convenience.logDebug;
+const { logDebug, modeLabel, MODES, WAKE_MODES } = Convenience;
 
 const { GObject, GLib, St } = imports.gi;
 
@@ -145,7 +144,10 @@ var ShutdownTimer = GObject.registerClass(
       // handlers for changed values in settings
       this.settingsHandlerIds = [
         ['shutdown-max-timer-value', this._updateSwitchLabel.bind(this)],
-        ['non-linear-shutdown-slider-value', this._updateSwitchLabel.bind(this)],
+        [
+          'non-linear-shutdown-slider-value',
+          this._updateSwitchLabel.bind(this),
+        ],
         ['wake-max-timer-value', this._updateWakeModeItem.bind(this)],
         ['non-linear-wake-slider-value', this._updateWakeModeItem.bind(this)],
         [

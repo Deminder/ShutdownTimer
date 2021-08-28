@@ -99,9 +99,21 @@
     </key>
 
     <key type="s" name="check-command-value">
-      <default>""</default>
-      <summary>Check command</summary>
-      <description>Run command before shutdown command. Proceed with shutdown only if check command succeedes.</description>
+      <default>"# Examples ...
+
+# Run a backup script
+# /user/backup/script
+
+# Wait for a process to exit
+# tail -f --pid=$PID
+
+# Activate the screen saver
+# gdbus call --session \\
+#     --dest org.gnome.ScreenSaver \\
+#     --object-path /org/gnome/ScreenSaver \\
+#     --method org.gnome.ScreenSaver.SetActive true >/dev/null"</default>
+      <summary>Check command(s)</summary>
+      <description>Run command(s) before shutdown command. Proceed with shutdown only if check command succeeds.</description>
     </key>
 
     <key type="b" name="enable-check-command-value">

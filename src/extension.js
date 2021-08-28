@@ -292,7 +292,12 @@ async function startSchedule(maxTimerMinutes, wakeMinutes) {
 }
 
 function maybeCheckCmdString() {
-  const cmd = settings.get_string('check-command-value');
+  const cmd = settings
+    .get_string('check-command-value')
+    .split('\n')
+    .filter(line => !line.trimLeft().startsWith('#') && line.trim())
+    .join('\n');
+
   return settings.get_boolean('enable-check-command-value') ? cmd : '';
 }
 
@@ -341,7 +346,9 @@ function enable() {
   if (shutdownTimerMenu === undefined) {
     shutdownTimerMenu = new MenuItem.ShutdownTimer();
     shutdownTimerMenu.checkRunning = CheckCommand.isChecking();
-    timer.setTickCallback(shutdownTimerMenu._updateShutdownInfo.bind(shutdownTimerMenu));
+    timer.setTickCallback(
+      shutdownTimerMenu._updateShutdownInfo.bind(shutdownTimerMenu)
+    );
     statusMenu.menu.addMenuItem(shutdownTimerMenu);
   }
 }

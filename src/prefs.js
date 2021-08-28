@@ -5,43 +5,17 @@
  * @copyright 2021
  * @license GNU General Public License v3.0
  */
-/* exported WAKE_MODES, MODES, logInstall, init, buildPrefsWidget */
+/* exported init, buildPrefsWidget */
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const { Install, Convenience } = Me.imports.lib;
-const logDebug = Convenience.logDebug;
+const { logDebug, modeLabel, MODES } = Convenience;
 
 const { GLib, GObject, Gtk } = imports.gi;
 
-const Gettext = imports.gettext.domain('ShutdownTimer');
-const _ = Gettext.gettext;
-
-let settings;
-var MODES = ['suspend', 'poweroff', 'reboot'];
-var WAKE_MODES = ['wake', 'no-wake'];
-
-function logInstall(message) {
-  settings.set_string(
-    'install-log-text-value',
-    settings.get_string('install-log-text-value') + message + '\n'
-  );
-}
-
-function modeLabel(mode) {
-  return {
-    suspend: _('Suspend'),
-    poweroff: _('Power Off'),
-    reboot: _('Restart'),
-    wake: _('Wake after'),
-    'no-wake': _('No Wake'),
-  }[mode];
-}
-
 function init() {
   ExtensionUtils.initTranslations();
-  imports.gettext.textdomain(Me.metadata['gettext-domain']);
-  settings = ExtensionUtils.getSettings();
 }
 
 const templateComponents = {
@@ -53,7 +27,7 @@ const templateComponents = {
   'show-shutdown-mode': 'buffer',
   'show-shutdown-slider': 'switch',
   'show-textboxes': 'switch',
-  'check-command': 'buffer',
+  'check-command': 'textbuffer',
   'enable-check-command': 'switch',
   'shutdown-mode': 'combo',
   'auto-wake': 'switch',
@@ -86,7 +60,7 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
       )
       .map(n => n.join('-'))
       .concat(
-        'install-log-text-buffer',
+        'install-log-textbuffer',
         'installer-scrollbar-adjustment',
         'install-policy-switch'
       ),
@@ -94,6 +68,8 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
   class ShutdownTimerPrefsWidget extends Gtk.Grid {
     _init(params = {}) {
       super._init(params);
+      imports.gettext.textdomain(Me.metadata['gettext-domain']);
+      this.settings = ExtensionUtils.getSettings();
       this.handlers = [];
       this.settingsHandlerIds = [];
       this.idleSourceIds = {};
@@ -102,36 +78,43 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
         adjustment: [
           v => v.get_value(),
           (v, s) => v.set_value(s),
-          sn => settings.get_int(sn),
-          (sn, v) => settings.set_int(sn, v),
+          sn => this.settings.get_int(sn),
+          (sn, v) => this.settings.set_int(sn, v),
           'value-changed',
         ],
         decimal: [
           v => v.get_value(),
           (v, s) => v.set_value(s),
-          sn => Number.parseFloat(settings.get_string(sn)),
-          (sn, v) => settings.set_string(sn, v.toFixed(3)),
+          sn => Number.parseFloat(this.settings.get_string(sn)),
+          (sn, v) => this.settings.set_string(sn, v.toFixed(3)),
           'value-changed',
         ],
         switch: [
           v => v.get_active(),
           (v, s) => v.set_active(s),
-          sn => settings.get_boolean(sn),
-          (sn, v) => settings.set_boolean(sn, v),
+          sn => this.settings.get_boolean(sn),
+          (sn, v) => this.settings.set_boolean(sn, v),
           'notify::active',
+        ],
+        textbuffer: [
+          v => v.get_text(v.get_start_iter(), v.get_end_iter(), false),
+          (v, s) => v.set_text(s, -1),
+          sn => this.settings.get_string(sn),
+          (sn, v) => this.settings.set_string(sn, v),
+          'notify::text',
         ],
         buffer: [
           v => v.get_text(),
           (v, s) => v.set_text(s, -1),
-          sn => settings.get_string(sn),
-          (sn, v) => settings.set_string(sn, v),
+          sn => this.settings.get_string(sn),
+          (sn, v) => this.settings.set_string(sn, v),
           'notify::text',
         ],
         combo: [
           v => v.get_active_id(),
           (v, s) => v.set_active_id(s),
-          sn => settings.get_string(sn),
-          (sn, v) => settings.set_string(sn, v),
+          sn => this.settings.get_string(sn),
+          (sn, v) => this.settings.set_string(sn, v),
           'changed',
         ],
       };
@@ -161,7 +144,7 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
         const fieldValue = settingsGetter(settingsName);
         const comp = this[fieldName];
         if (baseName === 'shutdown-mode') {
-          // update combo box entries
+          // replace combo box entries
           comp.remove_all();
           MODES.forEach(mode => {
             comp.append(mode, modeLabel(mode));
@@ -200,7 +183,7 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
           });
         });
         // update ui if values change externally
-        const settingsHandlerId = settings.connect(
+        const settingsHandlerId = this.settings.connect(
           'changed::' + settingsName,
           () => {
             maybeUpdate('external', () => {
@@ -219,9 +202,44 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
         connect_comp(k, v);
       });
 
-      // install log text buffer updates
+      const lineIter = (buffer, lineIndex) => {
+        const res = buffer.get_iter_at_line(lineIndex);
+        if (Gtk.get_major_version() < 4) {
+          return res;
+        }
+        const [ok, iter] = res;
+        if (!ok) {
+          throw new Error(`Line ${lineIndex} not found!`);
+        }
+        return iter;
+      };
+      // check command textbuffer
+
+      const checkCommandBuffer =
+        this[fieldNameByInteralID('check-command-textbuffer')];
+      const commentTag = new Gtk.TextTag({ foreground: 'grey' });
+      checkCommandBuffer.get_tag_table().add(commentTag);
+      const apply_comment_tags = b => {
+        b.remove_all_tags(b.get_start_iter(), b.get_end_iter());
+        for (let i = 0; i < b.get_line_count(); i++) {
+          const startIter = lineIter(b, i);
+          const endIter = lineIter(b, i + 1);
+          const line = b.get_text(startIter, endIter, false);
+          if (line.trimLeft().startsWith('#')) {
+            b.apply_tag(commentTag, startIter, endIter);
+          }
+        }
+      };
+      const ccBufferHandlerId = checkCommandBuffer.connect(
+        'changed',
+        apply_comment_tags
+      );
+      apply_comment_tags(checkCommandBuffer);
+      this.handlers.push([checkCommandBuffer, ccBufferHandlerId]);
+
+      // install log textbuffer updates
       const logTextBuffer =
-        this[fieldNameByInteralID('install-log-text-buffer')];
+        this[fieldNameByInteralID('install-log-textbuffer')];
       const scrollAdj =
         this[fieldNameByInteralID('installer-scrollbar-adjustment')];
       const errorTag = new Gtk.TextTag({ foreground: 'red' });
@@ -232,22 +250,11 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
         line = ['[', '#'].includes(line[0]) ? line : ' ' + line;
         logTextBuffer.insert(logTextBuffer.get_end_iter(), line + '\n', -1);
         const lastLineIndex = logTextBuffer.get_line_count() - 1;
-        const lineIter = lineIndex => {
-          const res = logTextBuffer.get_iter_at_line(lineIndex);
-          if (Gtk.get_major_version() < 4) {
-            return res;
-          }
-          const [ok, iter] = res;
-          if (!ok) {
-            throw new Error(`Line ${lineIndex} not found!`);
-          }
-          return iter;
-        };
         const applyTag = tag => {
           logTextBuffer.apply_tag(
             tag,
-            lineIter(lastLineIndex - 1),
-            lineIter(lastLineIndex)
+            lineIter(logTextBuffer, lastLineIndex - 1),
+            lineIter(logTextBuffer, lastLineIndex)
           );
         };
         if (line.startsWith('# ')) {
@@ -311,7 +318,7 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
         comp.disconnect(handlerId);
       });
       this.settingsHandlerIds.forEach(handlerId => {
-        settings.disconnect(handlerId);
+        this.settings.disconnect(handlerId);
       });
       Install.reset();
     }

@@ -2,8 +2,8 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
-  <object class="GtkEntryBuffer" id="check-command-buffer"/>
-  <object class="GtkTextBuffer" id="install-log-text-buffer">
+  <object class="GtkTextBuffer" id="check-command-textbuffer"/>
+  <object class="GtkTextBuffer" id="install-log-textbuffer">
     <property name="text">START test
 .
 .
@@ -63,12 +63,16 @@ DONE test</property>
     <property name="name">ShutdownTimer.Prefs.Widget</property>
     <property name="visible">True</property>
     <property name="can-focus">True</property>
+    <property name="has-focus">True</property>
+    <property name="is-focus">True</property>
     <property name="row-homogeneous">True</property>
     <property name="column-homogeneous">True</property>
     <child>
       <object class="GtkNotebook">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
+        <property name="has-focus">True</property>
+        <property name="is-focus">True</property>
         <child>
           <object class="GtkListBox">
             <property name="visible">True</property>
@@ -127,16 +131,15 @@ DONE test</property>
                     <property name="can-focus">True</property>
                     <property name="vadjustment">installer-scrollbar-adjustment</property>
                     <property name="min-content-width">500</property>
-                    <property name="min-content-height">200</property>
+                    <property name="min-content-height">250</property>
                     <child>
                       <object class="GtkTextView">
-                        <property name="height-request">40</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="editable">False</property>
                         <property name="wrap-mode">char</property>
                         <property name="cursor-visible">False</property>
-                        <property name="buffer">install-log-text-buffer</property>
+                        <property name="buffer">install-log-textbuffer</property>
                         <property name="accepts-tab">False</property>
                         <property name="monospace">True</property>
                       </object>
@@ -967,6 +970,8 @@ DONE test</property>
           <object class="GtkListBox">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="has-focus">True</property>
+            <property name="is-focus">True</property>
             <property name="margin-start">10</property>
             <property name="margin-end">10</property>
             <property name="margin-top">10</property>
@@ -986,7 +991,7 @@ DONE test</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="halign">start</property>
-                        <property name="label" translatable="yes">Enable check command</property>
+                        <property name="label" translatable="yes">Enable check</property>
                         <property name="use-markup">True</property>
                       </object>
                       <packing>
@@ -1013,7 +1018,7 @@ DONE test</property>
             <child>
               <object class="GtkListBoxRow">
                 <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="can-focus">False</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -1024,9 +1029,9 @@ DONE test</property>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="tooltip-text" translatable="yes">Run check command after timer runs out. Only proceeds if check command terminates successfully.</property>
+                        <property name="tooltip-text" translatable="yes">Script is run in a bash user shell after timer activates.</property>
                         <property name="halign">start</property>
-                        <property name="label" translatable="yes">Check command</property>
+                        <property name="label" translatable="yes">Proceed after timer is done only if this check terminates successfully:</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -1035,13 +1040,19 @@ DONE test</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="check-command-entry">
+                      <object class="GtkScrolledWindow">
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
-                        <property name="buffer">check-command-buffer</property>
-                        <property name="primary-icon-name">application-x-executable</property>
-                        <property name="primary-icon-tooltip-text" translatable="yes">command run in user shell</property>
-                        <property name="placeholder-text">/user/backup/script</property>
+                        <property name="min-content-width">500</property>
+                        <property name="min-content-height">250</property>
+                        <child>
+                          <object class="GtkTextView" id="check-command-entry">
+                            <property name="visible">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="buffer">check-command-textbuffer</property>
+                            <property name="monospace">True</property>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>

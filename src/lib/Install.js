@@ -27,7 +27,7 @@ function installAction(action, logInstall) {
     logDebug(`Trigger ${action} action.`);
     installCancel = new Gio.Cancellable();
     _installAction(action, logInstall, installCancel).finally(() => {
-      installCancel = null;
+      installCancel = undefined;
     });
   }
 }
