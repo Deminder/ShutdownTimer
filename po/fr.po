@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-28 22:24+0200\n"
+"POT-Creation-Date: 2021-08-28 23:25+0200\n"
 "PO-Revision-Date: 2021-08-17 10:51+0200\n"
 "Last-Translator: Brendan Chabannes <brendan.chabannes@gmail.com>\n"
 "Language-Team: \n"
@@ -255,113 +255,113 @@ msgstr ""
 msgid "policy rule"
 msgstr ""
 
-#: src/ui/prefs.ui:98
+#: src/ui/prefs.ui:94
 msgid "Setup a privileged script and give user access via polkit"
 msgstr ""
 
-#: src/ui/prefs.ui:100
+#: src/ui/prefs.ui:96
 msgid "Install/Uninstall privileges for this user"
 msgstr ""
 
-#: src/ui/prefs.ui:157
+#: src/ui/prefs.ui:153
 msgid "Install"
 msgstr ""
 
-#: src/ui/prefs.ui:192
+#: src/ui/prefs.ui:188
 msgid "Use mode"
 msgstr ""
 
-#: src/ui/prefs.ui:236
+#: src/ui/prefs.ui:232
 msgid "persistent shutdown or reboot by using 'shutdown -P/-r' command"
 msgstr ""
 
-#: src/ui/prefs.ui:238
+#: src/ui/prefs.ui:234
 msgid "Toggle root shutdown with shutdown timer"
 msgstr ""
 
-#: src/ui/prefs.ui:293
+#: src/ui/prefs.ui:289
 msgid "Shutdown slider position (in &#37;)"
 msgstr "Position du curseur (en %)"
 
-#: src/ui/prefs.ui:352 src/ui/prefs.ui:594
+#: src/ui/prefs.ui:348 src/ui/prefs.ui:589
 msgid "Non-linear scaling or 0 to disable"
 msgstr ""
 
-#: src/ui/prefs.ui:397
+#: src/ui/prefs.ui:393
 msgid "Maximum shutdown timer value (in minutes)"
 msgstr "Valeur maximum de la minuterie (en minutes)"
 
-#: src/ui/prefs.ui:443
+#: src/ui/prefs.ui:439
 msgid "Shutdown"
 msgstr "Arrêt"
 
-#: src/ui/prefs.ui:479
+#: src/ui/prefs.ui:475
 msgid "Toggle wake with shutdown timer"
 msgstr ""
 
-#: src/ui/prefs.ui:534
+#: src/ui/prefs.ui:530
 msgid "Wake slider position (in &#37;)"
 msgstr "Position du curseur (en %)"
 
-#: src/ui/prefs.ui:639
+#: src/ui/prefs.ui:634
 msgid "Maximum wake timer value (in minutes)"
 msgstr "Valeur maximum de la minuterie (en minutes)"
 
-#: src/ui/prefs.ui:685
+#: src/ui/prefs.ui:680
 msgid "Wake"
 msgstr ""
 
-#: src/ui/prefs.ui:715
+#: src/ui/prefs.ui:710
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:55
 msgid "Show settings button"
 msgstr ""
 
-#: src/ui/prefs.ui:753
+#: src/ui/prefs.ui:748
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:92
 msgid "Comma-separated shutdown modes which are shown in the popup menu."
 msgstr ""
 
-#: src/ui/prefs.ui:755
+#: src/ui/prefs.ui:750
 msgid "Show shutdown items"
 msgstr ""
 
-#: src/ui/prefs.ui:794
+#: src/ui/prefs.ui:789
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:61
 msgid "Show shutdown slider"
 msgstr ""
 
-#: src/ui/prefs.ui:832
+#: src/ui/prefs.ui:827
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:79
 msgid "Show notification text boxes"
 msgstr ""
 
-#: src/ui/prefs.ui:874
+#: src/ui/prefs.ui:869
 msgid "Show wake items"
 msgstr ""
 
-#: src/ui/prefs.ui:922
+#: src/ui/prefs.ui:917
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:67
 msgid "Show wake slider"
 msgstr ""
 
-#: src/ui/prefs.ui:959
+#: src/ui/prefs.ui:954
 msgid "Display"
 msgstr ""
 
-#: src/ui/prefs.ui:991
+#: src/ui/prefs.ui:984
 msgid "Enable check"
 msgstr ""
 
-#: src/ui/prefs.ui:1029
+#: src/ui/prefs.ui:1022
 msgid "Script is run in a bash user shell after timer activates."
 msgstr ""
 
-#: src/ui/prefs.ui:1031
+#: src/ui/prefs.ui:1024
 msgid ""
 "Proceed after timer is done only if this script terminates successfully:"
 msgstr ""
 
-#: src/ui/prefs.ui:1073
+#: src/ui/prefs.ui:1066
 msgid "Check"
 msgstr ""
 
