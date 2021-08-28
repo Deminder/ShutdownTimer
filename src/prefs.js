@@ -49,7 +49,7 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
     GTypeName: 'ShutdownTimerPrefsWidget',
     Template: templateFile,
     InternalChildren: Object.entries(templateComponents)
-      // entries only required for placeholder fix
+      // entries only required for placeholder replacement fix
       .flatMap(([b, c]) =>
         c === 'buffer'
           ? [
@@ -62,7 +62,8 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
       .concat(
         'install-log-textbuffer',
         'installer-scrollbar-adjustment',
-        'install-policy-switch'
+        'install-policy-switch',
+        'textview-parent-listboxrow'
       ),
   },
   class ShutdownTimerPrefsWidget extends Gtk.Grid {
@@ -151,22 +152,26 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
           });
         }
         fieldSetter(comp, fieldValue);
+
         if (component === 'buffer') {
-          // fix init of placeholder text
           const entry = this[fieldNameByInteralID(`${baseName}-entry`)];
           const placeholder =
             baseName === 'show-shutdown-mode'
-              ? `${MODES.map(modeLabel).join(',')}  (${MODES.join(', ')})`
+              ? `${MODES.join(',')} (${MODES.map(modeLabel).join(', ')})`
               : entry.get_placeholder_text();
-          entry.set_placeholder_text(fieldValue === '' ? placeholder : '');
-          const changedId = entry.connect('changed', () => {
-            entry.set_placeholder_text(placeholder);
-            entry.disconnect(changedId);
-          });
-          const destroyId = entry.connect('destroy', () => {
-            entry.disconnect(changedId);
-            entry.disconnect(destroyId);
-          });
+          entry.set_placeholder_text(placeholder);
+          // gtk4 fix: avoid overlapping normal text and placeholder text
+          if (fieldValue !== '' && Gtk.get_major_version() === 4) {
+            entry.set_placeholder_text('');
+            const changedId = entry.connect('changed', () => {
+              entry.set_placeholder_text(placeholder);
+              entry.disconnect(changedId);
+            });
+            const destroyId = entry.connect('destroy', () => {
+              entry.disconnect(changedId);
+              entry.disconnect(destroyId);
+            });
+          }
         }
         let lastActivity = { type: 'internal', time: 0 };
         const maybeUpdate = (type, update) => {
@@ -221,9 +226,10 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
       checkCommandBuffer.get_tag_table().add(commentTag);
       const apply_comment_tags = b => {
         b.remove_all_tags(b.get_start_iter(), b.get_end_iter());
-        for (let i = 0; i < b.get_line_count(); i++) {
+        const lc = b.get_line_count();
+        for (let i = 0; i < lc; i++) {
           const startIter = lineIter(b, i);
-          const endIter = lineIter(b, i + 1);
+          const endIter = lc === i + 1 ? b.get_end_iter() : lineIter(b, i + 1);
           const line = b.get_text(startIter, endIter, false);
           if (line.trimLeft().startsWith('#')) {
             b.apply_tag(commentTag, startIter, endIter);
@@ -289,6 +295,14 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
         logTextBuffer.set_text('', -1);
       });
 
+      // gtk3 fix: textview fails to keep focus on mouse click (listboxrow steals focus)
+      if (Gtk.get_major_version() < 4) {
+        this[fieldNameByInteralID('textview-parent-listboxrow')].set_can_focus(
+          false
+        );
+      }
+
+      // release all resources on destroy
       const destroyId = this.connect('destroy', () => {
         this._releaseEverything();
         this.disconnect(destroyId);
