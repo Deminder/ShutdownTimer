@@ -25,6 +25,18 @@ DONE test</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
+  <object class="GtkAdjustment" id="non-linear-shutdown-slider-decimal">
+    <property name="lower">-5</property>
+    <property name="upper">5</property>
+    <property name="step-increment">0.001</property>
+    <property name="page-increment">0.10</property>
+  </object>
+  <object class="GtkAdjustment" id="non-linear-wake-slider-decimal">
+    <property name="lower">-5</property>
+    <property name="upper">5</property>
+    <property name="step-increment">0.001</property>
+    <property name="page-increment">0.10</property>
+  </object>
   <object class="GtkEntryBuffer" id="show-shutdown-mode-buffer"/>
   <object class="GtkAdjustment" id="shutdown-max-timer-adjustment">
     <property name="upper">10000</property>
@@ -327,6 +339,52 @@ DONE test</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="spacing">5</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Non-linear scaling or 0 to disable</property>
+                            <property name="use-markup">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSpinButton">
+                            <property name="visible">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="text" translatable="yes">120</property>
+                            <property name="adjustment">non-linear-shutdown-slider-decimal</property>
+                            <property name="climb-rate">1</property>
+                            <property name="digits">3</property>
+                            <property name="snap-to-ticks">True</property>
+                            <property name="numeric">True</property>
+                            <property name="update-policy">if-valid</property>
+                            <property name="value">120</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkListBoxRow">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="spacing">5</property>
                         <child>
@@ -511,6 +569,52 @@ DONE test</property>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
                             <property name="position">2</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkListBoxRow">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="spacing">5</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Non-linear scaling or 0 to disable</property>
+                            <property name="use-markup">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSpinButton" id="max-timer-spinbutton2">
+                            <property name="visible">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="text" translatable="yes">5</property>
+                            <property name="adjustment">non-linear-wake-slider-decimal</property>
+                            <property name="climb-rate">1</property>
+                            <property name="digits">3</property>
+                            <property name="snap-to-ticks">True</property>
+                            <property name="numeric">True</property>
+                            <property name="update-policy">if-valid</property>
+                            <property name="value">5</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
                           </packing>
                         </child>
                       </object>

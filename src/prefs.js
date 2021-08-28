@@ -47,6 +47,7 @@ function init() {
 const templateComponents = {
   'shutdown-max-timer': 'adjustment',
   'shutdown-slider': 'adjustment',
+  'non-linear-shutdown-slider': 'decimal',
   'show-settings': 'switch',
   'root-mode': 'switch',
   'show-shutdown-mode': 'buffer',
@@ -58,6 +59,7 @@ const templateComponents = {
   'auto-wake': 'switch',
   'wake-max-timer': 'adjustment',
   'wake-slider': 'adjustment',
+  'non-linear-wake-slider': 'decimal',
   'show-wake-slider': 'switch',
   'show-wake-items': 'switch',
 };
@@ -102,6 +104,13 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
           (v, s) => v.set_value(s),
           sn => settings.get_int(sn),
           (sn, v) => settings.set_int(sn, v),
+          'value-changed',
+        ],
+        decimal: [
+          v => v.get_value(),
+          (v, s) => v.set_value(s),
+          sn => Number.parseFloat(settings.get_string(sn)),
+          (sn, v) => settings.set_string(sn, v.toFixed(3)),
           'value-changed',
         ],
         switch: [

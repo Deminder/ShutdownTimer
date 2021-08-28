@@ -32,10 +32,22 @@
       <description>Set wake slider position as percent of the maximum time. Must be in range 0 and 100.</description>
     </key>
 
+    <key type="s" name="non-linear-wake-slider-value">
+      <default>"1.5"</default>
+      <summary>Ramp-up of non-linear wake slider value</summary>
+      <description>Exponential ramp-up for wake time slider</description>
+    </key>
+
     <key type="i" name="shutdown-slider-value">
       <default>70</default>
       <summary>Shutdown slider position</summary>
       <description>Set shutdown slider position as percent of the maximum time. Must be in range 0 and 100.</description>
+    </key>
+
+    <key type="s" name="non-linear-shutdown-slider-value">
+      <default>"0"</default>
+      <summary>Ramp-up of non-linear shutdown slider value</summary>
+      <description>Exponential ramp-up for shutdown time slider</description>
     </key>
 
     <key type="b" name="show-settings-value">

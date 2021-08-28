@@ -145,7 +145,9 @@ var ShutdownTimer = GObject.registerClass(
       // handlers for changed values in settings
       this.settingsHandlerIds = [
         ['shutdown-max-timer-value', this._updateSwitchLabel.bind(this)],
+        ['non-linear-shutdown-slider-value', this._updateSwitchLabel.bind(this)],
         ['wake-max-timer-value', this._updateWakeModeItem.bind(this)],
+        ['non-linear-wake-slider-value', this._updateWakeModeItem.bind(this)],
         [
           'shutdown-slider-value',
           () => {
@@ -393,8 +395,13 @@ function init(settingsObj, actions) {
 
 function _getSliderMinutes(prefix) {
   let sliderValue = settings.get_int(prefix + '-slider-value') / 100.0;
+  const rampUp = Number.parseFloat(
+    settings.get_string(`non-linear-${prefix}-slider-value`)
+  );
+  const ramp = x => Math.expm1(rampUp * x) / Math.expm1(rampUp);
   return Math.floor(
-    sliderValue * settings.get_int(prefix + '-max-timer-value')
+    (rampUp === 0 ? sliderValue : ramp(sliderValue)) *
+      settings.get_int(prefix + '-max-timer-value')
   );
 }
 
