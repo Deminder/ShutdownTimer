@@ -63,16 +63,12 @@ DONE test</property>
     <property name="name">ShutdownTimer.Prefs.Widget</property>
     <property name="visible">True</property>
     <property name="can-focus">True</property>
-    <property name="has-focus">True</property>
-    <property name="is-focus">True</property>
     <property name="row-homogeneous">True</property>
     <property name="column-homogeneous">True</property>
     <child>
       <object class="GtkNotebook">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
-        <property name="has-focus">True</property>
-        <property name="is-focus">True</property>
         <child>
           <object class="GtkListBox">
             <property name="visible">True</property>
@@ -362,7 +358,6 @@ DONE test</property>
                           <object class="GtkSpinButton">
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
-                            <property name="text" translatable="yes">120</property>
                             <property name="adjustment">non-linear-shutdown-slider-decimal</property>
                             <property name="climb-rate">1</property>
                             <property name="digits">3</property>
@@ -561,7 +556,6 @@ DONE test</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="halign">end</property>
-                            <property name="text">0</property>
                             <property name="adjustment">wake-slider-adjustment</property>
                             <property name="climb-rate">1</property>
                             <property name="snap-to-ticks">True</property>
@@ -602,10 +596,9 @@ DONE test</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="max-timer-spinbutton2">
+                          <object class="GtkSpinButton">
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
-                            <property name="text" translatable="yes">5</property>
                             <property name="adjustment">non-linear-wake-slider-decimal</property>
                             <property name="climb-rate">1</property>
                             <property name="digits">3</property>
@@ -651,7 +644,6 @@ DONE test</property>
                           <object class="GtkSpinButton" id="wake-max-timer-spinbutton">
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
-                            <property name="text">120</property>
                             <property name="adjustment">wake-max-timer-adjustment</property>
                             <property name="climb-rate">1</property>
                             <property name="snap-to-ticks">True</property>
@@ -970,8 +962,6 @@ DONE test</property>
           <object class="GtkListBox">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="has-focus">True</property>
-            <property name="is-focus">True</property>
             <property name="margin-start">10</property>
             <property name="margin-end">10</property>
             <property name="margin-top">10</property>
@@ -1016,9 +1006,9 @@ DONE test</property>
               </object>
             </child>
             <child>
-              <object class="GtkListBoxRow">
+              <object class="GtkListBoxRow" id="textview-parent-listboxrow">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
+                <property name="can-focus">True</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -1031,7 +1021,7 @@ DONE test</property>
                         <property name="can-focus">False</property>
                         <property name="tooltip-text" translatable="yes">Script is run in a bash user shell after timer activates.</property>
                         <property name="halign">start</property>
-                        <property name="label" translatable="yes">Proceed after timer is done only if this check terminates successfully:</property>
+                        <property name="label" translatable="yes">Proceed after timer is done only if this script terminates successfully:</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
