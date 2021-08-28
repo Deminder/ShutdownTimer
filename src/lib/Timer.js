@@ -31,48 +31,52 @@ var Timer = class {
     const newDeadline = info.deadline !== this.info.deadline;
     this.info = info;
     if (info.scheduled) {
-      this.startTimer(newDeadline);
+      if (newDeadline) {
+        // update proc process for new deadline
+        this.startProcTimer();
+      }
+      this.startGLibTimer();
+      logDebug(
+        `Started timer: ${this.info.minutes}min remaining (deadline: ${this.info.deadline})`
+      );
     } else {
       this.stopTimer();
+      logDebug(
+        `Stopped timer: ${this.info.minutes}min remaining (deadline: ${this.info.deadline})`
+      );
     }
   }
 
-  startTimer(newDeadline) {
-    if (newDeadline) {
-      // updater for shutdown task
-      this.stopProcTimer();
+  stopTimer() {
+    this.stopProcTimer();
+    this.stopGLibTimer();
+  }
 
-      const secs = this.info.secondsLeft;
-      if (secs > 0) {
-        logDebug(
-          `Started timer: ${this.info.minutes}min remaining (deadline: ${this.info.deadline})`
-        );
-        this._timerCancel = new Gio.Cancellable();
-        RootMode.execCheck(['sleep', `${secs}`], this._timerCancel, false)
-          .then(() => {
-            this._callbackAction(this.info.mode);
-          })
-          .catch(() => {
-            logDebug(
-              `Stopped timer: ${this.info.minutes}min remaining (deadline: ${this.info.deadline})`
-            );
-          });
-      } else {
-        this._callbackAction(this.info.mode);
-      }
+  _maybeRunTimerAction() {
+    if (this._timerCancel !== null) {
+      // ensure timer action is only run once
+      logDebug(`Running '${this.info.mode}' timer action...`);
+      this._callbackAction(this.info.mode);
     }
-    if (this._timerId === null && this._tick !== null) {
-      // ticks for gui
-      this._timerId = GLib.timeout_add_seconds(GLib.PRIORITY_LOW, 1, () => {
-        if (this._tick !== null) {
-          this._tick();
-        } else if (this.deadline > GLib.DateTime.new_now_utc().to_unix()) {
-          return GLib.SOURCE_CONTINUE;
-        }
-        this._timerId = null;
-        return GLib.SOURCE_REMOVE;
-      });
-      this._tick();
+  }
+
+  async startProcTimer() {
+    // secondary timer witch calls a sleep process as timer
+    this.stopProcTimer();
+
+    const secs = this.info.secondsLeft;
+    this._timerCancel = new Gio.Cancellable();
+    try {
+      if (secs > 0) {
+        await RootMode.execCheck(
+          ['sleep', `${secs}`],
+          this._timerCancel,
+          false
+        );
+      }
+      this._maybeRunTimerAction();
+    } finally {
+      this._timerCancel = null;
     }
   }
 
@@ -83,10 +87,29 @@ var Timer = class {
     this._timerCancel = null;
   }
 
-  stopTimer() {
-    this.deadline = -1;
-    this.stopProcTimer();
-    this.stopGLibTimer();
+  _maybeTick() {
+    if (this._tick !== null) {
+      this._tick();
+    }
+  }
+
+  startGLibTimer() {
+    if (this._timerId === null) {
+      // primary timer which updates ticks every second
+      this._timerId = GLib.timeout_add_seconds(GLib.PRIORITY_LOW, 1, () => {
+        this._maybeTick();
+        if (this.info.scheduled && this.info.secondsLeft >= 0) {
+          // timer continues
+          return GLib.SOURCE_CONTINUE;
+        }
+        // timer completed
+        this._timerId = null;
+        this._maybeRunTimerAction();
+        this.stopProcTimer();
+        return GLib.SOURCE_REMOVE;
+      });
+      this._maybeTick();
+    }
   }
 
   stopGLibTimer() {

@@ -372,9 +372,15 @@ var ShutdownTimer = GObject.registerClass(
       this.settingsHandlerIds.forEach(handlerId => {
         settings.disconnect(handlerId);
       });
+      this.settingsHandlerIds = [];
       Object.keys(this.idleSourceIds).forEach(sourceId => {
         GLib.Source.remove(sourceId);
       });
+      this.idleSourceIds = {};
+      if (this.currentRefreshId !== null) {
+        GLib.Source.remove(this.currentRefreshId);
+      }
+      this.currentRefreshId = null;
       super.destroy();
     }
   }

@@ -341,7 +341,7 @@ function enable() {
   if (shutdownTimerMenu === undefined) {
     shutdownTimerMenu = new MenuItem.ShutdownTimer();
     shutdownTimerMenu.checkRunning = CheckCommand.isChecking();
-    timer.setTickCallback(() => shutdownTimerMenu._updateShutdownInfo());
+    timer.setTickCallback(shutdownTimerMenu._updateShutdownInfo.bind(shutdownTimerMenu));
     statusMenu.menu.addMenuItem(shutdownTimerMenu);
   }
 }
