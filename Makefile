@@ -1,27 +1,28 @@
-UUID=$(shell grep uuid src/metadata.json | cut -d\" -f 4)
-ZIP_FILE=$(UUID).shell-extension.zip
+UUID := $(shell grep uuid src/metadata.json | cut -d\" -f 4)
+ZIP_FILE := $(UUID).shell-extension.zip
+$(info Version: $(shell grep -oP '^ *?\"version\": *?\K(\d+)' src/metadata.json) ($(ZIP_FILE)))
 
-UI_IN=src/ui/prefs.ui
-GTK4_TOOL=$(shell which gtk4-builder-tool 2>/dev/null)
+UI_IN := src/ui/prefs.ui
+GTK4_TOOL := $(shell which gtk4-builder-tool 2>/dev/null)
 ifneq ($(GTK4_TOOL),)
-UI_OUT=src/ui/prefs-gtk4.ui
+UI_OUT := src/ui/prefs-gtk4.ui
 else
 $(info Skipping transform gtk3 to gtk4... gtk4-builder-tool not available!)
 endif
 
-SCHEMA_IN=src/schemas/$(shell grep settings-schema src/metadata.json | cut -d\" -f 4).gschema.xml
-SCHEMA_OUT=src/schemas/gschemas.compiled
+SCHEMA_IN := src/schemas/$(shell grep settings-schema src/metadata.json | cut -d\" -f 4).gschema.xml
+SCHEMA_OUT := src/schemas/gschemas.compiled
 
-GETTEXTDOMAIN=$(shell grep gettext-domain src/metadata.json | cut -d\" -f 4)
-PO_IN=$(wildcard po/*.po)
-PO_OUT=$(patsubst po/%.po,src/locale/%/LC_MESSAGES/$(GETTEXTDOMAIN).mo,$(PO_IN))
+GETTEXTDOMAIN := $(shell grep gettext-domain src/metadata.json | cut -d\" -f 4)
+PO_IN := $(wildcard po/*.po)
+PO_OUT := $(patsubst po/%.po,src/locale/%/LC_MESSAGES/$(GETTEXTDOMAIN).mo,$(PO_IN))
 
-OUTPUTS=$(UI_OUT) $(SCHEMA_OUT) $(PO_OUT)
-SOURCE_FILES=$(filter-out $(OUTPUTS),$(shell find src -type f) LICENSE)
+OUTPUTS := $(UI_OUT) $(SCHEMA_OUT) $(PO_OUT)
+SOURCE_FILES := $(filter-out $(OUTPUTS),$(shell find src -type f) LICENSE)
 
 target-zip=$(patsubst %,target/%/$(ZIP_FILE),$(1))
-DEFAULT_ZIP=$(call target-zip,default)
-DEBUG_ZIP=$(call target-zip,debug)
+DEFAULT_ZIP := $(call target-zip,default)
+DEBUG_ZIP := $(call target-zip,debug)
 
 all: $(DEFAULT_ZIP) $(DEBUG_ZIP)
 
@@ -43,7 +44,7 @@ $(UI_OUT): $(UI_IN)
 	@echo "Transforming gtk3 to gtk4..."
 	$(GTK4_TOOL) simplify --3to4 $< > $@
 
-LANGS=$(patsubst po/%.po,%,$(PO_IN))
+LANGS := $(patsubst po/%.po,%,$(PO_IN))
 $(info Translations: $(LANGS))
 define GENERATE_MO
 src/locale/$(1)/LC_MESSAGES/$(2).mo: po/$(1).po
