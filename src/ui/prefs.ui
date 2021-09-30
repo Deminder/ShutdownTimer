@@ -66,7 +66,7 @@ DONE test</property>
     <property name="row-homogeneous">True</property>
     <property name="column-homogeneous">True</property>
     <child>
-      <object class="GtkNotebook">
+      <object class="GtkNotebook" id="main-notebook">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <child>

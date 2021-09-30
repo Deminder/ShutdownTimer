@@ -63,7 +63,8 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
         'install-log-textbuffer',
         'installer-scrollbar-adjustment',
         'install-policy-switch',
-        'textview-parent-listboxrow'
+        'textview-parent-listboxrow',
+        'main-notebook'
       ),
   },
   class ShutdownTimerPrefsWidget extends Gtk.Grid {
@@ -202,6 +203,13 @@ const ShutdownTimerPrefsWidget = GObject.registerClass(
         this.handlers.push([comp, handlerId]);
         this.settingsHandlerIds.push(settingsHandlerId);
       };
+
+      const notebook = this[fieldNameByInteralID('main-notebook')];
+      notebook.set_current_page(this.settings.get_int('preferences-selected-page-value'));
+      const notebookHandlerId = notebook.connect('switch-page', (_nb, _pg, page_num) => {
+        this.settings.set_int('preferences-selected-page-value', page_num);
+      });
+      this.handlers.push([notebook, notebookHandlerId]);
 
       Object.entries(templateComponents).forEach(([k, v]) => {
         connect_comp(k, v);

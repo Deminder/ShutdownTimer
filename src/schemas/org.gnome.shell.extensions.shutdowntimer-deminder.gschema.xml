@@ -87,7 +87,7 @@
     </key>
 
     <key type="s" name="show-shutdown-mode-value">
-      <default>"poweroff,reboot,suspend"</default>
+      <default>"poweroff,suspend"</default>
       <summary>Shown shutdown modes</summary>
       <description>Comma-separated shutdown modes which are shown in the popup menu.</description>
     </key>
@@ -120,6 +120,12 @@
       <default>true</default>
       <summary>Enable check command</summary>
       <description>Check command is skipped if disabled.</description>
+    </key>
+
+    <key type="i" name="preferences-selected-page-value">
+      <default>0</default>
+      <summary>Last selected page in the preferences.</summary>
+      <description>Last selected page in the preferences.</description>
     </key>
 
   </schema>
