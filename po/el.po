@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-28 23:25+0200\n"
+"POT-Creation-Date: 2021-09-30 15:31+0200\n"
 "PO-Revision-Date: 2021-08-17 10:52+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: \n"
@@ -335,33 +335,33 @@ msgstr ""
 msgid "Show notification text boxes"
 msgstr ""
 
-#: src/ui/prefs.ui:869
+#: src/ui/prefs.ui:865
 msgid "Show wake items"
 msgstr ""
 
-#: src/ui/prefs.ui:917
+#: src/ui/prefs.ui:903
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:67
 msgid "Show wake slider"
 msgstr ""
 
-#: src/ui/prefs.ui:954
+#: src/ui/prefs.ui:936
 msgid "Display"
 msgstr ""
 
-#: src/ui/prefs.ui:984
+#: src/ui/prefs.ui:966
 msgid "Enable check"
 msgstr ""
 
-#: src/ui/prefs.ui:1022
+#: src/ui/prefs.ui:1004
 msgid "Script is run in a bash user shell after timer activates."
 msgstr ""
 
-#: src/ui/prefs.ui:1024
+#: src/ui/prefs.ui:1006
 msgid ""
 "Proceed after timer is done only if this script terminates successfully:"
 msgstr ""
 
-#: src/ui/prefs.ui:1066
+#: src/ui/prefs.ui:1048
 msgid "Check"
 msgstr ""
 
@@ -500,6 +500,11 @@ msgstr ""
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:122
 msgid "Check command is skipped if disabled."
+msgstr ""
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:127
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:128
+msgid "Last selected page in the preferences."
 msgstr ""
 
 #, javascript-format
