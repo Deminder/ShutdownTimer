@@ -14,10 +14,8 @@ SCHEMA_IN := src/schemas/$(shell grep settings-schema src/metadata.json | cut -d
 SCHEMA_OUT := src/schemas/gschemas.compiled
 
 GETTEXTDOMAIN := $(shell grep gettext-domain src/metadata.json | cut -d\" -f 4)
-PO_IN := $(wildcard po/*.po)
-PO_OUT := $(patsubst po/%.po,src/locale/%/LC_MESSAGES/$(GETTEXTDOMAIN).mo,$(PO_IN))
 
-OUTPUTS := $(UI_OUT) $(SCHEMA_OUT) $(PO_OUT)
+OUTPUTS := $(UI_OUT) $(SCHEMA_OUT)
 SOURCE_FILES := $(filter-out $(OUTPUTS),$(shell find src -type f) LICENSE)
 
 target-zip=$(patsubst %,target/%/$(ZIP_FILE),$(1))
@@ -44,14 +42,8 @@ $(UI_OUT): $(UI_IN)
 	@echo "Transforming gtk3 to gtk4..."
 	$(GTK4_TOOL) simplify --3to4 $< > $@
 
-LANGS := $(patsubst po/%.po,%,$(PO_IN))
+LANGS := $(patsubst po/%.po,%,$(wildcard po/*.po))
 $(info Translations: $(LANGS))
-define GENERATE_MO
-src/locale/$(1)/LC_MESSAGES/$(2).mo: po/$(1).po
-	@mkdir -p $$(@D)
-	@msgfmt $$< --output-file="$$@" && echo "$$(shell basename $$< .po) [OK]" || (echo "ERROR: Failed to generate '$$<'." && exit 1)
-endef
-$(foreach P,$(LANGS),$(eval $(call GENERATE_MO,$P,$(GETTEXTDOMAIN))))
 
 define INSTALL_EXTENSION
 .PHONY: $(1)
