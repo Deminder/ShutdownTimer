@@ -39,12 +39,10 @@ async function wakeInfo(rtc) {
     () => ''
   );
   let timestamp = content !== '' ? parseInt(content) : -1;
-  if (timestamp > -1) {
+  if (timestamp > -1 && await isWakeInfoLocal()) {
     const dt = GLib.DateTime.new_from_unix_local(timestamp);
-    const isLocal = await isWakeInfoLocal();
-    timestamp = isLocal
-      ? dt.to_unix() - dt.get_utc_offset() / 1000000
-      : timestamp;
+    timestamp = dt.to_unix() - dt.get_utc_offset() / 1000000;
+    dt.unref();
   }
   return { deadline: timestamp };
 }
