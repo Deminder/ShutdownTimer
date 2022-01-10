@@ -101,17 +101,14 @@
     <key type="s" name="check-command-value">
       <default>"# Examples ...
 
-# Run a backup script
-# /user/backup/script
+# Run a pre-shutdown script (e.g. updates or backups)
+# ~/.local/scripts/pre-shutdown.sh
 
 # Wait for a process to exit
 # tail -f --pid=$PID
 
 # Activate the screen saver
-# gdbus call --session \\
-#     --dest org.gnome.ScreenSaver \\
-#     --object-path /org/gnome/ScreenSaver \\
-#     --method org.gnome.ScreenSaver.SetActive true >/dev/null"</default>
+# xdg-screensaver activate"</default>
       <summary>Check command(s)</summary>
       <description>Run command(s) before shutdown command. Proceed with shutdown only if check command succeeds.</description>
     </key>

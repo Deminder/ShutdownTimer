@@ -47,7 +47,7 @@ function recent_polkit() {
 
 function check_support() {
     RECENT_STR=", stand-alone polkit rules $(recent_polkit)"
-    if which rtcwake >/dev/null
+    if which rtcwake >/dev/null 2>&1
     then
         echo "rtcwake supported${RECENT_STR}"
         exit ${EXIT_SUCCESS}
