@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-30 15:31+0200\n"
+"POT-Creation-Date: 2022-01-11 15:17+0100\n"
 "PO-Revision-Date: 2021-08-17 10:52+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: Russian <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: src/extension.js:84 src/extension.js:116 src/extension.js:238
+#: src/extension.js:84 src/extension.js:116 src/extension.js:235
 #, javascript-format
 msgctxt "Error"
 msgid ""
@@ -33,49 +33,36 @@ msgstr ""
 msgid "Root mode protection failed!"
 msgstr ""
 
-#: src/extension.js:147 src/extension.js:156 src/extension.js:280
-#, javascript-format
-msgctxt "CheckCommand"
-msgid ""
-"%s\n"
-"'%s'"
-msgstr ""
-
 #: src/extension.js:148
 #, javascript-format
 msgid "Waiting for %s confirmation"
 msgstr ""
 
-#: src/extension.js:155
+#: src/extension.js:154
 #, javascript-format
 msgctxt "CheckCommand"
-msgid "%s (Code: %s)"
+msgid "%s aborted (Code: %s)"
 msgstr ""
 
-#: src/extension.js:157
-#, javascript-format
-msgid "%s aborted"
-msgstr ""
-
-#: src/extension.js:238
+#: src/extension.js:235
 msgid "Wake action failed!"
 msgstr ""
 
-#: src/extension.js:249
+#: src/extension.js:246
 msgid "Confirmation canceled"
 msgstr ""
 
-#: src/extension.js:249
+#: src/extension.js:246
 msgid "Shutdown Timer stopped"
 msgstr "Таймер выключения остановлен"
 
-#: src/extension.js:274
+#: src/extension.js:271
 #, javascript-format
 msgctxt "StartSchedulePopup"
 msgid "%s in %s"
 msgstr "%s через %s"
 
-#: src/extension.js:276 src/lib/MenuItem.js:326
+#: src/extension.js:273 src/lib/MenuItem.js:326
 #, javascript-format
 msgid "%s minute"
 msgid_plural "%s minutes"
@@ -489,26 +476,26 @@ msgstr ""
 msgid "Mode to use for shutdown command."
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:115
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:112
 msgid "Check command(s)"
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:116
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:113
 msgid ""
 "Run command(s) before shutdown command. Proceed with shutdown only if check "
 "command succeeds."
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:121
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:118
 msgid "Enable check command"
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:122
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:119
 msgid "Check command is skipped if disabled."
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:127
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:128
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:124
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:125
 msgid "Last selected page in the preferences."
 msgstr ""
 
