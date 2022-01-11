@@ -143,20 +143,16 @@ function serveInernalSchedule(mode) {
         shutdownTimerMenu.checkRunning = true;
         shutdownTimerMenu._updateShutdownInfo();
       });
+      maybeShowTextbox(checkCmd);
       maybeShowTextbox(
-        C_('CheckCommand', "%s\n'%s'").format(
-          _('Waiting for %s confirmation').format(modeLabel(mode)),
-          checkCmd
-        )
+        _('Waiting for %s confirmation').format(modeLabel(mode))
       );
     },
     code => {
+      maybeShowTextbox(checkCmd);
       maybeShowTextbox(
-        C_('CheckCommand', '%s (Code: %s)').format(
-          C_('CheckCommand', "%s\n'%s'").format(
-            _('%s aborted').format(modeLabel(mode)),
-            checkCmd
-          ),
+        C_('CheckCommand', '%s aborted (Code: %s)').format(
+          modeLabel(mode),
           code
         )
       );
@@ -200,6 +196,7 @@ function serveInernalSchedule(mode) {
 
 function shutdown(mode) {
   Main.overview.hide();
+  Textbox.hideAll();
   const getSession = () => new imports.misc.gnomeSession.SessionManager();
 
   switch (mode) {
@@ -277,10 +274,7 @@ async function startSchedule(maxTimerMinutes, wakeMinutes) {
   );
   const checkCmd = maybeCheckCmdString();
   if (checkCmd !== '') {
-    startPopupText = C_('CheckCommand', "%s\n'%s'").format(
-      startPopupText,
-      checkCmd
-    );
+    maybeShowTextbox(checkCmd);
   }
   maybeShowTextbox(startPopupText);
 
@@ -388,7 +382,7 @@ async function maybeCompleteDisable() {
 }
 
 function disable() {
-  Textbox._hideTextbox();
+  Textbox.hideAll();
   if (shutdownTimerMenu !== undefined) {
     shutdownTimerMenu.destroy();
     if (timer !== undefined) {
