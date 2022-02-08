@@ -10,7 +10,7 @@
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const { Convenience, InfoFetcher, ScheduleInfo } = Me.imports.lib;
-const { logDebug, modeLabel, MODES, WAKE_MODES } = Convenience;
+const { logDebug, modeLabel, MODES, WAKE_MODES, longDurationString } = Convenience;
 
 const { GObject, GLib, St } = imports.gi;
 
@@ -309,22 +309,25 @@ var ShutdownTimer = GObject.registerClass(
 
     _updateSwitchLabel() {
       const minutes = Math.abs(_getSliderMinutes('shutdown'));
-      const minutesStr = _n('%s min', '%s mins', minutes).format(minutes);
+      const timeStr = longDurationString(
+        minutes,
+        h => _n('%s hr', '%s hrs', h),
+        m => _n('%s min', '%s mins', m)
+      );
       this.switcher.label.text = settings.get_boolean('root-mode-value')
-        ? _('%s (protect)').format(minutesStr)
-        : minutesStr;
+        ? _('%s (protect)').format(timeStr)
+        : timeStr;
     }
 
     _updateWakeModeItem() {
       const minutes = Math.abs(_getSliderMinutes('wake'));
-      const hours = Math.floor(minutes / 60);
       this.wakeModeItem.label.text = C_('WakeButtonText', '%s %s').format(
         modeLabel('wake'),
-        (hours !== 0 ? [_n('%s hour', '%s hours', hours).format(hours)] : [])
-          .concat(
-            _n('%s minute', '%s minutes', minutes % 60).format(minutes % 60)
-          )
-          .join(' ')
+        longDurationString(
+          minutes,
+          h => _n('%s hour', '%s hours', h),
+          m => _n('%s minute', '%s minutes', m)
+        )
       );
     }
 

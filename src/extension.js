@@ -21,7 +21,7 @@ const {
   CheckCommand,
 } = Me.imports.lib;
 const modeLabel = Me.imports.prefs.modeLabel;
-const logDebug = Convenience.logDebug;
+const { longDurationString, logDebug } = Convenience;
 
 /* IMPORTS */
 const { GLib, Gio } = imports.gi;
@@ -274,7 +274,11 @@ async function _startSchedule(maxTimerMinutes, wakeMinutes) {
   settings.set_int('shutdown-timestamp-value', info.deadline);
   let startPopupText = C_('StartSchedulePopup', '%s in %s').format(
     modeLabel(info.mode),
-    _n('%s minute', '%s minutes', maxTimerMinutes).format(maxTimerMinutes)
+    longDurationString(
+      maxTimerMinutes,
+      h => _n('%s hour', '%s hours', h),
+      m => _n('%s minute', '%s minutes', m)
+    )
   );
   const checkCmd = maybeCheckCmdString();
   if (checkCmd !== '') {
