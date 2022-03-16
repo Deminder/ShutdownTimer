@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk" version="4.0"/>
-  <object class="GtkTextBuffer" id="check-command-textbuffer"/>
-  <object class="GtkTextBuffer" id="install-log-textbuffer">
+  <object class="GtkTextBuffer" id="check_command_textbuffer"/>
+  <object class="GtkTextBuffer" id="install_log_textbuffer">
     <property name="text">START test
 .
 .
@@ -18,52 +17,51 @@
 .
 DONE test</property>
   </object>
-  <object class="GtkEntryBuffer" id="install-policy-prefix-buffer"/>
-  <object class="GtkAdjustment" id="installer-scrollbar-adjustment">
+  <object class="GtkEntryBuffer" id="install_policy_prefix_buffer"/>
+  <object class="GtkAdjustment" id="installer_scrollbar_adjustment">
     <property name="upper">1000000</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkAdjustment" id="non-linear-shutdown-slider-decimal">
+  <object class="GtkAdjustment" id="non_linear_shutdown_slider_decimal">
     <property name="lower">-5</property>
     <property name="upper">5</property>
     <property name="step-increment">0.001</property>
     <property name="page-increment">0.10</property>
   </object>
-  <object class="GtkAdjustment" id="non-linear-wake-slider-decimal">
+  <object class="GtkAdjustment" id="non_linear_wake_slider_decimal">
     <property name="lower">-5</property>
     <property name="upper">5</property>
     <property name="step-increment">0.001</property>
     <property name="page-increment">0.10</property>
   </object>
-  <object class="GtkEntryBuffer" id="show-shutdown-mode-buffer"/>
-  <object class="GtkAdjustment" id="shutdown-max-timer-adjustment">
+  <object class="GtkEntryBuffer" id="show_shutdown_mode_buffer"/>
+  <object class="GtkAdjustment" id="shutdown_max_timer_adjustment">
     <property name="upper">10000</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkAdjustment" id="shutdown-slider-adjustment">
+  <object class="GtkAdjustment" id="shutdown_slider_adjustment">
     <property name="upper">100</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkAdjustment" id="wake-max-timer-adjustment">
+  <object class="GtkAdjustment" id="wake_max_timer_adjustment">
     <property name="upper">10000</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkAdjustment" id="wake-slider-adjustment">
+  <object class="GtkAdjustment" id="wake_slider_adjustment">
     <property name="upper">100</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <template class="ShutdownTimerPrefsWidget" parent="GtkGrid">
-    <property name="name">ShutdownTimer.Prefs.Widget</property>
-    <property name="focusable">1</property>
-    <property name="row-homogeneous">1</property>
-    <property name="column-homogeneous">1</property>
+  <object class="AdwPreferencesPage" id="shutdowntimer_prefs_page">
+    <property name="name">shutdowntimer-prefs-page</property>
+    <property name="title" translatable="yes">Shutdown Timer</property>
+    <property name="icon-name">system-shutdown-symbolic</property>
     <child>
-      <object class="GtkNotebook" id="main-notebook">
+      <object class="GtkNotebook" id="main_notebook">
         <property name="focusable">1</property>
         <child>
           <object class="GtkNotebookPage">
@@ -92,7 +90,7 @@ DONE test</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkSwitch" id="install-policy-switch">
+                          <object class="GtkSwitch" id="install_policy_switch">
                             <property name="halign">center</property>
                             <property name="focusable">1</property>
                           </object>
@@ -107,7 +105,7 @@ DONE test</property>
                     <property name="child">
                       <object class="GtkScrolledWindow">
                         <property name="focusable">1</property>
-                        <property name="vadjustment">installer-scrollbar-adjustment</property>
+                        <property name="vadjustment">installer_scrollbar_adjustment</property>
                         <property name="min-content-width">500</property>
                         <property name="min-content-height">250</property>
                         <property name="child">
@@ -116,7 +114,7 @@ DONE test</property>
                             <property name="editable">0</property>
                             <property name="wrap-mode">char</property>
                             <property name="cursor-visible">0</property>
-                            <property name="buffer">install-log-textbuffer</property>
+                            <property name="buffer">install_log_textbuffer</property>
                             <property name="accepts-tab">0</property>
                             <property name="monospace">1</property>
                           </object>
@@ -166,7 +164,7 @@ DONE test</property>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkComboBoxText" id="shutdown-mode-combo">
+                              <object class="GtkComboBoxText" id="shutdown_mode_combo">
                                 <property name="focusable">1</property>
                                 <property name="active">0</property>
                                 <items>
@@ -198,7 +196,7 @@ DONE test</property>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkSwitch" id="root-mode-switch">
+                              <object class="GtkSwitch" id="root_mode_switch">
                                 <property name="halign">center</property>
                                 <property name="focusable">1</property>
                               </object>
@@ -237,18 +235,18 @@ DONE test</property>
                               <object class="GtkScale">
                                 <property name="draw-value">1</property>
                                 <property name="focusable">1</property>
-                                <property name="adjustment">shutdown-slider-adjustment</property>
+                                <property name="adjustment">shutdown_slider_adjustment</property>
                                 <property name="show-fill-level">1</property>
                                 <property name="round-digits">0</property>
                                 <property name="digits">0</property>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkSpinButton" id="slider-spinbutton">
+                              <object class="GtkSpinButton" id="slider_spinbutton">
                                 <property name="valign">center</property>
                                 <property name="focusable">1</property>
                                 <property name="halign">end</property>
-                                <property name="adjustment">shutdown-slider-adjustment</property>
+                                <property name="adjustment">shutdown_slider_adjustment</property>
                                 <property name="climb-rate">1</property>
                                 <property name="snap-to-ticks">1</property>
                                 <property name="numeric">1</property>
@@ -276,7 +274,7 @@ DONE test</property>
                             <child>
                               <object class="GtkSpinButton">
                                 <property name="focusable">1</property>
-                                <property name="adjustment">non-linear-shutdown-slider-decimal</property>
+                                <property name="adjustment">non_linear_shutdown_slider_decimal</property>
                                 <property name="climb-rate">1</property>
                                 <property name="digits">3</property>
                                 <property name="snap-to-ticks">1</property>
@@ -305,9 +303,9 @@ DONE test</property>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkSpinButton" id="max-timer-spinbutton">
+                              <object class="GtkSpinButton" id="max_timer_spinbutton">
                                 <property name="focusable">1</property>
-                                <property name="adjustment">shutdown-max-timer-adjustment</property>
+                                <property name="adjustment">shutdown_max_timer_adjustment</property>
                                 <property name="climb-rate">1</property>
                                 <property name="snap-to-ticks">1</property>
                                 <property name="numeric">1</property>
@@ -362,7 +360,7 @@ DONE test</property>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkSwitch" id="auto-wake-switch">
+                              <object class="GtkSwitch" id="auto_wake_switch">
                                 <property name="halign">center</property>
                                 <property name="focusable">1</property>
                               </object>
@@ -401,18 +399,18 @@ DONE test</property>
                               <object class="GtkScale">
                                 <property name="draw-value">1</property>
                                 <property name="focusable">1</property>
-                                <property name="adjustment">wake-slider-adjustment</property>
+                                <property name="adjustment">wake_slider_adjustment</property>
                                 <property name="show-fill-level">1</property>
                                 <property name="round-digits">0</property>
                                 <property name="digits">0</property>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkSpinButton" id="wake-slider-spinbutton">
+                              <object class="GtkSpinButton" id="wake_slider_spinbutton">
                                 <property name="valign">center</property>
                                 <property name="focusable">1</property>
                                 <property name="halign">end</property>
-                                <property name="adjustment">wake-slider-adjustment</property>
+                                <property name="adjustment">wake_slider_adjustment</property>
                                 <property name="climb-rate">1</property>
                                 <property name="snap-to-ticks">1</property>
                                 <property name="numeric">1</property>
@@ -440,7 +438,7 @@ DONE test</property>
                             <child>
                               <object class="GtkSpinButton">
                                 <property name="focusable">1</property>
-                                <property name="adjustment">non-linear-wake-slider-decimal</property>
+                                <property name="adjustment">non_linear_wake_slider_decimal</property>
                                 <property name="climb-rate">1</property>
                                 <property name="digits">3</property>
                                 <property name="snap-to-ticks">1</property>
@@ -469,9 +467,9 @@ DONE test</property>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkSpinButton" id="wake-max-timer-spinbutton">
+                              <object class="GtkSpinButton" id="wake_max_timer_spinbutton">
                                 <property name="focusable">1</property>
-                                <property name="adjustment">wake-max-timer-adjustment</property>
+                                <property name="adjustment">wake_max_timer_adjustment</property>
                                 <property name="climb-rate">1</property>
                                 <property name="snap-to-ticks">1</property>
                                 <property name="numeric">1</property>
@@ -521,7 +519,7 @@ DONE test</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkSwitch" id="show-settings-switch">
+                          <object class="GtkSwitch" id="show_settings_switch">
                             <property name="halign">center</property>
                           </object>
                         </child>
@@ -545,9 +543,9 @@ DONE test</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="show-shutdown-mode-entry">
+                          <object class="GtkEntry" id="show_shutdown_mode_entry">
                             <property name="focusable">1</property>
-                            <property name="buffer">show-shutdown-mode-buffer</property>
+                            <property name="buffer">show_shutdown_mode_buffer</property>
                             <property name="placeholder-text">poweroff, reboot, suspend</property>
                           </object>
                         </child>
@@ -571,7 +569,7 @@ DONE test</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkSwitch" id="show-shutdown-slider-switch">
+                          <object class="GtkSwitch" id="show_shutdown_slider_switch">
                             <property name="halign">center</property>
                             <property name="focusable">1</property>
                           </object>
@@ -596,7 +594,7 @@ DONE test</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkSwitch" id="show-textboxes-switch">
+                          <object class="GtkSwitch" id="show_textboxes_switch">
                             <property name="halign">center</property>
                             <property name="focusable">1</property>
                           </object>
@@ -620,7 +618,7 @@ DONE test</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkSwitch" id="show-wake-items-switch">
+                          <object class="GtkSwitch" id="show_wake_items_switch">
                             <property name="halign">center</property>
                             <property name="focusable">1</property>
                           </object>
@@ -644,7 +642,7 @@ DONE test</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkSwitch" id="show-wake-slider-switch">
+                          <object class="GtkSwitch" id="show_wake_slider_switch">
                             <property name="halign">center</property>
                             <property name="focusable">1</property>
                           </object>
@@ -689,7 +687,7 @@ DONE test</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkSwitch" id="enable-check-command-switch">
+                          <object class="GtkSwitch" id="enable_check_command_switch">
                             <property name="halign">center</property>
                             <property name="focusable">1</property>
                           </object>
@@ -699,7 +697,7 @@ DONE test</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkListBoxRow" id="textview-parent-listboxrow">
+                  <object class="GtkListBoxRow" id="textview_parent_listboxrow">
                     <property name="focusable">1</property>
                     <property name="child">
                       <object class="GtkBox">
@@ -719,9 +717,9 @@ DONE test</property>
                             <property name="min-content-width">500</property>
                             <property name="min-content-height">250</property>
                             <property name="child">
-                              <object class="GtkTextView" id="check-command-entry">
+                              <object class="GtkTextView" id="check_command_entry">
                                 <property name="focusable">1</property>
-                                <property name="buffer">check-command-textbuffer</property>
+                                <property name="buffer">check_command_textbuffer</property>
                                 <property name="monospace">1</property>
                               </object>
                             </property>
@@ -746,5 +744,5 @@ DONE test</property>
         </layout>
       </object>
     </child>
-  </template>
+  </object>
 </interface>

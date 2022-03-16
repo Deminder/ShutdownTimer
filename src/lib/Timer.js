@@ -75,6 +75,7 @@ var Timer = class {
         );
       }
       this._maybeRunTimerAction();
+    } catch {
     } finally {
       this._timerCancel = null;
     }

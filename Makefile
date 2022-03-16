@@ -3,20 +3,11 @@ ZIP_FILE := $(UUID).shell-extension.zip
 $(info Version: $(shell grep -oP '^ *?\"version\": *?\K(\d+)' src/metadata.json) ($(ZIP_FILE)))
 
 UI_IN := src/ui/prefs.ui
-GTK4_TOOL := $(shell which gtk4-builder-tool 2>/dev/null)
-ifneq ($(GTK4_TOOL),)
-UI_OUT := src/ui/prefs-gtk4.ui
-else
-$(info Skipping transform gtk3 to gtk4... gtk4-builder-tool not available!)
-endif
-
 SCHEMA_IN := src/schemas/$(shell grep settings-schema src/metadata.json | cut -d\" -f 4).gschema.xml
-SCHEMA_OUT := src/schemas/gschemas.compiled
 
 GETTEXTDOMAIN := $(shell grep gettext-domain src/metadata.json | cut -d\" -f 4)
 
-OUTPUTS := $(UI_OUT) $(SCHEMA_OUT)
-SOURCE_FILES := $(filter-out $(OUTPUTS),$(shell find src -type f) LICENSE)
+SOURCE_FILES := $(shell find src -type f) LICENSE
 
 target-zip=$(patsubst %,target/%/$(ZIP_FILE),$(1))
 DEFAULT_ZIP := $(call target-zip,default)
@@ -33,17 +24,6 @@ debug-zip: $(DEBUG_ZIP)
 
 lint:
 	eslint src
-
-$(SCHEMA_OUT): $(SCHEMA_IN)
-	@echo "Compiling schemas..."
-	glib-compile-schemas $(@D)
-
-$(UI_OUT): $(UI_IN)
-	@echo "Transforming gtk3 to gtk4..."
-	$(GTK4_TOOL) simplify --3to4 $< > $@
-
-LANGS := $(patsubst po/%.po,%,$(wildcard po/*.po))
-$(info Translations: $(LANGS))
 
 define INSTALL_EXTENSION
 .PHONY: $(1)

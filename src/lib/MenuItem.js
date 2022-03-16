@@ -88,12 +88,11 @@ var ShutdownTimer = GObject.registerClass(
       this.icon.icon_name = 'preferences-system-time-symbolic';
       this.menu.addMenuItem(this.switcher);
       // make switcher toggle without popup menu closing
-      this.switcher.disconnect(this.switcher._activateId);
-      // dummy for clean disconnect
-      this.switcher._activateId = this.switcher.connect_after(
-        'activate',
-        () => {}
-      );
+      this.switcher.activate = __ => {
+        if (this.switcher._switch.mapped) {
+          this.switcher.toggle();
+        }
+      };
       this.menu.addMenuItem(this.sliderItems['shutdown']);
 
       this.modeItems = MODES.map(mode => {
@@ -424,9 +423,7 @@ function _createSliderItem(settingsPrefix) {
   const item = new PopupMenu.PopupBaseMenuItem({ activate: false });
   const sliderIcon = new St.Icon({
     icon_name:
-      settingsPrefix === 'wake'
-        ? 'alarm-symbolic'
-        : 'system-shutdown-symbolic',
+      settingsPrefix === 'wake' ? 'alarm-symbolic' : 'system-shutdown-symbolic',
     style_class: 'popup-menu-icon',
   });
   item.add(sliderIcon);
