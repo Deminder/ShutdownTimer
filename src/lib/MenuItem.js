@@ -10,7 +10,8 @@
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const { Convenience, InfoFetcher, ScheduleInfo } = Me.imports.lib;
-const { logDebug, modeLabel, MODES, WAKE_MODES, longDurationString } = Convenience;
+const { logDebug, modeLabel, MODES, WAKE_MODES, durationString, longDurationString } =
+  Convenience;
 
 const { GObject, GLib, St } = imports.gi;
 
@@ -143,10 +144,7 @@ var ShutdownTimer = GObject.registerClass(
       // handlers for changed values in settings
       this.settingsHandlerIds = [
         ['shutdown-max-timer-value', this._updateSwitchLabel.bind(this)],
-        [
-          'nonlinear-shutdown-slider-value',
-          this._updateSwitchLabel.bind(this),
-        ],
+        ['nonlinear-shutdown-slider-value', this._updateSwitchLabel.bind(this)],
         ['wake-max-timer-value', this._updateWakeModeItem.bind(this)],
         ['nonlinear-wake-slider-value', this._updateWakeModeItem.bind(this)],
         [
@@ -279,7 +277,7 @@ var ShutdownTimer = GObject.registerClass(
         this.label.text =
           _('Check %s for %s').format(
             this.internalScheduleInfo.modeText,
-            ScheduleInfo.durationString(secPassed)
+            durationString(secPassed)
           ) + wakeLabel;
         return;
       }

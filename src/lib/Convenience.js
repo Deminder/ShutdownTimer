@@ -5,10 +5,11 @@
  * @copyright 2021
  * @license GNU General Public License v3.0
  */
-/* exported MODES, WAKE_MODES, modeLabel, logDebug, proxyPromise, longDurationString */
+/* exported MODES, WAKE_MODES, modeLabel, logDebug, proxyPromise, durationString, longDurationString */
 
 const Gettext = imports.gettext.domain('ShutdownTimer');
 const _ = Gettext.gettext;
+const _n = Gettext.gettext;
 
 let debugMode = false;
 
@@ -42,8 +43,21 @@ function proxyPromise(ProxyType, session, dest, objectPath) {
   });
 }
 
+function durationString(seconds) {
+  const sign = Math.sign(seconds);
+  const absSec = Math.floor(Math.abs(seconds));
+  const minutes = Math.floor(absSec / 60);
+  const hours = Math.floor(minutes / 60);
+  if (hours >= 3) {
+    return _n('%s hour', '%s hours', hours).format(sign * hours);
+  } else if (minutes === 0) {
+    return _n('%s sec', '%s secs', absSec).format(sign * absSec);
+  }
+  return _n('%s min', '%s mins', minutes).format(sign * minutes);
+}
+
 function longDurationString(minutes, hrFmt, minFmt) {
-  const hours = Math.floor(minutes / 60)
+  const hours = Math.floor(minutes / 60);
   const residualMinutes = minutes % 60;
   let parts = [minFmt(residualMinutes).format(residualMinutes)];
   if (hours) {

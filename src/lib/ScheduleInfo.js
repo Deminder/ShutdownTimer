@@ -6,12 +6,14 @@
  * @license GNU General Public License v3.0
  */
 /* exported ScheduleInfo, durationString */
+const Me = imports.misc.extensionUtils.getCurrentExtension();
+const { durationString } = Me.imports.lib.Convenience;
+
 const { GLib } = imports.gi;
 
 // translations
 const Gettext = imports.gettext.domain('ShutdownTimer');
 const _ = Gettext.gettext;
-const _n = Gettext.ngettext;
 
 var ScheduleInfo = class {
   constructor({ mode = '?', deadline = -1, external = false }) {
@@ -80,16 +82,3 @@ var ScheduleInfo = class {
     );
   }
 };
-
-function durationString(seconds) {
-  const sign = Math.sign(seconds);
-  const absSec = Math.floor(Math.abs(seconds));
-  const minutes = Math.floor(absSec / 60);
-  const hours = Math.floor(minutes / 60);
-  if (hours >= 3) {
-    return _n('%s hour', '%s hours', hours).format(sign * hours);
-  } else if (minutes === 0) {
-    return _n('%s sec', '%s secs', absSec).format(sign * absSec);
-  }
-  return _n('%s min', '%s mins', minutes).format(sign * minutes);
-}

@@ -24,7 +24,7 @@ const modeLabel = Me.imports.prefs.modeLabel;
 const { longDurationString, logDebug } = Convenience;
 
 /* IMPORTS */
-const { GLib, Gio } = imports.gi;
+const { GLib } = imports.gi;
 const LoginManager = imports.misc.loginManager;
 
 // screen and main functionality
@@ -256,8 +256,11 @@ function stopSchedule(stopProtection = true) {
 }
 
 function startSchedule(maxTimerMinutes, wakeMinutes) {
-  _startSchedule(maxTimerMinutes, wakeMinutes).catch(e => logDebug(e));
+  _startSchedule(maxTimerMinutes, wakeMinutes)
+    .then(() => logDebug('sucessfully started schedule'))
+    .catch(e => logError(e, 'failed to start schedule!'));
 }
+
 async function _startSchedule(maxTimerMinutes, wakeMinutes) {
   EndSessionDialogAware.unregister();
   if (CheckCommand.maybeCancel()) {
