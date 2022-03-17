@@ -7,7 +7,7 @@ SCHEMA_IN := src/schemas/$(shell grep settings-schema src/metadata.json | cut -d
 
 GETTEXTDOMAIN := $(shell grep gettext-domain src/metadata.json | cut -d\" -f 4)
 
-SOURCE_FILES := $(shell find src -type f) LICENSE
+SOURCE_FILES := $(shell find po -type f) $(shell find src -type f) LICENSE
 
 target-zip=$(patsubst %,target/%/$(ZIP_FILE),$(1))
 DEFAULT_ZIP := $(call target-zip,default)

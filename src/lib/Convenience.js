@@ -9,7 +9,7 @@
 
 const Gettext = imports.gettext.domain('ShutdownTimer');
 const _ = Gettext.gettext;
-const _n = Gettext.gettext;
+const _n = Gettext.ngettext;
 
 let debugMode = false;
 
