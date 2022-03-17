@@ -48,7 +48,7 @@
 
 ## Manual Installation
 
-Requires `gnome-shell-extensions` and `gtk4-builder-tool`:
+Requires `gnome-shell-extensions`:
 
 ```(shell)
 make install
