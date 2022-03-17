@@ -12,7 +12,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 const { Install, Convenience } = Me.imports.lib;
 var { logDebug, modeLabel, MODES } = Convenience;
 
-const { GLib, Gtk } = imports.gi;
+const { GLib, Gtk, Gio } = imports.gi;
 
 function init() {
   ExtensionUtils.initTranslations();
@@ -24,13 +24,13 @@ const templateComponents = {
     'root-mode': 'switch',
     'shutdown-max-timer': 'adjustment',
     'shutdown-slider': 'adjustment',
-    'non-linear-shutdown-slider': 'decimal',
+    'nonlinear-shutdown-slider': 'adjustment',
   },
   wake: {
     'auto-wake': 'switch',
     'wake-max-timer': 'adjustment',
     'wake-slider': 'adjustment',
-    'non-linear-wake-slider': 'decimal',
+    'nonlinear-wake-slider': 'adjustment',
   },
   display: {
     'show-settings': 'switch',
@@ -61,121 +61,58 @@ function _guiIdle(idleSourceIds) {
   });
 }
 
-function init_page(
-  pageId,
-  builder,
-  settings,
-  handlers,
-  settingsHandlerIds,
-  guiIdle
-) {
+function init_page(pageId, builder, settings, handlers, guiIdle) {
   const page = builder.get_object(pageId);
   const pageName = pageId.split('_').at(-1);
   if (!page) {
     throw new Error(`${pageId} not found!`);
   }
 
-  const connectFuncs = {
-    adjustment: [
-      v => v.get_value(),
-      (v, s) => v.set_value(s),
-      sn => settings.get_int(sn),
-      (sn, v) => settings.set_int(sn, v),
-      'value-changed',
-    ],
-    decimal: [
-      v => v.get_value(),
-      (v, s) => v.set_value(s),
-      sn => Number.parseFloat(settings.get_string(sn)),
-      (sn, v) => settings.set_string(sn, v.toFixed(3)),
-      'value-changed',
-    ],
-    switch: [
-      v => v.get_active(),
-      (v, s) => v.set_active(s),
-      sn => settings.get_boolean(sn),
-      (sn, v) => settings.set_boolean(sn, v),
-      'notify::active',
-    ],
-    textbuffer: [
-      v => v.get_text(v.get_start_iter(), v.get_end_iter(), false),
-      (v, s) => v.set_text(s, -1),
-      sn => settings.get_string(sn),
-      (sn, v) => settings.set_string(sn, v),
-      'notify::text',
-    ],
-    buffer: [
-      v => v.get_text(),
-      (v, s) => v.set_text(s, -1),
-      sn => settings.get_string(sn),
-      (sn, v) => settings.set_string(sn, v),
-      'notify::text',
-    ],
-    combo: [
-      v => v.get_active_id(),
-      (v, s) => v.set_active_id(s),
-      sn => settings.get_string(sn),
-      (sn, v) => settings.set_string(sn, v),
-      'changed',
-    ],
-  };
-
   const connect_comp = (baseName, component) => {
     const baseId = baseName.replaceAll('-', '_');
-    const [fieldGetter, fieldSetter, settingsGetter, settingsSetter, signal] =
-      connectFuncs[component];
     const settingsName = `${baseName}-value`;
-    const fieldValue = settingsGetter(settingsName);
     const compId = `${baseId}_${component}`;
     const comp = builder.get_object(compId);
     if (!comp) {
       throw new Error(`Component not found in template: ${compId}`);
     }
-    if (baseName === 'shutdown-mode') {
+    if (compId === 'shutdown_mode_combo') {
       // replace combo box entries
       comp.remove_all();
       MODES.forEach(mode => {
         comp.append(mode, modeLabel(mode));
       });
     }
-    fieldSetter(comp, fieldValue);
 
-    if (component === 'buffer') {
-      const entry = builder.get_object(`${baseId}_entry`);
-      entry.set_placeholder_text(
-        baseName === 'show-shutdown-mode'
-          ? `${MODES.join(',')} (${MODES.map(modeLabel).join(', ')})`
-          : entry.get_placeholder_text()
-      );
+    // init field value
+    ({
+      adjustment: (v, sn) => v.set_value(settings.get_int(sn)),
+      switch: (v, sn) => v.set_active(settings.get_boolean(sn)),
+      textbuffer: (v, sn) => v.set_text(settings.get_string(sn), -1),
+      buffer: (v, sn) => v.set_text(settings.get_string(sn), -1),
+      combo: (v, sn) => v.set_active_id(settings.get_string(sn)),
+    }[component](comp, settingsName));
+
+    if (compId === 'show_shutdown_mode_buffer') {
+      builder
+        .get_object(`${baseId}_entry`)
+        .set_placeholder_text(
+          `${MODES.join(',')} (${MODES.map(modeLabel).join(', ')})`
+        );
     }
-    let lastActivity = { type: 'internal', time: 0 };
-    const maybeUpdate = (type, update) => {
-      const time = GLib.get_monotonic_time();
-      if (lastActivity.type === type || time > lastActivity.time + 100000) {
-        lastActivity = { type, time };
-        update();
-      }
-    };
-    const handlerId = comp.connect(signal, w => {
-      maybeUpdate('internal', () => {
-        const val = fieldGetter(w);
-        settingsSetter(settingsName, val);
-      });
-    });
-    // update ui if values change externally
-    const settingsHandlerId = settings.connect(
-      'changed::' + settingsName,
-      () => {
-        maybeUpdate('external', () => {
-          const val = settingsGetter(settingsName);
-          if (val !== fieldGetter(comp)) {
-            fieldSetter(comp, val);
-          }
-        });
-      }
+
+    settings.bind(
+      settingsName,
+      comp,
+      {
+        adjustment: 'value',
+        switch: 'active',
+        textbuffer: 'text',
+        buffer: 'text',
+        combo: 'active-id',
+      }[component],
+      Gio.SettingsBindFlags.DEFAULT
     );
-    handlers.push([comp, handlerId]);
-    settingsHandlerIds.push(settingsHandlerId);
   };
 
   if (pageName in templateComponents) {
@@ -277,19 +214,13 @@ function fillPreferencesWindow(window) {
 
   const settings = ExtensionUtils.getSettings();
   const handlers = [];
-  const settingsHandlerIds = [];
   const idleSourceIds = {};
   const pageNames = ['install', 'shutdown', 'wake', 'display', 'check'].map(
     n => 'shutdowntimer-prefs-' + n
   );
   for (const page of pageNames.map(name =>
-    init_page(
-      name.replaceAll('-', '_'),
-      builder,
-      settings,
-      handlers,
-      settingsHandlerIds,
-      () => _guiIdle(idleSourceIds)
+    init_page(name.replaceAll('-', '_'), builder, settings, handlers, () =>
+      _guiIdle(idleSourceIds)
     )
   )) {
     window.add(page);
@@ -313,9 +244,6 @@ function fillPreferencesWindow(window) {
     });
     handlers.forEach(([comp, handlerId]) => {
       comp.disconnect(handlerId);
-    });
-    settingsHandlerIds.forEach(handlerId => {
-      settings.disconnect(handlerId);
     });
     Install.reset();
     window.disconnect(destroyId);

@@ -23,13 +23,13 @@ DONE test</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkAdjustment" id="non_linear_shutdown_slider_decimal">
+  <object class="GtkAdjustment" id="nonlinear_shutdown_slider_adjustment">
     <property name="lower">-5</property>
     <property name="upper">5</property>
     <property name="step-increment">0.001</property>
     <property name="page-increment">0.10</property>
   </object>
-  <object class="GtkAdjustment" id="non_linear_wake_slider_decimal">
+  <object class="GtkAdjustment" id="nonlinear_wake_slider_adjustment">
     <property name="lower">-5</property>
     <property name="upper">5</property>
     <property name="step-increment">0.001</property>
@@ -129,7 +129,7 @@ DONE test</property>
         <child>
           <object class="AdwActionRow">
             <property name="title" translatable="yes">Toggle root shutdown with shutdown timer</property>
-            <property name="subtitle" translatable="yes">persistent shutdown or reboot by using &apos;shutdown -P/-r&apos; command</property>
+            <property name="subtitle" translatable="yes">Persistent shutdown or reboot by using &apos;shutdown -P/-r&apos; command</property>
             <child>
               <object class="GtkSwitch" id="root_mode_switch">
                 <property name="valign">center</property>
@@ -181,7 +181,7 @@ DONE test</property>
               <object class="GtkSpinButton">
                 <property name="focusable">1</property>
                 <property name="valign">center</property>
-                <property name="adjustment">non_linear_shutdown_slider_decimal</property>
+                <property name="adjustment">nonlinear_shutdown_slider_adjustment</property>
                 <property name="climb-rate">1</property>
                 <property name="digits">3</property>
                 <property name="snap-to-ticks">1</property>
@@ -275,7 +275,7 @@ DONE test</property>
               <object class="GtkSpinButton">
                 <property name="focusable">1</property>
                 <property name="valign">center</property>
-                <property name="adjustment">non_linear_wake_slider_decimal</property>
+                <property name="adjustment">nonlinear_wake_slider_adjustment</property>
                 <property name="climb-rate">1</property>
                 <property name="digits">3</property>
                 <property name="snap-to-ticks">1</property>
@@ -344,7 +344,7 @@ DONE test</property>
         <child>
           <object class="AdwActionRow">
             <property name="title" translatable="yes">Show shutdown items</property>
-            <property name="subtitle" translatable="yes">Comma-separated shutdown modes which are shown in the popup menu.</property>
+            <property name="subtitle" translatable="yes">Comma-separated shutdown modes which are shown in the popup menu</property>
           </object>
         </child>
         <child>
