@@ -94,8 +94,8 @@
 
     <key type="s" name="shutdown-mode-value">
       <default>"poweroff"</default>
-      <summary>Shutdown mode</summary>
-      <description>Mode to use for shutdown command.</description>
+      <summary>Use mode</summary>
+      <description>Mode to use for timer action</description>
     </key>
 
     <key type="s" name="check-command-value">

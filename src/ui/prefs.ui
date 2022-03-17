@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <object class="GtkTextBuffer" id="check_command_textbuffer"/>
+  <object class="GtkTextBuffer" id="check_command_textbuffer" />
   <object class="GtkTextBuffer" id="install_log_textbuffer">
     <property name="text">START test
 .
@@ -17,7 +17,7 @@
 .
 DONE test</property>
   </object>
-  <object class="GtkEntryBuffer" id="install_policy_prefix_buffer"/>
+  <object class="GtkEntryBuffer" id="install_policy_prefix_buffer" />
   <object class="GtkAdjustment" id="installer_scrollbar_adjustment">
     <property name="upper">1000000</property>
     <property name="step-increment">1</property>
@@ -35,7 +35,7 @@ DONE test</property>
     <property name="step-increment">0.001</property>
     <property name="page-increment">0.10</property>
   </object>
-  <object class="GtkEntryBuffer" id="show_shutdown_mode_buffer"/>
+  <object class="GtkEntryBuffer" id="show_shutdown_mode_buffer" />
   <object class="GtkAdjustment" id="shutdown_max_timer_adjustment">
     <property name="upper">10000</property>
     <property name="step-increment">1</property>
@@ -56,692 +56,387 @@ DONE test</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="AdwPreferencesPage" id="shutdowntimer_prefs_page">
-    <property name="name">shutdowntimer-prefs-page</property>
-    <property name="title" translatable="yes">Shutdown Timer</property>
-    <property name="icon-name">system-shutdown-symbolic</property>
+  <object class="AdwPreferencesPage" id="shutdowntimer_prefs_install">
+    <property name="name">shutdowntimer-prefs-install</property>
+    <property name="title" translatable="yes">Install</property>
+    <property name="icon-name">go-up-symbolic</property>
     <child>
-      <object class="GtkNotebook" id="main_notebook">
-        <property name="focusable">1</property>
+      <object class="AdwPreferencesGroup">
         <child>
-          <object class="GtkNotebookPage">
-            <property name="child">
-              <object class="GtkListBox">
-                <property name="focusable">1</property>
-                <property name="margin-start">10</property>
-                <property name="margin-end">10</property>
-                <property name="margin-top">10</property>
-                <property name="margin-bottom">10</property>
-                <property name="selection-mode">none</property>
-                <child>
-                  <object class="GtkListBoxRow">
-                    <property name="focusable">1</property>
-                    <property name="child">
-                      <object class="GtkBox">
-                        <property name="focusable">1</property>
-                        <property name="spacing">5</property>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="hexpand">1</property>
-                            <property name="tooltip-text" translatable="yes">Setup a privileged script and give user access via polkit</property>
-                            <property name="halign">start</property>
-                            <property name="label" translatable="yes">Install/Uninstall privileges for this user</property>
-                            <property name="use-markup">1</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkSwitch" id="install_policy_switch">
-                            <property name="halign">center</property>
-                            <property name="focusable">1</property>
-                          </object>
-                        </child>
-                      </object>
-                    </property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkListBoxRow">
-                    <property name="focusable">1</property>
-                    <property name="child">
-                      <object class="GtkScrolledWindow">
-                        <property name="focusable">1</property>
-                        <property name="vadjustment">installer_scrollbar_adjustment</property>
-                        <property name="min-content-width">500</property>
-                        <property name="min-content-height">250</property>
-                        <property name="child">
-                          <object class="GtkTextView">
-                            <property name="focusable">1</property>
-                            <property name="editable">0</property>
-                            <property name="wrap-mode">char</property>
-                            <property name="cursor-visible">0</property>
-                            <property name="buffer">install_log_textbuffer</property>
-                            <property name="accepts-tab">0</property>
-                            <property name="monospace">1</property>
-                          </object>
-                        </property>
-                      </object>
-                    </property>
-                  </object>
-                </child>
+          <object class="AdwActionRow">
+            <property name="focusable">1</property>
+            <property name="title" translatable="yes">Install/Uninstall privileges for this user</property>
+            <property name="subtitle" translatable="yes">Setup a privileged script and give user access via polkit</property>
+            <child>
+              <object class="GtkSwitch" id="install_policy_switch">
+                <property name="valign">center</property>
               </object>
-            </property>
-            <property name="tab">
-              <object class="GtkLabel">
-                <property name="label" translatable="yes">Install</property>
-              </object>
-            </property>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkNotebookPage">
-            <property name="position">1</property>
-            <property name="child">
-              <object class="GtkBox">
+          <object class="AdwPreferencesRow">
+            <property name="title" translatable="yes">Install output</property>
+            <child>
+              <object class="GtkScrolledWindow">
                 <property name="focusable">1</property>
-                <property name="orientation">vertical</property>
-                <property name="spacing">5</property>
+                <property name="vadjustment">installer_scrollbar_adjustment</property>
+                <property name="min-content-height">350</property>
                 <child>
-                  <object class="GtkListBox">
+                  <object class="GtkTextView">
                     <property name="focusable">1</property>
-                    <property name="margin-start">10</property>
-                    <property name="margin-end">10</property>
-                    <property name="margin-top">10</property>
-                    <property name="margin-bottom">10</property>
-                    <property name="selection-mode">none</property>
-                    <child>
-                      <object class="GtkListBoxRow">
-                        <property name="focusable">1</property>
-                        <property name="child">
-                          <object class="GtkBox">
-                            <property name="focusable">1</property>
-                            <property name="spacing">5</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="hexpand">1</property>
-                                <property name="halign">start</property>
-                                <property name="label" translatable="yes">Use mode</property>
-                                <property name="use-markup">1</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkComboBoxText" id="shutdown_mode_combo">
-                                <property name="focusable">1</property>
-                                <property name="active">0</property>
-                                <items>
-                                  <item id="poweroff">Shutdown</item>
-                                  <item id="suspend">Suspend</item>
-                                  <item id="reboot">Reboot</item>
-                                  <item id="DO NOT EDIT">(replaced in code)</item>
-                                </items>
-                              </object>
-                            </child>
-                          </object>
-                        </property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkListBoxRow">
-                        <property name="focusable">1</property>
-                        <property name="child">
-                          <object class="GtkBox">
-                            <property name="focusable">1</property>
-                            <property name="spacing">5</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="hexpand">1</property>
-                                <property name="tooltip-text" translatable="yes">persistent shutdown or reboot by using &apos;shutdown -P/-r&apos; command</property>
-                                <property name="halign">start</property>
-                                <property name="label" translatable="yes">Toggle root shutdown with shutdown timer</property>
-                                <property name="use-markup">1</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkSwitch" id="root_mode_switch">
-                                <property name="halign">center</property>
-                                <property name="focusable">1</property>
-                              </object>
-                            </child>
-                          </object>
-                        </property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkListBox">
-                    <property name="focusable">1</property>
-                    <property name="margin-start">10</property>
-                    <property name="margin-end">10</property>
-                    <property name="margin-top">10</property>
-                    <property name="margin-bottom">10</property>
-                    <property name="selection-mode">none</property>
-                    <child>
-                      <object class="GtkListBoxRow">
-                        <property name="focusable">1</property>
-                        <property name="child">
-                          <object class="GtkBox">
-                            <property name="focusable">1</property>
-                            <property name="orientation">vertical</property>
-                            <property name="spacing">5</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="vexpand">1</property>
-                                <property name="halign">start</property>
-                                <property name="label" translatable="yes">Shutdown slider position (in &amp;#37;)</property>
-                                <property name="use-markup">1</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkScale">
-                                <property name="draw-value">1</property>
-                                <property name="focusable">1</property>
-                                <property name="adjustment">shutdown_slider_adjustment</property>
-                                <property name="show-fill-level">1</property>
-                                <property name="round-digits">0</property>
-                                <property name="digits">0</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkSpinButton" id="slider_spinbutton">
-                                <property name="valign">center</property>
-                                <property name="focusable">1</property>
-                                <property name="halign">end</property>
-                                <property name="adjustment">shutdown_slider_adjustment</property>
-                                <property name="climb-rate">1</property>
-                                <property name="snap-to-ticks">1</property>
-                                <property name="numeric">1</property>
-                                <property name="update-policy">if-valid</property>
-                              </object>
-                            </child>
-                          </object>
-                        </property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkListBoxRow">
-                        <property name="focusable">1</property>
-                        <property name="child">
-                          <object class="GtkBox">
-                            <property name="spacing">5</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="hexpand">1</property>
-                                <property name="halign">start</property>
-                                <property name="label" translatable="yes">Non-linear scaling or 0 to disable</property>
-                                <property name="use-markup">1</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkSpinButton">
-                                <property name="focusable">1</property>
-                                <property name="adjustment">non_linear_shutdown_slider_decimal</property>
-                                <property name="climb-rate">1</property>
-                                <property name="digits">3</property>
-                                <property name="snap-to-ticks">1</property>
-                                <property name="numeric">1</property>
-                                <property name="update-policy">if-valid</property>
-                                <property name="value">120</property>
-                              </object>
-                            </child>
-                          </object>
-                        </property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkListBoxRow">
-                        <property name="focusable">1</property>
-                        <property name="child">
-                          <object class="GtkBox">
-                            <property name="focusable">1</property>
-                            <property name="spacing">5</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="hexpand">1</property>
-                                <property name="halign">start</property>
-                                <property name="label" translatable="yes">Maximum shutdown timer value (in minutes)</property>
-                                <property name="use-markup">1</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkSpinButton" id="max_timer_spinbutton">
-                                <property name="focusable">1</property>
-                                <property name="adjustment">shutdown_max_timer_adjustment</property>
-                                <property name="climb-rate">1</property>
-                                <property name="snap-to-ticks">1</property>
-                                <property name="numeric">1</property>
-                                <property name="update-policy">if-valid</property>
-                                <property name="value">120</property>
-                              </object>
-                            </child>
-                          </object>
-                        </property>
-                      </object>
-                    </child>
+                    <property name="top-margin">5</property>
+                    <property name="editable">0</property>
+                    <property name="wrap-mode">char</property>
+                    <property name="cursor-visible">0</property>
+                    <property name="buffer">install_log_textbuffer</property>
+                    <property name="accepts-tab">0</property>
+                    <property name="monospace">1</property>
                   </object>
                 </child>
               </object>
-            </property>
-            <property name="tab">
-              <object class="GtkLabel">
-                <property name="label" translatable="yes">Shutdown</property>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="AdwPreferencesPage" id="shutdowntimer_prefs_shutdown">
+    <property name="name">shutdowntimer-prefs-page</property>
+    <property name="title" translatable="yes">Shutdown</property>
+    <property name="icon-name">preferences-system-time-symbolic</property>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">Timer Action</property>
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Use mode</property>
+            <property name="subtitle" translatable="yes">Mode to use for timer action</property>
+            <child>
+              <object class="GtkComboBoxText" id="shutdown_mode_combo">
+                <property name="valign">center</property>
+                <property name="active">0</property>
+                <items>
+                  <item id="poweroff">Shutdown</item>
+                  <item id="suspend">Suspend</item>
+                  <item id="reboot">Reboot</item>
+                  <item id="DO NOT EDIT">(replaced in code)</item>
+                </items>
               </object>
-            </property>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkNotebookPage">
-            <property name="position">2</property>
-            <property name="child">
-              <object class="GtkBox">
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Toggle root shutdown with shutdown timer</property>
+            <property name="subtitle" translatable="yes">persistent shutdown or reboot by using &apos;shutdown -P/-r&apos; command</property>
+            <child>
+              <object class="GtkSwitch" id="root_mode_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">Timer Input</property>
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Shutdown slider position (in &amp;#37;)</property>
+            <child>
+              <object class="GtkSpinButton" id="shutdown_slider_spinbutton">
                 <property name="focusable">1</property>
-                <property name="orientation">vertical</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkListBox">
-                    <property name="focusable">1</property>
-                    <property name="margin-start">10</property>
-                    <property name="margin-end">10</property>
-                    <property name="margin-top">10</property>
-                    <property name="margin-bottom">10</property>
-                    <property name="selection-mode">none</property>
-                    <child>
-                      <object class="GtkListBoxRow">
-                        <property name="focusable">1</property>
-                        <property name="child">
-                          <object class="GtkBox">
-                            <property name="focusable">1</property>
-                            <property name="spacing">5</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="hexpand">1</property>
-                                <property name="halign">start</property>
-                                <property name="label" translatable="yes">Toggle wake with shutdown timer</property>
-                                <property name="use-markup">1</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkSwitch" id="auto_wake_switch">
-                                <property name="halign">center</property>
-                                <property name="focusable">1</property>
-                              </object>
-                            </child>
-                          </object>
-                        </property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkListBox">
-                    <property name="focusable">1</property>
-                    <property name="margin-start">10</property>
-                    <property name="margin-end">10</property>
-                    <property name="margin-top">10</property>
-                    <property name="margin-bottom">10</property>
-                    <property name="selection-mode">none</property>
-                    <child>
-                      <object class="GtkListBoxRow">
-                        <property name="focusable">1</property>
-                        <property name="child">
-                          <object class="GtkBox">
-                            <property name="focusable">1</property>
-                            <property name="orientation">vertical</property>
-                            <property name="spacing">5</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="vexpand">1</property>
-                                <property name="halign">start</property>
-                                <property name="label" translatable="yes">Wake slider position (in &amp;#37;)</property>
-                                <property name="use-markup">1</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkScale">
-                                <property name="draw-value">1</property>
-                                <property name="focusable">1</property>
-                                <property name="adjustment">wake_slider_adjustment</property>
-                                <property name="show-fill-level">1</property>
-                                <property name="round-digits">0</property>
-                                <property name="digits">0</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkSpinButton" id="wake_slider_spinbutton">
-                                <property name="valign">center</property>
-                                <property name="focusable">1</property>
-                                <property name="halign">end</property>
-                                <property name="adjustment">wake_slider_adjustment</property>
-                                <property name="climb-rate">1</property>
-                                <property name="snap-to-ticks">1</property>
-                                <property name="numeric">1</property>
-                                <property name="update-policy">if-valid</property>
-                              </object>
-                            </child>
-                          </object>
-                        </property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkListBoxRow">
-                        <property name="focusable">1</property>
-                        <property name="child">
-                          <object class="GtkBox">
-                            <property name="spacing">5</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="hexpand">1</property>
-                                <property name="halign">start</property>
-                                <property name="label" translatable="yes">Non-linear scaling or 0 to disable</property>
-                                <property name="use-markup">1</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkSpinButton">
-                                <property name="focusable">1</property>
-                                <property name="adjustment">non_linear_wake_slider_decimal</property>
-                                <property name="climb-rate">1</property>
-                                <property name="digits">3</property>
-                                <property name="snap-to-ticks">1</property>
-                                <property name="numeric">1</property>
-                                <property name="update-policy">if-valid</property>
-                                <property name="value">5</property>
-                              </object>
-                            </child>
-                          </object>
-                        </property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkListBoxRow">
-                        <property name="focusable">1</property>
-                        <property name="child">
-                          <object class="GtkBox">
-                            <property name="focusable">1</property>
-                            <property name="spacing">5</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="hexpand">1</property>
-                                <property name="halign">start</property>
-                                <property name="label" translatable="yes">Maximum wake timer value (in minutes)</property>
-                                <property name="use-markup">1</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkSpinButton" id="wake_max_timer_spinbutton">
-                                <property name="focusable">1</property>
-                                <property name="adjustment">wake_max_timer_adjustment</property>
-                                <property name="climb-rate">1</property>
-                                <property name="snap-to-ticks">1</property>
-                                <property name="numeric">1</property>
-                                <property name="update-policy">if-valid</property>
-                                <property name="value">120</property>
-                              </object>
-                            </child>
-                          </object>
-                        </property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
+                <property name="valign">center</property>
+                <property name="adjustment">shutdown_slider_adjustment</property>
+                <property name="climb-rate">1</property>
+                <property name="snap-to-ticks">1</property>
+                <property name="numeric">1</property>
+                <property name="update-policy">if-valid</property>
               </object>
-            </property>
-            <property name="tab">
-              <object class="GtkLabel">
-                <property name="label" translatable="yes">Wake</property>
-              </object>
-            </property>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkNotebookPage">
-            <property name="position">3</property>
-            <property name="child">
-              <object class="GtkListBox">
+          <object class="AdwPreferencesRow">
+            <property name="title" translatable="yes">Shutdown slider position (in &amp;#37;)</property>
+            <child>
+              <object class="GtkScale">
                 <property name="focusable">1</property>
-                <property name="margin-start">10</property>
-                <property name="margin-end">10</property>
-                <property name="margin-top">10</property>
-                <property name="margin-bottom">10</property>
-                <property name="selection-mode">none</property>
-                <child>
-                  <object class="GtkListBoxRow">
-                    <property name="focusable">1</property>
-                    <property name="child">
-                      <object class="GtkBox">
-                        <property name="focusable">1</property>
-                        <property name="spacing">5</property>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="hexpand">1</property>
-                            <property name="halign">start</property>
-                            <property name="label" translatable="yes">Show settings button</property>
-                            <property name="use-markup">1</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkSwitch" id="show_settings_switch">
-                            <property name="halign">center</property>
-                          </object>
-                        </child>
-                      </object>
-                    </property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkListBoxRow">
-                    <property name="focusable">1</property>
-                    <property name="child">
-                      <object class="GtkBox">
-                        <property name="focusable">1</property>
-                        <property name="orientation">vertical</property>
-                        <property name="spacing">3</property>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="tooltip-text" translatable="yes">Comma-separated shutdown modes which are shown in the popup menu.</property>
-                            <property name="halign">start</property>
-                            <property name="label" translatable="yes">Show shutdown items</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkEntry" id="show_shutdown_mode_entry">
-                            <property name="focusable">1</property>
-                            <property name="buffer">show_shutdown_mode_buffer</property>
-                            <property name="placeholder-text">poweroff, reboot, suspend</property>
-                          </object>
-                        </child>
-                      </object>
-                    </property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkListBoxRow">
-                    <property name="focusable">1</property>
-                    <property name="child">
-                      <object class="GtkBox">
-                        <property name="focusable">1</property>
-                        <property name="spacing">5</property>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="hexpand">1</property>
-                            <property name="halign">start</property>
-                            <property name="label" translatable="yes">Show shutdown slider</property>
-                            <property name="use-markup">1</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkSwitch" id="show_shutdown_slider_switch">
-                            <property name="halign">center</property>
-                            <property name="focusable">1</property>
-                          </object>
-                        </child>
-                      </object>
-                    </property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkListBoxRow">
-                    <property name="focusable">1</property>
-                    <property name="child">
-                      <object class="GtkBox">
-                        <property name="focusable">1</property>
-                        <property name="spacing">5</property>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="hexpand">1</property>
-                            <property name="halign">start</property>
-                            <property name="label" translatable="yes">Show notification text boxes</property>
-                            <property name="use-markup">1</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkSwitch" id="show_textboxes_switch">
-                            <property name="halign">center</property>
-                            <property name="focusable">1</property>
-                          </object>
-                        </child>
-                      </object>
-                    </property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkListBoxRow">
-                    <property name="focusable">1</property>
-                    <property name="child">
-                      <object class="GtkBox">
-                        <property name="spacing">5</property>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="hexpand">1</property>
-                            <property name="halign">start</property>
-                            <property name="label" translatable="yes">Show wake items</property>
-                            <property name="use-markup">1</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkSwitch" id="show_wake_items_switch">
-                            <property name="halign">center</property>
-                            <property name="focusable">1</property>
-                          </object>
-                        </child>
-                      </object>
-                    </property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkListBoxRow">
-                    <property name="focusable">1</property>
-                    <property name="child">
-                      <object class="GtkBox">
-                        <property name="spacing">5</property>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="hexpand">1</property>
-                            <property name="halign">start</property>
-                            <property name="label" translatable="yes">Show wake slider</property>
-                            <property name="use-markup">1</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkSwitch" id="show_wake_slider_switch">
-                            <property name="halign">center</property>
-                            <property name="focusable">1</property>
-                          </object>
-                        </child>
-                      </object>
-                    </property>
-                  </object>
-                </child>
+                <property name="valign">center</property>
+                <property name="draw-value">1</property>
+                <property name="adjustment">shutdown_slider_adjustment</property>
+                <property name="show-fill-level">1</property>
+                <property name="round-digits">0</property>
+                <property name="digits">0</property>
               </object>
-            </property>
-            <property name="tab">
-              <object class="GtkLabel">
-                <property name="label" translatable="yes">Display</property>
-              </object>
-            </property>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkNotebookPage">
-            <property name="position">4</property>
-            <property name="child">
-              <object class="GtkListBox">
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Non-linear scaling or 0 to disable</property>
+            <child>
+              <object class="GtkSpinButton">
                 <property name="focusable">1</property>
-                <property name="margin-start">10</property>
-                <property name="margin-end">10</property>
-                <property name="margin-top">10</property>
-                <property name="margin-bottom">10</property>
-                <property name="selection-mode">none</property>
-                <child>
-                  <object class="GtkListBoxRow">
-                    <property name="focusable">1</property>
-                    <property name="child">
-                      <object class="GtkBox">
-                        <property name="focusable">1</property>
-                        <property name="spacing">5</property>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="hexpand">1</property>
-                            <property name="halign">start</property>
-                            <property name="label" translatable="yes">Enable check</property>
-                            <property name="use-markup">1</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkSwitch" id="enable_check_command_switch">
-                            <property name="halign">center</property>
-                            <property name="focusable">1</property>
-                          </object>
-                        </child>
-                      </object>
-                    </property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkListBoxRow" id="textview_parent_listboxrow">
-                    <property name="focusable">1</property>
-                    <property name="child">
-                      <object class="GtkBox">
-                        <property name="focusable">1</property>
-                        <property name="orientation">vertical</property>
-                        <property name="spacing">3</property>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="tooltip-text" translatable="yes">Script is run in a bash user shell after timer activates.</property>
-                            <property name="halign">start</property>
-                            <property name="label" translatable="yes">Proceed after timer is done only if this script terminates successfully:</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkScrolledWindow">
-                            <property name="focusable">1</property>
-                            <property name="min-content-width">500</property>
-                            <property name="min-content-height">250</property>
-                            <property name="child">
-                              <object class="GtkTextView" id="check_command_entry">
-                                <property name="focusable">1</property>
-                                <property name="buffer">check_command_textbuffer</property>
-                                <property name="monospace">1</property>
-                              </object>
-                            </property>
-                          </object>
-                        </child>
-                      </object>
-                    </property>
-                  </object>
-                </child>
+                <property name="valign">center</property>
+                <property name="adjustment">non_linear_shutdown_slider_decimal</property>
+                <property name="climb-rate">1</property>
+                <property name="digits">3</property>
+                <property name="snap-to-ticks">1</property>
+                <property name="numeric">1</property>
+                <property name="update-policy">if-valid</property>
+                <property name="value">120</property>
               </object>
-            </property>
-            <property name="tab">
-              <object class="GtkLabel">
-                <property name="label" translatable="yes">Check</property>
-              </object>
-            </property>
+            </child>
           </object>
         </child>
-        <layout>
-          <property name="column">0</property>
-          <property name="row">0</property>
-        </layout>
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Maximum shutdown timer value (in minutes)</property>
+            <child>
+              <object class="GtkSpinButton" id="shutdown_max_timer_spinbutton">
+                <property name="focusable">1</property>
+                <property name="valign">center</property>
+                <property name="adjustment">shutdown_max_timer_adjustment</property>
+                <property name="climb-rate">1</property>
+                <property name="snap-to-ticks">1</property>
+                <property name="numeric">1</property>
+                <property name="update-policy">if-valid</property>
+                <property name="value">120</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="AdwPreferencesPage" id="shutdowntimer_prefs_wake">
+    <property name="name">shutdowntimer-prefs-wake</property>
+    <property name="title" translatable="yes">Wake</property>
+    <property name="icon-name">alarm-symbolic</property>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">Timer Action</property>
+        <child>
+          <object class="AdwActionRow">
+            <property name="focusable">1</property>
+            <property name="title" translatable="yes">Toggle wake with timer action</property>
+            <child>
+              <object class="GtkSwitch" id="auto_wake_switch">
+                <property name="focusable">1</property>
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">Timer Input</property>
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Wake slider position (in &amp;#37;)</property>
+            <child>
+              <object class="GtkSpinButton" id="wake_slider_spinbutton">
+                <property name="focusable">1</property>
+                <property name="valign">center</property>
+                <property name="adjustment">wake_slider_adjustment</property>
+                <property name="climb-rate">1</property>
+                <property name="snap-to-ticks">1</property>
+                <property name="numeric">1</property>
+                <property name="update-policy">if-valid</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwPreferencesRow">
+            <property name="title" translatable="yes">Wake slider position (in &amp;#37;)</property>
+            <child>
+              <object class="GtkScale">
+                <property name="focusable">1</property>
+                <property name="valign">center</property>
+                <property name="draw-value">1</property>
+                <property name="adjustment">wake_slider_adjustment</property>
+                <property name="show-fill-level">1</property>
+                <property name="round-digits">0</property>
+                <property name="digits">0</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Non-linear scaling or 0 to disable</property>
+            <child>
+              <object class="GtkSpinButton">
+                <property name="focusable">1</property>
+                <property name="valign">center</property>
+                <property name="adjustment">non_linear_wake_slider_decimal</property>
+                <property name="climb-rate">1</property>
+                <property name="digits">3</property>
+                <property name="snap-to-ticks">1</property>
+                <property name="numeric">1</property>
+                <property name="update-policy">if-valid</property>
+                <property name="value">120</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Maximum wake timer value (in minutes)</property>
+            <child>
+              <object class="GtkSpinButton" id="wake_max_timer_spinbutton">
+                <property name="focusable">1</property>
+                <property name="valign">center</property>
+                <property name="adjustment">wake_max_timer_adjustment</property>
+                <property name="climb-rate">1</property>
+                <property name="snap-to-ticks">1</property>
+                <property name="numeric">1</property>
+                <property name="update-policy">if-valid</property>
+                <property name="value">120</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="AdwPreferencesPage" id="shutdowntimer_prefs_display">
+    <property name="name">shutdowntimer-prefs-display</property>
+    <property name="title" translatable="yes">Display</property>
+    <property name="icon-name">preferences-color-symbolic</property>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">General</property>
+        <child>
+          <object class="AdwActionRow">
+            <property name="focusable">1</property>
+            <property name="title" translatable="yes">Show settings button</property>
+            <child>
+              <object class="GtkSwitch" id="show_settings_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow">
+            <property name="focusable">1</property>
+            <property name="title" translatable="yes">Show notification text boxes</property>
+            <child>
+              <object class="GtkSwitch" id="show_textboxes_switch">
+                <property name="valign">center</property>
+                <property name="focusable">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">Shutdown</property>
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Show shutdown items</property>
+            <property name="subtitle" translatable="yes">Comma-separated shutdown modes which are shown in the popup menu.</property>
+          </object>
+        </child>
+        <child>
+          <object class="AdwPreferencesRow">
+            <property name="title" translatable="yes">Show shutdown items</property>
+            <child>
+              <object class="GtkEntry" id="show_shutdown_mode_entry">
+                <property name="valign">center</property>
+                <property name="buffer">show_shutdown_mode_buffer</property>
+                <property name="placeholder-text">poweroff, reboot, suspend</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow">
+            <property name="focusable">1</property>
+            <property name="title" translatable="yes">Show shutdown slider</property>
+            <child>
+              <object class="GtkSwitch" id="show_shutdown_slider_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">Wake</property>
+        <child>
+          <object class="AdwActionRow">
+            <property name="focusable">1</property>
+            <property name="title" translatable="yes">Show wake items</property>
+            <child>
+              <object class="GtkSwitch" id="show_wake_items_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow">
+            <property name="focusable">1</property>
+            <property name="title" translatable="yes">Show wake slider</property>
+            <child>
+              <object class="GtkSwitch" id="show_wake_slider_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="AdwPreferencesPage" id="shutdowntimer_prefs_check">
+    <property name="name">shutdowntimer-prefs-check</property>
+    <property name="title" translatable="yes">Check</property>
+    <property name="icon-name">emblem-ok-symbolic</property>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <child>
+          <object class="AdwActionRow">
+            <property name="focusable">1</property>
+            <property name="title" translatable="yes">Enable check</property>
+            <property name="subtitle" translatable="yes">Script is run in a bash user shell after timer activates. Timer action proceeds if check terminates successfully.</property>
+            <child>
+              <object class="GtkSwitch" id="enable_check_command_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwPreferencesRow">
+            <property name="title" translatable="yes">Check script</property>
+            <child>
+              <object class="GtkScrolledWindow">
+                <property name="focusable">1</property>
+                <property name="min-content-height">350</property>
+                <child>
+                  <object class="GtkTextView">
+                    <property name="focusable">1</property>
+                    <property name="top-margin">5</property>
+                    <property name="buffer">check_command_textbuffer</property>
+                    <property name="monospace">1</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
       </object>
     </child>
   </object>

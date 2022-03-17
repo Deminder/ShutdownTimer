@@ -19,47 +19,61 @@ function init() {
 }
 
 const templateComponents = {
-  'shutdown-max-timer': 'adjustment',
-  'shutdown-slider': 'adjustment',
-  'non-linear-shutdown-slider': 'decimal',
-  'show-settings': 'switch',
-  'root-mode': 'switch',
-  'show-shutdown-mode': 'buffer',
-  'show-shutdown-slider': 'switch',
-  'show-textboxes': 'switch',
-  'check-command': 'textbuffer',
-  'enable-check-command': 'switch',
-  'shutdown-mode': 'combo',
-  'auto-wake': 'switch',
-  'wake-max-timer': 'adjustment',
-  'wake-slider': 'adjustment',
-  'non-linear-wake-slider': 'decimal',
-  'show-wake-slider': 'switch',
-  'show-wake-items': 'switch',
+  shutdown: {
+    'shutdown-mode': 'combo',
+    'root-mode': 'switch',
+    'shutdown-max-timer': 'adjustment',
+    'shutdown-slider': 'adjustment',
+    'non-linear-shutdown-slider': 'decimal',
+  },
+  wake: {
+    'auto-wake': 'switch',
+    'wake-max-timer': 'adjustment',
+    'wake-slider': 'adjustment',
+    'non-linear-wake-slider': 'decimal',
+  },
+  display: {
+    'show-settings': 'switch',
+    'show-shutdown-mode': 'buffer',
+    'show-shutdown-slider': 'switch',
+    'show-textboxes': 'switch',
+    'show-wake-slider': 'switch',
+    'show-wake-items': 'switch',
+  },
+  check: {
+    'check-command': 'textbuffer',
+    'enable-check-command': 'switch',
+  },
 };
 
-function guiIdle(page) {
+function _guiIdle(idleSourceIds) {
   return new Promise((resolve, reject) => {
     try {
       const sourceId = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
         resolve();
-        delete page._idleSourceIds[sourceId];
+        delete idleSourceIds[sourceId];
         return GLib.SOURCE_REMOVE;
       });
-      page._idleSourceIds[sourceId] = 1;
+      idleSourceIds[sourceId] = 1;
     } catch (err) {
       reject(err);
     }
   });
 }
 
-function init_page(builder) {
-  const settings = ExtensionUtils.getSettings();
-  const handlers = [];
-  const settingsHandlerIds = [];
-
-  const page = builder.get_object('shutdowntimer_prefs_page');
-  page._idleSourceIds = {};
+function init_page(
+  pageId,
+  builder,
+  settings,
+  handlers,
+  settingsHandlerIds,
+  guiIdle
+) {
+  const page = builder.get_object(pageId);
+  const pageName = pageId.split('_').at(-1);
+  if (!page) {
+    throw new Error(`${pageId} not found!`);
+  }
 
   const connectFuncs = {
     adjustment: [
@@ -164,21 +178,11 @@ function init_page(builder) {
     settingsHandlerIds.push(settingsHandlerId);
   };
 
-  const notebook = builder.get_object('main_notebook');
-  notebook.set_current_page(
-    settings.get_int('preferences-selected-page-value')
-  );
-  const notebookHandlerId = notebook.connect(
-    'switch-page',
-    (_nb, _pg, page_num) => {
-      settings.set_int('preferences-selected-page-value', page_num);
+  if (pageName in templateComponents) {
+    for (const [k, v] of Object.entries(templateComponents[pageName])) {
+      connect_comp(k, v);
     }
-  );
-  handlers.push([notebook, notebookHandlerId]);
-
-  Object.entries(templateComponents).forEach(([k, v]) => {
-    connect_comp(k, v);
-  });
+  }
 
   const lineIter = (buffer, lineIndex) => {
     const [ok, iter] = buffer.get_iter_at_line(lineIndex);
@@ -187,83 +191,124 @@ function init_page(builder) {
     }
     return iter;
   };
-  // check command textbuffer
 
-  const checkCommandBuffer = builder.get_object('check_command_textbuffer');
-  const commentTag = new Gtk.TextTag({ foreground: 'grey' });
-  checkCommandBuffer.get_tag_table().add(commentTag);
-  const apply_comment_tags = b => {
-    b.remove_all_tags(b.get_start_iter(), b.get_end_iter());
-    const lc = b.get_line_count();
-    for (let i = 0; i < lc; i++) {
-      const startIter = lineIter(b, i);
-      const endIter = lc === i + 1 ? b.get_end_iter() : lineIter(b, i + 1);
-      const line = b.get_text(startIter, endIter, false);
-      if (line.trimLeft().startsWith('#')) {
-        b.apply_tag(commentTag, startIter, endIter);
+  if (pageName === 'check') {
+    // check command textbuffer
+    const checkCommandBuffer = builder.get_object('check_command_textbuffer');
+    const commentTag = new Gtk.TextTag({ foreground: 'grey' });
+    checkCommandBuffer.get_tag_table().add(commentTag);
+    const apply_comment_tags = b => {
+      b.remove_all_tags(b.get_start_iter(), b.get_end_iter());
+      const lc = b.get_line_count();
+      for (let i = 0; i < lc; i++) {
+        const startIter = lineIter(b, i);
+        const endIter = lc === i + 1 ? b.get_end_iter() : lineIter(b, i + 1);
+        const line = b.get_text(startIter, endIter, false);
+        if (line.trimLeft().startsWith('#')) {
+          b.apply_tag(commentTag, startIter, endIter);
+        }
       }
-    }
-  };
-  const ccBufferHandlerId = checkCommandBuffer.connect(
-    'changed',
-    apply_comment_tags
-  );
-  apply_comment_tags(checkCommandBuffer);
-  handlers.push([checkCommandBuffer, ccBufferHandlerId]);
-
-  // install log textbuffer updates
-  const logTextBuffer = builder.get_object('install_log_textbuffer');
-  const scrollAdj = builder.get_object('installer_scrollbar_adjustment');
-  const errorTag = new Gtk.TextTag({ foreground: 'red' });
-  const successTag = new Gtk.TextTag({ foreground: 'green' });
-  logTextBuffer.get_tag_table().add(errorTag);
-  logTextBuffer.get_tag_table().add(successTag);
-  const appendLogLine = line => {
-    line = ['[', '#'].includes(line[0]) ? line : ' ' + line;
-    logTextBuffer.insert(logTextBuffer.get_end_iter(), line + '\n', -1);
-    const lastLineIndex = logTextBuffer.get_line_count() - 1;
-    const applyTag = tag => {
-      logTextBuffer.apply_tag(
-        tag,
-        lineIter(logTextBuffer, lastLineIndex - 1),
-        lineIter(logTextBuffer, lastLineIndex)
-      );
     };
-    if (line.startsWith('# ')) {
-      applyTag(errorTag);
-    } else if (line.endsWith('🟢')) {
-      applyTag(successTag);
-    }
-    guiIdle(page)
-      .then(() => {
-        scrollAdj.set_value(1000000);
-      })
-      .catch(() => {});
-  };
+    const ccBufferHandlerId = checkCommandBuffer.connect(
+      'changed',
+      apply_comment_tags
+    );
+    apply_comment_tags(checkCommandBuffer);
+    handlers.push([checkCommandBuffer, ccBufferHandlerId]);
+  } else if (pageName === 'install') {
+    // install log textbuffer updates
+    const logTextBuffer = builder.get_object('install_log_textbuffer');
+    const scrollAdj = builder.get_object('installer_scrollbar_adjustment');
+    const errorTag = new Gtk.TextTag({ foreground: 'red' });
+    const successTag = new Gtk.TextTag({ foreground: 'green' });
+    logTextBuffer.get_tag_table().add(errorTag);
+    logTextBuffer.get_tag_table().add(successTag);
+    const appendLogLine = line => {
+      line = ['[', '#'].includes(line[0]) ? line : ' ' + line;
+      logTextBuffer.insert(logTextBuffer.get_end_iter(), line + '\n', -1);
+      const lastLineIndex = logTextBuffer.get_line_count() - 1;
+      const applyTag = tag => {
+        logTextBuffer.apply_tag(
+          tag,
+          lineIter(logTextBuffer, lastLineIndex - 1),
+          lineIter(logTextBuffer, lastLineIndex)
+        );
+      };
+      if (line.startsWith('# ')) {
+        applyTag(errorTag);
+      } else if (line.endsWith('🟢')) {
+        applyTag(successTag);
+      }
+      guiIdle()
+        .then(() => {
+          scrollAdj.set_value(1000000);
+        })
+        .catch(() => {});
+    };
 
-  const installSwitch = builder.get_object('install_policy_switch');
-  installSwitch.set_active(Install.checkInstalled());
-  const switchHandlerId = installSwitch.connect('notify::active', () =>
-    Install.installAction(
-      installSwitch.get_active() ? 'install' : 'uninstall',
-      message =>
-        guiIdle(page)
-          .then(() => message.split('\n').forEach(appendLogLine))
-          .catch(err => {
-            logDebug(`${err}...\nMissed message: ${message}`);
-          })
+    const installSwitch = builder.get_object('install_policy_switch');
+    installSwitch.set_active(Install.checkInstalled());
+    const switchHandlerId = installSwitch.connect('notify::active', () =>
+      Install.installAction(
+        installSwitch.get_active() ? 'install' : 'uninstall',
+        message =>
+          guiIdle()
+            .then(() => message.split('\n').forEach(appendLogLine))
+            .catch(err => {
+              logDebug(`${err}...\nMissed message: ${message}`);
+            })
+      )
+    );
+    handlers.push([installSwitch, switchHandlerId]);
+
+    guiIdle().then(() => {
+      // clear log
+      logTextBuffer.set_text('', -1);
+    });
+  }
+  return page;
+}
+
+function fillPreferencesWindow(window) {
+  const builder = Gtk.Builder.new();
+  builder.add_from_file(
+    Me.dir.get_child('ui').get_child('prefs.ui').get_path()
+  );
+
+  const settings = ExtensionUtils.getSettings();
+  const handlers = [];
+  const settingsHandlerIds = [];
+  const idleSourceIds = {};
+  const pageNames = ['install', 'shutdown', 'wake', 'display', 'check'].map(
+    n => 'shutdowntimer-prefs-' + n
+  );
+  for (const page of pageNames.map(name =>
+    init_page(
+      name.replaceAll('-', '_'),
+      builder,
+      settings,
+      handlers,
+      settingsHandlerIds,
+      () => _guiIdle(idleSourceIds)
+    )
+  )) {
+    window.add(page);
+  }
+  const selPageName =
+    pageNames[settings.get_int('preferences-selected-page-value')];
+  if (selPageName) {
+    window.set_visible_page_name(selPageName);
+  }
+  const pageVisHandlerId = window.connect('notify::visible-page-name', () =>
+    settings.set_int(
+      'preferences-selected-page-value',
+      pageNames.indexOf(window.get_visible_page_name())
     )
   );
-  handlers.push([installSwitch, switchHandlerId]);
-
-  guiIdle(page).then(() => {
-    // clear log
-    logTextBuffer.set_text('', -1);
-  });
-
+  handlers.push([window, pageVisHandlerId]);
   // release all resources on destroy
-  const destroyId = page.connect('destroy', () => {
-    Object.keys(page._idleSourceIds).forEach(sourceId => {
+  const destroyId = window.connect('destroy', () => {
+    Object.keys(idleSourceIds).forEach(sourceId => {
       GLib.Source.remove(sourceId);
     });
     handlers.forEach(([comp, handlerId]) => {
@@ -273,13 +318,6 @@ function init_page(builder) {
       settings.disconnect(handlerId);
     });
     Install.reset();
-    page.disconnect(destroyId);
+    window.disconnect(destroyId);
   });
-  return page;
-}
-
-function fillPreferencesWindow(window) {
-  let builder = Gtk.Builder.new();
-  builder.add_from_file(Me.dir.get_child('ui').get_child('prefs.ui').get_path());
-  window.add(init_page(builder));
 }
