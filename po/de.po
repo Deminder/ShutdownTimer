@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-17 19:32+0100\n"
-"PO-Revision-Date: 2022-03-17 19:40+0100\n"
+"PO-Revision-Date: 2022-03-17 20:22+0100\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: GERMAN Jonatan Zeidler <jonatan_zeidler@gmx.de>\n"
 "Language: de\n"
@@ -263,9 +263,8 @@ msgstr ""
 "Konfiguriere ein privilegiertes Skript und gebe Benutzer Zugriff via Polkit"
 
 #: src/ui/prefs.ui:79
-#, fuzzy
 msgid "Install output"
-msgstr "Installieren"
+msgstr "Ausgabe der Installation"
 
 #: src/ui/prefs.ui:106 src/ui/prefs.ui:343
 msgid "Shutdown"
@@ -282,18 +281,16 @@ msgstr "Verwende Option"
 
 #: src/ui/prefs.ui:114
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:98
-#, fuzzy
 msgid "Mode to use for timer action"
-msgstr "Verwendete Ausschaltoption der Stoppuhr."
+msgstr "Verwendete Ausschaltoption der Stoppuhr"
 
 #: src/ui/prefs.ui:131
 msgid "Toggle root shutdown with shutdown timer"
 msgstr "Schalte die Root-Absicherung zusammen mit der Ausschaltuhr"
 
 #: src/ui/prefs.ui:132
-#, fuzzy
 msgid "Persistent shutdown or reboot by using 'shutdown -P/-r' command"
-msgstr "persistierendes Abschalten oder Neustarten via 'shutdown -P/-r' Befehl"
+msgstr "Persistierendes Abschalten oder Neustarten via 'shutdown -P/-r' Befehl"
 
 #: src/ui/prefs.ui:144 src/ui/prefs.ui:238
 msgid "Timer Input"
@@ -316,7 +313,6 @@ msgid "Wake"
 msgstr "Wecker"
 
 #: src/ui/prefs.ui:225
-#, fuzzy
 msgid "Toggle wake with timer action"
 msgstr "Schalte den Wecker zusammen mit der Ausschaltuhr"
 
@@ -352,9 +348,8 @@ msgstr "Zeige Ausschaltoptionen"
 
 #: src/ui/prefs.ui:347
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:92
-#, fuzzy
 msgid "Comma-separated shutdown modes which are shown in the popup menu"
-msgstr "Kommagetrennt Ausschaltoptionen, die im Menü erscheinen."
+msgstr "Kommagetrennt Ausschaltoptionen, die im Menü erscheinen"
 
 #: src/ui/prefs.ui:365
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:61
@@ -379,18 +374,17 @@ msgid "Enable check"
 msgstr "Verwende Prüfbefehl(e)"
 
 #: src/ui/prefs.ui:413
-#, fuzzy
 msgid ""
 "Script is run in a bash user shell after timer activates. Timer action "
 "proceeds if check terminates successfully."
 msgstr ""
 "Das Skript läuft in einer Bash-Benutzer-Shell nach dem Ablauf der "
-"Ausschaltuhr."
+"Ausschaltuhr. Die Ausschaltaktion wird nur fortgesetzt wenn dieses Skript "
+"erfolgreich terminiert."
 
 #: src/ui/prefs.ui:423
-#, fuzzy
 msgid "Check script"
-msgstr "Prüfe seit"
+msgstr "Prüfskript"
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:7
 msgid "Maximum shutdown time (in minutes)"
