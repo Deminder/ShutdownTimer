@@ -352,11 +352,13 @@ function enable() {
 }
 
 async function maybeCompleteDisable() {
+
   const sleepCancel = new Gio.Cancellable();
-  const changePromise = ScreenSaverAware.screenSaverTurnsActive(3, sleepCancel);
+  const changePromise = ScreenSaverAware.screenSaverTurnsActive(2, sleepCancel);
   let active = await ScreenSaverAware.screenSaverGetActive();
   if (!active) {
     active = await changePromise;
+    active |= Main.screenShield.active || Main.screenShield.locked;
   } else {
     sleepCancel.cancel();
   }
