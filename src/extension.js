@@ -17,6 +17,7 @@ const {
   RootMode,
   Timer,
   Convenience,
+  ScreenSaverAware,
   EndSessionDialogAware,
   CheckCommand,
 } = Me.imports.lib;
@@ -24,7 +25,7 @@ const modeLabel = Me.imports.prefs.modeLabel;
 const { longDurationString, logDebug } = Convenience;
 
 /* IMPORTS */
-const { GLib } = imports.gi;
+const { GLib, Gio } = imports.gi;
 const LoginManager = imports.misc.loginManager;
 
 // screen and main functionality
@@ -255,19 +256,11 @@ function stopSchedule(stopProtection = true) {
   return Promise.resolve();
 }
 
-function startSchedule(maxTimerMinutes, wakeMinutes) {
-  _startSchedule(maxTimerMinutes, wakeMinutes)
-    .then(() => logDebug('sucessfully started schedule'))
-    .catch(e => logError(e, 'failed to start schedule!'));
-}
-
-async function _startSchedule(maxTimerMinutes, wakeMinutes) {
+async function startSchedule(maxTimerMinutes, wakeMinutes) {
   EndSessionDialogAware.unregister();
   if (CheckCommand.maybeCancel()) {
     // cancel running check command
-    try {
-      await RootMode.execCheck(['sleep', '0.1'], null, false);
-    } catch {}
+    await RootMode.execCheck(['sleep', '0.1'], null, false).catch(() => {});
   }
   const seconds = maxTimerMinutes * 60;
   const info = new ScheduleInfo.ScheduleInfo({
@@ -335,6 +328,8 @@ function enable() {
     // starts internal shutdown schedule if ready
     timer = new Timer.Timer(serveInernalSchedule);
 
+    ScreenSaverAware.load();
+
     EndSessionDialogAware.load(stopSchedule);
 
     initialized = true;
@@ -356,14 +351,48 @@ function enable() {
   }
 }
 
+async function maybeCompleteDisable() {
+  const sleepCancel = new Gio.Cancellable();
+  const changePromise = ScreenSaverAware.screenSaverTurnsActive(3, sleepCancel);
+  let active = await ScreenSaverAware.screenSaverGetActive();
+  if (!active) {
+    active = await changePromise;
+  } else {
+    sleepCancel.cancel();
+  }
+  if (!initialized) {
+    throw new Error('Already completely disabled!');
+  }
+  if (shutdownTimerMenu !== undefined) {
+    throw new Error('Extension is enabled. Complete disable aborted!');
+  }
+  if (!active) {
+    // screen saver inactive => the user probably disabled the extension
+
+    if (timer !== undefined) {
+      timer.stopTimer();
+      timer = undefined;
+    }
+    // clear internal schedule and keep root protected schedule
+    stopSchedule(false);
+    ScreenSaverAware.unload();
+    EndSessionDialogAware.unload();
+
+    initialized = false;
+    logDebug('Completly disabled. Screen saver is disabled.');
+  } else {
+    logDebug('Partially disabled. Screen saver is enabled.');
+  }
+}
+
 function disable() {
-  // unlock-dialog required: timer action has to trigger even during unlock-dialog
   Textbox.hideAll();
   if (shutdownTimerMenu !== undefined) {
     shutdownTimerMenu.destroy();
     if (timer !== undefined) {
       timer.setTickCallback(null);
-      timer.stopTimer();
+      // keep sleep process alive
+      timer.stopGLibTimer();
     }
   }
   shutdownTimerMenu = undefined;
@@ -373,10 +402,8 @@ function disable() {
   separator = undefined;
 
   if (initialized) {
-    stopSchedule(false);
-    EndSessionDialogAware.unload();
-
-    initialized = false;
-    logDebug('Disabled ShutdownTimer.');
+    maybeCompleteDisable().catch(error => {
+      logDebug(`Partially disabled. ${error}`);
+    });
   }
 }
