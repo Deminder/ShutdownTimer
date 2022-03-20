@@ -7,19 +7,28 @@
  */
 /* exported showTextbox, hideAll */
 const Main = imports.ui.main;
-const { GLib, St, Clutter } = imports.gi;
+const { St, Clutter } = imports.gi;
+const ExtensionUtils = imports.misc.extensionUtils;
+const Me = ExtensionUtils.getCurrentExtension();
+const { Convenience } = Me.imports.lib;
+const { setTimeout, cancelTimeout } = Convenience;
 let textboxes = [];
+let currentUpdate = null;
 
 // show textbox with message
 function showTextbox(textmsg) {
-  for (let t of textboxes) {
-    if (t.text === textmsg && _cancelTimeout(t)) {
-      // if already displaying message: move to top
-      textboxes.splice(t['_boxIndex'], 1);
-      textboxes.unshift(t);
-      _startFadeout(t);
-      return;
+  const renewedTextboxes = [];
+  textboxes = textboxes.filter(t => {
+    const moveToTop = t.text === textmsg && _cancelTimeout(t);
+    if (moveToTop) {
+      renewedTextboxes.unshift(t);
     }
+    return !moveToTop;
+  });
+  if (renewedTextboxes.length) {
+    textboxes = renewedTextboxes.concat(textboxes);
+    _debouncedUpdate();
+    return;
   }
 
   const textbox = new St.Label({
@@ -28,17 +37,30 @@ function showTextbox(textmsg) {
     opacity: 255,
   });
   Main.uiGroup.add_actor(textbox);
-  textbox['_boxIndex'] = 0;
   textboxes.unshift(textbox);
   _startFadeout(textbox);
+  _debouncedUpdate();
 }
 
-function _reposition() {
+function _debouncedUpdate() {
+  if (currentUpdate === null) {
+    currentUpdate = setTimeout(50, () => {
+      _update();
+      currentUpdate = null;
+    });
+  }
+}
+
+function _update() {
+  textboxes = textboxes.filter(t => {
+    if (t['_hidden']) {
+      Main.uiGroup.remove_actor(t);
+    }
+    return !t['_hidden'];
+  });
   const monitor = Main.layoutManager.primaryMonitor;
   let height_offset = 0;
-  for (let i = 0; i < textboxes.length; i++) {
-    const textbox = textboxes[i];
-    textbox['_boxIndex'] = i;
+  textboxes.forEach((textbox, i) => {
     if (i === 0) {
       height_offset = -textbox.height / 2;
     }
@@ -48,53 +70,41 @@ function _reposition() {
     );
     height_offset += textbox.height + 10;
     if ('_sourceId' in textbox) {
-      textbox.opacity = i === 0 ? 255 : Math.max(
-        25,
-        25 + 230 * (1 - height_offset / (monitor.height / 2))
-      );
+      textbox.opacity =
+        i === 0
+          ? 255
+          : Math.max(25, 25 + 230 * (1 - height_offset / (monitor.height / 2)));
     }
-  }
+  });
 }
 
 function _startFadeout(textbox) {
-  textbox['_sourceId'] = GLib.timeout_add_seconds(
-    GLib.PRIORITY_DEFAULT,
-    3,
-    () => {
-      textbox.ease({
-        opacity: 0,
-        duration: 1000,
-        mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-        onComplete: () => {
-          _removeTextbox(textbox);
-          textboxes.splice(textbox['_boxIndex'], 1);
-          _reposition();
-        },
-      });
-      delete textbox['_sourceId'];
-      return GLib.SOURCE_REMOVE;
-    }
-  );
-  _reposition();
+  textbox['_sourceId'] = setTimeout(3000, () => {
+    textbox.ease({
+      opacity: 0,
+      duration: 1000,
+      mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+      onComplete: () => {
+        textbox['_hidden'] = true;
+        _debouncedUpdate();
+      },
+    });
+    delete textbox['_sourceId'];
+  });
 }
 
 function _cancelTimeout(textbox) {
-  const active = '_sourceId' in textbox;
-  if (active) {
-    GLib.Source.remove(textbox['_sourceId']);
+  const cancelled = cancelTimeout(textbox['_sourceId']);
+  if (cancelled) {
     delete textbox['_sourceId'];
   }
-  return active;
-}
-
-function _removeTextbox(textbox) {
-  _cancelTimeout(textbox);
-  Main.uiGroup.remove_actor(textbox);
+  return cancelled;
 }
 
 function hideAll() {
-  for (let t of textboxes) {
-    _removeTextbox(t);
+  for (const t of textboxes) {
+    _cancelTimeout(t);
+    t['_hidden'] = true;
   }
-  textboxes = [];
+  _debouncedUpdate();
 }

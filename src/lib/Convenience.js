@@ -5,8 +5,9 @@
  * @copyright 2021
  * @license GNU General Public License v3.0
  */
-/* exported MODES, WAKE_MODES, modeLabel, logDebug, proxyPromise, durationString, longDurationString */
+/* exported MODES, WAKE_MODES, modeLabel, logDebug, proxyPromise, durationString, longDurationString, setTimeout, cancelTimeout */
 
+const { GLib } = imports.gi;
 const Gettext = imports.gettext.domain('ShutdownTimer');
 const _ = Gettext.gettext;
 const _n = Gettext.ngettext;
@@ -64,4 +65,18 @@ function longDurationString(minutes, hrFmt, minFmt) {
     parts = [hrFmt(hours).format(hours)].concat(parts);
   }
   return parts.join(' ');
+}
+
+function setTimeout(millis, timeoutFunction) {
+  return GLib.timeout_add(GLib.PRIORITY_DEFAULT, millis, () => {
+    timeoutFunction();
+    return GLib.SOURCE_REMOVE;
+  });
+}
+
+function cancelTimeout(sourceId) {
+  if (sourceId) {
+    GLib.Source.remove(sourceId);
+  }
+  return sourceId;
 }
