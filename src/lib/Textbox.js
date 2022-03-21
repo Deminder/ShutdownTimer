@@ -21,6 +21,7 @@ function showTextbox(textmsg) {
   textboxes = textboxes.filter(t => {
     const moveToTop = t.text === textmsg && _cancelTimeout(t);
     if (moveToTop) {
+      _startFadeout(t);
       renewedTextboxes.unshift(t);
     }
     return !moveToTop;

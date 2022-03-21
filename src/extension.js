@@ -17,15 +17,15 @@ const {
   RootMode,
   Timer,
   Convenience,
-  ScreenSaverAware,
   EndSessionDialogAware,
+  SessionModeAware,
   CheckCommand,
 } = Me.imports.lib;
 const modeLabel = Me.imports.prefs.modeLabel;
 const { longDurationString, logDebug } = Convenience;
 
 /* IMPORTS */
-const { GLib, Gio } = imports.gi;
+const { GLib } = imports.gi;
 const LoginManager = imports.misc.loginManager;
 
 // screen and main functionality
@@ -305,6 +305,54 @@ function onShutdownScheduleChange(info) {
   }
 }
 
+function onSessionModeChange(sessionMode) {
+  logDebug(`sessionMode: ${sessionMode}`);
+  switch (sessionMode) {
+  case 'user':
+    enableForeground();
+    break;
+  case 'unlock-dialog':
+    disableForeground();
+    break;
+  }
+}
+
+function enableForeground() {
+  // add separator line and submenu in status area menu
+  const statusMenu = Main.panel.statusArea['aggregateMenu'];
+  if (separator === undefined) {
+    separator = new PopupMenu.PopupSeparatorMenuItem();
+    statusMenu.menu.addMenuItem(separator);
+  }
+  if (shutdownTimerMenu === undefined) {
+    shutdownTimerMenu = new MenuItem.ShutdownTimer();
+    shutdownTimerMenu.checkRunning = CheckCommand.isChecking();
+    timer.setTickCallback(
+      shutdownTimerMenu._updateShutdownInfo.bind(shutdownTimerMenu)
+    );
+    statusMenu.menu.addMenuItem(shutdownTimerMenu);
+  }
+  logDebug('Enabled foreground.');
+}
+
+function disableForeground() {
+  Textbox.hideAll();
+  if (shutdownTimerMenu !== undefined) {
+    shutdownTimerMenu.destroy();
+    if (timer !== undefined) {
+      timer.setTickCallback(null);
+      // keep sleep process alive
+      timer.stopGLibTimer();
+    }
+  }
+  shutdownTimerMenu = undefined;
+  if (separator !== undefined) {
+    separator.destroy();
+  }
+  separator = undefined;
+  logDebug('Disabled foreground.');
+}
+
 /* EXTENSION MAIN FUNCTIONS */
 function init() {
   // initialize translations
@@ -328,84 +376,28 @@ function enable() {
     // starts internal shutdown schedule if ready
     timer = new Timer.Timer(serveInernalSchedule);
 
-    ScreenSaverAware.load();
-
     EndSessionDialogAware.load(stopSchedule);
+    SessionModeAware.load(onSessionModeChange);
 
     initialized = true;
   }
-
-  // add separator line and submenu in status area menu
-  const statusMenu = Main.panel.statusArea['aggregateMenu'];
-  if (separator === undefined) {
-    separator = new PopupMenu.PopupSeparatorMenuItem();
-    statusMenu.menu.addMenuItem(separator);
-  }
-  if (shutdownTimerMenu === undefined) {
-    shutdownTimerMenu = new MenuItem.ShutdownTimer();
-    shutdownTimerMenu.checkRunning = CheckCommand.isChecking();
-    timer.setTickCallback(
-      shutdownTimerMenu._updateShutdownInfo.bind(shutdownTimerMenu)
-    );
-    statusMenu.menu.addMenuItem(shutdownTimerMenu);
-  }
+  enableForeground();
+  logDebug('Completly enabled.');
 }
 
-async function maybeCompleteDisable() {
-
-  const sleepCancel = new Gio.Cancellable();
-  const changePromise = ScreenSaverAware.screenSaverTurnsActive(2, sleepCancel);
-  let active = await ScreenSaverAware.screenSaverGetActive();
-  if (!active) {
-    active = await changePromise;
-    active |= Main.screenShield.active || Main.screenShield.locked;
-  } else {
-    sleepCancel.cancel();
-  }
-  if (!initialized) {
-    throw new Error('Already completely disabled!');
-  }
-  if (shutdownTimerMenu !== undefined) {
-    throw new Error('Extension is enabled. Complete disable aborted!');
-  }
-  if (!active) {
-    // screen saver inactive => the user probably disabled the extension
-
+function disable() {
+  // unlock-dialog session-mode is required such that the timer action can trigger
+  disableForeground();
+  if (initialized) {
     if (timer !== undefined) {
       timer.stopTimer();
       timer = undefined;
     }
     // clear internal schedule and keep root protected schedule
     stopSchedule(false);
-    ScreenSaverAware.unload();
     EndSessionDialogAware.unload();
+    SessionModeAware.unload();
 
     initialized = false;
-    logDebug('Completly disabled. Screen saver is disabled.');
-  } else {
-    logDebug('Partially disabled. Screen saver is enabled.');
-  }
-}
-
-function disable() {
-  Textbox.hideAll();
-  if (shutdownTimerMenu !== undefined) {
-    shutdownTimerMenu.destroy();
-    if (timer !== undefined) {
-      timer.setTickCallback(null);
-      // keep sleep process alive
-      timer.stopGLibTimer();
-    }
-  }
-  shutdownTimerMenu = undefined;
-  if (separator !== undefined) {
-    separator.destroy();
-  }
-  separator = undefined;
-
-  if (initialized) {
-    maybeCompleteDisable().catch(error => {
-      logDebug(`Partially disabled. ${error}`);
-    });
   }
 }
