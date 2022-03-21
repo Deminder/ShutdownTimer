@@ -102,6 +102,7 @@ function _cancelTimeout(textbox) {
 }
 
 function hideAll() {
+  cancelTimeout(currentUpdate);
   for (const t of textboxes) {
     _cancelTimeout(t);
     t['_hidden'] = true;
