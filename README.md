@@ -16,7 +16,7 @@
 - Timer for _Poweroff_, _Reboot_, _Suspend_
 
   - Options may be reordered or hidden
-  - Disabling the extension leaves a timer process alive. The extension is only completely disabled if the screen saver does not activate within three seconds.
+  - During the unlock-dialog the timer will not stop. (If the extension is disabled or when logging out the timer will stop.)
 
 - Show scheduled shutdown info as _(sys)_
 
