@@ -21,7 +21,7 @@ function showTextbox(textmsg) {
   textboxes = textboxes.filter(t => {
     const moveToTop = t.text === textmsg && _cancelTimeout(t);
     if (moveToTop) {
-      _startFadeout(t);
+      t['_fresh'] = 1;
       renewedTextboxes.unshift(t);
     }
     return !moveToTop;
@@ -35,11 +35,11 @@ function showTextbox(textmsg) {
   const textbox = new St.Label({
     style_class: 'textbox-label',
     text: textmsg,
-    opacity: 255,
+    opacity: 0,
   });
   Main.uiGroup.add_actor(textbox);
+  textbox['_fresh'] = 1;
   textboxes.unshift(textbox);
-  _startFadeout(textbox);
   _debouncedUpdate();
 }
 
@@ -62,6 +62,10 @@ function _update() {
   const monitor = Main.layoutManager.primaryMonitor;
   let height_offset = 0;
   textboxes.forEach((textbox, i) => {
+    if ('_fresh' in textbox) {
+      _startFadeout(textbox);
+      delete textbox['_fresh'];
+    }
     if (i === 0) {
       height_offset = -textbox.height / 2;
     }
