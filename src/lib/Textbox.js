@@ -70,8 +70,8 @@ function _update() {
       height_offset = -textbox.height / 2;
     }
     textbox.set_position(
-      Math.floor(monitor.width / 2 - textbox.width / 2),
-      Math.floor(monitor.height / 2 + height_offset)
+      monitor.x + Math.floor(monitor.width / 2 - textbox.width / 2),
+      monitor.y + Math.floor(monitor.height / 2 + height_offset)
     );
     height_offset += textbox.height + 10;
     if ('_sourceId' in textbox) {

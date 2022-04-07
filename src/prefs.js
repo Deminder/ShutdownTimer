@@ -84,14 +84,6 @@ function init_page(pageId, builder, settings, handlers, guiIdle) {
       });
     }
 
-    if (compId === 'show_shutdown_mode_buffer') {
-      builder
-        .get_object(`${baseId}_entry`)
-        .set_placeholder_text(
-          `${MODES.join(',')} (${MODES.map(modeLabel).join(', ')})`
-        );
-    }
-
     settings.bind(
       settingsName,
       comp,
@@ -104,8 +96,15 @@ function init_page(pageId, builder, settings, handlers, guiIdle) {
       }[component],
       Gio.SettingsBindFlags.DEFAULT
     );
-  };
 
+    if (compId === 'show_shutdown_mode_buffer') {
+      builder
+        .get_object(`${baseId}_entry`)
+        .set_placeholder_text(
+          `${MODES.join(',')} (${MODES.map(modeLabel).join(', ')})`
+        );
+    }
+  };
 
   if (pageName in templateComponents) {
     for (const [k, v] of Object.entries(templateComponents[pageName])) {

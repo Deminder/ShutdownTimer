@@ -83,9 +83,12 @@ var ShutdownTimer = GObject.registerClass(
       _disconnectOnDestroy(this.switcherSettingsButton, [
         [
           'clicked',
-          () => {
+          async () => {
             try {
-              ExtensionUtils.openPrefs();
+              const r = ExtensionUtils.openPrefs();
+              if (r) {
+                await r;
+              }
             } catch {
               logDebug('failed to open preferences!');
             }
