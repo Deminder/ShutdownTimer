@@ -26,9 +26,9 @@
       <description>Unix time in seconds of scheduled shutdown or -1 if disabled.</description>
     </key>
 
-    <key type="i" name="wake-slider-value">
+    <key type="d" name="wake-slider-value">
       <default>70</default>
-      <summary>Wake slider position</summary>
+      <summary>Wake slider position (in percent)</summary>
       <description>Set wake slider position as percent of the maximum time. Must be in range 0 and 100.</description>
     </key>
 
@@ -38,9 +38,9 @@
       <description>Exponential ramp-up for wake time slider</description>
     </key>
 
-    <key type="i" name="shutdown-slider-value">
+    <key type="d" name="shutdown-slider-value">
       <default>70</default>
-      <summary>Shutdown slider position</summary>
+      <summary>Shutdown slider position (in percent)</summary>
       <description>Set shutdown slider position as percent of the maximum time. Must be in range 0 and 100.</description>
     </key>
 

@@ -10,8 +10,14 @@
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const { Convenience, InfoFetcher, ScheduleInfo } = Me.imports.lib;
-const { logDebug, modeLabel, MODES, WAKE_MODES, durationString, longDurationString } =
-  Convenience;
+const {
+  logDebug,
+  modeLabel,
+  MODES,
+  WAKE_MODES,
+  durationString,
+  longDurationString,
+} = Convenience;
 
 const { GObject, GLib, St } = imports.gi;
 
@@ -78,7 +84,11 @@ var ShutdownTimer = GObject.registerClass(
         [
           'clicked',
           () => {
-            ExtensionUtils.openPrefs();
+            try {
+              ExtensionUtils.openPrefs();
+            } catch {
+              logDebug('failed to open preferences!');
+            }
           },
         ],
       ]);
@@ -302,7 +312,7 @@ var ShutdownTimer = GObject.registerClass(
     // update timer value if slider has changed
     _updateSlider(prefix) {
       this.sliders[prefix].value =
-        settings.get_int(prefix + '-slider-value') / 100.0;
+        settings.get_double(prefix + '-slider-value') / 100.0;
     }
 
     _updateSwitchLabel() {
@@ -396,7 +406,7 @@ function init(settingsObj, actions) {
 }
 
 function _getSliderMinutes(prefix) {
-  let sliderValue = settings.get_int(prefix + '-slider-value') / 100.0;
+  let sliderValue = settings.get_double(prefix + '-slider-value') / 100.0;
   const rampUp = settings.get_double(`nonlinear-${prefix}-slider-value`);
   const ramp = x => Math.expm1(rampUp * x) / Math.expm1(rampUp);
   return Math.floor(
@@ -418,7 +428,7 @@ function _disconnectOnDestroy(item, connections) {
 
 function _createSliderItem(settingsPrefix) {
   const sliderValue =
-    settings.get_int(settingsPrefix + '-slider-value') / 100.0;
+    settings.get_double(settingsPrefix + '-slider-value') / 100.0;
   const item = new PopupMenu.PopupBaseMenuItem({ activate: false });
   const sliderIcon = new St.Icon({
     icon_name:
@@ -431,7 +441,10 @@ function _createSliderItem(settingsPrefix) {
     [
       'notify::value',
       () => {
-        settings.set_int(settingsPrefix + '-slider-value', slider.value * 100);
+        settings.set_double(
+          settingsPrefix + '-slider-value',
+          slider.value * 100
+        );
       },
     ],
   ]);

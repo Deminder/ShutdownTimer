@@ -84,15 +84,6 @@ function init_page(pageId, builder, settings, handlers, guiIdle) {
       });
     }
 
-    // init field value
-    ({
-      adjustment: (v, sn) => v.set_value(settings.get_int(sn)),
-      switch: (v, sn) => v.set_active(settings.get_boolean(sn)),
-      textbuffer: (v, sn) => v.set_text(settings.get_string(sn), -1),
-      buffer: (v, sn) => v.set_text(settings.get_string(sn), -1),
-      combo: (v, sn) => v.set_active_id(settings.get_string(sn)),
-    }[component](comp, settingsName));
-
     if (compId === 'show_shutdown_mode_buffer') {
       builder
         .get_object(`${baseId}_entry`)
@@ -114,6 +105,7 @@ function init_page(pageId, builder, settings, handlers, guiIdle) {
       Gio.SettingsBindFlags.DEFAULT
     );
   };
+
 
   if (pageName in templateComponents) {
     for (const [k, v] of Object.entries(templateComponents[pageName])) {
