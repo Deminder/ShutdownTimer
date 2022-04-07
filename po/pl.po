@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-20 21:21+0100\n"
-"PO-Revision-Date: 2022-03-17 19:37+0100\n"
+"POT-Creation-Date: 2022-04-07 22:03+0200\n"
+"PO-Revision-Date: 2022-04-07 22:14+0200\n"
 "Last-Translator: Jakub Żywiec <jakub.zywiec@gmail.com>\n"
 "Language-Team: POLISH <jakub.zywiec@gmail.com>\n"
 "Language: pl\n"
@@ -61,7 +61,7 @@ msgctxt "StartSchedulePopup"
 msgid "%s in %s"
 msgstr "%s za %s"
 
-#: src/extension.js:275 src/lib/Convenience.js:53 src/lib/MenuItem.js:326
+#: src/extension.js:275 src/lib/Convenience.js:53 src/lib/MenuItem.js:339
 #, javascript-format
 msgid "%s hour"
 msgid_plural "%s hours"
@@ -69,7 +69,7 @@ msgstr[0] "%s godzina"
 msgstr[1] "%s godziny"
 msgstr[2] "%s godzin"
 
-#: src/extension.js:276 src/lib/MenuItem.js:327
+#: src/extension.js:276 src/lib/MenuItem.js:340
 #, javascript-format
 msgid "%s minute"
 msgid_plural "%s minutes"
@@ -105,7 +105,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: src/lib/Convenience.js:57 src/lib/MenuItem.js:313
+#: src/lib/Convenience.js:57 src/lib/MenuItem.js:326
 #, javascript-format
 msgid "%s min"
 msgid_plural "%s mins"
@@ -133,16 +133,16 @@ msgstr ""
 msgid "uninstall"
 msgstr ""
 
-#: src/lib/MenuItem.js:70
+#: src/lib/MenuItem.js:76
 msgid "Settings"
 msgstr "Ustawienia"
 
-#: src/lib/MenuItem.js:278
+#: src/lib/MenuItem.js:291
 #, javascript-format
 msgid "Check %s for %s"
 msgstr ""
 
-#: src/lib/MenuItem.js:312
+#: src/lib/MenuItem.js:325
 #, javascript-format
 msgid "%s hr"
 msgid_plural "%s hrs"
@@ -150,12 +150,12 @@ msgstr[0] "%s godzina"
 msgstr[1] "%s godziny"
 msgstr[2] "%s godzin"
 
-#: src/lib/MenuItem.js:316
+#: src/lib/MenuItem.js:329
 #, javascript-format
 msgid "%s (protect)"
 msgstr ""
 
-#: src/lib/MenuItem.js:322
+#: src/lib/MenuItem.js:335
 #, javascript-format
 msgctxt "WakeButtonText"
 msgid "%s %s"
@@ -270,11 +270,11 @@ msgstr ""
 msgid "Install output"
 msgstr ""
 
-#: src/ui/prefs.ui:106 src/ui/prefs.ui:343
+#: src/ui/prefs.ui:106 src/ui/prefs.ui:345
 msgid "Shutdown"
 msgstr "Wyłącznik"
 
-#: src/ui/prefs.ui:110 src/ui/prefs.ui:221
+#: src/ui/prefs.ui:110 src/ui/prefs.ui:222
 msgid "Timer Action"
 msgstr ""
 
@@ -296,94 +296,94 @@ msgstr ""
 msgid "Persistent shutdown or reboot by using 'shutdown -P/-r' command"
 msgstr ""
 
-#: src/ui/prefs.ui:144 src/ui/prefs.ui:238
+#: src/ui/prefs.ui:144 src/ui/prefs.ui:239
 msgid "Timer Input"
 msgstr ""
 
-#: src/ui/prefs.ui:147 src/ui/prefs.ui:163
+#: src/ui/prefs.ui:147 src/ui/prefs.ui:164
 msgid "Shutdown slider position (in &#37;)"
 msgstr "Pozycja suwaka (w %)"
 
-#: src/ui/prefs.ui:179 src/ui/prefs.ui:273
+#: src/ui/prefs.ui:180 src/ui/prefs.ui:275
 msgid "Non-linear scaling or 0 to disable"
 msgstr ""
 
-#: src/ui/prefs.ui:197
+#: src/ui/prefs.ui:198
 msgid "Maximum shutdown timer value (in minutes)"
 msgstr "Maksymalny czas licznika (w minutach)"
 
-#: src/ui/prefs.ui:217 src/ui/prefs.ui:377
+#: src/ui/prefs.ui:218 src/ui/prefs.ui:379
 msgid "Wake"
 msgstr ""
 
-#: src/ui/prefs.ui:225
+#: src/ui/prefs.ui:226
 msgid "Toggle wake with timer action"
 msgstr ""
 
-#: src/ui/prefs.ui:241 src/ui/prefs.ui:257
+#: src/ui/prefs.ui:242 src/ui/prefs.ui:259
 msgid "Wake slider position (in &#37;)"
 msgstr "Pozycja suwaka (w %)"
 
-#: src/ui/prefs.ui:291
+#: src/ui/prefs.ui:293
 msgid "Maximum wake timer value (in minutes)"
 msgstr "Maksymalny czas licznika (w minutach)"
 
-#: src/ui/prefs.ui:311
+#: src/ui/prefs.ui:313
 msgid "Display"
 msgstr ""
 
-#: src/ui/prefs.ui:315
+#: src/ui/prefs.ui:317
 msgid "General"
 msgstr ""
 
-#: src/ui/prefs.ui:319
+#: src/ui/prefs.ui:321
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:55
 msgid "Show settings button"
 msgstr ""
 
-#: src/ui/prefs.ui:330
+#: src/ui/prefs.ui:332
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:79
 msgid "Show notification text boxes"
 msgstr ""
 
-#: src/ui/prefs.ui:346 src/ui/prefs.ui:352
+#: src/ui/prefs.ui:348 src/ui/prefs.ui:354
 msgid "Show shutdown items"
 msgstr ""
 
-#: src/ui/prefs.ui:347
+#: src/ui/prefs.ui:349
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:92
 msgid "Comma-separated shutdown modes which are shown in the popup menu"
 msgstr ""
 
-#: src/ui/prefs.ui:365
+#: src/ui/prefs.ui:367
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:61
 msgid "Show shutdown slider"
 msgstr "Wyłącznik czasowy"
 
-#: src/ui/prefs.ui:381
+#: src/ui/prefs.ui:383
 msgid "Show wake items"
 msgstr ""
 
-#: src/ui/prefs.ui:392
+#: src/ui/prefs.ui:394
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:67
 msgid "Show wake slider"
 msgstr ""
 
-#: src/ui/prefs.ui:405
+#: src/ui/prefs.ui:407
 msgid "Check"
 msgstr ""
 
-#: src/ui/prefs.ui:412
+#: src/ui/prefs.ui:414
 msgid "Enable check"
 msgstr ""
 
-#: src/ui/prefs.ui:413
+#: src/ui/prefs.ui:415
 msgid ""
 "Script is run in a bash user shell after timer activates. Timer action "
 "proceeds if check terminates successfully."
 msgstr ""
 
-#: src/ui/prefs.ui:423
+#: src/ui/prefs.ui:425
 msgid "Check script"
 msgstr ""
 
@@ -425,8 +425,8 @@ msgid "Unix time in seconds of scheduled shutdown or -1 if disabled."
 msgstr ""
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:31
-msgid "Wake slider position"
-msgstr ""
+msgid "Wake slider position (in percent)"
+msgstr "Pozycja suwaka wyłączania (w %)"
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:32
 msgid ""
@@ -443,8 +443,8 @@ msgid "Exponential ramp-up for wake time slider"
 msgstr ""
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:43
-msgid "Shutdown slider position"
-msgstr "Wyłącznik czasowy wstrzymany"
+msgid "Shutdown slider position (in percent)"
+msgstr "Pozycja suwaka budzenia (w %)"
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:44
 msgid ""
@@ -520,6 +520,9 @@ msgstr ""
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:125
 msgid "Last selected page in the preferences."
 msgstr ""
+
+#~ msgid "Shutdown slider position"
+#~ msgstr "Wyłącznik czasowy wstrzymany"
 
 #, javascript-format
 #~ msgctxt "StartSchedulePopup"
