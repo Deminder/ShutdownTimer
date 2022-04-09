@@ -19,7 +19,9 @@ const EndSessionDialogInf = loadInterfaceXML(
 const EndSessionDialogProxy =
   Gio.DBusProxy.makeProxyWrapper(EndSessionDialogInf);
 
-let endSessionDialogSignalId, endSessionDialog, registered;
+let endSessionDialogPromise = null;
+let wantConnectAction = null;
+let registered = false;
 
 function unregister() {
   registered = false;
@@ -29,43 +31,58 @@ function register() {
 }
 
 function load(cancelAction) {
-  if (endSessionDialog === undefined) {
-    endSessionDialog = proxyPromise(
-      EndSessionDialogProxy,
-      Gio.DBus.session,
-      'org.gnome.Shell',
-      '/org/gnome/SessionManager/EndSessionDialog'
-    );
-    // stop schedule if endSessionDialog cancel button is activated
-    endSessionDialog
-      .then(proxy => {
-        logDebug('Connect for cancel of endSessionDialog...');
-        endSessionDialogSignalId = proxy.connectSignal('Canceled', () => {
-          if (registered) {
-            logDebug('Stopping schedule due to endSessionDialog cancel.');
-            cancelAction();
-          }
-        });
-      })
-      .catch(err => {
-        logError(err, 'EndSessionDialogProxyError');
-      });
-  }
+  wantConnectAction = cancelAction;
+  _update();
 }
 
 function unload() {
-  if (endSessionDialog !== undefined) {
-    const signalId = endSessionDialogSignalId;
-    if (signalId !== undefined) {
-      endSessionDialog
-        .then(proxy => {
-          proxy.disconnectSignal(signalId);
-        })
-        .catch(err => {
-          logError(err, 'EndSessionDialogProxyError');
-        });
+  wantConnectAction = null;
+  _update();
+}
+
+async function _update() {
+  try {
+    if (wantConnectAction && !endSessionDialogPromise) {
+      endSessionDialogPromise = proxyPromise(
+        EndSessionDialogProxy,
+        Gio.DBus.session,
+        'org.gnome.Shell',
+        '/org/gnome/SessionManager/EndSessionDialog'
+      );
     }
-    endSessionDialog = undefined;
-    endSessionDialogSignalId = undefined;
+  } catch (err) {
+    logError(err, 'EndSessionDialogProxyError');
+  }
+  if (endSessionDialogPromise) {
+    const dialog = await endSessionDialogPromise;
+    // and wantConnectAction may have changed after await
+    if (wantConnectAction) {
+      _connect(dialog, wantConnectAction);
+    } else {
+      _disconnect(dialog);
+      endSessionDialogPromise = null;
+    }
+  }
+}
+
+function _connect(dialog, cancelAction) {
+  if (!('_cancelSignalId' in dialog)) {
+    logDebug('Connect cancel of endSessionDialog...');
+    dialog['_cancelSignalId'] = dialog.connectSignal('Canceled', () => {
+      logDebug(
+        `endSessionDialog cancel triggered. propagate registered: ${registered}`
+      );
+      if (registered) {
+        cancelAction();
+      }
+    });
+  }
+}
+
+function _disconnect(dialog) {
+  const signalId = dialog['_cancelSignalId'];
+  if (signalId) {
+    logDebug('Disconnect cancel of endSessionDialog...');
+    dialog.disconnectSignal(signalId);
   }
 }

@@ -66,7 +66,11 @@ async function continueRootProtectionDuringCheck(
   cancellable,
   onSuccessIdle
 ) {
-  await RootMode.execCheck(['sleep', '30'], cancellable, false).catch(() => {});
+  try {
+    await RootMode.execCheck(['sleep', '30'], cancellable, false);
+  } catch (err) {
+    logDebug('RootProtection during check: Canceled');
+  }
   const done = checkCancel === undefined;
   await onSuccessIdle(done, checkSuccess);
 
