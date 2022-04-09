@@ -17,9 +17,11 @@ const {
   WAKE_MODES,
   durationString,
   longDurationString,
+  guiIdle,
+  debounceTimeout,
 } = Convenience;
 
-const { GObject, GLib, St } = imports.gi;
+const { GObject, St } = imports.gi;
 
 // menu items
 const PopupMenu = imports.ui.popupMenu;
@@ -40,7 +42,11 @@ var ShutdownTimer = GObject.registerClass(
       super._init('', true);
       // track external shutdown and wake schedule
       this.infoFetcher = new InfoFetcher.InfoFetcher();
-      this.currentRefreshId = null;
+      [this.refreshExternalInfo, this.refreshExternalInfoCancel] =
+        debounceTimeout(300, () => {
+          logDebug('Extra external info refresh...');
+          this.infoFetcher.updateScheduleInfo();
+        });
       this.idleSourceIds = {};
       this.checkRunning = false;
       this.externalScheduleInfo = new ScheduleInfo.ScheduleInfo({
@@ -191,28 +197,6 @@ var ShutdownTimer = GObject.registerClass(
       ].map(([label, func]) => settings.connect('changed::' + label, func));
     }
 
-    guiIdle(func) {
-      const sourceId = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
-        func();
-        delete this.idleSourceIds[sourceId];
-        return GLib.SOURCE_REMOVE;
-      });
-      this.idleSourceIds[sourceId] = 1;
-      return sourceId;
-    }
-
-    refreshExternalInfo() {
-      if (this.currentRefreshId !== null) {
-        return;
-      }
-      this.currentRefreshId = GLib.timeout_add(GLib.PRIORITY_LOW, 300, () => {
-        logDebug('Extra external info refresh...');
-        this.infoFetcher.updateScheduleInfo();
-        this.currentRefreshId = null;
-        return GLib.SOURCE_REMOVE;
-      });
-    }
-
     _onRootModeChanged() {
       Promise.all([
         ACTIONS.maybeStopRootModeProtection(this.internalScheduleInfo),
@@ -228,9 +212,7 @@ var ShutdownTimer = GObject.registerClass(
         .then(() => {
           this._updateCurrentMode();
           logDebug('Shutdown mode: ' + this.internalScheduleInfo.mode);
-          this.guiIdle(() => {
-            this._updateSelectedModeItems();
-          });
+          guiIdle(this._updateSelectedModeItems.bind(this));
         })
         .then(() =>
           ACTIONS.maybeStartRootModeProtection(this.internalScheduleInfo)
@@ -260,9 +242,7 @@ var ShutdownTimer = GObject.registerClass(
     _externalScheduleInfoTick(info, wakeInfo) {
       this.externalScheduleInfo = this.externalScheduleInfo.copy({ ...info });
       this.externalWakeInfo = this.externalWakeInfo.copy({ ...wakeInfo });
-      this.guiIdle(() => {
-        this._updateShutdownInfo();
-      });
+      guiIdle(this._updateShutdownInfo.bind(this));
     }
 
     _updateShownModeItems() {
@@ -390,14 +370,7 @@ var ShutdownTimer = GObject.registerClass(
         settings.disconnect(handlerId);
       });
       this.settingsHandlerIds = [];
-      Object.keys(this.idleSourceIds).forEach(sourceId => {
-        GLib.Source.remove(sourceId);
-      });
-      this.idleSourceIds = {};
-      if (this.currentRefreshId !== null) {
-        GLib.Source.remove(this.currentRefreshId);
-      }
-      this.currentRefreshId = null;
+      this.refreshExternalInfoCancel();
       super.destroy();
     }
   }

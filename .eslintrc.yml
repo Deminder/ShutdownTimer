@@ -180,5 +180,9 @@ globals:
   window: readonly
   TextEncoder: readonly
   TextDecoder: readonly
+  setTimeout: readonly
+  clearTimeout: readonly
+  setInterval: readonly
+  clearInterval: readonly
 parserOptions:
   ecmaVersion: 2020

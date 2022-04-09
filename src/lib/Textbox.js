@@ -11,61 +11,41 @@ const { St, Clutter } = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const { Convenience } = Me.imports.lib;
-const { setTimeout, cancelTimeout } = Convenience;
+const { logDebug, debounceTimeout } = Convenience;
 let textboxes = [];
-let currentUpdate = null;
+let [debounceUpdate, debounceUpdateCancel] = debounceTimeout(50, _update);
 
 // show textbox with message
 function showTextbox(textmsg) {
-  const renewedTextboxes = [];
-  textboxes = textboxes.filter(t => {
-    const moveToTop = t.text === textmsg && _cancelTimeout(t);
-    if (moveToTop) {
-      t['_fresh'] = 1;
-      renewedTextboxes.unshift(t);
+  for (const t of textboxes) {
+    // replace old textbox if it has the same text
+    if (t.text === textmsg) {
+      t['_hidden'] = 1;
     }
-    return !moveToTop;
-  });
-  if (renewedTextboxes.length) {
-    textboxes = renewedTextboxes.concat(textboxes);
-    _debouncedUpdate();
-    return;
   }
-
+  logDebug('show textbox: ' + textmsg);
   const textbox = new St.Label({
     style_class: 'textbox-label',
     text: textmsg,
     opacity: 0,
   });
   Main.uiGroup.add_actor(textbox);
-  textbox['_fresh'] = 1;
   textboxes.unshift(textbox);
-  _debouncedUpdate();
-}
-
-function _debouncedUpdate() {
-  if (currentUpdate === null) {
-    currentUpdate = setTimeout(50, () => {
-      _update();
-      currentUpdate = null;
-    });
-  }
+  debounceUpdate();
 }
 
 function _update() {
+  // remove hidden textboxes
   textboxes = textboxes.filter(t => {
     if (t['_hidden']) {
-      Main.uiGroup.remove_actor(t);
+      clearTimeout(t['_sourceId']);
+      t.destroy();
     }
     return !t['_hidden'];
   });
   const monitor = Main.layoutManager.primaryMonitor;
   let height_offset = 0;
   textboxes.forEach((textbox, i) => {
-    if ('_fresh' in textbox) {
-      _startFadeout(textbox);
-      delete textbox['_fresh'];
-    }
     if (i === 0) {
       height_offset = -textbox.height / 2;
     }
@@ -74,7 +54,23 @@ function _update() {
       monitor.y + Math.floor(monitor.height / 2 + height_offset)
     );
     height_offset += textbox.height + 10;
-    if ('_sourceId' in textbox) {
+    if (!('_sourceId' in textbox)) {
+      // start fadeout of textbox after 3 seconds
+      textbox['_sourceId'] = setTimeout(() => {
+        textbox.ease({
+          opacity: 0,
+          duration: 1000,
+          mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+          onComplete: () => {
+            textbox['_hidden'] = 1;
+            debounceUpdate();
+          },
+        });
+        textbox['_sourceId'] = 0;
+      }, 3000);
+    }
+    if (textbox['_sourceId']) {
+      // set opacity before fadeout starts
       textbox.opacity =
         i === 0
           ? 255
@@ -83,34 +79,10 @@ function _update() {
   });
 }
 
-function _startFadeout(textbox) {
-  textbox['_sourceId'] = setTimeout(3000, () => {
-    textbox.ease({
-      opacity: 0,
-      duration: 1000,
-      mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-      onComplete: () => {
-        textbox['_hidden'] = true;
-        _debouncedUpdate();
-      },
-    });
-    delete textbox['_sourceId'];
-  });
-}
-
-function _cancelTimeout(textbox) {
-  const cancelled = cancelTimeout(textbox['_sourceId']);
-  if (cancelled) {
-    delete textbox['_sourceId'];
-  }
-  return cancelled;
-}
-
 function hideAll() {
-  cancelTimeout(currentUpdate);
+  debounceUpdateCancel();
   for (const t of textboxes) {
-    _cancelTimeout(t);
-    t['_hidden'] = true;
+    t['_hidden'] = 1;
   }
-  _debouncedUpdate();
+  _update();
 }

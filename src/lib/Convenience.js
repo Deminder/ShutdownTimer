@@ -5,7 +5,7 @@
  * @copyright 2021
  * @license GNU General Public License v3.0
  */
-/* exported MODES, WAKE_MODES, modeLabel, logDebug, proxyPromise, durationString, longDurationString, setTimeout, cancelTimeout */
+/* exported MODES, WAKE_MODES, modeLabel, logDebug, proxyPromise, durationString, longDurationString, disableGuiIdle, enableGuiIdle, guiIdle, debounceTimeout */
 
 const { GLib } = imports.gi;
 const Gettext = imports.gettext.domain('ShutdownTimer');
@@ -67,16 +67,55 @@ function longDurationString(minutes, hrFmt, minFmt) {
   return parts.join(' ');
 }
 
-function setTimeout(millis, timeoutFunction) {
-  return GLib.timeout_add(GLib.PRIORITY_DEFAULT, millis, () => {
-    timeoutFunction();
-    return GLib.SOURCE_REMOVE;
-  });
+let idleSourceId = null;
+let idleCallbacks = [];
+let idleEnabled = false;
+
+function enableGuiIdle() {
+  idleEnabled = true;
 }
 
-function cancelTimeout(sourceId) {
-  if (sourceId) {
-    GLib.Source.remove(sourceId);
+function disableGuiIdle() {
+  idleEnabled = false;
+  idleCallbacks = [];
+  if (idleSourceId) {
+    GLib.Source.remove(idleSourceId);
   }
-  return sourceId;
+  idleSourceId = null;
+}
+
+function guiIdle(callback) {
+  if (idleEnabled) {
+    idleCallbacks.push(callback);
+    if (!idleSourceId) {
+      idleSourceId = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+        for (const func of idleCallbacks) {
+          func();
+        }
+        idleCallbacks = [];
+        idleSourceId = null;
+        return GLib.SOURCE_REMOVE;
+      });
+    }
+  }
+}
+
+function debounceTimeout(delayMillis, timeoutFunc) {
+  let current = null;
+  return [
+    () => {
+      if (current === null) {
+        current = setTimeout(() => {
+          timeoutFunc();
+          current = null;
+        }, delayMillis);
+      }
+    },
+    () => {
+      if (current) {
+        clearTimeout(current);
+        current = null;
+      }
+    },
+  ];
 }

@@ -10,7 +10,7 @@ const Me = imports.misc.extensionUtils.getCurrentExtension();
 const { RootMode, ScheduleInfo } = Me.imports.lib;
 const logDebug = Me.imports.lib.Convenience.logDebug;
 
-const { GLib, Gio } = imports.gi;
+const { Gio } = imports.gi;
 
 /* TIMER */
 var Timer = class {
@@ -35,7 +35,7 @@ var Timer = class {
         // update proc process for new deadline
         this.startProcTimer();
       }
-      this.startGLibTimer();
+      this.startForegroundTick();
       logDebug(
         `Started timer: ${this.info.minutes}min remaining (deadline: ${this.info.deadline})`
       );
@@ -49,7 +49,7 @@ var Timer = class {
 
   stopTimer() {
     this.stopProcTimer();
-    this.stopGLibTimer();
+    this.stopForeground();
   }
 
   _maybeRunTimerAction() {
@@ -94,29 +94,23 @@ var Timer = class {
     }
   }
 
-  startGLibTimer() {
+  startForegroundTick() {
     if (this._timerId === null) {
       // primary timer which updates ticks every second
-      this._timerId = GLib.timeout_add_seconds(GLib.PRIORITY_LOW, 1, () => {
+      this._timerId = setInterval(() => {
         this._maybeTick();
-        if (this.info.scheduled && this.info.secondsLeft >= 0) {
-          // timer continues
-          return GLib.SOURCE_CONTINUE;
+        if (!this.info.scheduled || this.info.secondsLeft < 0) {
+          // timer completed
+          this._maybeRunTimerAction();
+          this.stopTimer();
         }
-        // timer completed
-        this._timerId = null;
-        this._maybeRunTimerAction();
-        this.stopProcTimer();
-        return GLib.SOURCE_REMOVE;
-      });
+      }, 1000);
       this._maybeTick();
     }
   }
 
-  stopGLibTimer() {
-    if (this._timerId !== null) {
-      GLib.Source.remove(this._timerId);
-    }
+  stopForeground() {
+    clearInterval(this._timerId);
     this._timerId = null;
   }
 };

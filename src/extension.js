@@ -22,7 +22,8 @@ const {
   CheckCommand,
 } = Me.imports.lib;
 const modeLabel = Me.imports.prefs.modeLabel;
-const { longDurationString, logDebug } = Convenience;
+const { guiIdle, disableGuiIdle, enableGuiIdle, longDurationString, logDebug } =
+  Convenience;
 
 /* IMPORTS */
 const { GLib } = imports.gi;
@@ -42,12 +43,6 @@ const _n = Gettext.ngettext;
 let shutdownTimerMenu, timer, separator, settings;
 
 let initialized = false;
-
-function guiIdle(func) {
-  if (shutdownTimerMenu !== undefined) {
-    shutdownTimerMenu.guiIdle(func);
-  }
-}
 
 function refreshExternalInfo() {
   if (shutdownTimerMenu !== undefined) {
@@ -133,12 +128,10 @@ async function maybeStopWake() {
 }
 
 // timer action (shutdown/reboot/suspend)
-function serveInernalSchedule(mode) {
+async function serveInernalSchedule(mode) {
   const checkCmd = maybeCheckCmdString();
-  CheckCommand.maybeDoCheck(
-    checkCmd,
-    mode,
-    () => {
+  try {
+    if (checkCmd !== '') {
       guiIdle(() => {
         shutdownTimerMenu.checkRunning = true;
         shutdownTimerMenu._updateShutdownInfo();
@@ -147,51 +140,68 @@ function serveInernalSchedule(mode) {
       maybeShowTextbox(
         _('Waiting for %s confirmation').format(modeLabel(mode))
       );
-    },
-    code => {
-      maybeShowTextbox(checkCmd);
-      maybeShowTextbox(
-        C_('CheckCommand', '%s aborted (Code: %s)').format(
-          modeLabel(mode),
-          code
-        )
+      await CheckCommand.doCheck(
+        checkCmd,
+        line => {
+          if (!line.startsWith('[')) {
+            maybeShowTextbox(`'${line}'`);
+          }
+        },
+        async () => {
+          // keep protection alive
+          await maybeStartRootModeProtection(
+            new ScheduleInfo.ScheduleInfo({ mode, deadline: 0 })
+          );
+        }
       );
-    },
-    () =>
-      guiIdle(() => {
-        shutdownTimerMenu.checkRunning = false;
-        shutdownTimerMenu._updateShutdownInfo();
-      }),
-    (done, success) => {
-      const dueInfo = new ScheduleInfo.ScheduleInfo({ mode, deadline: 0 });
-      if (done && !success) {
-        // disable protection if check command failed
-        return maybeStopRootModeProtection(dueInfo, true);
-      }
-      // keep protection
-      return maybeStartRootModeProtection(dueInfo);
     }
-  )
-    .then(() => {
-      // check succeeded: do shutdown
-      shutdown(mode);
-    })
-    .catch(err => {
-      logError(err, 'CheckError');
-      // check failed: cancel shutdown
-      if (settings.get_boolean('root-mode-value')) {
-        RootMode.shutdownCancel();
+    // check succeeded: do shutdown
+    shutdown(mode);
+  } catch (err) {
+    logError(err, 'CheckError');
+    // check failed: cancel shutdown
+    // stop root protection
+    await maybeStopRootModeProtection(
+      new ScheduleInfo.ScheduleInfo({ mode, deadline: 0 }),
+      true
+    );
+    try {
+      const root = settings.get_boolean('root-mode-value');
+      if (root) {
+        await RootMode.shutdownCancel();
+      }
+      const wake = settings.get_boolean('auto-wake-value');
+      if (wake) {
+        await RootMode.wakeCancel();
+      }
+      if (root || wake) {
         refreshExternalInfo();
       }
-      if (settings.get_boolean('auto-wake-value')) {
-        RootMode.wakeCancel();
-        refreshExternalInfo();
-      }
-    })
-    .finally(() => {
-      // reset schedule timestamp
-      settings.set_int('shutdown-timestamp-value', -1);
+    } catch (err2) {
+      // error is most likely: script not installed
+      logError(err2, 'CheckError');
+    }
+    // check failed: log failure
+    let code = '?';
+    if ('code' in err) {
+      code = `${err.code}`;
+      logDebug(`Check command aborted ${mode}. Code: ${code}`);
+    }
+    maybeShowTextbox(
+      C_('CheckCommand', '%s aborted (Code: %s)').format(modeLabel(mode), code)
+    );
+    if (parseInt(code) === 19) {
+      maybeShowTextbox(_('Confirmation canceled'));
+    }
+  } finally {
+    // update shutdownTimerMenu
+    guiIdle(() => {
+      shutdownTimerMenu.checkRunning = false;
+      shutdownTimerMenu._updateShutdownInfo();
     });
+    // reset schedule timestamp
+    settings.set_int('shutdown-timestamp-value', -1);
+  }
 }
 
 function shutdown(mode) {
@@ -203,7 +213,12 @@ function shutdown(mode) {
   const getSession = () => new imports.misc.gnomeSession.SessionManager();
   const run = imports.misc.util.spawnCommandLine;
 
-  // endSessionDialog fails in unlock-dialog
+  // refresh root shutdown protection before action
+  maybeStartRootModeProtection(
+    new ScheduleInfo.ScheduleInfo({ mode, deadline: 0 })
+  );
+
+  // endSessionDialog gets canceled in unlock-dialog
   // gnome 42 bug?: endSessionDialog + Lock-session => endSessionDialog blocks login screen
   switch (mode) {
   case 'reboot':
@@ -254,11 +269,9 @@ async function wakeAction(mode, minutes) {
 function stopSchedule(stopProtection = true) {
   EndSessionDialogAware.unregister();
   const canceled = CheckCommand.maybeCancel();
-  if (canceled || settings.get_int('shutdown-timestamp-value') > -1) {
+  if (!canceled && settings.get_int('shutdown-timestamp-value') > -1) {
     settings.set_int('shutdown-timestamp-value', -1);
-    maybeShowTextbox(
-      canceled ? _('Confirmation canceled') : _('Shutdown Timer stopped')
-    );
+    maybeShowTextbox(_('Shutdown Timer stopped'));
   }
 
   if (stopProtection) {
@@ -332,6 +345,7 @@ function onSessionModeChange(sessionMode) {
 }
 
 function enableForeground() {
+  enableGuiIdle();
   // add separator line and submenu in status area menu
   const statusMenu = Main.panel.statusArea['aggregateMenu'];
   if (separator === undefined) {
@@ -352,13 +366,14 @@ function enableForeground() {
 }
 
 function disableForeground() {
+  disableGuiIdle();
   Textbox.hideAll();
   if (shutdownTimerMenu !== undefined) {
     shutdownTimerMenu.destroy();
     if (timer !== undefined) {
       timer.setTickCallback(null);
       // keep sleep process alive
-      timer.stopGLibTimer();
+      timer.stopForeground();
     }
   }
   shutdownTimerMenu = undefined;
