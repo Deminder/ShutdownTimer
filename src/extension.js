@@ -195,21 +195,35 @@ function serveInernalSchedule(mode) {
 }
 
 function shutdown(mode) {
-  Main.overview.hide();
-  Textbox.hideAll();
+  const foregroundActive = Main.sessionMode.currentMode === 'user';
+  if (foregroundActive) {
+    Main.overview.hide();
+    Textbox.hideAll();
+  }
   const getSession = () => new imports.misc.gnomeSession.SessionManager();
+  const run = imports.misc.util.spawnCommandLine;
 
+  // endSessionDialog fails in unlock-dialog
+  // gnome 42 bug?: endSessionDialog + Lock-session => endSessionDialog blocks login screen
   switch (mode) {
   case 'reboot':
-    EndSessionDialogAware.register();
-    getSession().RebootRemote(0);
+    if (foregroundActive) {
+      EndSessionDialogAware.register();
+      getSession().RebootRemote(0);
+    } else {
+      run('reboot');
+    }
     break;
   case 'suspend':
     LoginManager.getLoginManager().suspend();
     break;
   default:
-    EndSessionDialogAware.register();
-    getSession().ShutdownRemote(0); // shutdown after 60s
+    if (foregroundActive) {
+      EndSessionDialogAware.register();
+      getSession().ShutdownRemote(0); // shutdown after 60s
+    } else {
+      run('poweroff');
+    }
     break;
   }
 }
@@ -332,6 +346,8 @@ function enableForeground() {
     );
     statusMenu.menu.addMenuItem(shutdownTimerMenu);
   }
+  // stop schedule if endSessionDialog cancel button is activated
+  EndSessionDialogAware.load(stopSchedule);
   logDebug('Enabled foreground.');
 }
 
@@ -350,6 +366,7 @@ function disableForeground() {
     separator.destroy();
   }
   separator = undefined;
+  EndSessionDialogAware.unload();
   logDebug('Disabled foreground.');
 }
 
@@ -363,6 +380,8 @@ function enable() {
   if (!initialized) {
     // initialize settings
     settings = ExtensionUtils.getSettings();
+    // ensure that no shutdown is scheduled
+    settings.set_int('shutdown-timestamp-value', -1);
     MenuItem.init(settings, {
       wakeAction,
       startSchedule,
@@ -376,7 +395,6 @@ function enable() {
     // starts internal shutdown schedule if ready
     timer = new Timer.Timer(serveInernalSchedule);
 
-    EndSessionDialogAware.load(stopSchedule);
     SessionModeAware.load(onSessionModeChange);
 
     initialized = true;
@@ -395,9 +413,9 @@ function disable() {
     }
     // clear internal schedule and keep root protected schedule
     stopSchedule(false);
-    EndSessionDialogAware.unload();
     SessionModeAware.unload();
 
     initialized = false;
+    logDebug('Completly disabled.');
   }
 }
