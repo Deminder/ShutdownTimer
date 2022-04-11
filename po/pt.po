@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-07 22:03+0200\n"
+"POT-Creation-Date: 2022-04-11 22:35+0200\n"
 "PO-Revision-Date: 2022-04-07 22:13+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: Roberto Alegro \"Kasama\"\n"
@@ -21,7 +21,7 @@ msgstr ""
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: src/extension.js:84 src/extension.js:116 src/extension.js:235
+#: src/extension.js:85 src/extension.js:117 src/extension.js:273
 #, javascript-format
 msgctxt "Error"
 msgid ""
@@ -29,47 +29,47 @@ msgid ""
 "%s"
 msgstr ""
 
-#: src/extension.js:84 src/extension.js:116
+#: src/extension.js:85 src/extension.js:117
 msgid "Root mode protection failed!"
 msgstr ""
 
-#: src/extension.js:148
+#: src/extension.js:147
 #, javascript-format
 msgid "Waiting for %s confirmation"
 msgstr ""
 
-#: src/extension.js:154
+#: src/extension.js:197
 #, javascript-format
 msgctxt "CheckCommand"
 msgid "%s aborted (Code: %s)"
 msgstr ""
 
-#: src/extension.js:235
-msgid "Wake action failed!"
-msgstr ""
-
-#: src/extension.js:246
+#: src/extension.js:200
 msgid "Confirmation canceled"
 msgstr ""
 
-#: src/extension.js:246
+#: src/extension.js:273
+msgid "Wake action failed!"
+msgstr ""
+
+#: src/extension.js:283
 msgid "Shutdown Timer stopped"
 msgstr "Temporizador desativado"
 
-#: src/extension.js:271
+#: src/extension.js:307
 #, javascript-format
 msgctxt "StartSchedulePopup"
 msgid "%s in %s"
 msgstr "%s em %s"
 
-#: src/extension.js:275 src/lib/Convenience.js:53 src/lib/MenuItem.js:339
+#: src/extension.js:311 src/lib/Convenience.js:53 src/lib/MenuItem.js:319
 #, javascript-format
 msgid "%s hour"
 msgid_plural "%s hours"
 msgstr[0] "%s hora"
 msgstr[1] "%s horas"
 
-#: src/extension.js:276 src/lib/MenuItem.js:340
+#: src/extension.js:312 src/lib/MenuItem.js:320
 #, javascript-format
 msgid "%s minute"
 msgid_plural "%s minutes"
@@ -103,7 +103,7 @@ msgid_plural "%s secs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/lib/Convenience.js:57 src/lib/MenuItem.js:326
+#: src/lib/Convenience.js:57 src/lib/MenuItem.js:306
 #, javascript-format
 msgid "%s min"
 msgid_plural "%s mins"
@@ -130,28 +130,28 @@ msgstr ""
 msgid "uninstall"
 msgstr ""
 
-#: src/lib/MenuItem.js:76
+#: src/lib/MenuItem.js:82
 msgid "Settings"
 msgstr "Configurações"
 
-#: src/lib/MenuItem.js:291
+#: src/lib/MenuItem.js:271
 #, javascript-format
 msgid "Check %s for %s"
 msgstr ""
 
-#: src/lib/MenuItem.js:325
+#: src/lib/MenuItem.js:305
 #, javascript-format
 msgid "%s hr"
 msgid_plural "%s hrs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/lib/MenuItem.js:329
+#: src/lib/MenuItem.js:309
 #, javascript-format
 msgid "%s (protect)"
 msgstr ""
 
-#: src/lib/MenuItem.js:335
+#: src/lib/MenuItem.js:315
 #, javascript-format
 msgctxt "WakeButtonText"
 msgid "%s %s"
