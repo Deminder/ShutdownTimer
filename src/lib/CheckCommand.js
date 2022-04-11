@@ -63,7 +63,7 @@ async function continueRootProtectionDuringCheck(
   } else {
     await redoRootProtection();
     logDebug('RootProtection during check: Continue');
-    await continueRootProtectionDuringCheck(cancellable);
+    await continueRootProtectionDuringCheck(cancellable, redoRootProtection);
   }
 }
 

@@ -22,8 +22,14 @@ const {
   CheckCommand,
 } = Me.imports.lib;
 const modeLabel = Me.imports.prefs.modeLabel;
-const { guiIdle, disableGuiIdle, enableGuiIdle, longDurationString, logDebug } =
-  Convenience;
+const {
+  guiIdle,
+  debounceTimeout,
+  disableGuiIdle,
+  enableGuiIdle,
+  longDurationString,
+  logDebug,
+} = Convenience;
 
 /* IMPORTS */
 const { GLib } = imports.gi;
@@ -134,7 +140,7 @@ async function serveInernalSchedule(mode) {
     if (checkCmd !== '') {
       guiIdle(() => {
         shutdownTimerMenu.checkRunning = true;
-        shutdownTimerMenu._updateShutdownInfo();
+        shutdownTimerMenu.updateShutdownInfo();
       });
       maybeShowTextbox(checkCmd);
       maybeShowTextbox(
@@ -197,16 +203,19 @@ async function serveInernalSchedule(mode) {
     // update shutdownTimerMenu
     guiIdle(() => {
       shutdownTimerMenu.checkRunning = false;
-      shutdownTimerMenu._updateShutdownInfo();
+      shutdownTimerMenu.updateShutdownInfo();
     });
     // reset schedule timestamp
     settings.set_int('shutdown-timestamp-value', -1);
   }
 }
 
+function foregroundActive() {
+  return Main.sessionMode.currentMode === 'user';
+}
+
 function shutdown(mode) {
-  const foregroundActive = Main.sessionMode.currentMode === 'user';
-  if (foregroundActive) {
+  if (foregroundActive()) {
     Main.overview.hide();
     Textbox.hideAll();
   }
@@ -222,7 +231,7 @@ function shutdown(mode) {
   // gnome 42 bug?: endSessionDialog + Lock-session => endSessionDialog blocks login screen
   switch (mode) {
   case 'reboot':
-    if (foregroundActive) {
+    if (foregroundActive()) {
       EndSessionDialogAware.register();
       getSession().RebootRemote(0);
     } else {
@@ -356,7 +365,7 @@ function enableForeground() {
     shutdownTimerMenu = new MenuItem.ShutdownTimer();
     shutdownTimerMenu.checkRunning = CheckCommand.isChecking();
     timer.setTickCallback(
-      shutdownTimerMenu._updateShutdownInfo.bind(shutdownTimerMenu)
+      shutdownTimerMenu.updateShutdownInfo.bind(shutdownTimerMenu)
     );
     statusMenu.menu.addMenuItem(shutdownTimerMenu);
   }
@@ -391,8 +400,15 @@ function init() {
   ExtensionUtils.initTranslations();
 }
 
+let debounceDisable = null;
+let debounceDisableCancel = null;
+
 function enable() {
   if (!initialized) {
+    [debounceDisable, debounceDisableCancel] = debounceTimeout(
+      100,
+      completeDisable
+    );
     // initialize settings
     settings = ExtensionUtils.getSettings();
     // ensure that no shutdown is scheduled
@@ -405,6 +421,7 @@ function enable() {
       maybeStartRootModeProtection,
       onShutdownScheduleChange,
     });
+    Textbox.init();
 
     // check for shutdown may run in background and can be canceled by user
     // starts internal shutdown schedule if ready
@@ -413,23 +430,44 @@ function enable() {
     SessionModeAware.load(onSessionModeChange);
 
     initialized = true;
+  } else {
+    debounceDisableCancel();
   }
-  enableForeground();
-  logDebug('Completly enabled.');
+  if (foregroundActive()) {
+    enableForeground();
+    logDebug('Completly enabled.');
+  } else {
+    logDebug('Background enabled.');
+  }
 }
 
 function disable() {
   // unlock-dialog session-mode is required such that the timer action can trigger
   disableForeground();
+  // DELAYED DISABLE:
+  // Workaround for Gnome 42 weird behaviour (?unlock-dialog sessionMode bug?):
+  // on first screensaver activation after login gnome-shell quickly enables/disables this extension
+  // for each extension that is also enabled besides this extension
+  if (initialized) {
+    debounceDisable();
+  }
+}
+
+function completeDisable() {
   if (initialized) {
     if (timer !== undefined) {
       timer.stopTimer();
       timer = undefined;
     }
+    Textbox.uninit();
+    MenuItem.uninit();
     // clear internal schedule and keep root protected schedule
     stopSchedule(false);
     SessionModeAware.unload();
 
+    debounceDisableCancel();
+    debounceDisable = null;
+    debounceDisableCancel = null;
     initialized = false;
     logDebug('Completly disabled.');
   }

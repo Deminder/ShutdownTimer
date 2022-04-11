@@ -50,18 +50,19 @@ async function _update() {
         '/org/gnome/SessionManager/EndSessionDialog'
       );
     }
+    if (endSessionDialogPromise) {
+      const dialog = await endSessionDialogPromise;
+      // and wantConnectAction may have changed after await
+      if (wantConnectAction) {
+        _connect(dialog, wantConnectAction);
+      } else {
+        _disconnect(dialog);
+        endSessionDialogPromise = null;
+      }
+    }
   } catch (err) {
     logError(err, 'EndSessionDialogProxyError');
-  }
-  if (endSessionDialogPromise) {
-    const dialog = await endSessionDialogPromise;
-    // and wantConnectAction may have changed after await
-    if (wantConnectAction) {
-      _connect(dialog, wantConnectAction);
-    } else {
-      _disconnect(dialog);
-      endSessionDialogPromise = null;
-    }
+    endSessionDialogPromise = null;
   }
 }
 
@@ -84,5 +85,6 @@ function _disconnect(dialog) {
   if (signalId) {
     logDebug('Disconnect cancel of endSessionDialog...');
     dialog.disconnectSignal(signalId);
+    delete dialog['_cancelSignalId'];
   }
 }

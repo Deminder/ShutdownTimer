@@ -5,7 +5,7 @@
  * @copyright 2021
  * @license GNU General Public License v3.0
  */
-/* exported showTextbox, hideAll */
+/* exported showTextbox, hideAll, init, uninit */
 const Main = imports.ui.main;
 const { St, Clutter } = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -13,7 +13,18 @@ const Me = ExtensionUtils.getCurrentExtension();
 const { Convenience } = Me.imports.lib;
 const { logDebug, debounceTimeout } = Convenience;
 let textboxes = [];
-let [debounceUpdate, debounceUpdateCancel] = debounceTimeout(50, _update);
+
+let debounceUpdate = null;
+let debounceUpdateCancel = null;
+
+function init() {
+  [debounceUpdate, debounceUpdateCancel] = debounceTimeout(50, _update);
+}
+
+function uninit() {
+  debounceUpdate = null;
+  debounceUpdateCancel = null;
+}
 
 // show textbox with message
 function showTextbox(textmsg) {
@@ -39,6 +50,7 @@ function _update() {
   textboxes = textboxes.filter(t => {
     if (t['_hidden']) {
       clearTimeout(t['_sourceId']);
+      delete t['_sourceId'];
       t.destroy();
     }
     return !t['_hidden'];
@@ -57,6 +69,7 @@ function _update() {
     if (!('_sourceId' in textbox)) {
       // start fadeout of textbox after 3 seconds
       textbox['_sourceId'] = setTimeout(() => {
+        textbox['_sourceId'] = 0;
         textbox.ease({
           opacity: 0,
           duration: 1000,
@@ -66,7 +79,6 @@ function _update() {
             debounceUpdate();
           },
         });
-        textbox['_sourceId'] = 0;
       }, 3000);
     }
     if (textbox['_sourceId']) {

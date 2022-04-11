@@ -5,7 +5,7 @@
  * @copyright 2021
  * @license GNU General Public License v3.0
  */
-/* exported ShutdownTimer, init, MODES */
+/* exported ShutdownTimer, init, uninit, MODES */
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -225,7 +225,7 @@ var ShutdownTimer = GObject.registerClass(
       });
 
       ACTIONS.onShutdownScheduleChange(this.internalScheduleInfo);
-      this._updateShutdownInfo();
+      this.updateShutdownInfo();
     }
 
     _onInternalShutdownTimestampChanged() {
@@ -235,14 +235,14 @@ var ShutdownTimer = GObject.registerClass(
 
       ACTIONS.onShutdownScheduleChange(this.internalScheduleInfo);
       this.switcher.setToggleState(this.internalScheduleInfo.scheduled);
-      this._updateShutdownInfo();
+      this.updateShutdownInfo();
     }
 
     /* Schedule Info updates */
     _externalScheduleInfoTick(info, wakeInfo) {
       this.externalScheduleInfo = this.externalScheduleInfo.copy({ ...info });
       this.externalWakeInfo = this.externalWakeInfo.copy({ ...wakeInfo });
-      guiIdle(this._updateShutdownInfo.bind(this));
+      guiIdle(this.updateShutdownInfo.bind(this));
     }
 
     _updateShownModeItems() {
@@ -260,7 +260,7 @@ var ShutdownTimer = GObject.registerClass(
       });
     }
 
-    _updateShutdownInfo() {
+    updateShutdownInfo() {
       let wakeLabel = this.externalWakeInfo.scheduled
         ? '\n' + this.externalWakeInfo.label
         : '';
@@ -379,6 +379,11 @@ var ShutdownTimer = GObject.registerClass(
 function init(settingsObj, actions) {
   settings = settingsObj;
   ACTIONS = actions;
+}
+
+function uninit() {
+  settings = null;
+  ACTIONS = null;
 }
 
 function _getSliderMinutes(prefix) {

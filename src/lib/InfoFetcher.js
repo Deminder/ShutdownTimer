@@ -9,10 +9,6 @@
 
 const { Gio, GLib } = imports.gi;
 const ByteArray = imports.byteArray;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-const { Convenience } = Me.imports.lib;
-const { logDebug } = Convenience;
 
 function readFile(path) {
   return new Promise((resolve, reject) => {
@@ -79,7 +75,6 @@ var InfoFetcher = class {
   }
 
   _updateInfoLoop() {
-    logDebug('start info fetcher interval...');
     this._infoTimerId = setInterval(this.tick.bind(this), 5000);
     this.tick();
   }
