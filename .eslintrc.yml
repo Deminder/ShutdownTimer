@@ -185,4 +185,4 @@ globals:
   setInterval: readonly
   clearInterval: readonly
 parserOptions:
-  ecmaVersion: 2020
+  ecmaVersion: 2022

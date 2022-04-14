@@ -5,7 +5,7 @@
  * @copyright 2021
  * @license GNU General Public License v3.0
  */
-/* exported MODES, WAKE_MODES, modeLabel, logDebug, proxyPromise, durationString, longDurationString, disableGuiIdle, enableGuiIdle, guiIdle, debounceTimeout */
+/* exported MODES, WAKE_MODES, modeLabel, logDebug, proxyPromise, durationString, longDurationString, disableGuiIdle, enableGuiIdle, guiIdle, throttleTimeout */
 
 const { GLib } = imports.gi;
 const Gettext = imports.gettext.domain('ShutdownTimer');
@@ -100,7 +100,7 @@ function guiIdle(callback) {
   }
 }
 
-function debounceTimeout(delayMillis, timeoutFunc) {
+function throttleTimeout(timeoutFunc, delayMillis) {
   let current = null;
   return [
     () => {

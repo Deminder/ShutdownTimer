@@ -18,7 +18,7 @@ const {
   durationString,
   longDurationString,
   guiIdle,
-  debounceTimeout,
+  throttleTimeout,
 } = Convenience;
 
 const { GObject, St } = imports.gi;
@@ -43,10 +43,10 @@ var ShutdownTimer = GObject.registerClass(
       // track external shutdown and wake schedule
       this.infoFetcher = new InfoFetcher.InfoFetcher();
       [this.refreshExternalInfo, this.refreshExternalInfoCancel] =
-        debounceTimeout(300, () => {
+        throttleTimeout(() => {
           logDebug('Extra external info refresh...');
           this.infoFetcher.updateScheduleInfo();
-        });
+        }, 300);
       this.idleSourceIds = {};
       this.checkRunning = false;
       this.externalScheduleInfo = new ScheduleInfo.ScheduleInfo({

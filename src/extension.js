@@ -24,7 +24,7 @@ const {
 const modeLabel = Me.imports.prefs.modeLabel;
 const {
   guiIdle,
-  debounceTimeout,
+  throttleTimeout,
   disableGuiIdle,
   enableGuiIdle,
   longDurationString,
@@ -400,14 +400,14 @@ function init() {
   ExtensionUtils.initTranslations();
 }
 
-let debounceDisable = null;
-let debounceDisableCancel = null;
+let throttleDisable = null;
+let throttleDisableCancel = null;
 
 function enable() {
   if (!initialized) {
-    [debounceDisable, debounceDisableCancel] = debounceTimeout(
-      100,
-      completeDisable
+    [throttleDisable, throttleDisableCancel] = throttleTimeout(
+      completeDisable,
+      100
     );
     // initialize settings
     settings = ExtensionUtils.getSettings();
@@ -431,7 +431,7 @@ function enable() {
 
     initialized = true;
   } else {
-    debounceDisableCancel();
+    throttleDisableCancel();
   }
   if (foregroundActive()) {
     enableForeground();
@@ -449,7 +449,7 @@ function disable() {
   // on first screensaver activation after login gnome-shell quickly enables/disables this extension
   // for each extension that is also enabled besides this extension
   if (initialized) {
-    debounceDisable();
+    throttleDisable();
   }
 }
 
@@ -465,9 +465,9 @@ function completeDisable() {
     stopSchedule(false);
     SessionModeAware.unload();
 
-    debounceDisableCancel();
-    debounceDisable = null;
-    debounceDisableCancel = null;
+    throttleDisableCancel();
+    throttleDisable = null;
+    throttleDisableCancel = null;
     initialized = false;
     logDebug('Completly disabled.');
   }

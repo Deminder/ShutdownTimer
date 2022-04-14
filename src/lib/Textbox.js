@@ -11,19 +11,19 @@ const { St, Clutter } = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const { Convenience } = Me.imports.lib;
-const { logDebug, debounceTimeout } = Convenience;
+const { logDebug, throttleTimeout } = Convenience;
 let textboxes = [];
 
-let debounceUpdate = null;
-let debounceUpdateCancel = null;
+let throttleUpdate = null;
+let throttleUpdateCancel = null;
 
 function init() {
-  [debounceUpdate, debounceUpdateCancel] = debounceTimeout(50, _update);
+  [throttleUpdate, throttleUpdateCancel] = throttleTimeout(_update, 50);
 }
 
 function uninit() {
-  debounceUpdate = null;
-  debounceUpdateCancel = null;
+  throttleUpdate = null;
+  throttleUpdateCancel = null;
 }
 
 // show textbox with message
@@ -42,7 +42,7 @@ function showTextbox(textmsg) {
   });
   Main.uiGroup.add_actor(textbox);
   textboxes.unshift(textbox);
-  debounceUpdate();
+  throttleUpdate();
 }
 
 function _update() {
@@ -76,7 +76,7 @@ function _update() {
           mode: Clutter.AnimationMode.EASE_OUT_QUAD,
           onComplete: () => {
             textbox['_hidden'] = 1;
-            debounceUpdate();
+            throttleUpdate();
           },
         });
       }, 3000);
@@ -92,7 +92,7 @@ function _update() {
 }
 
 function hideAll() {
-  debounceUpdateCancel();
+  throttleUpdateCancel();
   for (const t of textboxes) {
     t['_hidden'] = 1;
   }
