@@ -16,7 +16,7 @@
 - Timer for _Poweroff_, _Reboot_, _Suspend_
 
   - Options may be reordered or hidden
-  - During the unlock-dialog the timer will not stop. (If the extension is disabled or when logging out the timer will stop.)
+  - During the unlock-dialog the timer will not stop. (The timer will stop if the extension is disabled or when logging out.)
 
 - Show scheduled shutdown info as _(sys)_
 
@@ -34,7 +34,7 @@
   - Wake info from: `/sys/class/rtc/rtc0/wakealarm`
   - Wake info displayed in menu: <br/>![wakeInfoMenu](data/img/wakeInfoFeature.png)
   - Controlling wake alarm requires installation of privileged script
-  - Note: for advanced use-cases there are more suitable tools: e.g. [gnome-schedule](https://gitlab.gnome.org/GNOME/gnome-schedule)
+  - Note: for advanced use-cases there are more suitable tools: e.g. [gnome-schedule](https://gitlab.gnome.org/World/gnome-schedule)
 
 - Root shutdown protection
 
@@ -61,7 +61,7 @@ Then a new login is required to restart gnome-shell.
 Manually install privileged script for rtcwake and shutdown with:
 
 ```(shell)
-sudo ./tool/installer.sh --tool-user $USER install
+sudo ./src/tool/installer.sh --tool-user $USER install
 ```
 
 ## Development
@@ -88,9 +88,10 @@ Extract transalable text from sources to template file `po/main.pot` and update 
 ./scripts/update-pod.sh
 ```
 
-### Resources
+### References
 
 - https://gjs.guide/extensions/
 - https://gjs.guide/guides/
 - https://gjs-docs.gnome.org/
 - [D-Bus and Polkit (Introduction)](https://venam.nixers.net/blog/unix/2020/07/06/dbus-polkit.html)
+- Forked (June 2021) [neumann-d/ShutdownTimer](https://github.com/neumann-d/ShutdownTimer)
