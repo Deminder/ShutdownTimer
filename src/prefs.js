@@ -10,7 +10,8 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const { Install, Convenience } = Me.imports.lib;
-var { logDebug, modeLabel, MODES } = Convenience;
+var { logDebug, enableGuiIdle, disableGuiIdle, guiIdle, modeLabel, MODES } =
+  Convenience;
 
 const { GLib, Gtk, Gio } = imports.gi;
 
@@ -46,22 +47,7 @@ const templateComponents = {
   },
 };
 
-function _guiIdle(idleSourceIds) {
-  return new Promise((resolve, reject) => {
-    try {
-      const sourceId = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
-        resolve();
-        delete idleSourceIds[sourceId];
-        return GLib.SOURCE_REMOVE;
-      });
-      idleSourceIds[sourceId] = 1;
-    } catch (err) {
-      reject(err);
-    }
-  });
-}
-
-function init_page(pageId, builder, settings, handlers, guiIdle) {
+function init_page(pageId, builder, settings, handlers) {
   const page = builder.get_object(pageId);
   const pageName = pageId.split('_').at(-1);
   if (!page) {
@@ -126,7 +112,7 @@ function init_page(pageId, builder, settings, handlers, guiIdle) {
     const commentTag = new Gtk.TextTag({ foreground: 'grey' });
     checkCommandBuffer.get_tag_table().add(commentTag);
     const apply_comment_tags = b => {
-      b.remove_all_tags(b.get_start_iter(), b.get_end_iter());
+      b.remove_tag(commentTag, b.get_start_iter(), b.get_end_iter());
       const lc = b.get_line_count();
       for (let i = 0; i < lc; i++) {
         const startIter = lineIter(b, i);
@@ -137,12 +123,11 @@ function init_page(pageId, builder, settings, handlers, guiIdle) {
         }
       }
     };
-    const ccBufferHandlerId = checkCommandBuffer.connect(
-      'changed',
-      apply_comment_tags
-    );
     apply_comment_tags(checkCommandBuffer);
-    handlers.push([checkCommandBuffer, ccBufferHandlerId]);
+    handlers.push([
+      checkCommandBuffer,
+      checkCommandBuffer.connect('changed', apply_comment_tags),
+    ]);
   } else if (pageName === 'install') {
     // install log textbuffer updates
     const logTextBuffer = builder.get_object('install_log_textbuffer');
@@ -167,11 +152,7 @@ function init_page(pageId, builder, settings, handlers, guiIdle) {
       } else if (line.endsWith('🟢')) {
         applyTag(successTag);
       }
-      guiIdle()
-        .then(() => {
-          scrollAdj.set_value(1000000);
-        })
-        .catch(() => {});
+      guiIdle(() => scrollAdj.set_value(1000000));
     };
 
     const installSwitch = builder.get_object('install_policy_switch');
@@ -179,20 +160,13 @@ function init_page(pageId, builder, settings, handlers, guiIdle) {
     const switchHandlerId = installSwitch.connect('notify::active', () =>
       Install.installAction(
         installSwitch.get_active() ? 'install' : 'uninstall',
-        message =>
-          guiIdle()
-            .then(() => message.split('\n').forEach(appendLogLine))
-            .catch(err => {
-              logDebug(`${err}...\nMissed message: ${message}`);
-            })
+        message => guiIdle(() => message.split('\n').forEach(appendLogLine))
       )
     );
     handlers.push([installSwitch, switchHandlerId]);
 
-    guiIdle().then(() => {
-      // clear log
-      logTextBuffer.set_text('', -1);
-    });
+    // clear log
+    guiIdle(() => logTextBuffer.set_text('', -1));
   }
   return page;
 }
@@ -209,10 +183,9 @@ function fillPreferencesWindow(window) {
   const pageNames = ['install', 'shutdown', 'wake', 'display', 'check'].map(
     n => 'shutdowntimer-prefs-' + n
   );
+  enableGuiIdle();
   for (const page of pageNames.map(name =>
-    init_page(name.replaceAll('-', '_'), builder, settings, handlers, () =>
-      _guiIdle(idleSourceIds)
-    )
+    init_page(name.replaceAll('-', '_'), builder, settings, handlers)
   )) {
     window.add(page);
   }
@@ -230,6 +203,7 @@ function fillPreferencesWindow(window) {
   handlers.push([window, pageVisHandlerId]);
   // release all resources on destroy
   const destroyId = window.connect('destroy', () => {
+    disableGuiIdle();
     Object.keys(idleSourceIds).forEach(sourceId => {
       GLib.Source.remove(sourceId);
     });
