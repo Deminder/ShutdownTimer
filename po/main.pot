@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Shutdown Timer r24\n"
+"Project-Id-Version: Shutdown Timer r25\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-11 22:44+0200\n"
+"POT-Creation-Date: 2022-05-09 00:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/extension.js:85 src/extension.js:117 src/extension.js:273
+#: src/extension.js:85 src/extension.js:117 src/extension.js:274
 #, javascript-format
 msgctxt "Error"
 msgid ""
@@ -45,28 +45,28 @@ msgstr ""
 msgid "Confirmation canceled"
 msgstr ""
 
-#: src/extension.js:273
+#: src/extension.js:274
 msgid "Wake action failed!"
 msgstr ""
 
-#: src/extension.js:283
+#: src/extension.js:284
 msgid "Shutdown Timer stopped"
 msgstr ""
 
-#: src/extension.js:307
+#: src/extension.js:308
 #, javascript-format
 msgctxt "StartSchedulePopup"
 msgid "%s in %s"
 msgstr ""
 
-#: src/extension.js:311 src/lib/Convenience.js:53 src/lib/MenuItem.js:319
+#: src/extension.js:312 src/lib/Convenience.js:53 src/lib/MenuItem.js:319
 #, javascript-format
 msgid "%s hour"
 msgid_plural "%s hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/extension.js:312 src/lib/MenuItem.js:320
+#: src/extension.js:313 src/lib/MenuItem.js:320
 #, javascript-format
 msgid "%s minute"
 msgid_plural "%s minutes"

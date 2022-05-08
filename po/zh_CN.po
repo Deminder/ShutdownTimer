@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-11 22:35+0200\n"
+"POT-Creation-Date: 2022-05-09 00:27+0200\n"
 "PO-Revision-Date: 2022-04-07 22:08+0200\n"
 "Last-Translator: 绿色圣光 <lishaohui.qd@163.com>\n"
 "Language-Team: Chinese (Simplified) <>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: src/extension.js:85 src/extension.js:117 src/extension.js:273
+#: src/extension.js:85 src/extension.js:117 src/extension.js:274
 #, javascript-format
 msgctxt "Error"
 msgid ""
@@ -47,27 +47,27 @@ msgstr ""
 msgid "Confirmation canceled"
 msgstr ""
 
-#: src/extension.js:273
+#: src/extension.js:274
 msgid "Wake action failed!"
 msgstr ""
 
-#: src/extension.js:283
+#: src/extension.js:284
 msgid "Shutdown Timer stopped"
 msgstr "已取消定时关机"
 
-#: src/extension.js:307
+#: src/extension.js:308
 #, javascript-format
 msgctxt "StartSchedulePopup"
 msgid "%s in %s"
 msgstr ""
 
-#: src/extension.js:311 src/lib/Convenience.js:53 src/lib/MenuItem.js:319
+#: src/extension.js:312 src/lib/Convenience.js:53 src/lib/MenuItem.js:319
 #, javascript-format
 msgid "%s hour"
 msgid_plural "%s hours"
 msgstr[0] "%s時"
 
-#: src/extension.js:312 src/lib/MenuItem.js:320
+#: src/extension.js:313 src/lib/MenuItem.js:320
 #, javascript-format
 msgid "%s minute"
 msgid_plural "%s minutes"
