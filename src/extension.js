@@ -211,7 +211,8 @@ async function serveInernalSchedule(mode) {
 }
 
 function foregroundActive() {
-  return Main.sessionMode.currentMode === 'user';
+  // ubuntu22.04 uses 'ubuntu' as 'user' sessionMode
+  return Main.sessionMode.currentMode !== 'unlock-dialog';
 }
 
 function shutdown(mode) {
@@ -344,11 +345,12 @@ function onShutdownScheduleChange(info) {
 function onSessionModeChange(sessionMode) {
   logDebug(`sessionMode: ${sessionMode}`);
   switch (sessionMode) {
-  case 'user':
-    enableForeground();
-    break;
   case 'unlock-dialog':
     disableForeground();
+    break;
+  case 'user':
+  default:
+    enableForeground();
     break;
   }
 }
