@@ -10,7 +10,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const { Install, Convenience } = Me.imports.lib;
-var { logDebug, enableGuiIdle, disableGuiIdle, guiIdle, modeLabel, MODES } =
+var { enableGuiIdle, disableGuiIdle, guiIdle, modeLabel, MODES } =
   Convenience;
 
 const { GLib, Gtk, Gio } = imports.gi;
