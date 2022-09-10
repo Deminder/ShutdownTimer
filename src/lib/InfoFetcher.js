@@ -96,7 +96,9 @@ var InfoFetcher = class {
       this._infoCallback = () => {};
     }
 
-    clearInterval(this._infoTimerId);
+    if (this._infoTimerId !== null) {
+      clearInterval(this._infoTimerId);
+    }
     this._infoTimerId = null;
   }
 
