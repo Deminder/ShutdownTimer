@@ -8,10 +8,10 @@
 /* exported register, unregister, load, unload */
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
-const { Convenience } = Me.imports.lib;
-const { Gio } = imports.gi;
-const { loadInterfaceXML } = imports.misc.fileUtils;
-const { proxyPromise, logDebug } = Convenience;
+const {Convenience} = Me.imports.lib;
+const {Gio} = imports.gi;
+const {loadInterfaceXML} = imports.misc.fileUtils;
+const {proxyPromise, logDebug} = Convenience;
 
 const EndSessionDialogInf = loadInterfaceXML(
   'org.gnome.SessionManager.EndSessionDialog'
@@ -19,8 +19,8 @@ const EndSessionDialogInf = loadInterfaceXML(
 const EndSessionDialogProxy =
   Gio.DBusProxy.makeProxyWrapper(EndSessionDialogInf);
 
-let endSessionDialogPromise = null;
-let wantConnectAction = null;
+let endSessionDialog = null;
+let onCancelAction = null;
 let registered = false;
 
 function unregister() {
@@ -31,38 +31,36 @@ function register() {
 }
 
 function load(cancelAction) {
-  wantConnectAction = cancelAction;
+  onCancelAction = cancelAction;
   _update();
 }
 
 function unload() {
-  wantConnectAction = null;
+  onCancelAction = null;
   _update();
 }
 
 async function _update() {
   try {
-    if (wantConnectAction && !endSessionDialogPromise) {
-      endSessionDialogPromise = proxyPromise(
+    if (onCancelAction && !endSessionDialog) {
+      endSessionDialog = await proxyPromise(
         EndSessionDialogProxy,
         Gio.DBus.session,
         'org.gnome.Shell',
         '/org/gnome/SessionManager/EndSessionDialog'
       );
     }
-    if (endSessionDialogPromise) {
-      const dialog = await endSessionDialogPromise;
-      // and wantConnectAction may have changed after await
-      if (wantConnectAction) {
-        _connect(dialog, wantConnectAction);
+    if (endSessionDialog) {
+      if (onCancelAction === null) {
+        _disconnect(endSessionDialog);
+        endSessionDialog = null;
       } else {
-        _disconnect(dialog);
-        endSessionDialogPromise = null;
+        _connect(endSessionDialog, onCancelAction);
       }
     }
   } catch (err) {
     logError(err, 'EndSessionDialogProxyError');
-    endSessionDialogPromise = null;
+    endSessionDialog = null;
   }
 }
 
