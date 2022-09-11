@@ -62,7 +62,10 @@ function _update() {
   // remove hidden textboxes
   textboxes = textboxes.filter(t => {
     if (t['_hidden']) {
-      clearTimeout(t['_sourceId']);
+      const sid = t['_sourceId'];
+      if (sid) {
+        clearTimeout(sid);
+      }
       delete t['_sourceId'];
       t.destroy();
     }
