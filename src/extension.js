@@ -37,7 +37,6 @@ const LoginManager = imports.misc.loginManager;
 
 // screen and main functionality
 const Main = imports.ui.main;
-const PopupMenu = imports.ui.popupMenu;
 
 // translations
 const Gettext = imports.gettext.domain('ShutdownTimer');
@@ -46,13 +45,13 @@ const C_ = Gettext.pgettext;
 const _n = Gettext.ngettext;
 
 /* GLOBAL VARIABLES */
-let shutdownTimerMenu, timer, separator, settings;
+let stIndicator, timer, settings;
 
 let initialized = false;
 
 function refreshExternalInfo() {
-  if (shutdownTimerMenu !== undefined) {
-    shutdownTimerMenu.refreshExternalInfo();
+  if (stIndicator !== undefined) {
+    stIndicator._shutdownTimerItem.infoFetcher.refresh();
   }
 }
 
@@ -139,8 +138,8 @@ async function serveInernalSchedule(mode) {
   try {
     if (checkCmd !== '') {
       guiIdle(() => {
-        shutdownTimerMenu.checkRunning = true;
-        shutdownTimerMenu.updateShutdownInfo();
+        stIndicator._shutdownTimerItem.checkRunning = true;
+        stIndicator._shutdownTimerItem.updateShutdownInfo();
       });
       maybeShowTextbox(checkCmd);
       maybeShowTextbox(
@@ -168,7 +167,7 @@ async function serveInernalSchedule(mode) {
     // check failed: cancel shutdown
     // stop root protection
     await maybeStopRootModeProtection(
-      new ScheduleInfo.ScheduleInfo({ mode, deadline: 0 }),
+      new ScheduleInfo.ScheduleInfo({mode, deadline: 0}),
       true
     );
     try {
@@ -202,8 +201,8 @@ async function serveInernalSchedule(mode) {
   } finally {
     // update shutdownTimerMenu
     guiIdle(() => {
-      shutdownTimerMenu.checkRunning = false;
-      shutdownTimerMenu.updateShutdownInfo();
+      stIndicator._shutdownTimerItem.checkRunning = false;
+      stIndicator._shutdownTimerItem.updateShutdownInfo();
     });
     // reset schedule timestamp
     settings.set_int('shutdown-timestamp-value', -1);
@@ -225,7 +224,7 @@ function shutdown(mode) {
 
   // refresh root shutdown protection before action
   maybeStartRootModeProtection(
-    new ScheduleInfo.ScheduleInfo({ mode, deadline: 0 })
+    new ScheduleInfo.ScheduleInfo({mode, deadline: 0})
   );
 
   // endSessionDialog gets canceled in unlock-dialog
@@ -357,19 +356,17 @@ function onSessionModeChange(sessionMode) {
 
 function enableForeground() {
   enableGuiIdle();
-  // add separator line and submenu in status area menu
-  const statusMenu = Main.panel.statusArea['aggregateMenu'];
-  if (separator === undefined) {
-    separator = new PopupMenu.PopupSeparatorMenuItem();
-    statusMenu.menu.addMenuItem(separator);
-  }
-  if (shutdownTimerMenu === undefined) {
-    shutdownTimerMenu = new MenuItem.ShutdownTimer();
-    shutdownTimerMenu.checkRunning = CheckCommand.isChecking();
+
+  const qs = Main.panel.statusArea.quickSettings;
+  if (stIndicator === undefined) {
+    stIndicator = new MenuItem.ShutdownTimerIndicator()
+    const stItem = stIndicator._shutdownTimerItem;
+    stItem.checkRunning = CheckCommand.isChecking();
     timer.setTickCallback(
-      shutdownTimerMenu.updateShutdownInfo.bind(shutdownTimerMenu)
+      stItem.updateShutdownInfo.bind(stItem)
     );
-    statusMenu.menu.addMenuItem(shutdownTimerMenu);
+    qs._indicators.add_child(stIndicator)
+    qs._addItems(stIndicator.quickSettingsItems);
   }
   // stop schedule if endSessionDialog cancel button is activated
   EndSessionDialogAware.load(stopSchedule);
@@ -379,19 +376,18 @@ function enableForeground() {
 function disableForeground() {
   disableGuiIdle();
   Textbox.hideAll();
-  if (shutdownTimerMenu !== undefined) {
-    shutdownTimerMenu.destroy();
+  if (stIndicator !== undefined) {
+    for (const item of stIndicator.quickSettingsItems) {
+      item.destroy();
+    }
+    stIndicator.destroy();
     if (timer !== undefined) {
       timer.setTickCallback(null);
       // keep sleep process alive
       timer.stopForeground();
     }
   }
-  shutdownTimerMenu = undefined;
-  if (separator !== undefined) {
-    separator.destroy();
-  }
-  separator = undefined;
+  stIndicator = undefined;
   EndSessionDialogAware.unload();
   logDebug('Disabled foreground.');
 }

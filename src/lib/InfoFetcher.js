@@ -8,6 +8,12 @@
 /* exported InfoFetcher */
 
 const { Gio, GLib } = imports.gi;
+const Me = imports.misc.extensionUtils.getCurrentExtension();
+const { Convenience } = Me.imports.lib;
+const {
+  logDebug,
+  throttleTimeout,
+} = Convenience;
 const ByteArray = imports.byteArray;
 
 function readFile(path) {
@@ -62,19 +68,21 @@ async function shutdownInfo() {
 }
 
 var InfoFetcher = class {
-  constructor() {
+  constructor(onFetch) {
     this._infoTimerId = null;
     this._pending = false;
     this._rtc = 'rtc0';
-    this._infoCallback = () => {};
+    this._onFetch = onFetch;
+    [this.refresh, this.stop] = throttleTimeout(this._refresh.bind(this), 300);
+    this.refresh();
   }
 
-  startScheduleInfoLoop(infoCallback) {
-    this._infoCallback = infoCallback;
-    return this.updateScheduleInfo();
-  }
-
-  _updateInfoLoop() {
+  _refresh() {
+    logDebug('Extra info refresh...');
+    if (this._infoTimerId !== null) {
+      clearInterval(this._infoTimerId);
+    }
+    // restart loop
     this._infoTimerId = setInterval(this.tick.bind(this), 5000);
     this.tick();
   }
@@ -84,27 +92,10 @@ var InfoFetcher = class {
       this._pending = true;
       Promise.all([shutdownInfo(), wakeInfo(this._rtc)]).then(
         ([schedule, wake]) => {
-          this._infoCallback(schedule, wake);
+          this._onFetch(schedule, wake);
           this._pending = false;
         }
       );
     }
-  }
-
-  stopScheduleInfoLoop(clean = true) {
-    if (clean) {
-      this._infoCallback = () => {};
-    }
-
-    if (this._infoTimerId !== null) {
-      clearInterval(this._infoTimerId);
-    }
-    this._infoTimerId = null;
-  }
-
-  updateScheduleInfo() {
-    this.stopScheduleInfoLoop(false);
-    // restart loop
-    this._updateInfoLoop();
   }
 };

@@ -48,6 +48,7 @@ gnome-extensions pack src \
     --podir="../po" \
     --extra-source="bin" \
     --extra-source="lib" \
+    --extra-source="icons" \
     --extra-source="ui" \
     --extra-source="tool" \
     --extra-source="polkit" \

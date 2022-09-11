@@ -59,7 +59,7 @@ var ScheduleInfo = class {
   }
 
   get label() {
-    let label = _('Shutdown Timer');
+    let label = '';
     if (this.scheduled) {
       label = _('%s until %s').format(
         durationString(this.secondsLeft),
