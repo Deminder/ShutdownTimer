@@ -10,12 +10,13 @@
 const { Gio, GLib } = imports.gi;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const { Convenience } = Me.imports.lib;
-const {
-  logDebug,
-  throttleTimeout,
-} = Convenience;
+const { logDebug, throttleTimeout } = Convenience;
 const ByteArray = imports.byteArray;
 
+/**
+ *
+ * @param path
+ */
 function readFile(path) {
   return new Promise((resolve, reject) => {
     try {
@@ -35,17 +36,24 @@ function readFile(path) {
   });
 }
 
+/**
+ *
+ */
 async function isWakeInfoLocal() {
   const content = await readFile('/etc/adjtime').catch(() => '');
   return content.trim().toLowerCase().endsWith('local');
 }
 
+/**
+ *
+ * @param rtc
+ */
 async function wakeInfo(rtc) {
   const content = await readFile(`/sys/class/rtc/${rtc}/wakealarm`).catch(
     () => ''
   );
   let timestamp = content !== '' ? parseInt(content) : -1;
-  if (timestamp > -1 && await isWakeInfoLocal()) {
+  if (timestamp > -1 && (await isWakeInfoLocal())) {
     const dt = GLib.DateTime.new_from_unix_local(timestamp);
     timestamp = dt.to_unix() - dt.get_utc_offset() / 1000000;
     dt.unref();
@@ -53,6 +61,9 @@ async function wakeInfo(rtc) {
   return { deadline: timestamp };
 }
 
+/**
+ *
+ */
 async function shutdownInfo() {
   try {
     const content = await readFile('/run/systemd/shutdown/scheduled');

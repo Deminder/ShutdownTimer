@@ -3,25 +3,26 @@
 **/
 
 .textbox-label {
-	font-size: 2em;
-	font-weight: bold;
-	color: #ffffff;
-	background-color: rgba(10,10,10,0.7);
-	border-radius: .5em;
-	padding: .5em;
+  font-size: 2em;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: rgba(10, 10, 10, 0.7);
+  border-radius: 0.5em;
+  padding: 0.5em;
 }
 
 .settings-button {
-    padding: 4px;
-    border-radius: 32px;
-    margin: 1px;
+  padding: 4px;
+  border-radius: 32px;
+  margin: 1px;
 }
 
-.settings-button:hover, .settings-button:focus {
-    padding: 5px;
-    margin: 0px;
+.settings-button:hover,
+.settings-button:focus {
+  padding: 5px;
+  margin: 0px;
 }
 
 .settings-button > StIcon {
-    icon-size: 15px;
+  icon-size: 15px;
 }

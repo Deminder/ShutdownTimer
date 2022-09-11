@@ -14,6 +14,10 @@ const _n = Gettext.ngettext;
 
 let debugMode = false;
 
+/**
+ *
+ * @param {...any} args
+ */
 function logDebug(...args) {
   if (debugMode) {
     log(...args);
@@ -22,6 +26,10 @@ function logDebug(...args) {
 
 var MODES = ['suspend', 'poweroff', 'reboot'];
 var WAKE_MODES = ['wake', 'no-wake'];
+/**
+ *
+ * @param mode
+ */
 function modeLabel(mode) {
   return {
     suspend: _('Suspend'),
@@ -32,6 +40,13 @@ function modeLabel(mode) {
   }[mode];
 }
 
+/**
+ *
+ * @param ProxyType
+ * @param session
+ * @param dest
+ * @param objectPath
+ */
 function proxyPromise(ProxyType, session, dest, objectPath) {
   return new Promise((resolve, reject) => {
     new ProxyType(session, dest, objectPath, (proxy, error) => {
@@ -44,6 +59,10 @@ function proxyPromise(ProxyType, session, dest, objectPath) {
   });
 }
 
+/**
+ *
+ * @param seconds
+ */
 function durationString(seconds) {
   const sign = Math.sign(seconds);
   const absSec = Math.floor(Math.abs(seconds));
@@ -57,6 +76,12 @@ function durationString(seconds) {
   return _n('%s min', '%s mins', minutes).format(sign * minutes);
 }
 
+/**
+ *
+ * @param minutes
+ * @param hrFmt
+ * @param minFmt
+ */
 function longDurationString(minutes, hrFmt, minFmt) {
   const hours = Math.floor(minutes / 60);
   const residualMinutes = minutes % 60;
@@ -71,10 +96,16 @@ let idleSourceId = null;
 let idleCallbacks = [];
 let idleEnabled = false;
 
+/**
+ *
+ */
 function enableGuiIdle() {
   idleEnabled = true;
 }
 
+/**
+ *
+ */
 function disableGuiIdle() {
   idleEnabled = false;
   idleCallbacks = [];
@@ -84,6 +115,10 @@ function disableGuiIdle() {
   idleSourceId = null;
 }
 
+/**
+ *
+ * @param callback
+ */
 function guiIdle(callback) {
   if (idleEnabled) {
     idleCallbacks.push(callback);
@@ -100,6 +135,11 @@ function guiIdle(callback) {
   }
 }
 
+/**
+ *
+ * @param timeoutFunc
+ * @param delayMillis
+ */
 function throttleTimeout(timeoutFunc, delayMillis) {
   let current = null;
   return [

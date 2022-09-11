@@ -15,6 +15,11 @@ const { Gio, GLib } = imports.gi;
 const Gettext = imports.gettext.domain('ShutdownTimer');
 const _ = Gettext.gettext;
 
+/**
+ *
+ * @param stream
+ * @param cancellable
+ */
 function readLine(stream, cancellable) {
   return new Promise((resolve, reject) => {
     stream.read_line_async(0, cancellable, (s, res) => {
@@ -33,6 +38,10 @@ function readLine(stream, cancellable) {
   });
 }
 
+/**
+ *
+ * @param str
+ */
 function quoteEscape(str) {
   return str.replaceAll('\\', '\\\\').replaceAll('"', '\\"');
 }
@@ -45,9 +54,15 @@ function quoteEscape(str) {
  * @param {string[] | string} argv - a list of string arguments or command line that will be parsed
  * @param {Gio.Cancellable} [cancellable] - optional cancellable object
  * @param {boolean} shell - run command as shell command
+ * @param logFunc
  * @returns {Promise<void>} - The process success
  */
-function execCheck(argv, cancellable = null, shell = true, logFunc = undefined) {
+function execCheck(
+  argv,
+  cancellable = null,
+  shell = true,
+  logFunc = undefined
+) {
   if (!shell && typeof argv === 'string') {
     argv = GLib.shell_parse_argv(argv)[1];
   }
@@ -71,7 +86,7 @@ function execCheck(argv, cancellable = null, shell = true, logFunc = undefined) 
     cancelId = cancellable.connect(() => {
       if (logFunc !== undefined) {
         if (isRootProc) {
-          logFunc('# ' + _('Can not cancel root process!'));
+          logFunc(`# ${_('Can not cancel root process!')}`);
         } else {
           logFunc(`[${_('CANCEL')}]`);
         }
@@ -146,10 +161,13 @@ function execCheck(argv, cancellable = null, shell = true, logFunc = undefined) 
   });
 }
 
+/**
+ *
+ */
 function installedScriptPath() {
   for (const name of [
     'shutdowntimerctl',
-    'shutdowntimerctl-' + GLib.get_user_name(),
+    `shutdowntimerctl-${GLib.get_user_name()}`,
   ]) {
     const standard = GLib.find_program_in_path(name);
     if (standard !== null) {
@@ -157,7 +175,7 @@ function installedScriptPath() {
     }
     for (const bindir of ['/usr/local/bin/', '/usr/bin/']) {
       const path = bindir + name;
-      logDebug('Looking for: ' + path);
+      logDebug(`Looking for: ${path}`);
       if (Gio.File.new_for_path(path).query_exists(null)) {
         return path;
       }
@@ -166,6 +184,12 @@ function installedScriptPath() {
   return null;
 }
 
+/**
+ *
+ * @param action
+ * @param cancellable
+ * @param logFunc
+ */
 function _runInstaller(action, cancellable, logFunc) {
   const user = GLib.get_user_name();
   logDebug(`? installer.sh --tool-user ${user} ${action}`);
@@ -183,17 +207,32 @@ function _runInstaller(action, cancellable, logFunc) {
   );
 }
 
+/**
+ *
+ * @param cancellable
+ * @param logFunc
+ */
 async function installScript(cancellable, logFunc) {
   // install for user if installed in the /home directory
   await _runInstaller('install', cancellable, logFunc);
   return true;
 }
 
+/**
+ *
+ * @param cancellable
+ * @param logFunc
+ */
 async function uninstallScript(cancellable, logFunc) {
   await _runInstaller('uninstall', cancellable, logFunc);
   return true;
 }
 
+/**
+ *
+ * @param args
+ * @param noScriptArgs
+ */
 function runWithScript(args, noScriptArgs) {
   const installedScript = installedScriptPath();
   if (installedScript !== null) {
@@ -205,6 +244,11 @@ function runWithScript(args, noScriptArgs) {
   return execCheck(noScriptArgs, null, false);
 }
 
+/**
+ *
+ * @param minutes
+ * @param reboot
+ */
 function shutdown(minutes, reboot = false) {
   return runWithScript(
     [reboot ? 'reboot' : 'shutdown', `${minutes}`],
@@ -212,14 +256,24 @@ function shutdown(minutes, reboot = false) {
   );
 }
 
+/**
+ *
+ */
 function shutdownCancel() {
   return runWithScript(['shutdown-cancel'], ['shutdown', '-c']);
 }
 
+/**
+ *
+ * @param minutes
+ */
 function wake(minutes) {
   return runWithScript(['wake', `${minutes}`]);
 }
 
+/**
+ *
+ */
 function wakeCancel() {
   return runWithScript(['wake-cancel']);
 }

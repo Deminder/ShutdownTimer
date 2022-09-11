@@ -49,12 +49,19 @@ let stIndicator, timer, settings;
 
 let initialized = false;
 
+/**
+ *
+ */
 function refreshExternalInfo() {
   if (stIndicator !== undefined) {
     stIndicator._shutdownTimerItem.infoFetcher.refresh();
   }
 }
 
+/**
+ *
+ * @param textmsg
+ */
 function maybeShowTextbox(textmsg) {
   if (settings.get_boolean('show-textboxes-value')) {
     guiIdle(() => {
@@ -63,21 +70,26 @@ function maybeShowTextbox(textmsg) {
   }
 }
 
+/**
+ *
+ * @param info
+ * @param stopScheduled
+ */
 async function maybeStopRootModeProtection(info, stopScheduled = false) {
   if (
     (stopScheduled || !info.scheduled) &&
     settings.get_boolean('root-mode-value')
   ) {
-    logDebug('Stop root mode protection for: ' + info.mode);
+    logDebug(`Stop root mode protection for: ${info.mode}`);
     try {
       switch (info.mode) {
-      case 'poweroff':
-      case 'reboot':
-        await RootMode.shutdownCancel();
-        refreshExternalInfo();
-        break;
-      default:
-        logDebug('No root mode protection stopped for: ' + info.mode);
+        case 'poweroff':
+        case 'reboot':
+          await RootMode.shutdownCancel();
+          refreshExternalInfo();
+          break;
+        default:
+          logDebug(`No root mode protection stopped for: ${info.mode}`);
       }
     } catch (err) {
       maybeShowTextbox(
@@ -93,23 +105,24 @@ async function maybeStopRootModeProtection(info, stopScheduled = false) {
  * Insure that shutdown is executed even if the GLib timer fails by running
  * the `shutdown` command delayed by 1 minute. Suspend is not insured.
  *
+ * @param info
  */
 async function maybeStartRootModeProtection(info) {
   if (info.scheduled && settings.get_boolean('root-mode-value')) {
-    logDebug('Start root mode protection for: ' + info.label);
+    logDebug(`Start root mode protection for: ${info.label}`);
     try {
       const minutes = Math.max(0, info.minutes) + 1;
       switch (info.mode) {
-      case 'poweroff':
-        await RootMode.shutdown(minutes);
-        refreshExternalInfo();
-        break;
-      case 'reboot':
-        await RootMode.shutdown(minutes, true);
-        refreshExternalInfo();
-        break;
-      default:
-        logDebug('No root mode protection started for: ' + info.mode);
+        case 'poweroff':
+          await RootMode.shutdown(minutes);
+          refreshExternalInfo();
+          break;
+        case 'reboot':
+          await RootMode.shutdown(minutes, true);
+          refreshExternalInfo();
+          break;
+        default:
+          logDebug(`No root mode protection started for: ${info.mode}`);
       }
     } catch (err) {
       maybeShowTextbox(
@@ -120,12 +133,19 @@ async function maybeStartRootModeProtection(info) {
   }
 }
 
+/**
+ *
+ * @param wakeMinutes
+ */
 async function maybeStartWake(wakeMinutes) {
   if (settings.get_boolean('auto-wake-value')) {
     await wakeAction('wake', wakeMinutes);
   }
 }
 
+/**
+ *
+ */
 async function maybeStopWake() {
   if (settings.get_boolean('auto-wake-value')) {
     await wakeAction('no-wake');
@@ -133,6 +153,10 @@ async function maybeStopWake() {
 }
 
 // timer action (shutdown/reboot/suspend)
+/**
+ *
+ * @param mode
+ */
 async function serveInernalSchedule(mode) {
   const checkCmd = maybeCheckCmdString();
   try {
@@ -167,7 +191,7 @@ async function serveInernalSchedule(mode) {
     // check failed: cancel shutdown
     // stop root protection
     await maybeStopRootModeProtection(
-      new ScheduleInfo.ScheduleInfo({mode, deadline: 0}),
+      new ScheduleInfo.ScheduleInfo({ mode, deadline: 0 }),
       true
     );
     try {
@@ -209,11 +233,18 @@ async function serveInernalSchedule(mode) {
   }
 }
 
+/**
+ *
+ */
 function foregroundActive() {
   // ubuntu22.04 uses 'ubuntu' as 'user' sessionMode
   return Main.sessionMode.currentMode !== 'unlock-dialog';
 }
 
+/**
+ *
+ * @param mode
+ */
 function shutdown(mode) {
   if (foregroundActive()) {
     Main.overview.hide();
@@ -224,49 +255,54 @@ function shutdown(mode) {
 
   // refresh root shutdown protection before action
   maybeStartRootModeProtection(
-    new ScheduleInfo.ScheduleInfo({mode, deadline: 0})
+    new ScheduleInfo.ScheduleInfo({ mode, deadline: 0 })
   );
 
   // endSessionDialog gets canceled in unlock-dialog
   // gnome 42 bug?: endSessionDialog + Lock-session => endSessionDialog blocks login screen
   switch (mode) {
-  case 'reboot':
-    if (foregroundActive()) {
-      EndSessionDialogAware.register();
-      getSession().RebootRemote(0);
-    } else {
-      run('reboot');
-    }
-    break;
-  case 'suspend':
-    LoginManager.getLoginManager().suspend();
-    break;
-  default:
-    if (foregroundActive) {
-      EndSessionDialogAware.register();
-      getSession().ShutdownRemote(0); // shutdown after 60s
-    } else {
-      run('poweroff');
-    }
-    break;
+    case 'reboot':
+      if (foregroundActive()) {
+        EndSessionDialogAware.register();
+        getSession().RebootRemote(0);
+      } else {
+        run('reboot');
+      }
+      break;
+    case 'suspend':
+      LoginManager.getLoginManager().suspend();
+      break;
+    default:
+      if (foregroundActive) {
+        EndSessionDialogAware.register();
+        getSession().ShutdownRemote(0); // shutdown after 60s
+      } else {
+        run('poweroff');
+      }
+      break;
   }
 }
 
 /* ACTION FUNCTIONS */
+/**
+ *
+ * @param mode
+ * @param minutes
+ */
 async function wakeAction(mode, minutes) {
   try {
     switch (mode) {
-    case 'wake':
-      await RootMode.wake(minutes);
-      refreshExternalInfo();
-      return;
-    case 'no-wake':
-      await RootMode.wakeCancel();
-      refreshExternalInfo();
-      return;
-    default:
-      logError(new Error('Unknown wake mode: ' + mode));
-      return false;
+      case 'wake':
+        await RootMode.wake(minutes);
+        refreshExternalInfo();
+        return;
+      case 'no-wake':
+        await RootMode.wakeCancel();
+        refreshExternalInfo();
+        return;
+      default:
+        logError(new Error(`Unknown wake mode: ${mode}`));
+        return;
     }
   } catch (err) {
     maybeShowTextbox(
@@ -275,6 +311,10 @@ async function wakeAction(mode, minutes) {
   }
 }
 
+/**
+ *
+ * @param stopProtection
+ */
 function stopSchedule(stopProtection = true) {
   EndSessionDialogAware.unregister();
   const canceled = CheckCommand.maybeCancel();
@@ -292,6 +332,11 @@ function stopSchedule(stopProtection = true) {
   return Promise.resolve();
 }
 
+/**
+ *
+ * @param maxTimerMinutes
+ * @param wakeMinutes
+ */
 async function startSchedule(maxTimerMinutes, wakeMinutes) {
   EndSessionDialogAware.unregister();
   if (CheckCommand.maybeCancel()) {
@@ -325,6 +370,9 @@ async function startSchedule(maxTimerMinutes, wakeMinutes) {
   ]);
 }
 
+/**
+ *
+ */
 function maybeCheckCmdString() {
   const cmd = settings
     .get_string('check-command-value')
@@ -335,37 +383,46 @@ function maybeCheckCmdString() {
   return settings.get_boolean('enable-check-command-value') ? cmd : '';
 }
 
+/**
+ *
+ * @param info
+ */
 function onShutdownScheduleChange(info) {
   if (timer !== undefined) {
     timer.adjustTo(info);
   }
 }
 
+/**
+ *
+ * @param sessionMode
+ */
 function onSessionModeChange(sessionMode) {
   logDebug(`sessionMode: ${sessionMode}`);
   switch (sessionMode) {
-  case 'unlock-dialog':
-    disableForeground();
-    break;
-  case 'user':
-  default:
-    enableForeground();
-    break;
+    case 'unlock-dialog':
+      disableForeground();
+      break;
+    case 'user':
+    default:
+      enableForeground();
+      break;
   }
 }
 
+/**
+ *
+ */
 function enableForeground() {
   enableGuiIdle();
 
   const qs = Main.panel.statusArea.quickSettings;
   if (stIndicator === undefined) {
-    stIndicator = new MenuItem.ShutdownTimerIndicator()
+    stIndicator = new MenuItem.ShutdownTimerIndicator();
     const stItem = stIndicator._shutdownTimerItem;
     stItem.checkRunning = CheckCommand.isChecking();
-    timer.setTickCallback(
-      stItem.updateShutdownInfo.bind(stItem)
-    );
-    qs._indicators.add_child(stIndicator)
+    timer.setTickCallback(stItem.updateShutdownInfo.bind(stItem));
+    qs._indicators.add_child(stIndicator);
     qs._addItems(stIndicator.quickSettingsItems);
   }
   // stop schedule if endSessionDialog cancel button is activated
@@ -373,6 +430,9 @@ function enableForeground() {
   logDebug('Enabled foreground.');
 }
 
+/**
+ *
+ */
 function disableForeground() {
   disableGuiIdle();
   Textbox.hideAll();
@@ -393,6 +453,9 @@ function disableForeground() {
 }
 
 /* EXTENSION MAIN FUNCTIONS */
+/**
+ *
+ */
 function init() {
   // initialize translations
   ExtensionUtils.initTranslations();
@@ -401,6 +464,9 @@ function init() {
 let throttleDisable = null;
 let throttleDisableCancel = null;
 
+/**
+ *
+ */
 function enable() {
   if (!initialized) {
     [throttleDisable, throttleDisableCancel] = throttleTimeout(
@@ -439,6 +505,9 @@ function enable() {
   }
 }
 
+/**
+ *
+ */
 function disable() {
   // unlock-dialog session-mode is required such that the timer action can trigger
   disableForeground();
@@ -451,6 +520,9 @@ function disable() {
   }
 }
 
+/**
+ *
+ */
 function completeDisable() {
   if (initialized) {
     if (timer !== undefined) {

@@ -19,6 +19,11 @@ const _ = Gettext.gettext;
 
 let installCancel;
 
+/**
+ *
+ * @param action
+ * @param logInstall
+ */
 function installAction(action, logInstall) {
   if (installCancel !== undefined) {
     logDebug('Trigger cancel install.');
@@ -32,15 +37,24 @@ function installAction(action, logInstall) {
   }
 }
 
+/**
+ *
+ */
 function checkInstalled() {
   const scriptPath = RootMode.installedScriptPath();
   const isInstalled = scriptPath !== null;
   if (isInstalled) {
-    logDebug('Existing installation at: ' + scriptPath);
+    logDebug(`Existing installation at: ${scriptPath}`);
   }
   return isInstalled;
 }
 
+/**
+ *
+ * @param action
+ * @param logInstall
+ * @param cancel
+ */
 async function _installAction(action, logInstall, cancel) {
   logInstall(`[${_('START')} ${actionLabel(action)}]`);
   try {
@@ -56,10 +70,17 @@ async function _installAction(action, logInstall, cancel) {
   }
 }
 
+/**
+ *
+ * @param action
+ */
 function actionLabel(action) {
   return { install: _('install'), uninstall: _('uninstall') }[action];
 }
 
+/**
+ *
+ */
 function reset() {
   if (installCancel !== undefined) {
     installCancel.cancel();

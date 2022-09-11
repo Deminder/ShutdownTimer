@@ -16,11 +16,9 @@ let checkCancel;
 
 /**
  * Wait for checkCmd to execute successfully.
+ *
  * @param {string} checkCmd check command
- * @param {string} mode shutdown mode
- * @param {() => void} onStart
  * @param {(line: string) => void} onLog
- * @param {(code: string) => void} onAbort
  * @param {async () => void} redoRootProtection
  */
 function doCheck(checkCmd, onLog, redoRootProtection) {
@@ -39,6 +37,12 @@ function doCheck(checkCmd, onLog, redoRootProtection) {
     continueRootProtectionDuringCheck(checkWatchCancel, redoRootProtection),
   ]);
 }
+/**
+ *
+ * @param checkCmd
+ * @param checkWatchCancel
+ * @param onLog
+ */
 async function _doCheck(checkCmd, checkWatchCancel, onLog) {
   try {
     await RootMode.execCheck(checkCmd, checkCancel, true, onLog);
@@ -49,6 +53,11 @@ async function _doCheck(checkCmd, checkWatchCancel, onLog) {
   }
 }
 
+/**
+ *
+ * @param cancellable
+ * @param redoRootProtection
+ */
 async function continueRootProtectionDuringCheck(
   cancellable,
   redoRootProtection
@@ -67,10 +76,16 @@ async function continueRootProtectionDuringCheck(
   }
 }
 
+/**
+ *
+ */
 function isChecking() {
   return checkCancel !== undefined && !checkCancel.is_cancelled();
 }
 
+/**
+ *
+ */
 function maybeCancel() {
   const doCancel = isChecking();
   if (doCancel) {

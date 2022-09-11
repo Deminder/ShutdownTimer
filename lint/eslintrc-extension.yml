@@ -1,0 +1,10 @@
+# SPDX-FileCopyrightText: 2021 Romain Vigier <contact AT romainvigier.fr>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+rules:
+  no-unused-vars:
+    - error
+    - vars: 'local'
+      varsIgnorePattern: (^unused|_$)
+      argsIgnorePattern: ^(unused|_)
+

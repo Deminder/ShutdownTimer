@@ -10,11 +10,13 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const { Install, Convenience } = Me.imports.lib;
-var { enableGuiIdle, disableGuiIdle, guiIdle, modeLabel, MODES } =
-  Convenience;
+var { enableGuiIdle, disableGuiIdle, guiIdle, modeLabel, MODES } = Convenience;
 
 const { GLib, Gtk, Gio } = imports.gi;
 
+/**
+ *
+ */
 function init() {
   ExtensionUtils.initTranslations();
 }
@@ -47,14 +49,21 @@ const templateComponents = {
   },
 };
 
-function init_page(pageId, builder, settings, handlers) {
+/**
+ *
+ * @param pageId
+ * @param builder
+ * @param settings
+ * @param handlers
+ */
+function initPage(pageId, builder, settings, handlers) {
   const page = builder.get_object(pageId);
   const pageName = pageId.split('_').at(-1);
   if (!page) {
     throw new Error(`${pageId} not found!`);
   }
 
-  const connect_comp = (baseName, component) => {
+  const connectComp = (baseName, component) => {
     const baseId = baseName.replaceAll('-', '_');
     const settingsName = `${baseName}-value`;
     const compId = `${baseId}_${component}`;
@@ -94,7 +103,7 @@ function init_page(pageId, builder, settings, handlers) {
 
   if (pageName in templateComponents) {
     for (const [k, v] of Object.entries(templateComponents[pageName])) {
-      connect_comp(k, v);
+      connectComp(k, v);
     }
   }
 
@@ -111,7 +120,7 @@ function init_page(pageId, builder, settings, handlers) {
     const checkCommandBuffer = builder.get_object('check_command_textbuffer');
     const commentTag = new Gtk.TextTag({ foreground: 'grey' });
     checkCommandBuffer.get_tag_table().add(commentTag);
-    const apply_comment_tags = b => {
+    const applyCommentTags = b => {
       b.remove_tag(commentTag, b.get_start_iter(), b.get_end_iter());
       const lc = b.get_line_count();
       for (let i = 0; i < lc; i++) {
@@ -123,10 +132,10 @@ function init_page(pageId, builder, settings, handlers) {
         }
       }
     };
-    apply_comment_tags(checkCommandBuffer);
+    applyCommentTags(checkCommandBuffer);
     handlers.push([
       checkCommandBuffer,
-      checkCommandBuffer.connect('changed', apply_comment_tags),
+      checkCommandBuffer.connect('changed', applyCommentTags),
     ]);
   } else if (pageName === 'install') {
     // install log textbuffer updates
@@ -137,8 +146,8 @@ function init_page(pageId, builder, settings, handlers) {
     logTextBuffer.get_tag_table().add(errorTag);
     logTextBuffer.get_tag_table().add(successTag);
     const appendLogLine = line => {
-      line = ['[', '#'].includes(line[0]) ? line : ' ' + line;
-      logTextBuffer.insert(logTextBuffer.get_end_iter(), line + '\n', -1);
+      line = ['[', '#'].includes(line[0]) ? line : ` ${line}`;
+      logTextBuffer.insert(logTextBuffer.get_end_iter(), `${line}\n`, -1);
       const lastLineIndex = logTextBuffer.get_line_count() - 1;
       const applyTag = tag => {
         logTextBuffer.apply_tag(
@@ -171,6 +180,10 @@ function init_page(pageId, builder, settings, handlers) {
   return page;
 }
 
+/**
+ *
+ * @param window
+ */
 function fillPreferencesWindow(window) {
   const builder = Gtk.Builder.new();
   builder.add_from_file(
@@ -181,11 +194,11 @@ function fillPreferencesWindow(window) {
   const handlers = [];
   const idleSourceIds = {};
   const pageNames = ['install', 'shutdown', 'wake', 'display', 'check'].map(
-    n => 'shutdowntimer-prefs-' + n
+    n => `shutdowntimer-prefs-${n}`
   );
   enableGuiIdle();
   for (const page of pageNames.map(name =>
-    init_page(name.replaceAll('-', '_'), builder, settings, handlers)
+    initPage(name.replaceAll('-', '_'), builder, settings, handlers)
   )) {
     window.add(page);
   }

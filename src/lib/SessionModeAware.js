@@ -10,6 +10,10 @@ const Main = imports.ui.main;
 
 let sessionId = null;
 
+/**
+ *
+ * @param onSessionModeChange
+ */
 function load(onSessionModeChange) {
   if (sessionId === null) {
     sessionId = Main.sessionMode.connect('updated', session =>
@@ -18,6 +22,9 @@ function load(onSessionModeChange) {
   }
 }
 
+/**
+ *
+ */
 function unload() {
   if (sessionId !== null) {
     Main.sessionMode.disconnect(sessionId);

@@ -8,10 +8,10 @@
 /* exported register, unregister, load, unload */
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
-const {Convenience} = Me.imports.lib;
-const {Gio} = imports.gi;
-const {loadInterfaceXML} = imports.misc.fileUtils;
-const {proxyPromise, logDebug} = Convenience;
+const { Convenience } = Me.imports.lib;
+const { Gio } = imports.gi;
+const { loadInterfaceXML } = imports.misc.fileUtils;
+const { proxyPromise, logDebug } = Convenience;
 
 const EndSessionDialogInf = loadInterfaceXML(
   'org.gnome.SessionManager.EndSessionDialog'
@@ -23,23 +23,39 @@ let endSessionDialog = null;
 let onCancelAction = null;
 let registered = false;
 
+/**
+ *
+ */
 function unregister() {
   registered = false;
 }
+/**
+ *
+ */
 function register() {
   registered = true;
 }
 
+/**
+ *
+ * @param cancelAction
+ */
 function load(cancelAction) {
   onCancelAction = cancelAction;
   _update();
 }
 
+/**
+ *
+ */
 function unload() {
   onCancelAction = null;
   _update();
 }
 
+/**
+ *
+ */
 async function _update() {
   try {
     if (onCancelAction && !endSessionDialog) {
@@ -64,6 +80,11 @@ async function _update() {
   }
 }
 
+/**
+ *
+ * @param dialog
+ * @param cancelAction
+ */
 function _connect(dialog, cancelAction) {
   if (!('_cancelSignalId' in dialog)) {
     logDebug('Connect cancel of endSessionDialog...');
@@ -78,6 +99,10 @@ function _connect(dialog, cancelAction) {
   }
 }
 
+/**
+ *
+ * @param dialog
+ */
 function _disconnect(dialog) {
   const signalId = dialog['_cancelSignalId'];
   if (signalId) {

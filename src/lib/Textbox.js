@@ -17,16 +17,26 @@ let textboxes = [];
 let throttleUpdate = null;
 let throttleUpdateCancel = null;
 
+/**
+ *
+ */
 function init() {
   [throttleUpdate, throttleUpdateCancel] = throttleTimeout(_update, 50);
 }
 
+/**
+ *
+ */
 function uninit() {
   throttleUpdate = null;
   throttleUpdateCancel = null;
 }
 
 // show textbox with message
+/**
+ *
+ * @param textmsg
+ */
 function showTextbox(textmsg) {
   for (const t of textboxes) {
     // replace old textbox if it has the same text
@@ -34,7 +44,7 @@ function showTextbox(textmsg) {
       t['_hidden'] = 1;
     }
   }
-  logDebug('show textbox: ' + textmsg);
+  logDebug(`show textbox: ${textmsg}`);
   const textbox = new St.Label({
     style_class: 'textbox-label',
     text: textmsg,
@@ -45,6 +55,9 @@ function showTextbox(textmsg) {
   throttleUpdate();
 }
 
+/**
+ *
+ */
 function _update() {
   // remove hidden textboxes
   textboxes = textboxes.filter(t => {
@@ -56,16 +69,16 @@ function _update() {
     return !t['_hidden'];
   });
   const monitor = Main.layoutManager.primaryMonitor;
-  let height_offset = 0;
+  let heightOffset = 0;
   textboxes.forEach((textbox, i) => {
     if (i === 0) {
-      height_offset = -textbox.height / 2;
+      heightOffset = -textbox.height / 2;
     }
     textbox.set_position(
       monitor.x + Math.floor(monitor.width / 2 - textbox.width / 2),
-      monitor.y + Math.floor(monitor.height / 2 + height_offset)
+      monitor.y + Math.floor(monitor.height / 2 + heightOffset)
     );
-    height_offset += textbox.height + 10;
+    heightOffset += textbox.height + 10;
     if (!('_sourceId' in textbox)) {
       // start fadeout of textbox after 3 seconds
       textbox['_sourceId'] = setTimeout(() => {
@@ -86,11 +99,14 @@ function _update() {
       textbox.opacity =
         i === 0
           ? 255
-          : Math.max(25, 25 + 230 * (1 - height_offset / (monitor.height / 2)));
+          : Math.max(25, 25 + 230 * (1 - heightOffset / (monitor.height / 2)));
     }
   });
 }
 
+/**
+ *
+ */
 function hideAll() {
   throttleUpdateCancel();
   for (const t of textboxes) {

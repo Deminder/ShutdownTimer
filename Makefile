@@ -23,7 +23,8 @@ zip: $(DEFAULT_ZIP)
 debug-zip: $(DEBUG_ZIP)
 
 lint:
-	eslint src
+	npm run lint
+	npm run prettier
 
 define INSTALL_EXTENSION
 .PHONY: $(1)

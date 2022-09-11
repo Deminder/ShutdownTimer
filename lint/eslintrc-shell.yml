@@ -1,0 +1,20 @@
+# SPDX-FileCopyrightText: GNOME Shell developers
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+# From https://gitlab.gnome.org/GNOME/gnome-shell/
+rules:
+  camelcase:
+    - error
+    - properties: never
+      allow: [^vfunc_, ^on_]
+  consistent-return: error
+  key-spacing:
+    - error
+    - mode: minimum
+      beforeColon: false
+      afterColon: true
+  object-curly-spacing:
+    - error
+    - always
+  prefer-arrow-callback: error
+
