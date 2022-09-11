@@ -37,6 +37,7 @@ const LoginManager = imports.misc.loginManager;
 
 // screen and main functionality
 const Main = imports.ui.main;
+const PopupMenu = imports.ui.popupMenu;
 
 // translations
 const Gettext = imports.gettext.domain('ShutdownTimer');
@@ -45,7 +46,7 @@ const C_ = Gettext.pgettext;
 const _n = Gettext.ngettext;
 
 /* GLOBAL VARIABLES */
-let stIndicator, timer, settings;
+let shutdownTimerMenu, timer, separator, settings;
 
 let initialized = false;
 
@@ -53,8 +54,8 @@ let initialized = false;
  *
  */
 function refreshExternalInfo() {
-  if (stIndicator !== undefined) {
-    stIndicator._shutdownTimerItem.infoFetcher.refresh();
+  if (shutdownTimerMenu !== undefined) {
+    shutdownTimerMenu.infoFetcher.refresh();
   }
 }
 
@@ -162,8 +163,8 @@ async function serveInernalSchedule(mode) {
   try {
     if (checkCmd !== '') {
       guiIdle(() => {
-        stIndicator._shutdownTimerItem.checkRunning = true;
-        stIndicator._shutdownTimerItem.updateShutdownInfo();
+        shutdownTimerMenu.checkRunning = true;
+        shutdownTimerMenu.updateShutdownInfo();
       });
       maybeShowTextbox(checkCmd);
       maybeShowTextbox(
@@ -225,8 +226,8 @@ async function serveInernalSchedule(mode) {
   } finally {
     // update shutdownTimerMenu
     guiIdle(() => {
-      stIndicator._shutdownTimerItem.checkRunning = false;
-      stIndicator._shutdownTimerItem.updateShutdownInfo();
+      shutdownTimerMenu.checkRunning = false;
+      shutdownTimerMenu.updateShutdownInfo();
     });
     // reset schedule timestamp
     settings.set_int('shutdown-timestamp-value', -1);
@@ -415,15 +416,19 @@ function onSessionModeChange(sessionMode) {
  */
 function enableForeground() {
   enableGuiIdle();
-
-  const qs = Main.panel.statusArea.quickSettings;
-  if (stIndicator === undefined) {
-    stIndicator = new MenuItem.ShutdownTimerIndicator();
-    const stItem = stIndicator._shutdownTimerItem;
-    stItem.checkRunning = CheckCommand.isChecking();
-    timer.setTickCallback(stItem.updateShutdownInfo.bind(stItem));
-    qs._indicators.add_child(stIndicator);
-    qs._addItems(stIndicator.quickSettingsItems);
+  // add separator line and submenu in status area menu
+  const statusMenu = Main.panel.statusArea['aggregateMenu'];
+  if (separator === undefined) {
+    separator = new PopupMenu.PopupSeparatorMenuItem();
+    statusMenu.menu.addMenuItem(separator);
+  }
+  if (shutdownTimerMenu === undefined) {
+    shutdownTimerMenu = new MenuItem.ShutdownTimer();
+    shutdownTimerMenu.checkRunning = CheckCommand.isChecking();
+    timer.setTickCallback(
+      shutdownTimerMenu.updateShutdownInfo.bind(shutdownTimerMenu)
+    );
+    statusMenu.menu.addMenuItem(shutdownTimerMenu);
   }
   // stop schedule if endSessionDialog cancel button is activated
   EndSessionDialogAware.load(stopSchedule);
@@ -436,18 +441,19 @@ function enableForeground() {
 function disableForeground() {
   disableGuiIdle();
   Textbox.hideAll();
-  if (stIndicator !== undefined) {
-    for (const item of stIndicator.quickSettingsItems) {
-      item.destroy();
-    }
-    stIndicator.destroy();
+  if (shutdownTimerMenu !== undefined) {
+    shutdownTimerMenu.destroy();
     if (timer !== undefined) {
       timer.setTickCallback(null);
       // keep sleep process alive
       timer.stopForeground();
     }
   }
-  stIndicator = undefined;
+  shutdownTimerMenu = undefined;
+  if (separator !== undefined) {
+    separator.destroy();
+  }
+  separator = undefined;
   EndSessionDialogAware.unload();
   logDebug('Disabled foreground.');
 }

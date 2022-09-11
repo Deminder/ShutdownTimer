@@ -5,7 +5,7 @@
  * @copyright 2021
  * @license GNU General Public License v3.0
  */
-/* exported ShutdownTimerIndicator, init, uninit, MODES */
+/* exported ShutdownTimer, init, uninit, MODES */
 
 const { GObject, St, Gio, Clutter } = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -24,7 +24,6 @@ const {
 // menu items
 const PopupMenu = imports.ui.popupMenu;
 const Slider = imports.ui.slider;
-const { QuickMenuToggle, SystemIndicator } = imports.ui.quickSettings;
 
 // translations
 const Gettext = imports.gettext.domain('ShutdownTimer');
@@ -35,45 +34,10 @@ const C_ = Gettext.pgettext;
 let ACTIONS;
 let settings;
 
-var ShutdownTimerItem = GObject.registerClass(
-  {
-    Properties: {
-      'shutdown-text': GObject.ParamSpec.string(
-        'shutdown-text',
-        '',
-        '',
-        GObject.ParamFlags.READWRITE,
-        ''
-      ),
-      'indicator-icon-name': GObject.ParamSpec.string(
-        'indicator-icon-name',
-        '',
-        '',
-        GObject.ParamFlags.READWRITE,
-        'go-down-symbolic'
-      ),
-      'indicator-show': GObject.ParamSpec.boolean(
-        'indicator-show',
-        '',
-        '',
-        GObject.ParamFlags.READWRITE,
-        false
-      ),
-    },
-  },
-  class ShutdownTimerItem extends QuickMenuToggle {
+var ShutdownTimer = GObject.registerClass(
+  class ShutdownTimer extends PopupMenu.PopupSubMenuMenuItem {
     _init() {
-      const gicon = Gio.icon_new_for_string(
-        `${Me.path}/icons/shutdown-timer-symbolic.svg`
-      );
-      super._init({
-        // canFocus: true,
-        label: _('Shutdown Timer'),
-        gicon,
-        accessible_name: _('Shutdown Timer'),
-      });
-      this.shutdownTimerIcon = gicon;
-
+      super._init('', true);
       // track external shutdown and wake schedule
       this.infoFetcher = new InfoFetcher.InfoFetcher(
         this._externalScheduleInfoTick.bind(this)
@@ -134,6 +98,7 @@ var ShutdownTimerItem = GObject.registerClass(
 
       this._onShowSettingsButtonChanged();
       this._updateSwitchLabel();
+      this.icon.icon_name = 'preferences-system-time-symbolic';
       this.menu.addMenuItem(this.switcher);
       // make switcher toggle without popup menu closing
       this.switcher.activate = __ => {
@@ -218,7 +183,6 @@ var ShutdownTimerItem = GObject.registerClass(
           this._onInternalShutdownTimestampChanged.bind(this),
         ],
       ].map(([label, func]) => settings.connect(`changed::${label}`, func));
-      this.connect('clicked', () => this.switcher.toggle());
     }
 
     _onRootModeChanged() {
@@ -288,15 +252,12 @@ var ShutdownTimerItem = GObject.registerClass(
 
     updateShutdownInfo() {
       let shutdownLabel;
-      let shutdownText = '';
-      let iconName = 'go-down-symbolic';
       if (this.internalScheduleInfo.scheduled && this.checkRunning) {
         const secPassed = Math.max(0, -this.internalScheduleInfo.secondsLeft);
         shutdownLabel = _('Check %s for %s').format(
           this.internalScheduleInfo.modeText,
           durationString(secPassed)
         );
-        iconName = 'go-bottom-symbolic';
       } else {
         const info = this.externalScheduleInfo.isMoreUrgendThan(
           this.internalScheduleInfo
@@ -304,23 +265,11 @@ var ShutdownTimerItem = GObject.registerClass(
           ? this.externalScheduleInfo
           : this.internalScheduleInfo;
         shutdownLabel = info.label;
-        if (info.scheduled) {
-          shutdownText = durationString(info.secondsLeft);
-        }
       }
-      this.set({
-        checked: this.internalScheduleInfo.scheduled,
-        indicator_show:
-          this.internalScheduleInfo.scheduled ||
-          this.externalScheduleInfo.scheduled,
-        shutdown_text: shutdownText,
-        indicator_icon_name: iconName,
-      });
-      this.menu.setHeader(
-        this.shutdownTimerIcon,
-        _('Shutdown Timer'),
-        [shutdownLabel, this.externalWakeInfo.label].filter(v => !!v).join('\n')
-      );
+      this.label.text =
+        [shutdownLabel, this.externalWakeInfo.label]
+          .filter(v => !!v)
+          .join('\n') || _('Shutdown Timer');
     }
 
     _updateSelectedModeItems() {
@@ -331,7 +280,6 @@ var ShutdownTimerItem = GObject.registerClass(
             : PopupMenu.Ornament.NONE
         );
       });
-      this.label = modeLabel(this.internalScheduleInfo.mode);
     }
 
     // update timer value if slider has changed
@@ -494,51 +442,3 @@ function _createSliderItem(settingsPrefix) {
   item.add_child(slider);
   return [item, slider];
 }
-
-var ShutdownTimerIndicator = GObject.registerClass(
-  class ShutdownTimerIndicator extends SystemIndicator {
-    _init() {
-      super._init();
-      this._indicator = this._addIndicator();
-      this._shutdownTimerItem = new ShutdownTimerItem();
-
-      this._scheduleLabel = new St.Label({
-        y_expand: true,
-        y_align: Clutter.ActorAlign.CENTER,
-      });
-      this.add_child(this._scheduleLabel);
-
-      this._shutdownTimerItem.bind_property(
-        'indicator-icon-name',
-        this._indicator,
-        'icon-name',
-        GObject.BindingFlags.SYNC_CREATE
-      );
-
-      this._shutdownTimerItem.bind_property(
-        'indicator-show',
-        this._indicator,
-        'visible',
-        GObject.BindingFlags.SYNC_CREATE
-      );
-
-      this._shutdownTimerItem.bind_property(
-        'shutdown-text',
-        this._scheduleLabel,
-        'text',
-        GObject.BindingFlags.SYNC_CREATE
-      );
-
-      this._shutdownTimerItem.bind_property_full(
-        'shutdown-text',
-        this._scheduleLabel,
-        'visible',
-        GObject.BindingFlags.SYNC_CREATE,
-        (__, text) => [true, !!text],
-        null
-      );
-
-      this.quickSettingsItems.push(this._shutdownTimerItem);
-    }
-  }
-);
