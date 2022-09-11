@@ -8,7 +8,8 @@
 set -e
 
 # release should be on master branch
-[[ `git branch --show-current` == 'master' ]] || ( echo "Expected branch: master" >&2 && exit 1 )
+BRANCH=`git branch --show-current`
+[[ "$BRANCH" == 'master' || "$BRANCH" == 'gnome-42-backport' ]] || ( echo "Expected branch: master,gnome-42-backport" >&2 && exit 1 )
 
 # cd to the repo root
 cd "$( cd "$( dirname "$0" )" && pwd )/.."
