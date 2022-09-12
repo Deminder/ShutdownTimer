@@ -110,7 +110,9 @@ var Timer = class {
   }
 
   stopForeground() {
-    clearInterval(this._timerId);
+    if (this._timerId) {
+      clearInterval(this._timerId);
+    }
     this._timerId = null;
   }
 };
