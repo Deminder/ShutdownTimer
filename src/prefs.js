@@ -192,7 +192,6 @@ function fillPreferencesWindow(window) {
 
   const settings = ExtensionUtils.getSettings();
   const handlers = [];
-  const idleSourceIds = {};
   const pageNames = ['install', 'shutdown', 'wake', 'display', 'check'].map(
     n => `shutdowntimer-prefs-${n}`
   );
@@ -217,9 +216,6 @@ function fillPreferencesWindow(window) {
   // release all resources on destroy
   const destroyId = window.connect('destroy', () => {
     disableGuiIdle();
-    Object.keys(idleSourceIds).forEach(sourceId => {
-      GLib.Source.remove(sourceId);
-    });
     handlers.forEach(([comp, handlerId]) => {
       comp.disconnect(handlerId);
     });
