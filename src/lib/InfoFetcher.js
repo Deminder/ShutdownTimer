@@ -84,18 +84,23 @@ var InfoFetcher = class {
     this._pending = false;
     this._rtc = 'rtc0';
     this._onFetch = onFetch;
-    [this.refresh, this.stop] = throttleTimeout(this._refresh.bind(this), 300);
+    [this.refresh, this._cancelRefresh] = throttleTimeout(this._refresh.bind(this), 300);
     this.refresh();
   }
 
   _refresh() {
     logDebug('Extra info refresh...');
-    if (this._infoTimerId !== null) {
-      clearInterval(this._infoTimerId);
-    }
+    this.stop()
     // restart loop
     this._infoTimerId = setInterval(this.tick.bind(this), 5000);
     this.tick();
+  }
+
+  stop() {
+    if (this._infoTimerId !== null) {
+      clearInterval(this._infoTimerId);
+    }
+    this._cancelRefresh()
   }
 
   tick() {
