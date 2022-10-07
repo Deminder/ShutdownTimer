@@ -10,7 +10,9 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const { Install, Convenience } = Me.imports.lib;
-var { enableGuiIdle, disableGuiIdle, guiIdle, modeLabel, MODES } = Convenience;
+const { logDebug } = Convenience;
+const { enableGuiIdle, disableGuiIdle, guiIdle, modeLabel, MODES } =
+  Convenience;
 
 const { GLib, Gtk, Gio } = imports.gi;
 
@@ -25,6 +27,7 @@ const templateComponents = {
   shutdown: {
     'shutdown-mode': 'combo',
     'root-mode': 'switch',
+    'show-end-session-dialog': 'switch',
     'shutdown-max-timer': 'adjustment',
     'shutdown-slider': 'adjustment',
     'nonlinear-shutdown-slider': 'adjustment',
@@ -206,12 +209,13 @@ function fillPreferencesWindow(window) {
   if (selPageName) {
     window.set_visible_page_name(selPageName);
   }
-  const pageVisHandlerId = window.connect('notify::visible-page-name', () =>
+  const pageVisHandlerId = window.connect('notify::visible-page-name', () => {
+    logDebug(window.get_visible_page_name());
     settings.set_int(
       'preferences-selected-page-value',
       pageNames.indexOf(window.get_visible_page_name())
-    )
-  );
+    );
+  });
   handlers.push([window, pageVisHandlerId]);
   // release all resources on destroy
   const destroyId = window.connect('destroy', () => {

@@ -250,36 +250,33 @@ function shutdown(mode) {
     Main.overview.hide();
     Textbox.hideAll();
   }
-  const getSession = () => new imports.misc.gnomeSession.SessionManager();
-  const run = imports.misc.util.spawnCommandLine;
 
-  // refresh root shutdown protection before action
-  maybeStartRootModeProtection(
-    new ScheduleInfo.ScheduleInfo({ mode, deadline: 0 })
-  );
-
-  // endSessionDialog gets canceled in unlock-dialog
-  // gnome 42 bug?: endSessionDialog + Lock-session => endSessionDialog blocks login screen
-  switch (mode) {
-    case 'reboot':
-      if (foregroundActive()) {
-        EndSessionDialogAware.register();
-        getSession().RebootRemote(0);
+  if (['reboot', 'poweroff'].includes(mode)) {
+    if (
+      foregroundActive() &&
+      settings.get_boolean('show-end-session-dialog-value')
+    ) {
+      // show endSessionDialog
+      // refresh root shutdown protection
+      maybeStartRootModeProtection(
+        new ScheduleInfo.ScheduleInfo({ mode, deadline: 0 })
+      );
+      EndSessionDialogAware.register();
+      const session = new imports.misc.gnomeSession.SessionManager();
+      if (mode === 'reboot') {
+        session.RebootRemote(0);
       } else {
-        run('reboot');
+        session.ShutdownRemote(0);
       }
-      break;
-    case 'suspend':
-      LoginManager.getLoginManager().suspend();
-      break;
-    default:
-      if (foregroundActive) {
-        EndSessionDialogAware.register();
-        getSession().ShutdownRemote(0); // shutdown after 60s
-      } else {
-        run('poweroff');
-      }
-      break;
+    } else {
+      imports.misc.util.spawnCommandLine(
+        mode === 'reboot' ? 'reboot' : 'poweroff'
+      );
+    }
+  } else if (mode === 'suspend') {
+    LoginManager.getLoginManager().suspend();
+  } else {
+    logError(new Error(`Unknown shutdown mode: ${mode}`));
   }
 }
 
@@ -339,10 +336,8 @@ function stopSchedule(stopProtection = true) {
  */
 async function startSchedule(maxTimerMinutes, wakeMinutes) {
   EndSessionDialogAware.unregister();
-  if (CheckCommand.maybeCancel()) {
-    // cancel running check command
-    await RootMode.execCheck(['sleep', '0.1'], null, false).catch(() => {});
-  }
+  CheckCommand.maybeCancel();
+
   const seconds = maxTimerMinutes * 60;
   const info = new ScheduleInfo.ScheduleInfo({
     mode: settings.get_string('shutdown-mode-value'),
