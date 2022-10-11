@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-07 17:58+0200\n"
+"POT-Creation-Date: 2022-10-11 23:38+0200\n"
 "PO-Revision-Date: 2022-04-07 22:06+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: Russian <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: src/extension.js:96 src/extension.js:129 src/extension.js:306
+#: src/extension.js:97 src/extension.js:130 src/extension.js:307
 #, javascript-format
 msgctxt "Error"
 msgid ""
@@ -29,40 +29,40 @@ msgid ""
 "%s"
 msgstr ""
 
-#: src/extension.js:96 src/extension.js:129
+#: src/extension.js:97 src/extension.js:130
 msgid "Root mode protection failed!"
 msgstr ""
 
-#: src/extension.js:170
+#: src/extension.js:171
 #, javascript-format
 msgid "Waiting for %s confirmation"
 msgstr ""
 
-#: src/extension.js:220
+#: src/extension.js:221
 #, javascript-format
 msgctxt "CheckCommand"
 msgid "%s aborted (Code: %s)"
 msgstr ""
 
-#: src/extension.js:223
+#: src/extension.js:224
 msgid "Confirmation canceled"
 msgstr ""
 
-#: src/extension.js:306
+#: src/extension.js:307
 msgid "Wake action failed!"
 msgstr ""
 
-#: src/extension.js:320
+#: src/extension.js:321
 msgid "Shutdown Timer stopped"
 msgstr "Таймер выключения остановлен"
 
-#: src/extension.js:347
+#: src/extension.js:348
 #, javascript-format
 msgctxt "StartSchedulePopup"
 msgid "%s in %s"
 msgstr "%s через %s"
 
-#: src/extension.js:351 src/lib/Convenience.js:72 src/lib/MenuItem.js:361
+#: src/extension.js:352 src/lib/Convenience.js:72 src/lib/MenuItem.js:361
 #, javascript-format
 msgid "%s hour"
 msgid_plural "%s hours"
@@ -70,7 +70,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: src/extension.js:352 src/lib/MenuItem.js:362
+#: src/extension.js:353 src/lib/MenuItem.js:362
 #, javascript-format
 msgid "%s minute"
 msgid_plural "%s minutes"
