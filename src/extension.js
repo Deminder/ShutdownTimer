@@ -21,11 +21,12 @@ const {
   SessionModeAware,
   CheckCommand,
 } = Me.imports.lib;
-const modeLabel = Me.imports.prefs.modeLabel;
+
 const {
   guiIdle,
   throttleTimeout,
   disableGuiIdle,
+  modeLabel,
   enableGuiIdle,
   longDurationString,
   logDebug,
