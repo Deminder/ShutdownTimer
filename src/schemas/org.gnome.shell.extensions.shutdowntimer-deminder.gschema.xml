@@ -86,6 +86,12 @@
       <description>Set root mode on/off. In root mode powering off is done via 'pkexec' and 'shutdown' terminal command.</description>
     </key>
 
+    <key type="b" name="show-end-session-dialog-value">
+      <default>true</default>
+      <summary>Show end-session dialog</summary>
+      <description>Show the end-session dialog for reboot and shutdown if screensaver is inactive.</description>
+    </key>
+
     <key type="s" name="show-shutdown-mode-value">
       <default>"poweroff,suspend"</default>
       <summary>Shown shutdown modes</summary>

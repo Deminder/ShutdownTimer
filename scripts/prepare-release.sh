@@ -14,6 +14,8 @@ BRANCH=`git branch --show-current`
 # cd to the repo root
 cd "$( cd "$( dirname "$0" )" && pwd )/.."
 
+npm run format
+
 VPATTERN='^ *?\"version\": *?'
 METADATA_FILE=src/metadata.json
 VERSION=$(( 1 + `grep -oP "$VPATTERN"'\K(\d+)' "$METADATA_FILE"` ))

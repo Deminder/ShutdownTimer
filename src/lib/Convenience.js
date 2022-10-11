@@ -71,7 +71,9 @@ function durationString(seconds) {
   if (hours >= 3) {
     return _n('%s hour', '%s hours', hours).format(sign * hours);
   } else if (minutes === 0) {
-    return _n('%s sec', '%s secs', absSec).format(sign * absSec);
+    return _n('%s sec', '%s secs', absSec).format(
+      sign * (absSec > 5 ? 10 * Math.ceil(absSec / 10) : absSec)
+    );
   }
   return _n('%s min', '%s mins', minutes).format(sign * minutes);
 }
