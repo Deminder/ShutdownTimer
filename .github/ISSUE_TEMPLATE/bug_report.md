@@ -10,7 +10,7 @@ assignees: ''
 **Describe the bug**
 _A clear and concise description of what the bug is._
 - If applicable, show log appropriate output `journalctl -o cat /usr/bin/gnome-shell`
-- Does the bug only occur in with an additional gnome shell extension enabled or with only the "Shutdown Timer" extension enabled ?
+- Does the bug only occur with an additional gnome shell extension enabled or with only the "Shutdown Timer" extension enabled?
 
 **To Reproduce**
 _Steps to reproduce the behavior:_
@@ -28,8 +28,7 @@ _If applicable, add screenshots to help explain your problem._
 **System**
 - Extension version: `gnome-extensions info ShutdownTimer@deminder | grep -i version`
 - GNOME shell version: `gnome-shell --version`
-- Distro: _Ubuntu 20.04, Fedora 34, etc._
-
+- Distro: _Ubuntu 22.04, Fedora 37, etc._
 
 
 **Additional context**
