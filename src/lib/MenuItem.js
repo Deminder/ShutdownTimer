@@ -294,7 +294,9 @@ var ShutdownTimerItem = GObject.registerClass(
       let shutdownLabel;
       let shutdownText = '';
       let iconName = 'go-down-symbolic';
-      const showIndicator = settings.get_boolean('show-shutdown-indicator-value');
+      const showIndicator = settings.get_boolean(
+        'show-shutdown-indicator-value'
+      );
       if (this.internalScheduleInfo.scheduled && this.checkRunning) {
         const secPassed = Math.max(0, -this.internalScheduleInfo.secondsLeft);
         shutdownLabel = _('Check %s for %s').format(

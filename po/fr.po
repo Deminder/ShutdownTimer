@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-11 23:38+0200\n"
+"POT-Creation-Date: 2022-11-01 23:19+0100\n"
 "PO-Revision-Date: 2022-04-07 22:25+0200\n"
 "Last-Translator: Brendan Chabannes <brendan.chabannes@gmail.com>\n"
 "Language-Team: \n"
@@ -61,14 +61,14 @@ msgctxt "StartSchedulePopup"
 msgid "%s in %s"
 msgstr "%s dans %s"
 
-#: src/extension.js:352 src/lib/Convenience.js:72 src/lib/MenuItem.js:361
+#: src/extension.js:352 src/lib/Convenience.js:72 src/lib/MenuItem.js:369
 #, javascript-format
 msgid "%s hour"
 msgid_plural "%s hours"
 msgstr[0] "%s heure"
 msgstr[1] "%s heures"
 
-#: src/extension.js:353 src/lib/MenuItem.js:362
+#: src/extension.js:353 src/lib/MenuItem.js:370
 #, javascript-format
 msgid "%s minute"
 msgid_plural "%s minutes"
@@ -102,7 +102,7 @@ msgid_plural "%s secs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/lib/Convenience.js:78 src/lib/MenuItem.js:348
+#: src/lib/Convenience.js:78 src/lib/MenuItem.js:356
 #, javascript-format
 msgid "%s min"
 msgid_plural "%s mins"
@@ -129,7 +129,7 @@ msgstr ""
 msgid "uninstall"
 msgstr ""
 
-#: src/lib/MenuItem.js:71 src/lib/MenuItem.js:73 src/lib/MenuItem.js:321
+#: src/lib/MenuItem.js:71 src/lib/MenuItem.js:73 src/lib/MenuItem.js:329
 msgid "Shutdown Timer"
 msgstr "Arrêt planifié"
 
@@ -137,24 +137,24 @@ msgstr "Arrêt planifié"
 msgid "Settings"
 msgstr "Préférences"
 
-#: src/lib/MenuItem.js:295
+#: src/lib/MenuItem.js:302
 #, javascript-format
 msgid "Check %s for %s"
 msgstr ""
 
-#: src/lib/MenuItem.js:347
+#: src/lib/MenuItem.js:355
 #, javascript-format
 msgid "%s hr"
 msgid_plural "%s hrs"
 msgstr[0] "%s h"
 msgstr[1] "%s h"
 
-#: src/lib/MenuItem.js:351
+#: src/lib/MenuItem.js:359
 #, javascript-format
 msgid "%s (protect)"
 msgstr ""
 
-#: src/lib/MenuItem.js:357
+#: src/lib/MenuItem.js:365
 #, javascript-format
 msgctxt "WakeButtonText"
 msgid "%s %s"
@@ -316,7 +316,7 @@ msgstr ""
 msgid "Maximum shutdown timer value (in minutes)"
 msgstr "Valeur maximum de la minuterie (en minutes)"
 
-#: src/ui/prefs.ui:229 src/ui/prefs.ui:390
+#: src/ui/prefs.ui:229 src/ui/prefs.ui:402
 msgid "Wake"
 msgstr ""
 
@@ -364,30 +364,40 @@ msgstr ""
 msgid "Show shutdown slider"
 msgstr ""
 
-#: src/ui/prefs.ui:394
+#: src/ui/prefs.ui:389
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:109
+msgid "Show shutdown indicator"
+msgstr ""
+
+#: src/ui/prefs.ui:390
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:110
+msgid "Shows the remaining time until shutdown action"
+msgstr ""
+
+#: src/ui/prefs.ui:406
 msgid "Show wake items"
 msgstr ""
 
-#: src/ui/prefs.ui:405
+#: src/ui/prefs.ui:417
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:67
 msgid "Show wake slider"
 msgstr ""
 
-#: src/ui/prefs.ui:418
+#: src/ui/prefs.ui:430
 msgid "Check"
 msgstr ""
 
-#: src/ui/prefs.ui:425
+#: src/ui/prefs.ui:437
 msgid "Enable check"
 msgstr ""
 
-#: src/ui/prefs.ui:426
+#: src/ui/prefs.ui:438
 msgid ""
 "Script is run in a bash user shell after timer activates. Timer action "
 "proceeds if check terminates successfully."
 msgstr ""
 
-#: src/ui/prefs.ui:436
+#: src/ui/prefs.ui:448
 msgid "Check script"
 msgstr ""
 
@@ -508,26 +518,26 @@ msgstr ""
 msgid "Shown shutdown modes"
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:118
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:124
 msgid "Check command(s)"
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:119
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:125
 msgid ""
 "Run command(s) before shutdown command. Proceed with shutdown only if check "
 "command succeeds."
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:124
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:130
 msgid "Enable check command"
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:125
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:131
 msgid "Check command is skipped if disabled."
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:130
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:131
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:136
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:137
 msgid "Last selected page in the preferences."
 msgstr ""
 
