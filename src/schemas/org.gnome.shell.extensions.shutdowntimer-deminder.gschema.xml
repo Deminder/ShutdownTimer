@@ -104,6 +104,12 @@
       <description>Mode to use for timer action</description>
     </key>
 
+    <key type="b" name="show-shutdown-indicator-value">
+      <default>true</default>
+      <summary>Show shutdown indicator</summary>
+      <description>Shows the remaining time until shutdown action</description>
+    </key>
+
     <key type="s" name="check-command-value">
       <default>"# Examples ...
 

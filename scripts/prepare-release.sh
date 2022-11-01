@@ -26,5 +26,5 @@ git add "$METADATA_FILE"
 ./scripts/update-pod.sh
 git add po
 
-git commit -m "bump version to $VERSION"
+git commit -am "bump version to $VERSION"
 git tag -a "r$VERSION" -m "Release version $VERSION"

@@ -383,6 +383,18 @@ DONE test</property>
             </child>
           </object>
         </child>
+        <child>
+          <object class="AdwActionRow">
+            <property name="focusable">1</property>
+            <property name="title" translatable="yes">Show shutdown indicator</property>
+            <property name="subtitle" translatable="yes">Shows the remaining time until shutdown action</property>
+            <child>
+              <object class="GtkSwitch" id="show_shutdown_indicator_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
       </object>
     </child>
     <child>

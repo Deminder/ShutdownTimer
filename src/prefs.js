@@ -42,6 +42,7 @@ const templateComponents = {
     'show-settings': 'switch',
     'show-shutdown-mode': 'buffer',
     'show-shutdown-slider': 'switch',
+    'show-shutdown-indicator': 'switch',
     'show-textboxes': 'switch',
     'show-wake-slider': 'switch',
     'show-wake-items': 'switch',

@@ -22,7 +22,7 @@
 
 ## Manual Installation
 
-Requires `gnome-shell-extensions`:
+Requires `gnome-shell-extensions` and `gettext`:
 
 ```(shell)
 make install

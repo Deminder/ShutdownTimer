@@ -210,6 +210,10 @@ var ShutdownTimerItem = GObject.registerClass(
           () => this._onShowSliderChanged('shutdown'),
         ],
         ['show-wake-slider-value', () => this._onShowSliderChanged('wake')],
+        [
+          'show-shutdown-indicator-value',
+          () => this.updateShutdownInfo.bind(this),
+        ],
         ['show-wake-items-value', this._updateShownWakeItems.bind(this)],
         ['show-shutdown-mode-value', this._updateShownModeItems.bind(this)],
         ['shutdown-mode-value', this._onModeChange.bind(this)],
@@ -290,6 +294,7 @@ var ShutdownTimerItem = GObject.registerClass(
       let shutdownLabel;
       let shutdownText = '';
       let iconName = 'go-down-symbolic';
+      const showIndicator = settings.get_boolean('show-shutdown-indicator-value');
       if (this.internalScheduleInfo.scheduled && this.checkRunning) {
         const secPassed = Math.max(0, -this.internalScheduleInfo.secondsLeft);
         shutdownLabel = _('Check %s for %s').format(
@@ -304,15 +309,16 @@ var ShutdownTimerItem = GObject.registerClass(
           ? this.externalScheduleInfo
           : this.internalScheduleInfo;
         shutdownLabel = info.label;
-        if (info.scheduled) {
+        if (info.scheduled && showIndicator) {
           shutdownText = durationString(info.secondsLeft);
         }
       }
       this.set({
         checked: this.internalScheduleInfo.scheduled,
         indicator_show:
-          this.internalScheduleInfo.scheduled ||
-          this.externalScheduleInfo.scheduled,
+          showIndicator &&
+          (this.internalScheduleInfo.scheduled ||
+            this.externalScheduleInfo.scheduled),
         shutdown_text: shutdownText,
         indicator_icon_name: iconName,
       });
