@@ -534,6 +534,7 @@ function completeDisable() {
     throttleDisableCancel();
     throttleDisable = null;
     throttleDisableCancel = null;
+    settings = null;
     initialized = false;
     logDebug('Completly disabled.');
   }
