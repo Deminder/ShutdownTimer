@@ -5,7 +5,7 @@
  * @copyright 2021
  * @license GNU General Public License v3.0
  */
-/* exported MODES, WAKE_MODES, modeLabel, logDebug, proxyPromise, durationString, longDurationString, disableGuiIdle, enableGuiIdle, guiIdle, throttleTimeout */
+/* exported MODES, WAKE_MODES, modeLabel, logDebug, proxyPromise, durationString, longDurationString, absoluteTimeString, disableGuiIdle, enableGuiIdle, guiIdle, throttleTimeout */
 
 const { GLib } = imports.gi;
 const Gettext = imports.gettext.domain('ShutdownTimer');
@@ -35,7 +35,7 @@ function modeLabel(mode) {
     suspend: _('Suspend'),
     poweroff: _('Power Off'),
     reboot: _('Restart'),
-    wake: _('Wake after'),
+    wake: _('Wake'),
     'no-wake': _('No Wake'),
   }[mode];
 }
@@ -92,6 +92,10 @@ function longDurationString(minutes, hrFmt, minFmt) {
     parts = [hrFmt(hours).format(hours)].concat(parts);
   }
   return parts.join(' ');
+}
+
+function absoluteTimeString(minutes, timeFmt) {
+  return GLib.DateTime.new_now_local().add_minutes(minutes).format(timeFmt);
 }
 
 let idleSourceId = null;

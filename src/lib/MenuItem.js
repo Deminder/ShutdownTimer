@@ -7,7 +7,7 @@
  */
 /* exported ShutdownTimerIndicator, init, uninit, MODES */
 
-const { GObject, St, Gio, Clutter } = imports.gi;
+const { GObject, St, Gio, Clutter, GLib } = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const { Convenience, InfoFetcher, ScheduleInfo } = Me.imports.lib;
@@ -18,6 +18,7 @@ const {
   WAKE_MODES,
   durationString,
   longDurationString,
+  absoluteTimeString,
   guiIdle,
 } = Convenience;
 
@@ -132,8 +133,6 @@ var ShutdownTimerItem = GObject.registerClass(
       ]);
       this.switcher.add_child(this.switcherSettingsButton);
 
-      this._onShowSettingsButtonChanged();
-      this._updateSwitchLabel();
       this.menu.addMenuItem(this.switcher);
       // make switcher toggle without popup menu closing
       this.switcher.activate = __ => {
@@ -174,10 +173,13 @@ var ShutdownTimerItem = GObject.registerClass(
           return modeItem;
         }),
       ];
-      this._updateWakeModeItem();
       this.wakeItems.forEach(item => {
         this.menu.addMenuItem(item);
       });
+      this._updateWakeModeItem();
+      this._onShowSettingsButtonChanged();
+      this._updateSwitchLabel();
+
       this._updateShownWakeItems();
       this._updateShownModeItems();
       this._updateSelectedModeItems();
@@ -187,7 +189,14 @@ var ShutdownTimerItem = GObject.registerClass(
       this.settingsHandlerIds = [
         ['shutdown-max-timer-value', this._updateSwitchLabel.bind(this)],
         ['nonlinear-shutdown-slider-value', this._updateSwitchLabel.bind(this)],
+        ['shutdown-ref-timer-value', this._updateSwitchLabel.bind(this)],
+        [
+          'show-shutdown-absolute-timer-value',
+          this._updateSwitchLabel.bind(this),
+        ],
         ['wake-max-timer-value', this._updateWakeModeItem.bind(this)],
+        ['wake-ref-timer-value', this._updateWakeModeItem.bind(this)],
+        ['show-wake-absolute-timer-value', this._updateWakeModeItem.bind(this)],
         ['nonlinear-wake-slider-value', this._updateWakeModeItem.bind(this)],
         [
           'shutdown-slider-value',
@@ -329,6 +338,12 @@ var ShutdownTimerItem = GObject.registerClass(
         _('Shutdown Timer'),
         [shutdownLabel, this.externalWakeInfo.label].filter(v => !!v).join('\n')
       );
+      if (settings.get_boolean('show-shutdown-absolute-timer-value')) {
+        this._updateSwitchLabel();
+      }
+      if (settings.get_boolean('show-wake-absolute-timer-value')) {
+        this._updateWakeModeItem();
+      }
     }
 
     _updateSelectedModeItems() {
@@ -350,25 +365,38 @@ var ShutdownTimerItem = GObject.registerClass(
 
     _updateSwitchLabel() {
       const minutes = Math.abs(_getSliderMinutes('shutdown'));
-      const timeStr = longDurationString(
-        minutes,
-        h => _n('%s hr', '%s hrs', h),
-        m => _n('%s min', '%s mins', m)
-      );
+      const timeStr = settings.get_boolean('show-shutdown-absolute-timer-value')
+        ? absoluteTimeString(minutes, C_('absolute time notation', '%a, %R'))
+        : longDurationString(
+            minutes,
+            h => _n('%s hr', '%s hrs', h),
+            m => _n('%s min', '%s mins', m)
+          );
       this.switcher.label.text = settings.get_boolean('root-mode-value')
         ? _('%s (protect)').format(timeStr)
         : timeStr;
+
+      if (settings.get_string('wake-ref-timer-value') === 'shutdown') {
+        this._updateWakeModeItem();
+      }
     }
 
     _updateWakeModeItem() {
       const minutes = Math.abs(_getSliderMinutes('wake'));
-      this.wakeModeItem.label.text = C_('WakeButtonText', '%s %s').format(
+      const abs = settings.get_boolean('show-wake-absolute-timer-value');
+      this.wakeModeItem.label.text = (
+        abs
+          ? C_('WakeButtonText', '%s at %s')
+          : C_('WakeButtonText', '%s after %s')
+      ).format(
         modeLabel('wake'),
-        longDurationString(
-          minutes,
-          h => _n('%s hour', '%s hours', h),
-          m => _n('%s minute', '%s minutes', m)
-        )
+        abs
+          ? absoluteTimeString(minutes, C_('absolute time notation', '%a, %R'))
+          : longDurationString(
+              minutes,
+              h => _n('%s hour', '%s hours', h),
+              m => _n('%s minute', '%s minutes', m)
+            )
       );
     }
 
@@ -448,13 +476,37 @@ function uninit() {
  * @param prefix
  */
 function _getSliderMinutes(prefix) {
-  let sliderValue = settings.get_double(`${prefix}-slider-value`) / 100.0;
+  const sliderValue = settings.get_double(`${prefix}-slider-value`) / 100.0;
   const rampUp = settings.get_double(`nonlinear-${prefix}-slider-value`);
   const ramp = x => Math.expm1(rampUp * x) / Math.expm1(rampUp);
-  return Math.floor(
+  let minutes = Math.floor(
     (rampUp === 0 ? sliderValue : ramp(sliderValue)) *
       settings.get_int(`${prefix}-max-timer-value`)
   );
+
+  const refstr = settings.get_string(`${prefix}-ref-timer-value`);
+  // default: 'now'
+  const MS = 1000 * 60;
+  if (refstr.includes(':')) {
+    const mh = refstr
+      .split(':')
+      .map(s => Number.parseInt(s))
+      .filter(n => !Number.isNaN(n) && n >= 0);
+    if (mh.length >= 2) {
+      const d = new Date();
+      const nowTime = d.getTime();
+      d.setHours(mh[0]);
+      d.setMinutes(mh[1]);
+
+      if (d.getTime() + MS * minutes < nowTime) {
+        d.setDate(d.getDate() + 1);
+      }
+      minutes += Math.floor(new Date(d.getTime() - nowTime).getTime() / MS);
+    }
+  } else if (prefix !== 'shutdown' && refstr === 'shutdown') {
+    minutes += _getSliderMinutes('shutdown');
+  }
+  return minutes;
 }
 
 /**
