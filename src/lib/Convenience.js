@@ -95,9 +95,8 @@ function longDurationString(minutes, hrFmt, minFmt) {
 }
 
 function absoluteTimeString(minutes, timeFmt) {
-  return GLib.DateTime.new_now_local().add_minutes(minutes).format(timeFmt)
+  return GLib.DateTime.new_now_local().add_minutes(minutes).format(timeFmt);
 }
-
 
 let idleSourceId = null;
 let idleCallbacks = [];
