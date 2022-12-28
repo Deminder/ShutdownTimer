@@ -14,6 +14,30 @@
       <description>Set maximum selectable wake time of the slider (in minutes). Use only values greater zero.</description>
     </key>
 
+    <key type="s" name="shutdown-ref-timer-value">
+      <default>"now"</default>
+      <summary>Reference start time for shutdown</summary>
+      <description>Reference start time for shutdown either now or HH:MM</description>
+    </key>
+
+    <key type="b" name="show-shutdown-absolute-timer-value">
+      <default>true</default>
+      <summary>Display shutdown time as absolute timestamp</summary>
+      <description>Display shutdown time as absolute timestamp "HH:MM"</description>
+    </key>
+
+    <key type="s" name="wake-ref-timer-value">
+      <default>"now"</default>
+      <summary>Reference start time for wake</summary>
+      <description>Reference start time for wake either now, shutdown, or HH:MM</description>
+    </key>
+
+    <key type="b" name="show-wake-absolute-timer-value">
+      <default>true</default>
+      <summary>Display wake time as absolute timestamp</summary>
+      <description>Display wake time as absolute timestamp "HH:MM"</description>
+    </key>
+
     <key type="b" name="auto-wake-value">
       <default>false</default>
       <summary>Automatically start and stop wake on shutdown timer toggle</summary>

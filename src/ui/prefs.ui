@@ -36,6 +36,8 @@ DONE test</property>
     <property name="page-increment">0.10</property>
   </object>
   <object class="GtkEntryBuffer" id="show_shutdown_mode_buffer" />
+  <object class="GtkEntryBuffer" id="shutdown_ref_timer_buffer" />
+  <object class="GtkEntryBuffer" id="wake_ref_timer_buffer" />
   <object class="GtkAdjustment" id="shutdown_max_timer_adjustment">
     <property name="upper">10000</property>
     <property name="step-increment">1</property>
@@ -155,6 +157,19 @@ DONE test</property>
         <property name="title" translatable="yes">Timer Input</property>
         <child>
           <object class="AdwActionRow">
+            <property name="title" translatable="yes">Reference start time</property>
+            <property name="subtitle" translatable="yes">Options: now, HH:MM</property>
+            <child>
+              <object class="GtkEntry" id="shutdown_ref_timer_entry">
+                <property name="valign">center</property>
+                <property name="buffer">shutdown_ref_timer_buffer</property>
+                <property name="placeholder-text">23:59</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow">
             <property name="title" translatable="yes">Shutdown slider position (in &amp;#37;)</property>
             <child>
               <object class="GtkSpinButton" id="shutdown_slider_spinbutton">
@@ -248,6 +263,19 @@ DONE test</property>
     <child>
       <object class="AdwPreferencesGroup">
         <property name="title" translatable="yes">Timer Input</property>
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Reference start time</property>
+            <property name="subtitle" translatable="yes">Options: now, shutdown, HH:MM</property>
+            <child>
+              <object class="GtkEntry" id="wake_ref_timer_entry">
+                <property name="valign">center</property>
+                <property name="buffer">wake_ref_timer_buffer</property>
+                <property name="placeholder-text">23:59</property>
+              </object>
+            </child>
+          </object>
+        </child>
         <child>
           <object class="AdwActionRow">
             <property name="title" translatable="yes">Wake slider position (in &amp;#37;)</property>
@@ -395,6 +423,17 @@ DONE test</property>
             </child>
           </object>
         </child>
+        <child>
+          <object class="AdwActionRow">
+            <property name="focusable">1</property>
+            <property name="title" translatable="yes">Absolute shutdown time selection</property>
+            <child>
+              <object class="GtkSwitch" id="show_shutdown_absolute_timer_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
       </object>
     </child>
     <child>
@@ -417,6 +456,17 @@ DONE test</property>
             <property name="title" translatable="yes">Show wake slider</property>
             <child>
               <object class="GtkSwitch" id="show_wake_slider_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow">
+            <property name="focusable">1</property>
+            <property name="title" translatable="yes">Absolute wake time selection</property>
+            <child>
+              <object class="GtkSwitch" id="show_wake_absolute_timer_switch">
                 <property name="valign">center</property>
               </object>
             </child>
