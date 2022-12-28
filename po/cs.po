@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-01 23:19+0100\n"
+"POT-Creation-Date: 2022-12-28 18:37+0100\n"
 "PO-Revision-Date: 2022-04-07 22:30+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: CZECH <jiri.doubravsky@gmail.com>\n"
@@ -62,7 +62,7 @@ msgctxt "StartSchedulePopup"
 msgid "%s in %s"
 msgstr "%s in %s"
 
-#: src/extension.js:352 src/lib/Convenience.js:72 src/lib/MenuItem.js:369
+#: src/extension.js:352 src/lib/Convenience.js:72 src/lib/MenuItem.js:397
 #, javascript-format
 msgid "%s hour"
 msgid_plural "%s hours"
@@ -70,7 +70,7 @@ msgstr[0] "%s uro"
 msgstr[1] "%s uri"
 msgstr[2] "%s ur"
 
-#: src/extension.js:353 src/lib/MenuItem.js:370
+#: src/extension.js:353 src/lib/MenuItem.js:398
 #, javascript-format
 msgid "%s minute"
 msgid_plural "%s minutes"
@@ -90,8 +90,8 @@ msgstr ""
 msgid "Restart"
 msgstr ""
 
-#: src/lib/Convenience.js:38
-msgid "Wake after"
+#: src/lib/Convenience.js:38 src/ui/prefs.ui:244 src/ui/prefs.ui:441
+msgid "Wake"
 msgstr ""
 
 #: src/lib/Convenience.js:39
@@ -106,7 +106,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: src/lib/Convenience.js:78 src/lib/MenuItem.js:356
+#: src/lib/Convenience.js:78 src/lib/MenuItem.js:373
 #, javascript-format
 msgid "%s min"
 msgid_plural "%s mins"
@@ -134,20 +134,25 @@ msgstr ""
 msgid "uninstall"
 msgstr ""
 
-#: src/lib/MenuItem.js:71 src/lib/MenuItem.js:73 src/lib/MenuItem.js:329
+#: src/lib/MenuItem.js:72 src/lib/MenuItem.js:74 src/lib/MenuItem.js:338
 msgid "Shutdown Timer"
 msgstr "Odpočet k vypnutí"
 
-#: src/lib/MenuItem.js:111
+#: src/lib/MenuItem.js:112
 msgid "Settings"
 msgstr "Možnosti"
 
-#: src/lib/MenuItem.js:302
+#: src/lib/MenuItem.js:311
 #, javascript-format
 msgid "Check %s for %s"
 msgstr ""
 
-#: src/lib/MenuItem.js:355
+#: src/lib/MenuItem.js:369 src/lib/MenuItem.js:394
+msgctxt "absolute time notation"
+msgid "%a, %R"
+msgstr ""
+
+#: src/lib/MenuItem.js:372
 #, javascript-format
 msgid "%s hr"
 msgid_plural "%s hrs"
@@ -155,15 +160,21 @@ msgstr[0] "%s uro"
 msgstr[1] "%s uri"
 msgstr[2] "%s ur"
 
-#: src/lib/MenuItem.js:359
+#: src/lib/MenuItem.js:376
 #, javascript-format
 msgid "%s (protect)"
 msgstr ""
 
-#: src/lib/MenuItem.js:365
+#: src/lib/MenuItem.js:389
 #, javascript-format
 msgctxt "WakeButtonText"
-msgid "%s %s"
+msgid "%s at %s"
+msgstr ""
+
+#: src/lib/MenuItem.js:390
+#, javascript-format
+msgctxt "WakeButtonText"
+msgid "%s after %s"
 msgstr ""
 
 #: src/lib/RootMode.js:89
@@ -255,155 +266,171 @@ msgstr ""
 msgid "policy rule"
 msgstr ""
 
-#: src/ui/prefs.ui:61
+#: src/ui/prefs.ui:63
 msgid "Install"
 msgstr ""
 
-#: src/ui/prefs.ui:68
+#: src/ui/prefs.ui:70
 msgid "Install/Uninstall privileges for this user"
 msgstr ""
 
-#: src/ui/prefs.ui:69
+#: src/ui/prefs.ui:71
 msgid "Setup a privileged script and give user access via polkit"
 msgstr ""
 
-#: src/ui/prefs.ui:79
+#: src/ui/prefs.ui:81
 msgid "Install output"
 msgstr ""
 
-#: src/ui/prefs.ui:106 src/ui/prefs.ui:356
+#: src/ui/prefs.ui:108 src/ui/prefs.ui:384
 msgid "Shutdown"
 msgstr "Vypnutí"
 
-#: src/ui/prefs.ui:110 src/ui/prefs.ui:233
+#: src/ui/prefs.ui:112 src/ui/prefs.ui:248
 msgid "Timer Action"
 msgstr ""
 
-#: src/ui/prefs.ui:113
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:103
+#: src/ui/prefs.ui:115
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:127
 msgid "Use mode"
 msgstr ""
 
-#: src/ui/prefs.ui:114
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:104
+#: src/ui/prefs.ui:116
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:128
 msgid "Mode to use for timer action"
 msgstr ""
 
-#: src/ui/prefs.ui:131
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:91
+#: src/ui/prefs.ui:133
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:115
 msgid "Show end-session dialog"
 msgstr ""
 
-#: src/ui/prefs.ui:132
+#: src/ui/prefs.ui:134
 msgid "Shown for reboot and shutdown if screensaver is inactive"
 msgstr ""
 
-#: src/ui/prefs.ui:142
+#: src/ui/prefs.ui:144
 msgid "Toggle root shutdown with shutdown timer"
 msgstr ""
 
-#: src/ui/prefs.ui:143
+#: src/ui/prefs.ui:145
 msgid "Runs extra 'shutdown -P/-r' command for shutdown or reboot"
 msgstr ""
 
-#: src/ui/prefs.ui:155 src/ui/prefs.ui:250
+#: src/ui/prefs.ui:157 src/ui/prefs.ui:265
 msgid "Timer Input"
 msgstr ""
 
-#: src/ui/prefs.ui:158 src/ui/prefs.ui:175
+#: src/ui/prefs.ui:160 src/ui/prefs.ui:268
+msgid "Reference start time"
+msgstr ""
+
+#: src/ui/prefs.ui:161
+msgid "Options: now, HH:MM"
+msgstr ""
+
+#: src/ui/prefs.ui:173 src/ui/prefs.ui:190
 msgid "Shutdown slider position (in &#37;)"
 msgstr "Výchozí poloha posuvníku (v %)"
 
-#: src/ui/prefs.ui:191 src/ui/prefs.ui:286
+#: src/ui/prefs.ui:206 src/ui/prefs.ui:314
 msgid "Non-linear scaling or 0 to disable"
 msgstr ""
 
-#: src/ui/prefs.ui:209
+#: src/ui/prefs.ui:224
 msgid "Maximum shutdown timer value (in minutes)"
 msgstr "Nejvýše minut do vypnutí"
 
-#: src/ui/prefs.ui:229 src/ui/prefs.ui:402
-msgid "Wake"
-msgstr ""
-
-#: src/ui/prefs.ui:237
+#: src/ui/prefs.ui:252
 msgid "Toggle wake with timer action"
 msgstr ""
 
-#: src/ui/prefs.ui:253 src/ui/prefs.ui:270
+#: src/ui/prefs.ui:269
+msgid "Options: now, shutdown, HH:MM"
+msgstr ""
+
+#: src/ui/prefs.ui:281 src/ui/prefs.ui:298
 msgid "Wake slider position (in &#37;)"
 msgstr "Výchozí poloha posuvníku (v %)"
 
-#: src/ui/prefs.ui:304
+#: src/ui/prefs.ui:332
 msgid "Maximum wake timer value (in minutes)"
 msgstr "Nejvýše minut do vypnutí"
 
-#: src/ui/prefs.ui:324
+#: src/ui/prefs.ui:352
 msgid "Display"
 msgstr ""
 
-#: src/ui/prefs.ui:328
+#: src/ui/prefs.ui:356
 msgid "General"
 msgstr ""
 
-#: src/ui/prefs.ui:332
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:55
+#: src/ui/prefs.ui:360
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:79
 msgid "Show settings button"
 msgstr ""
 
-#: src/ui/prefs.ui:343
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:79
+#: src/ui/prefs.ui:371
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:103
 msgid "Show notification text boxes"
 msgstr ""
 
-#: src/ui/prefs.ui:359 src/ui/prefs.ui:365
+#: src/ui/prefs.ui:387 src/ui/prefs.ui:393
 msgid "Show shutdown items"
 msgstr ""
 
-#: src/ui/prefs.ui:360
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:98
+#: src/ui/prefs.ui:388
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:122
 msgid "Comma-separated shutdown modes which are shown in the popup menu"
 msgstr ""
 
-#: src/ui/prefs.ui:378
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:61
+#: src/ui/prefs.ui:406
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:85
 msgid "Show shutdown slider"
 msgstr ""
 
-#: src/ui/prefs.ui:389
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:109
+#: src/ui/prefs.ui:417
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:133
 msgid "Show shutdown indicator"
 msgstr ""
 
-#: src/ui/prefs.ui:390
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:110
+#: src/ui/prefs.ui:418
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:134
 msgid "Shows the remaining time until shutdown action"
 msgstr ""
 
-#: src/ui/prefs.ui:406
+#: src/ui/prefs.ui:429
+msgid "Absolute shutdown time selection"
+msgstr ""
+
+#: src/ui/prefs.ui:445
 msgid "Show wake items"
 msgstr ""
 
-#: src/ui/prefs.ui:417
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:67
+#: src/ui/prefs.ui:456
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:91
 msgid "Show wake slider"
 msgstr ""
 
-#: src/ui/prefs.ui:430
+#: src/ui/prefs.ui:467
+msgid "Absolute wake time selection"
+msgstr ""
+
+#: src/ui/prefs.ui:480
 msgid "Check"
 msgstr ""
 
-#: src/ui/prefs.ui:437
+#: src/ui/prefs.ui:487
 msgid "Enable check"
 msgstr ""
 
-#: src/ui/prefs.ui:438
+#: src/ui/prefs.ui:488
 msgid ""
 "Script is run in a bash user shell after timer activates. Timer action "
 "proceeds if check terminates successfully."
 msgstr ""
 
-#: src/ui/prefs.ui:448
+#: src/ui/prefs.ui:498
 msgid "Check script"
 msgstr ""
 
@@ -428,122 +455,154 @@ msgid ""
 msgstr ""
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:19
-msgid "Automatically start and stop wake on shutdown timer toggle"
+msgid "Reference start time for shutdown"
 msgstr ""
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:20
+msgid "Reference start time for shutdown either now or HH:MM"
+msgstr ""
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:25
+msgid "Display shutdown time as absolute timestamp"
+msgstr ""
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:26
+msgid "Display shutdown time as absolute timestamp \"HH:MM\""
+msgstr ""
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:31
+msgid "Reference start time for wake"
+msgstr ""
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:32
+msgid "Reference start time for wake either now, shutdown, or HH:MM"
+msgstr ""
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:37
+msgid "Display wake time as absolute timestamp"
+msgstr ""
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:38
+msgid "Display wake time as absolute timestamp \"HH:MM\""
+msgstr ""
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:43
+msgid "Automatically start and stop wake on shutdown timer toggle"
+msgstr ""
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:44
 msgid ""
 "Enable/Disable the wake alarm when the shutdown timer is started/stopped."
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:25
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:49
 msgid "Scheduled shutdown timestamp."
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:26
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:50
 msgid "Unix time in seconds of scheduled shutdown or -1 if disabled."
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:31
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:55
 msgid "Wake slider position (in percent)"
 msgstr "Výchozí poloha jezdce alarmu (v %)"
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:32
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:56
 msgid ""
 "Set wake slider position as percent of the maximum time. Must be in range 0 "
 "and 100."
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:37
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:61
 msgid "Ramp-up of non-linear wake slider value"
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:38
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:62
 msgid "Exponential ramp-up for wake time slider"
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:43
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:67
 msgid "Shutdown slider position (in percent)"
 msgstr "Výchozí poloha jezdce vypnutí (v %)"
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:44
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:68
 msgid ""
 "Set shutdown slider position as percent of the maximum time. Must be in "
 "range 0 and 100."
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:49
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:73
 msgid "Ramp-up of non-linear shutdown slider value"
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:50
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:74
 msgid "Exponential ramp-up for shutdown time slider"
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:56
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:80
 msgid "Show/hide settings button in widget."
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:62
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:86
 msgid "Show/hide shutdown slider in widget."
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:68
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:92
 msgid "Show/hide wake slider in widget."
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:73
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:97
 msgid "Show all wake items"
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:74
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:98
 msgid "Show/hide all wake items in widget."
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:80
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:104
 msgid "Show/hide notification text boxes on screen."
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:85
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:109
 msgid "Root mode"
 msgstr "Režim správce"
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:86
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:110
 msgid ""
 "Set root mode on/off. In root mode powering off is done via 'pkexec' and "
 "'shutdown' terminal command."
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:92
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:116
 msgid ""
 "Show the end-session dialog for reboot and shutdown if screensaver is "
 "inactive."
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:97
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:121
 msgid "Shown shutdown modes"
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:124
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:148
 msgid "Check command(s)"
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:125
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:149
 msgid ""
 "Run command(s) before shutdown command. Proceed with shutdown only if check "
 "command succeeds."
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:130
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:154
 msgid "Enable check command"
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:131
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:155
 msgid "Check command is skipped if disabled."
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:136
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:137
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:160
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:161
 msgid "Last selected page in the preferences."
 msgstr ""
 
