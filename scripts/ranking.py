@@ -11,7 +11,7 @@ def fetch_json(s, params):
     return s.get('https://extensions.gnome.org/extension-query/', params=params).json()
 
 
-def fetch_pages(sort='downloads', version='40.3'):
+def fetch_pages(sort='downloads', version='44'):
     p = {'page': 1}
     if sort is not None:
         p['sort'] = sort
@@ -45,7 +45,8 @@ if __name__ == '__main__':
             extensions = json.load(f)
 
     for i, e in enumerate(extensions):
-        if re.match('.*Shutdown.*', e['name'] + " " + e['description'], re.IGNORECASE | re.DOTALL):
-            print(i, e['creator'], e['uuid'],
-                  '[old]' if '40' not in e['shell_version_map'] else '')
+        highlight = e['creator'] == 'Deminder'
+        if highlight or re.match('.*(Shutdown|OSD).*', e['name'] + " " + e['description'], re.IGNORECASE | re.DOTALL):
+            print(i, ('*' if highlight else '' ) + e['creator'], e['uuid'],
+                  '[old]' if '43' not in e['shell_version_map'] else '')
     print(len(extensions), '[last]')
