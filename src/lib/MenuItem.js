@@ -33,6 +33,9 @@ const _ = Gettext.gettext;
 const _n = Gettext.ngettext;
 const C_ = Gettext.pgettext;
 
+const { PACKAGE_VERSION } = imports.misc.config;
+const MAJOR = Number.parseInt(PACKAGE_VERSION);
+
 let ACTIONS;
 let settings;
 
@@ -67,12 +70,9 @@ var ShutdownTimerItem = GObject.registerClass(
       const gicon = Gio.icon_new_for_string(
         `${Me.path}/icons/shutdown-timer-symbolic.svg`
       );
-      super._init({
-        // canFocus: true,
-        label: _('Shutdown Timer'),
-        gicon,
-        accessible_name: _('Shutdown Timer'),
-      });
+      const props = { gicon, accessible_name: _('Shutdown Timer') };
+      if (MAJOR >= 44) props.subtitle = _('Shutdown Timer');
+      super._init(props);
       this.shutdownTimerIcon = gicon;
 
       // track external shutdown and wake schedule
@@ -354,7 +354,9 @@ var ShutdownTimerItem = GObject.registerClass(
             : PopupMenu.Ornament.NONE
         );
       });
-      this.label = modeLabel(this.internalScheduleInfo.mode);
+      this[MAJOR >= 44 ? 'title' : 'label'] = modeLabel(
+        this.internalScheduleInfo.mode
+      );
     }
 
     // update timer value if slider has changed

@@ -1,5 +1,5 @@
 {
-  "shell-version": ["43"],
+  "shell-version": ["43", "44"],
   "uuid": "ShutdownTimer@deminder",
   "name": "Shutdown Timer",
   "gettext-domain": "ShutdownTimer",
