@@ -10,6 +10,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const { Convenience } = Me.imports.lib;
 const { Gio } = imports.gi;
+const { EventEmitter } = imports.misc.signals;
 const { loadInterfaceXML } = imports.misc.fileUtils;
 const { proxyPromise, logDebug } = Convenience;
 
@@ -19,95 +20,52 @@ const EndSessionDialogInf = loadInterfaceXML(
 const EndSessionDialogProxy =
   Gio.DBusProxy.makeProxyWrapper(EndSessionDialogInf);
 
-let endSessionDialog = null;
-let onCancelAction = null;
-let registered = false;
+var ESDAware = class extends EventEmitter {
+  constructor() {
+    super();
 
-/**
- *
- */
-function unregister() {
-  registered = false;
-}
-/**
- *
- */
-function register() {
-  registered = true;
-}
-
-/**
- *
- * @param cancelAction
- */
-function load(cancelAction) {
-  onCancelAction = cancelAction;
-  _update();
-}
-
-/**
- *
- */
-function unload() {
-  onCancelAction = null;
-  _update();
-}
-
-/**
- *
- */
-async function _update() {
-  try {
-    if (onCancelAction && !endSessionDialog) {
-      endSessionDialog = await proxyPromise(
-        EndSessionDialogProxy,
-        Gio.DBus.session,
-        'org.gnome.Shell',
-        '/org/gnome/SessionManager/EndSessionDialog'
-      );
-    }
-    if (endSessionDialog) {
-      if (onCancelAction === null) {
-        _disconnect(endSessionDialog);
-        endSessionDialog = null;
-      } else {
-        _connect(endSessionDialog, onCancelAction);
-      }
-    }
-  } catch (err) {
-    logError(err, 'EndSessionDialogProxyError');
-    endSessionDialog = null;
-  }
-}
-
-/**
- *
- * @param dialog
- * @param cancelAction
- */
-function _connect(dialog, cancelAction) {
-  if (!('_cancelSignalId' in dialog)) {
-    logDebug('Connect cancel of endSessionDialog...');
-    dialog['_cancelSignalId'] = dialog.connectSignal('Canceled', () => {
-      logDebug(
-        `endSessionDialog cancel triggered. propagate registered: ${registered}`
-      );
-      if (registered) {
-        cancelAction();
-      }
+    this.proxy = null;
+    this.proxyPromise = proxyPromise(
+      EndSessionDialogProxy,
+      Gio.DBus.session,
+      'org.gnome.Shell',
+      '/org/gnome/SessionManager/EndSessionDialog'
+    ).then(proxy => {
+      this.proxyPromise = null;
+      this.proxy = proxy;
     });
+    this.proxySignalIds = [];
   }
-}
 
-/**
- *
- * @param dialog
- */
-function _disconnect(dialog) {
-  const signalId = dialog['_cancelSignalId'];
-  if (signalId) {
-    logDebug('Disconnect cancel of endSessionDialog...');
-    dialog.disconnectSignal(signalId);
-    delete dialog['_cancelSignalId'];
+  unreact() {
+    for (const sigId of this.proxySignalIds) {
+      this.proxy.disconnectSignal(sigId);
+    }
+    this.proxySignalIds = [];
   }
-}
+
+  react(handleFunc) {
+    if (this.proxy === null) {
+      handleFunc('proxy-missing');
+    } else {
+      this.unreact();
+      this.proxySignalIds = ['Canceled', 'Closed'].map(name =>
+        this.proxy.connectSignal(name, () => {
+          this.unreact();
+          handleFunc(name);
+        })
+      );
+    }
+  }
+
+  destroy() {
+    if (this.proxyPromise !== null)
+      this.proxyPromise.then(() => {
+        this.proxy = null;
+      });
+    else {
+      this.unreact();
+      this.proxy = null;
+    }
+  }
+};

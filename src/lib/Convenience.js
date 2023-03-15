@@ -152,8 +152,8 @@ function throttleTimeout(timeoutFunc, delayMillis) {
     () => {
       if (current === null) {
         current = setTimeout(() => {
-          timeoutFunc();
           current = null;
+          timeoutFunc();
         }, delayMillis);
       }
     },

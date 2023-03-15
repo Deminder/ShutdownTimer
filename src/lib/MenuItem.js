@@ -10,7 +10,7 @@
 const { GObject, St, Gio, Clutter, GLib } = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
-const { Convenience, InfoFetcher, ScheduleInfo } = Me.imports.lib;
+const { CheckCommand, Convenience, InfoFetcher, ScheduleInfo } = Me.imports.lib;
 const {
   logDebug,
   modeLabel,
@@ -19,7 +19,6 @@ const {
   durationString,
   longDurationString,
   absoluteTimeString,
-  guiIdle,
 } = Convenience;
 
 // menu items
@@ -35,9 +34,6 @@ const C_ = Gettext.pgettext;
 
 const { PACKAGE_VERSION } = imports.misc.config;
 const MAJOR = Number.parseInt(PACKAGE_VERSION);
-
-let ACTIONS;
-let settings;
 
 var ShutdownTimerItem = GObject.registerClass(
   {
@@ -56,31 +52,42 @@ var ShutdownTimerItem = GObject.registerClass(
         GObject.ParamFlags.READWRITE,
         'go-down-symbolic'
       ),
-      'indicator-show': GObject.ParamSpec.boolean(
-        'indicator-show',
+      'wake-minutes': GObject.ParamSpec.int(
+        'wake-minutes',
         '',
         '',
-        GObject.ParamFlags.READWRITE,
-        false
+        GObject.ParamFlags.READABLE,
+        0
       ),
+      'shutdown-minutes': GObject.ParamSpec.int(
+        'shutdown-minutes',
+        '',
+        '',
+        GObject.ParamFlags.READABLE,
+        0
+      ),
+    },
+    Signals: {
+      'external-info': {},
+      shutdown: {
+        param_types: [GObject.TYPE_BOOLEAN],
+      },
+      wake: {
+        param_types: [GObject.TYPE_BOOLEAN],
+      },
     },
   },
   class ShutdownTimerItem extends QuickMenuToggle {
-    _init() {
+    _init(props) {
       const gicon = Gio.icon_new_for_string(
         `${Me.path}/icons/shutdown-timer-symbolic.svg`
       );
-      const props = { gicon, accessible_name: _('Shutdown Timer') };
-      if (MAJOR >= 44) props.subtitle = _('Shutdown Timer');
-      super._init(props);
+      const nprops = { gicon, accessible_name: _('Shutdown Timer') };
+      if (MAJOR >= 44) nprops.subtitle = _('Shutdown Timer');
+      super._init({ ...nprops, ...props });
+      this._settings = ExtensionUtils.getSettings();
       this.shutdownTimerIcon = gicon;
 
-      // track external shutdown and wake schedule
-      this.infoFetcher = new InfoFetcher.InfoFetcher(
-        this._externalScheduleInfoTick.bind(this)
-      );
-
-      this.checkRunning = false;
       this.externalScheduleInfo = new ScheduleInfo.ScheduleInfo({
         external: true,
       });
@@ -88,23 +95,37 @@ var ShutdownTimerItem = GObject.registerClass(
         external: false,
         mode: 'wake',
       });
-      this.internalScheduleInfo = new ScheduleInfo.ScheduleInfo({
-        external: false,
-        deadline: settings.get_int('shutdown-timestamp-value'),
-        mode: settings.get_string('shutdown-mode-value'),
-      });
+
+      // track external shutdown and wake schedule
+      this.infoFetcher = new InfoFetcher.InfoFetcher();
+      this.infoFetcher.connectObject(
+        'changed',
+        () => {
+          this.externalScheduleInfo = this.externalScheduleInfo.copy({
+            ...this.infoFetcher.shutdownInfo,
+          });
+          this.externalWakeInfo = this.externalWakeInfo.copy({
+            ...this.infoFetcher.wakeInfo,
+          });
+          this.updateShutdownInfo();
+        },
+        this
+      );
 
       // submenu in status area menu with slider and toggle button
       this.sliderItems = {};
       this.sliders = {};
       ['shutdown', 'wake'].forEach(prefix => {
-        const [item, slider] = _createSliderItem(prefix);
+        const [item, slider] = this._createSliderItem(prefix);
         this.sliderItems[prefix] = item;
         this.sliders[prefix] = slider;
         this._onShowSliderChanged(prefix);
       });
       this.switcher = new PopupMenu.PopupSwitchMenuItem('', false);
-      _connect(this.switcher, [['toggled', this._onToggle.bind(this)]]);
+      // start/stop shutdown timer
+      this.switcher.connect('toggled', () =>
+        this.emit('shutdown', this.switcher.state)
+      );
       this.switcherSettingsButton = new St.Button({
         reactive: true,
         can_focus: true,
@@ -116,21 +137,9 @@ var ShutdownTimerItem = GObject.registerClass(
         icon_name: 'emblem-system-symbolic',
         style_class: 'popup-menu-icon',
       });
-      _connect(this.switcherSettingsButton, [
-        [
-          'clicked',
-          async () => {
-            try {
-              const r = ExtensionUtils.openPrefs();
-              if (r) {
-                await r;
-              }
-            } catch {
-              logDebug('failed to open preferences!');
-            }
-          },
-        ],
-      ]);
+      this.switcherSettingsButton.connect('clicked', () =>
+        ExtensionUtils.openPrefs()
+      );
       this.switcher.add_child(this.switcherSettingsButton);
 
       this.menu.addMenuItem(this.switcher);
@@ -144,14 +153,10 @@ var ShutdownTimerItem = GObject.registerClass(
 
       this.modeItems = MODES.map(mode => {
         const modeItem = new PopupMenu.PopupMenuItem(modeLabel(mode));
-        _connect(modeItem, [
-          [
-            'activate',
-            () => {
-              this._startMode(mode);
-            },
-          ],
-        ]);
+        modeItem.connect('activate', () => {
+          this._settings.set_string('shutdown-mode-value', mode);
+          this.emit('shutdown', true);
+        });
         this.menu.addMenuItem(modeItem);
         return [mode, modeItem];
       });
@@ -164,12 +169,9 @@ var ShutdownTimerItem = GObject.registerClass(
           if (mode === 'wake') {
             this.wakeModeItem = modeItem;
           }
-          _connect(modeItem, [
-            [
-              'activate',
-              () => ACTIONS.wakeAction(mode, _getSliderMinutes('wake')),
-            ],
-          ]);
+          modeItem.connect('activate', () =>
+            this.emit('wake', mode === 'wake')
+          );
           return modeItem;
         }),
       ];
@@ -177,115 +179,73 @@ var ShutdownTimerItem = GObject.registerClass(
         this.menu.addMenuItem(item);
       });
       this._updateWakeModeItem();
-      this._onShowSettingsButtonChanged();
       this._updateSwitchLabel();
 
-      this._updateShownWakeItems();
-      this._updateShownModeItems();
-      this._updateSelectedModeItems();
-      this._onInternalShutdownTimestampChanged();
-
       // handlers for changed values in settings
-      this.settingsHandlerIds = [
-        ['shutdown-max-timer-value', this._updateSwitchLabel.bind(this)],
-        ['nonlinear-shutdown-slider-value', this._updateSwitchLabel.bind(this)],
-        ['shutdown-ref-timer-value', this._updateSwitchLabel.bind(this)],
+      const settingsHandlerIds = [
         [
-          'show-shutdown-absolute-timer-value',
-          this._updateSwitchLabel.bind(this),
-        ],
-        ['wake-max-timer-value', this._updateWakeModeItem.bind(this)],
-        ['wake-ref-timer-value', this._updateWakeModeItem.bind(this)],
-        ['show-wake-absolute-timer-value', this._updateWakeModeItem.bind(this)],
-        ['nonlinear-wake-slider-value', this._updateWakeModeItem.bind(this)],
-        [
-          'shutdown-slider-value',
-          () => {
-            this._updateSlider('shutdown');
-            this._updateSwitchLabel();
-          },
+          [
+            'shutdown-max-timer-value',
+            'nonlinear-shutdown-slider-value',
+            'shutdown-ref-timer-value',
+            'show-shutdown-absolute-timer-value',
+            'root-mode-value',
+            'shutdown-slider-value',
+          ],
+          () => this._updateSwitchLabel(),
         ],
         [
-          'wake-slider-value',
-          () => {
-            this._updateSlider('wake');
-            this._updateWakeModeItem();
-          },
+          [
+            'wake-max-timer-value',
+            'wake-ref-timer-value',
+            'show-wake-absolute-timer-value',
+            'nonlinear-wake-slider-value',
+            'wake-slider-value',
+          ],
+          () => this._updateWakeModeItem(),
         ],
-        ['root-mode-value', this._onRootModeChanged.bind(this)],
-        ['show-settings-value', this._onShowSettingsButtonChanged.bind(this)],
+        [['shutdown-slider-value'], () => this._updateSlider('shutdown')],
+        [['wake-slider-value'], () => this._updateSlider('wake')],
         [
-          'show-shutdown-slider-value',
-          () => this._onShowSliderChanged('shutdown'),
+          [
+            'show-wake-items-value',
+            'show-shutdown-mode-value',
+            'show-shutdown-slider-value',
+            'show-wake-slider-value',
+            'show-shutdown-indicator-value',
+            'show-settings-value',
+            'shutdown-mode-value',
+            'shutdown-timestamp-value',
+          ],
+          () => this._sync(),
         ],
-        ['show-wake-slider-value', () => this._onShowSliderChanged('wake')],
-        [
-          'show-shutdown-indicator-value',
-          () => this.updateShutdownInfo.bind(this),
-        ],
-        ['show-wake-items-value', this._updateShownWakeItems.bind(this)],
-        ['show-shutdown-mode-value', this._updateShownModeItems.bind(this)],
-        ['shutdown-mode-value', this._onModeChange.bind(this)],
-        [
-          'shutdown-timestamp-value',
-          this._onInternalShutdownTimestampChanged.bind(this),
-        ],
-      ].map(([label, func]) => settings.connect(`changed::${label}`, func));
-      this.connect('clicked', () => this.switcher.toggle());
-    }
-
-    _onRootModeChanged() {
-      Promise.all([
-        ACTIONS.maybeStopRootModeProtection(this.internalScheduleInfo),
-        ACTIONS.maybeStartRootModeProtection(this.internalScheduleInfo),
-      ]).then(() => {
-        this._updateSwitchLabel();
-      });
-    }
-
-    _onModeChange() {
-      // redo Root-mode protection
-      ACTIONS.maybeStopRootModeProtection(this.internalScheduleInfo, true)
-        .then(() => {
-          this._updateCurrentMode();
-          logDebug(`Shutdown mode: ${this.internalScheduleInfo.mode}`);
-          guiIdle(this._updateSelectedModeItems.bind(this));
-        })
-        .then(() =>
-          ACTIONS.maybeStartRootModeProtection(this.internalScheduleInfo)
+      ]
+        .flatMap(([names, func]) => names.map(n => [n, func]))
+        .map(([name, func]) =>
+          this._settings.connect(`changed::${name}`, func)
         );
-    }
-
-    _updateCurrentMode() {
-      this.internalScheduleInfo = this.internalScheduleInfo.copy({
-        mode: settings.get_string('shutdown-mode-value'),
+      this.connect('clicked', () => this.switcher.toggle());
+      const tickHandlerId = setInterval(() => this.updateShutdownInfo(), 1000);
+      this.connect('destroy', () => {
+        clearInterval(tickHandlerId);
+        this.infoFetcher.destroy();
+        this.infoFetcher = null;
+        settingsHandlerIds.forEach(handlerId => {
+          this._settings.disconnect(handlerId);
+        });
       });
-
-      ACTIONS.onShutdownScheduleChange(this.internalScheduleInfo);
-      this.updateShutdownInfo();
+      this._sync();
     }
 
-    _onInternalShutdownTimestampChanged() {
-      this.internalScheduleInfo = this.internalScheduleInfo.copy({
-        deadline: settings.get_int('shutdown-timestamp-value'),
+    _sync() {
+      // Update wake mode items
+      this.wakeItems.forEach(item => {
+        item.visible = this._settings.get_boolean('show-wake-items-value');
       });
+      this._onShowSliderChanged('wake');
 
-      ACTIONS.onShutdownScheduleChange(this.internalScheduleInfo);
-      this.switcher.setToggleState(this.internalScheduleInfo.scheduled);
-      this.updateShutdownInfo();
-    }
-
-    /* Schedule Info updates */
-    _externalScheduleInfoTick(info, wakeInfo) {
-      this.externalScheduleInfo = this.externalScheduleInfo.copy({
-        ...info,
-      });
-      this.externalWakeInfo = this.externalWakeInfo.copy({ ...wakeInfo });
-      guiIdle(this.updateShutdownInfo.bind(this));
-    }
-
-    _updateShownModeItems() {
-      const activeModes = settings
+      // Update shutdown mode items
+      const activeModes = this._settings
         .get_string('show-shutdown-mode-value')
         .split(',')
         .map(s => s.trim().toLowerCase())
@@ -297,95 +257,129 @@ var ShutdownTimerItem = GObject.registerClass(
         }
         item.visible = position > -1;
       });
+      const info = this.shutdownScheduleInfo;
+      this.modeItems.forEach(([mode, item]) => {
+        item.setOrnament(
+          mode === info.mode ? PopupMenu.Ornament.DOT : PopupMenu.Ornament.NONE
+        );
+      });
+      this[MAJOR >= 44 ? 'title' : 'label'] = modeLabel(info.mode);
+      this._onShowSliderChanged('shutdown');
+
+      // Update switcher
+      this.switcher.setToggleState(info.scheduled);
+      this.updateShutdownInfo();
+      this.switcherSettingsButton.visible = this._settings.get_boolean(
+        'show-settings-value'
+      );
     }
 
     updateShutdownInfo() {
-      let shutdownLabel;
-      let shutdownText = '';
-      let iconName = 'go-down-symbolic';
-      const showIndicator = settings.get_boolean(
+      const showIndicator = this._settings.get_boolean(
         'show-shutdown-indicator-value'
       );
-      if (this.internalScheduleInfo.scheduled && this.checkRunning) {
-        const secPassed = Math.max(0, -this.internalScheduleInfo.secondsLeft);
-        shutdownLabel = _('Check %s for %s').format(
-          this.internalScheduleInfo.modeText,
-          durationString(secPassed)
-        );
-        iconName = 'go-bottom-symbolic';
-      } else {
-        const info = this.externalScheduleInfo.isMoreUrgendThan(
-          this.internalScheduleInfo
-        )
-          ? this.externalScheduleInfo
-          : this.internalScheduleInfo;
-        shutdownLabel = info.label;
-        if (info.scheduled && showIndicator) {
-          shutdownText = durationString(info.secondsLeft);
-        }
-      }
+      const info = this.externalScheduleInfo.isMoreUrgendThan(
+        this.shutdownScheduleInfo
+      )
+        ? this.externalScheduleInfo
+        : this.shutdownScheduleInfo;
+      const checkRunning =
+        this.shutdownScheduleInfo.scheduled && CheckCommand.isChecking();
       this.set({
-        checked: this.internalScheduleInfo.scheduled,
-        indicator_show:
+        checked: this.shutdownScheduleInfo.scheduled,
+        shutdownText:
+          info.scheduled && showIndicator
+            ? info.secondsLeft > 0
+              ? durationString(info.secondsLeft)
+              : _('now')
+            : '',
+        indicatorIconName:
           showIndicator &&
-          (this.internalScheduleInfo.scheduled ||
-            this.externalScheduleInfo.scheduled),
-        shutdown_text: shutdownText,
-        indicator_icon_name: iconName,
+          (this.shutdownScheduleInfo.scheduled ||
+            this.externalScheduleInfo.scheduled)
+            ? checkRunning
+              ? 'go-down-symbolic'
+              : 'go-bottom-symbolic'
+            : '',
       });
       this.menu.setHeader(
         this.shutdownTimerIcon,
         _('Shutdown Timer'),
-        [shutdownLabel, this.externalWakeInfo.label].filter(v => !!v).join('\n')
+        [
+          checkRunning
+            ? _('Check %s for %s').format(
+                this.shutdownScheduleInfo.modeText,
+                durationString(
+                  // Show seconds which passed since check started
+                  Math.max(0, -this.shutdownScheduleInfo.secondsLeft)
+                )
+              )
+            : info.label,
+          this.externalWakeInfo.label,
+        ]
+          .filter(v => !!v)
+          .join('\n')
       );
-      if (settings.get_boolean('show-shutdown-absolute-timer-value')) {
+      if (this._settings.get_boolean('show-shutdown-absolute-timer-value')) {
         this._updateSwitchLabel();
       }
-      if (settings.get_boolean('show-wake-absolute-timer-value')) {
+      if (this._settings.get_boolean('show-wake-absolute-timer-value')) {
         this._updateWakeModeItem();
       }
-    }
-
-    _updateSelectedModeItems() {
-      this.modeItems.forEach(([mode, item]) => {
-        item.setOrnament(
-          mode === this.internalScheduleInfo.mode
-            ? PopupMenu.Ornament.DOT
-            : PopupMenu.Ornament.NONE
-        );
-      });
-      this[MAJOR >= 44 ? 'title' : 'label'] = modeLabel(
-        this.internalScheduleInfo.mode
-      );
     }
 
     // update timer value if slider has changed
     _updateSlider(prefix) {
       this.sliders[prefix].value =
-        settings.get_double(`${prefix}-slider-value`) / 100.0;
+        this._settings.get_double(`${prefix}-slider-value`) / 100.0;
+    }
+
+    _createSliderItem(settingsPrefix) {
+      const sliderValue =
+        this._settings.get_double(`${settingsPrefix}-slider-value`) / 100.0;
+      const item = new PopupMenu.PopupBaseMenuItem({ activate: false });
+      const sliderIcon = new St.Icon({
+        icon_name:
+          settingsPrefix === 'wake'
+            ? 'alarm-symbolic'
+            : 'system-shutdown-symbolic',
+        style_class: 'popup-menu-icon',
+      });
+      item.add(sliderIcon);
+      const slider = new Slider.Slider(sliderValue);
+      slider.connect('notify::value', () => {
+        this._settings.set_double(
+          `${settingsPrefix}-slider-value`,
+          slider.value * 100
+        );
+      });
+      item.add_child(slider);
+      return [item, slider];
     }
 
     _updateSwitchLabel() {
-      const minutes = Math.abs(_getSliderMinutes('shutdown'));
-      const timeStr = settings.get_boolean('show-shutdown-absolute-timer-value')
+      const minutes = Math.abs(this._getSliderMinutes('shutdown'));
+      const timeStr = this._settings.get_boolean(
+        'show-shutdown-absolute-timer-value'
+      )
         ? absoluteTimeString(minutes, C_('absolute time notation', '%a, %R'))
         : longDurationString(
             minutes,
             h => _n('%s hr', '%s hrs', h),
             m => _n('%s min', '%s mins', m)
           );
-      this.switcher.label.text = settings.get_boolean('root-mode-value')
+      this.switcher.label.text = this._settings.get_boolean('root-mode-value')
         ? _('%s (protect)').format(timeStr)
         : timeStr;
 
-      if (settings.get_string('wake-ref-timer-value') === 'shutdown') {
+      if (this._settings.get_string('wake-ref-timer-value') === 'shutdown') {
         this._updateWakeModeItem();
       }
     }
 
     _updateWakeModeItem() {
-      const minutes = Math.abs(_getSliderMinutes('wake'));
-      const abs = settings.get_boolean('show-wake-absolute-timer-value');
+      const minutes = Math.abs(this.wake_minutes);
+      const abs = this._settings.get_boolean('show-wake-absolute-timer-value');
       this.wakeModeItem.label.text = (
         abs
           ? C_('WakeButtonText', '%s at %s')
@@ -402,205 +396,154 @@ var ShutdownTimerItem = GObject.registerClass(
       );
     }
 
-    _onShowSettingsButtonChanged() {
-      this.switcherSettingsButton.visible = settings.get_boolean(
-        'show-settings-value'
-      );
-    }
-
-    _updateShownWakeItems() {
-      this.wakeItems.forEach(item => {
-        item.visible = settings.get_boolean('show-wake-items-value');
-      });
-      this._onShowSliderChanged('wake');
-    }
-
     _onShowSliderChanged(settingsPrefix) {
       this.sliderItems[settingsPrefix].visible =
         (settingsPrefix !== 'wake' ||
-          settings.get_boolean('show-wake-items-value')) &&
-        settings.get_boolean(`show-${settingsPrefix}-slider-value`);
+          this._settings.get_boolean('show-wake-items-value')) &&
+        this._settings.get_boolean(`show-${settingsPrefix}-slider-value`);
     }
 
-    _startMode(mode) {
-      settings.set_string('shutdown-mode-value', mode);
-      ACTIONS.startSchedule(
-        _getSliderMinutes('shutdown'),
-        _getSliderMinutes('wake')
+    _getSliderMinutes(prefix) {
+      const sliderValue =
+        this._settings.get_double(`${prefix}-slider-value`) / 100.0;
+      const rampUp = this._settings.get_double(
+        `nonlinear-${prefix}-slider-value`
       );
-    }
+      const ramp = x => Math.expm1(rampUp * x) / Math.expm1(rampUp);
+      let minutes = Math.floor(
+        (rampUp === 0 ? sliderValue : ramp(sliderValue)) *
+          this._settings.get_int(`${prefix}-max-timer-value`)
+      );
 
-    // toggle button starts/stops shutdown timer
-    _onToggle() {
-      if (this.switcher.state) {
-        // start shutdown timer
-        ACTIONS.startSchedule(
-          _getSliderMinutes('shutdown'),
-          _getSliderMinutes('wake')
-        );
-      } else {
-        // stop shutdown timer
-        ACTIONS.stopSchedule();
+      const refstr = this._settings.get_string(`${prefix}-ref-timer-value`);
+      // default: 'now'
+      const MS = 1000 * 60;
+      if (refstr.includes(':')) {
+        const mh = refstr
+          .split(':')
+          .map(s => Number.parseInt(s))
+          .filter(n => !Number.isNaN(n) && n >= 0);
+        if (mh.length >= 2) {
+          const d = new Date();
+          const nowTime = d.getTime();
+          d.setHours(mh[0]);
+          d.setMinutes(mh[1]);
+
+          if (d.getTime() + MS * minutes < nowTime) {
+            d.setDate(d.getDate() + 1);
+          }
+          minutes += Math.floor(new Date(d.getTime() - nowTime).getTime() / MS);
+        }
+      } else if (prefix !== 'shutdown' && refstr === 'shutdown') {
+        minutes += this._getSliderMinutes('shutdown');
       }
+      return minutes;
     }
 
-    destroy() {
-      this.infoFetcher.stop();
-      this.settingsHandlerIds.forEach(handlerId => {
-        settings.disconnect(handlerId);
+    get shutdown_minutes() {
+      return this._getSliderMinutes('shutdown');
+    }
+
+    get wake_minutes() {
+      return this._getSliderMinutes('wake');
+    }
+
+    get shutdownScheduleInfo() {
+      return new ScheduleInfo.ScheduleInfo({
+        mode: this._settings.get_string('shutdown-mode-value'),
+        deadline: this._settings.get_int('shutdown-timestamp-value'),
       });
-      this.settingsHandlerIds = [];
-      super.destroy();
+    }
+
+    on_external_info() {
+      this.infoFetcher.refresh();
     }
   }
 );
 
-/**
- *
- * @param settingsObj
- * @param actions
- */
-function init(settingsObj, actions) {
-  settings = settingsObj;
-  ACTIONS = actions;
-}
-
-/**
- *
- */
-function uninit() {
-  settings = null;
-  ACTIONS = null;
-}
-
-/**
- *
- * @param prefix
- */
-function _getSliderMinutes(prefix) {
-  const sliderValue = settings.get_double(`${prefix}-slider-value`) / 100.0;
-  const rampUp = settings.get_double(`nonlinear-${prefix}-slider-value`);
-  const ramp = x => Math.expm1(rampUp * x) / Math.expm1(rampUp);
-  let minutes = Math.floor(
-    (rampUp === 0 ? sliderValue : ramp(sliderValue)) *
-      settings.get_int(`${prefix}-max-timer-value`)
-  );
-
-  const refstr = settings.get_string(`${prefix}-ref-timer-value`);
-  // default: 'now'
-  const MS = 1000 * 60;
-  if (refstr.includes(':')) {
-    const mh = refstr
-      .split(':')
-      .map(s => Number.parseInt(s))
-      .filter(n => !Number.isNaN(n) && n >= 0);
-    if (mh.length >= 2) {
-      const d = new Date();
-      const nowTime = d.getTime();
-      d.setHours(mh[0]);
-      d.setMinutes(mh[1]);
-
-      if (d.getTime() + MS * minutes < nowTime) {
-        d.setDate(d.getDate() + 1);
-      }
-      minutes += Math.floor(new Date(d.getTime() - nowTime).getTime() / MS);
-    }
-  } else if (prefix !== 'shutdown' && refstr === 'shutdown') {
-    minutes += _getSliderMinutes('shutdown');
-  }
-  return minutes;
-}
-
-/**
- *
- * @param item
- * @param connections
- */
-function _connect(item, connections) {
-  const handlerIds = connections.map(([label, func]) =>
-    item.connect(label, func)
-  );
-  const destroyId = item.connect('destroy', () => {
-    handlerIds.concat(destroyId).forEach(handlerId => {
-      item.disconnect(handlerId);
-    });
-  });
-}
-
-/**
- *
- * @param settingsPrefix
- */
-function _createSliderItem(settingsPrefix) {
-  const sliderValue =
-    settings.get_double(`${settingsPrefix}-slider-value`) / 100.0;
-  const item = new PopupMenu.PopupBaseMenuItem({ activate: false });
-  const sliderIcon = new St.Icon({
-    icon_name:
-      settingsPrefix === 'wake' ? 'alarm-symbolic' : 'system-shutdown-symbolic',
-    style_class: 'popup-menu-icon',
-  });
-  item.add(sliderIcon);
-  const slider = new Slider.Slider(sliderValue);
-  _connect(slider, [
-    [
-      'notify::value',
-      () => {
-        settings.set_double(
-          `${settingsPrefix}-slider-value`,
-          slider.value * 100
-        );
-      },
-    ],
-  ]);
-  item.add_child(slider);
-  return [item, slider];
-}
-
 var ShutdownTimerIndicator = GObject.registerClass(
+  {
+    Properties: {
+      'wake-minutes': GObject.ParamSpec.int(
+        'wake-minutes',
+        '',
+        '',
+        GObject.ParamFlags.READABLE,
+        0
+      ),
+      'shutdown-minutes': GObject.ParamSpec.int(
+        'shutdown-minutes',
+        '',
+        '',
+        GObject.ParamFlags.READABLE,
+        0
+      ),
+    },
+    Signals: {
+      'external-info': {},
+      shutdown: {
+        param_types: [GObject.TYPE_BOOLEAN],
+      },
+      wake: {
+        param_types: [GObject.TYPE_BOOLEAN],
+      },
+    },
+  },
   class ShutdownTimerIndicator extends SystemIndicator {
     _init() {
       super._init();
-      this._indicator = this._addIndicator();
-      this._shutdownTimerItem = new ShutdownTimerItem();
+      const item = new ShutdownTimerItem();
+      this._shutdownTimerItem = item;
 
-      this._scheduleLabel = new St.Label({
+      item.connect('shutdown', (__, shutdown) =>
+        this.emit('shutdown', shutdown)
+      );
+      item.connect('wake', (__, wake) => this.emit('wake', wake));
+
+      const icon = new St.Icon({ style_class: 'system-status-icon' });
+      const updateIcon = () => {
+        const name = item.indicatorIconName;
+        icon.visible = !!name;
+        if (icon.visible) icon.iconName = name;
+        this._syncIndicatorsVisible();
+      };
+
+      const scheduleLabel = new St.Label({
         y_expand: true,
         y_align: Clutter.ActorAlign.CENTER,
       });
-      this.add_child(this._scheduleLabel);
+      const updateLabel = () => {
+        const text = item.shutdownText;
+        scheduleLabel.text = text;
+        scheduleLabel.visible = !!text;
+        this._syncIndicatorsVisible();
+      };
 
-      this._shutdownTimerItem.bind_property(
-        'indicator-icon-name',
-        this._indicator,
-        'icon-name',
-        GObject.BindingFlags.SYNC_CREATE
-      );
+      this.add_actor(icon);
+      this.add_child(scheduleLabel);
 
-      this._shutdownTimerItem.bind_property(
-        'indicator-show',
-        this._indicator,
-        'visible',
-        GObject.BindingFlags.SYNC_CREATE
-      );
+      item.connect('notify::indicator-icon-name', () => updateIcon());
+      item.connect('notify::shutdown-text', () => updateLabel());
 
-      this._shutdownTimerItem.bind_property(
-        'shutdown-text',
-        this._scheduleLabel,
-        'text',
-        GObject.BindingFlags.SYNC_CREATE
-      );
+      updateLabel();
+      updateIcon();
 
-      this._shutdownTimerItem.bind_property_full(
-        'shutdown-text',
-        this._scheduleLabel,
-        'visible',
-        GObject.BindingFlags.SYNC_CREATE,
-        (__, text) => [true, !!text],
-        null
-      );
+      this.quickSettingsItems.push(item);
+      this.connect('destroy', () => {
+        this.quickSettingsItems.forEach(i => i.destroy());
+      });
+    }
 
-      this.quickSettingsItems.push(this._shutdownTimerItem);
+    get shutdown_minutes() {
+      return this._shutdownTimerItem.shutdown_minutes;
+    }
+
+    get wake_minutes() {
+      return this._shutdownTimerItem.wake_minutes;
+    }
+
+    on_external_info() {
+      this._shutdownTimerItem.emit('external-info');
     }
   }
 );
