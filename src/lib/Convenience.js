@@ -1,10 +1,6 @@
-/**
- * Convenience module
- *
- * @author Deminder <tremminder@gmail.com>
- * @copyright 2021
- * @license GNU General Public License v3.0
- */
+// SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 /* exported MODES, WAKE_MODES, modeLabel, logDebug, proxyPromise, durationString, longDurationString, absoluteTimeString, disableGuiIdle, enableGuiIdle, guiIdle, throttleTimeout */
 
 const { GLib } = imports.gi;

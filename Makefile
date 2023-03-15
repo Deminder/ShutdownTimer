@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 UUID := $(shell grep uuid src/metadata.json | cut -d\" -f 4)
 ZIP_FILE := $(UUID).shell-extension.zip
 $(info Version: $(shell grep -oP '^ *?\"version\": *?\K(\d+)' src/metadata.json) ($(ZIP_FILE)))
@@ -7,7 +10,7 @@ SCHEMA_IN := src/schemas/$(shell grep settings-schema src/metadata.json | cut -d
 
 GETTEXTDOMAIN := $(shell grep gettext-domain src/metadata.json | cut -d\" -f 4)
 
-SOURCE_FILES := $(shell find po -type f) $(shell find src -type f) LICENSE
+SOURCE_FILES := $(shell find po -type f) $(shell find src -type f)
 
 target-zip=$(patsubst %,target/%/$(ZIP_FILE),$(1))
 DEFAULT_ZIP := $(call target-zip,default)

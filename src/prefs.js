@@ -1,10 +1,6 @@
-/**
- * Extension preferences GUI
- *
- * @author Deminder <tremminder@gmail.com>
- * @copyright 2021
- * @license GNU General Public License v3.0
- */
+// SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 /* exported init, fillPreferencesWindow */
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -16,9 +12,6 @@ const { enableGuiIdle, disableGuiIdle, guiIdle, modeLabel, MODES } =
 
 const { GLib, Gtk, Gio } = imports.gi;
 
-/**
- *
- */
 function init() {
   ExtensionUtils.initTranslations();
 }

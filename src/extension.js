@@ -1,11 +1,6 @@
-/**
- * Shutdown Timer Extension for GNOME Shell
- *
- * @author Deminder <tremminder@gmail.com>
- * @author D. Neumann <neumann89@gmail.com>
- * @copyright 2014-2023
- * @license GNU General Public License v3.0
- */
+// SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>, D. Neumann <neumann89@gmail.com>
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 /* exported init */
 
 const ExtensionUtils = imports.misc.extensionUtils;

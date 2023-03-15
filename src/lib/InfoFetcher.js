@@ -1,12 +1,7 @@
-/**
- * InfoFetcher module
- *
- * @author Deminder <tremminder@gmail.com>
- * @copyright 2021
- * @license GNU General Public License v3.0
- */
-/* exported InfoFetcher */
+// SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>
+// SPDX-License-Identifier: GPL-3.0-or-later
 
+/* exported InfoFetcher */
 const { Gio, GLib, GObject } = imports.gi;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const { Convenience } = Me.imports.lib;

@@ -1,10 +1,6 @@
-/**
- * EndSessionDialogAware module
- *
- * @author Deminder <tremminder@gmail.com>
- * @copyright 2021
- * @license GNU General Public License v3.0
- */
+// SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 /* exported register, unregister, load, unload */
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();

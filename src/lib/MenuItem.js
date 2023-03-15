@@ -1,12 +1,7 @@
-/**
- * MenuItem module
- *
- * @author Deminder <tremminder@gmail.com>
- * @copyright 2021
- * @license GNU General Public License v3.0
- */
-/* exported ShutdownTimerIndicator, init, uninit, MODES */
+// SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>
+// SPDX-License-Identifier: GPL-3.0-or-later
 
+/* exported ShutdownTimerIndicator, init, uninit, MODES */
 const { GObject, St, Gio, Clutter, GLib } = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();

@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Script to update main.pot and *.po files
+# SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
-# This Script is released under GPL v3 license
-# Copyright (C) 2021 Javad Rahmatzadeh (changed)
+# Adapted from JustPerfection 2021 by Javad Rahmatzadeh
 
 set -e
 

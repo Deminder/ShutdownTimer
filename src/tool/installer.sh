@@ -1,10 +1,15 @@
 #!/bin/bash
 
+# SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Adapted from cpupower extension by:
+# Martin Koppehel <psl.kontakt@gmail.com>, Fin Christensen <christensen.fin@gmail.com>
+
 # installer.sh - This script installs a policykit rule for the Shutdown Timer gnome-shell extension.
 #
 # This file is part of the gnome-shell extension ShutdownTimer@Deminder.
 
-# Authors: Martin Koppehel <psl.kontakt@gmail.com>, Fin Christensen <christensen.fin@gmail.com> (cpupower extension), Deminder <tremminder@gmail.com>
 
 set -e
 

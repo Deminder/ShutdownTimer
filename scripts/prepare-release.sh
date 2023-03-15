@@ -1,9 +1,7 @@
 #!/bin/bash
 
-# Script to bump version and prepare release
-#
-# This Script is released under GPL v3 license
-# Copyright (C) 2021 Deminder
+# SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 set -e
 
@@ -13,6 +11,7 @@ set -e
 # cd to the repo root
 cd "$( cd "$( dirname "$0" )" && pwd )/.."
 
+reuse lint
 npm run format
 
 VPATTERN='^ *?\"version\": *?'
@@ -26,5 +25,5 @@ git add "$METADATA_FILE"
 ./scripts/update-pod.sh
 git add po
 
-git commit -am "bump version to $VERSION"
+git commit -am "Bump version to $VERSION"
 git tag -a "r$VERSION" -m "Release version $VERSION"

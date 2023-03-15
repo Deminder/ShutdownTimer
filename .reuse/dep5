@@ -1,0 +1,24 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: battery-indicator-icon
+Upstream-Contact: Deminder <tremminder@gmail.com>
+Source: https://github.com/Deminder/battery-indicator-icon
+
+Files: po/*.po po/main.pot
+Copyright: Translators
+License: CC-BY-SA-4.0
+
+Files: data/**
+Copyright: 2023 Deminder <tremminder@gmail.com>
+License: CC-BY-SA-4.0
+
+Files: src/polkit/*
+Copyright: 2023 Deminder <tremminder@gmail.com>
+License: GPL-3.0-or-later
+
+Files: src/ui/*
+Copyright: 2023 Deminder <tremminder@gmail.com>
+License: GPL-3.0-or-later
+
+Files: .github/**
+Copyright: 2023 Deminder <tremminder@gmail.com>
+License: MIT

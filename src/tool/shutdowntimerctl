@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
 # shutdowntimerctl - This script can configure the shutdown and rtc wake alarm schedule.
 #
 # This file is part of the gnome-shell extension ShutdownTimer@Deminder.

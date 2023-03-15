@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Script to pack the extension zip and install the package
+# SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
-# This Script is released under GPL v3 license
-# Copyright (C) 2021 Javad Rahmatzadeh (changed)
+# Adapted from JustPerfection 2021 by Javad Rahmatzadeh
 
 set -e
 
@@ -52,7 +52,7 @@ gnome-extensions pack src \
     --extra-source="ui" \
     --extra-source="tool" \
     --extra-source="polkit" \
-    --extra-source="../LICENSE" \
+    --extra-source="../LICENSES" \
     --extra-source="../CHANGELOG.md" \
     --out-dir="$targetdir"
 

@@ -1,19 +1,13 @@
-/**
- * Install module
- *
- * @author Deminder <tremminder@gmail.com>
- * @copyright 2021
- * @license GNU General Public License v3.0
- */
-/* exported installAction, checkInstalled, reset, actionLabel */
+// SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>
+// SPDX-License-Identifier: GPL-3.0-or-later
 
+/* exported installAction, checkInstalled, reset, actionLabel */
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const { Convenience, RootMode } = Me.imports.lib;
 const logDebug = Convenience.logDebug;
 
 const { Gio } = imports.gi;
-// translations
 const Gettext = imports.gettext.domain('ShutdownTimer');
 const _ = Gettext.gettext;
 

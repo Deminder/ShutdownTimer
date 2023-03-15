@@ -1,17 +1,12 @@
-/**
- * RootMode module
- *
- * @author Deminder <tremminder@gmail.com>
- * @copyright 2021
- * @license GNU General Public License v3.0
- */
+// SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 /* exported shutdown, shutdownCancel, wake, wakeCancel, installScript, uninstallScript */
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const logDebug = Me.imports.lib.Convenience.logDebug;
 
 const { Gio, GLib } = imports.gi;
 
-// translations
 const Gettext = imports.gettext.domain('ShutdownTimer');
 const _ = Gettext.gettext;
 

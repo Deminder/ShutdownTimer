@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>
+SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 <h1 align="center">Shutdown Timer for Gnome Shell</h1>
 <p align="center">
   <img alt="Shutdown Timer Icon" width="228" src="data/img/icon.svg"/>
