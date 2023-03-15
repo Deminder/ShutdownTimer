@@ -12,7 +12,7 @@ const { RootMode, Convenience } = Me.imports.lib;
 const Gio = imports.gi.Gio;
 const logDebug = Convenience.logDebug;
 
-let checkCancel;
+let checkCancel = null;
 
 /**
  * Wait for checkCmd to execute successfully.
@@ -21,75 +21,46 @@ let checkCancel;
  * @param {(line: string) => void} onLog
  * @param {async () => void} redoRootProtection
  */
-function doCheck(checkCmd, onLog, redoRootProtection) {
-  if (checkCancel !== undefined) {
-    return Promise.reject(
-      new Error(
-        'Confirmation canceled: attempted to start a second check command!'
-      )
+async function doCheck(checkCmd, onLog, redoRootProtection) {
+  if (checkCancel !== null) {
+    throw new Error(
+      'Confirmation canceled: attempted to start a second check command!'
     );
   }
-
+  const continueRootProtection = async () => {
+    if (isChecking())
+      try {
+        await RootMode.execCheck(['sleep', '30'], checkCancel, false);
+        await redoRootProtection();
+        logDebug('[continueRootProtectionDuringCheck] Continue');
+        await continueRootProtection();
+        return;
+      } catch (err) {}
+    logDebug('[continueRootProtectionDuringCheck] Done');
+  };
+  const check = async () => {
+    logDebug('[doCheck] start');
+    try {
+      await RootMode.execCheck(checkCmd, checkCancel, true, onLog);
+      logDebug('[doCheck] confirmed');
+    } finally {
+      if (isChecking()) checkCancel.cancel();
+      checkCancel = null;
+    }
+  };
   checkCancel = new Gio.Cancellable();
-  const checkWatchCancel = new Gio.Cancellable();
-  return Promise.all([
-    _doCheck(checkCmd, checkWatchCancel, onLog),
-    continueRootProtectionDuringCheck(checkWatchCancel, redoRootProtection),
-  ]);
-}
-/**
- *
- * @param checkCmd
- * @param checkWatchCancel
- * @param onLog
- */
-async function _doCheck(checkCmd, checkWatchCancel, onLog) {
-  try {
-    await RootMode.execCheck(checkCmd, checkCancel, true, onLog);
-    logDebug(`Check command "${checkCmd}" confirmed shutdown.`);
-  } finally {
-    checkCancel = undefined;
-    checkWatchCancel.cancel();
-  }
+  await Promise.all([check(), continueRootProtection()]);
 }
 
-/**
- *
- * @param cancellable
- * @param redoRootProtection
- */
-async function continueRootProtectionDuringCheck(
-  cancellable,
-  redoRootProtection
-) {
-  try {
-    await RootMode.execCheck(['sleep', '30'], cancellable, false);
-  } catch (err) {
-    logDebug('RootProtection during check: Canceled');
-  }
-  if (checkCancel === undefined) {
-    logDebug('RootProtection during check: Done');
-  } else {
-    await redoRootProtection();
-    logDebug('RootProtection during check: Continue');
-    await continueRootProtectionDuringCheck(cancellable, redoRootProtection);
-  }
-}
-
-/**
- *
- */
 function isChecking() {
-  return checkCancel !== undefined && !checkCancel.is_cancelled();
+  return checkCancel !== null && !checkCancel.is_cancelled();
 }
 
-/**
- *
- */
 function maybeCancel() {
   const doCancel = isChecking();
   if (doCancel) {
     checkCancel.cancel();
   }
+  checkCancel = null;
   return doCancel;
 }

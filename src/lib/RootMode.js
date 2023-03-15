@@ -15,14 +15,9 @@ const { Gio, GLib } = imports.gi;
 const Gettext = imports.gettext.domain('ShutdownTimer');
 const _ = Gettext.gettext;
 
-/**
- *
- * @param stream
- * @param cancellable
- */
-function readLine(stream, cancellable) {
+function readLine(stream) {
   return new Promise((resolve, reject) => {
-    stream.read_line_async(0, cancellable, (s, res) => {
+    stream.read_line_async(0, null, (s, res) => {
       try {
         const line = s.read_line_finish_utf8(res)[0];
 
@@ -38,10 +33,6 @@ function readLine(stream, cancellable) {
   });
 }
 
-/**
- *
- * @param str
- */
 function quoteEscape(str) {
   return str.replaceAll('\\', '\\\\').replaceAll('"', '\\"');
 }
@@ -96,7 +87,6 @@ function execCheck(
   }
   let stdoutStream = null;
   let stderrStream = null;
-  let stdCancel = null;
 
   if (logFunc !== undefined) {
     stdoutStream = new Gio.DataInputStream({
@@ -109,24 +99,22 @@ function execCheck(
       close_base_stream: true,
     });
     const readNextLine = async (stream, prefix) => {
-      stdCancel = new Gio.Cancellable();
-      const line = await readLine(stream, stdCancel);
-      logFunc(prefix + line);
-      logDebug(line);
-      return readNextLine(stream, prefix);
+      try {
+        const line = await readLine(stream);
+        logFunc(prefix + line);
+        logDebug(line);
+        await readNextLine(stream, prefix);
+      } catch {}
     };
     // read stdout and stderr asynchronously
-    readNextLine(stdoutStream, '').catch(() => {});
-    readNextLine(stderrStream, '# ').catch(() => {});
+    readNextLine(stdoutStream, '');
+    readNextLine(stderrStream, '# ');
   }
 
   return new Promise((resolve, reject) => {
     proc.wait_check_async(null, (p, res) => {
       try {
         const success = p.wait_check_finish(res);
-        if (stdCancel !== null) {
-          stdCancel.cancel();
-        }
         if (!success) {
           let status = p.get_exit_status();
 
@@ -140,22 +128,18 @@ function execCheck(
       } catch (e) {
         reject(e);
       } finally {
-        const maybeCloseStream = stream => {
+        for (const stream of [stdoutStream, stderrStream]) {
           if (stream !== null && !stream.is_closed()) {
             stream.close_async(0, null, (s, sRes) => {
               try {
                 s.close_finish(sRes);
               } catch (e) {
-                logError(e, 'StreamCloseError');
+                logDebug(`[StreamCloseError] ${e}`);
               }
             });
           }
-        };
-        maybeCloseStream(stdoutStream);
-        maybeCloseStream(stderrStream);
-        if (cancelId > 0) {
-          cancellable.disconnect(cancelId);
         }
+        if (cancelId > 0) cancellable.disconnect(cancelId);
       }
     });
   });
