@@ -55,130 +55,150 @@ const templateComponents = {
  * @param pageId
  * @param builder
  * @param settings
- * @param handlers
  */
-function initPage(pageId, builder, settings, handlers) {
+function initPage(pageId, builder, settings) {
   const page = builder.get_object(pageId);
   const pageName = pageId.split('_').at(-1);
   if (!page) {
     throw new Error(`${pageId} not found!`);
   }
 
-  const connectComp = (baseName, component) => {
-    const baseId = baseName.replaceAll('-', '_');
-    const settingsName = `${baseName}-value`;
-    const compId = `${baseId}_${component}`;
-    const comp = builder.get_object(compId);
-    if (!comp) {
-      throw new Error(`Component not found in template: ${compId}`);
-    }
-    if (compId === 'shutdown_mode_combo') {
-      // replace combo box entries
-      comp.remove_all();
-      MODES.forEach(mode => {
-        comp.append(mode, modeLabel(mode));
-      });
-    }
-
-    settings.bind(
-      settingsName,
-      comp,
-      {
-        adjustment: 'value',
-        switch: 'active',
-        textbuffer: 'text',
-        buffer: 'text',
-        combo: 'active-id',
-      }[component],
-      Gio.SettingsBindFlags.DEFAULT
-    );
-
-    if (compId === 'show_shutdown_mode_buffer') {
-      builder
-        .get_object(`${baseId}_entry`)
-        .set_placeholder_text(
-          `${MODES.join(',')} (${MODES.map(modeLabel).join(', ')})`
-        );
-    }
-  };
-
-  if (pageName in templateComponents) {
-    for (const [k, v] of Object.entries(templateComponents[pageName])) {
-      connectComp(k, v);
-    }
-  }
-
-  const lineIter = (buffer, lineIndex) => {
-    const [ok, iter] = buffer.get_iter_at_line(lineIndex);
-    if (!ok) {
-      throw new Error(`Line ${lineIndex} not found!`);
-    }
-    return iter;
-  };
-
   if (pageName === 'check') {
-    // check command textbuffer
+    // Check command textbuffer
     const checkCommandBuffer = builder.get_object('check_command_textbuffer');
     const commentTag = new Gtk.TextTag({ foreground: 'grey' });
     checkCommandBuffer.get_tag_table().add(commentTag);
-    const applyCommentTags = b => {
-      b.remove_tag(commentTag, b.get_start_iter(), b.get_end_iter());
-      const lc = b.get_line_count();
-      for (let i = 0; i < lc; i++) {
-        const startIter = lineIter(b, i);
-        const endIter = lc === i + 1 ? b.get_end_iter() : lineIter(b, i + 1);
-        const line = b.get_text(startIter, endIter, false);
-        if (line.trimLeft().startsWith('#')) {
-          b.apply_tag(commentTag, startIter, endIter);
-        }
+    checkCommandBuffer.connect('changed', () => {
+      const b = checkCommandBuffer;
+      b.remove_all_tags(b.get_start_iter(), b.get_end_iter());
+      let anchor = b.get_start_iter();
+      while (!anchor.is_end()) {
+        const [ok, start] = anchor.forward_search(
+          '#',
+          Gtk.TextSearchFlags.TEXT_ONLY,
+          null
+        );
+        if (!ok) break;
+        anchor = start.copy();
+        const m = anchor.copy();
+        if (!m.starts_line() && m.backward_char() && m.get_char() === '\\') {
+          anchor.forward_char();
+          continue;
+        } else anchor.forward_to_line_end();
+        b.apply_tag(commentTag, start, anchor);
+        anchor.forward_char();
       }
-    };
-    applyCommentTags(checkCommandBuffer);
-    handlers.push([
-      checkCommandBuffer,
-      checkCommandBuffer.connect('changed', applyCommentTags),
-    ]);
+    });
   } else if (pageName === 'install') {
     // install log textbuffer updates
     const logTextBuffer = builder.get_object('install_log_textbuffer');
     const scrollAdj = builder.get_object('installer_scrollbar_adjustment');
     const errorTag = new Gtk.TextTag({ foreground: 'red' });
     const successTag = new Gtk.TextTag({ foreground: 'green' });
-    logTextBuffer.get_tag_table().add(errorTag);
-    logTextBuffer.get_tag_table().add(successTag);
-    const appendLogLine = line => {
-      line = ['[', '#'].includes(line[0]) ? line : ` ${line}`;
-      logTextBuffer.insert(logTextBuffer.get_end_iter(), `${line}\n`, -1);
-      const lastLineIndex = logTextBuffer.get_line_count() - 1;
-      const applyTag = tag => {
-        logTextBuffer.apply_tag(
-          tag,
-          lineIter(logTextBuffer, lastLineIndex - 1),
-          lineIter(logTextBuffer, lastLineIndex)
-        );
-      };
-      if (line.startsWith('# ')) {
-        applyTag(errorTag);
-      } else if (line.endsWith('🟢')) {
-        applyTag(successTag);
-      }
-      guiIdle(() => scrollAdj.set_value(1000000));
-    };
+    const table = logTextBuffer.get_tag_table();
+    table.add(errorTag);
+    table.add(successTag);
 
     const installSwitch = builder.get_object('install_policy_switch');
     installSwitch.set_active(Install.checkInstalled());
-    const switchHandlerId = installSwitch.connect('notify::active', () =>
+    installSwitch.connect('notify::active', () =>
       Install.installAction(
         installSwitch.get_active() ? 'install' : 'uninstall',
-        message => guiIdle(() => message.split('\n').forEach(appendLogLine))
+        message =>
+          guiIdle(() =>
+            // Format log lines
+            message.split('\n').forEach(line => {
+              line = ['[', '#'].includes(line[0]) ? line : ` ${line}`;
+              const b = logTextBuffer;
+              b.insert(b.get_end_iter(), `${line}\n`, -1);
+              const end = b.get_end_iter();
+              const start = end.copy();
+              if (start.backward_line()) {
+                if (line.startsWith('# ')) {
+                  b.apply_tag(errorTag, start, end);
+                } else if (line.endsWith('🟢')) {
+                  b.apply_tag(successTag, start, end);
+                }
+              }
+              guiIdle(() => scrollAdj.set_value(1000000));
+            })
+          )
       )
     );
-    handlers.push([installSwitch, switchHandlerId]);
-
     // clear log
     guiIdle(() => logTextBuffer.set_text('', -1));
   }
+  if (pageName in templateComponents) {
+    for (const [baseName, component] of Object.entries(
+      templateComponents[pageName]
+    )) {
+      const baseId = baseName.replaceAll('-', '_');
+      const settingsName = `${baseName}-value`;
+      const compId = `${baseId}_${component}`;
+      const comp = builder.get_object(compId);
+      if (!comp) {
+        throw new Error(`Component not found in template: ${compId}`);
+      }
+      if (compId === 'shutdown_mode_combo') {
+        const model = new Gtk.StringList();
+        for (const mode of Object.values(MODES)) {
+          model.append(modeLabel(mode));
+        }
+        comp.model = model;
+        const updateComboRow = () => {
+          const index = MODES.indexOf(
+            settings.get_string('shutdown-mode-value')
+          );
+          if (index >= 0 && index !== comp.selected) comp.selected = index;
+        };
+        comp.connect('notify::selected', () => {
+          const mode = MODES[comp.selected];
+          if (mode) settings.set_string('shutdown-mode-value', mode);
+        });
+        const comboHandlerId = settings.connect(
+          'changed::shutdown-mode-value',
+          () => updateComboRow()
+        );
+        comp.connect('destroy', () => settings.disconnect(comboHandlerId));
+        updateComboRow();
+      } else {
+        settings.bind(
+          settingsName,
+          comp,
+          {
+            adjustment: 'value',
+            switch: 'active',
+            textbuffer: 'text',
+            buffer: 'text',
+          }[component],
+          Gio.SettingsBindFlags.DEFAULT
+        );
+      }
+
+      if (
+        ['show_wake_slider_switch', 'show_wake_absolute_timer_switch'].includes(
+          compId
+        )
+      )
+        switchDependsOnSetting(comp, settings, 'show-wake-items-value');
+    }
+  }
+
   return page;
+}
+
+function switchDependsOnSetting(comp, settings, settingsName) {
+  const update = () => {
+    const active = settings.get_boolean(settingsName);
+    comp.sensitive = active;
+    const row = comp.get_parent().get_parent();
+    row.sensitive = active;
+  };
+  const handlerId = settings.connect(`changed::${settingsName}`, () =>
+    update()
+  );
+  comp.connect('destroy', () => settings.disconnect(handlerId));
+  update();
 }
 
 /**
@@ -216,12 +236,11 @@ function fillPreferencesWindow(window) {
   });
   handlers.push([window, pageVisHandlerId]);
   // release all resources on destroy
-  const destroyId = window.connect('destroy', () => {
+  window.connect('destroy', () => {
     disableGuiIdle();
     handlers.forEach(([comp, handlerId]) => {
       comp.disconnect(handlerId);
     });
     Install.reset();
-    window.disconnect(destroyId);
   });
 }

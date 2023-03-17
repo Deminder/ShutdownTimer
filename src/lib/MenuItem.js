@@ -243,8 +243,8 @@ var ShutdownTimerItem = GObject.registerClass(
       const activeModes = this._settings
         .get_string('show-shutdown-mode-value')
         .split(',')
-        .map(s => s.trim().toLowerCase())
-        .filter(s => MODES.includes(s));
+        .map(s => MODES.find(m => m[0] === s.trim().toLowerCase()[0]))
+        .filter(mode => !!mode);
       this.modeItems.forEach(([mode, item]) => {
         const position = activeModes.indexOf(mode);
         if (position > -1) {
@@ -330,8 +330,8 @@ var ShutdownTimerItem = GObject.registerClass(
     }
 
     _createSliderItem(settingsPrefix) {
-      const sliderValue =
-        this._settings.get_double(`${settingsPrefix}-slider-value`) / 100.0;
+      const valueName = `${settingsPrefix}-slider-value`;
+      const sliderValue = this._settings.get_double(valueName) / 100.0;
       const item = new PopupMenu.PopupBaseMenuItem({ activate: false });
       const sliderIcon = new St.Icon({
         icon_name:
@@ -343,10 +343,9 @@ var ShutdownTimerItem = GObject.registerClass(
       item.add(sliderIcon);
       const slider = new Slider.Slider(sliderValue);
       slider.connect('notify::value', () => {
-        this._settings.set_double(
-          `${settingsPrefix}-slider-value`,
-          slider.value * 100
-        );
+        const v = slider.value * 100;
+        if (v !== this._settings.get_double(valueName))
+          this._settings.set_double(valueName, v);
       });
       item.add_child(slider);
       return [item, slider];

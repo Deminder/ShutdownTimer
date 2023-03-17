@@ -123,9 +123,9 @@ SPDX-License-Identifier: GPL-3.0-or-later
     </key>
 
     <key type="s" name="show-shutdown-mode-value">
-      <default>"poweroff,suspend"</default>
+      <default>"p,s"</default>
       <summary>Shown shutdown modes</summary>
-      <description>Comma-separated shutdown modes which are shown in the popup menu</description>
+      <description>Comma-separated shutdown modes which are shown in the popup menu (p: poweroff, s: suspend, r: reboot)</description>
     </key>
 
     <key type="s" name="shutdown-mode-value">
@@ -150,7 +150,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
 # tail -f --pid=$PID
 
 # Activate the screen saver
-# xdg-screensaver activate"</default>
+# gdbus call --session \\
+#     --dest org.gnome.ScreenSaver \\
+#     --object-path /org/gnome/ScreenSaver \\
+#     --method org.gnome.ScreenSaver.SetActive true >/dev/null"</default>
       <summary>Check command(s)</summary>
       <description>Run command(s) before shutdown command. Proceed with shutdown only if check command succeeds.</description>
     </key>
