@@ -118,7 +118,7 @@ rules:
   no-label-var: error
   no-lonely-if: error
   no-loop-func: error
-  no-nested-ternary: error
+  #no-nested-ternary: error
   no-new-object: error
   no-new-wrappers: error
   no-octal-escape: error
