@@ -9,6 +9,7 @@ const { GLib } = imports.gi;
 
 const Gettext = imports.gettext.domain('ShutdownTimer');
 const _ = Gettext.gettext;
+const C_ = Gettext.pgettext;
 
 var ScheduleInfo = class {
   constructor({ mode = '?', deadline = -1, external = false }) {
@@ -65,6 +66,12 @@ var ScheduleInfo = class {
       }
     }
     return label;
+  }
+
+  get absoluteTimeString() {
+    return GLib.DateTime.new_from_unix_utc(this.deadline)
+      .to_local()
+      .format(C_('absolute schedule notation', '%a, %T'));
   }
 
   isMoreUrgendThan(otherInfo) {

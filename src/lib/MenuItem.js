@@ -77,9 +77,7 @@ var ShutdownTimerItem = GObject.registerClass(
       const gicon = Gio.icon_new_for_string(
         `${Me.path}/icons/shutdown-timer-symbolic.svg`
       );
-      const nprops = { gicon, accessible_name: _('Shutdown Timer') };
-      if (MAJOR >= 44) nprops.subtitle = _('Shutdown Timer');
-      super._init({ ...nprops, ...props });
+      super._init({ gicon, accessible_name: _('Shutdown Timer'), ...props });
       this._settings = ExtensionUtils.getSettings();
       this.shutdownTimerIcon = gicon;
 
@@ -259,6 +257,7 @@ var ShutdownTimerItem = GObject.registerClass(
         );
       });
       this[MAJOR >= 44 ? 'title' : 'label'] = modeLabel(info.mode);
+
       this._onShowSliderChanged('shutdown');
 
       // Update switcher
@@ -280,6 +279,7 @@ var ShutdownTimerItem = GObject.registerClass(
         : this.shutdownScheduleInfo;
       const checkRunning =
         this.shutdownScheduleInfo.scheduled && CheckCommand.isChecking();
+
       this.set({
         checked: this.shutdownScheduleInfo.scheduled,
         shutdownText:
@@ -293,8 +293,8 @@ var ShutdownTimerItem = GObject.registerClass(
           (this.shutdownScheduleInfo.scheduled ||
             this.externalScheduleInfo.scheduled)
             ? checkRunning
-              ? 'go-down-symbolic'
-              : 'go-bottom-symbolic'
+              ? 'go-bottom-symbolic'
+              : 'go-down-symbolic'
             : '',
       });
       this.menu.setHeader(
@@ -321,6 +321,7 @@ var ShutdownTimerItem = GObject.registerClass(
       if (this._settings.get_boolean('show-wake-absolute-timer-value')) {
         this._updateWakeModeItem();
       }
+      this._updateSubtitle();
     }
 
     // update timer value if slider has changed
@@ -351,24 +352,37 @@ var ShutdownTimerItem = GObject.registerClass(
       return [item, slider];
     }
 
-    _updateSwitchLabel() {
+    get shutdownTimeStr() {
       const minutes = Math.abs(this._getSliderMinutes('shutdown'));
-      const timeStr = this._settings.get_boolean(
-        'show-shutdown-absolute-timer-value'
-      )
+      return this._settings.get_boolean('show-shutdown-absolute-timer-value')
         ? absoluteTimeString(minutes, C_('absolute time notation', '%a, %R'))
         : longDurationString(
             minutes,
             h => _n('%s hr', '%s hrs', h),
             m => _n('%s min', '%s mins', m)
           );
+    }
+
+    _updateSwitchLabel() {
       this.switcher.label.text = this._settings.get_boolean('root-mode-value')
-        ? _('%s (protect)').format(timeStr)
-        : timeStr;
+        ? _('%s (protect)').format(this.shutdownTimeStr)
+        : this.shutdownTimeStr;
 
       if (this._settings.get_string('wake-ref-timer-value') === 'shutdown') {
         this._updateWakeModeItem();
       }
+      if (!this.shutdownScheduleInfo.scheduled) {
+        this._updateSubtitle();
+      }
+    }
+
+    _updateSubtitle() {
+      if (MAJOR >= 44)
+        this.subtitle = this.shutdownScheduleInfo.scheduled
+          ? this._settings.get_boolean('show-shutdown-absolute-timer-value')
+            ? this.shutdownScheduleInfo.absoluteTimeString
+            : durationString(this.shutdownScheduleInfo.secondsLeft)
+          : this.shutdownTimeStr;
     }
 
     _updateWakeModeItem() {
