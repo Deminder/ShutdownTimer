@@ -47,9 +47,35 @@ if __name__ == '__main__':
         with open(FETCH_CACHE, 'r') as f:
             extensions = json.load(f)
 
+    new_only = True
+    downloads_dist = []
+    annotations = []
+    new_count = 0
     for i, e in enumerate(extensions):
+        versions = e['shell_version_map']
+        is_new = any(int(v.split('.')[0]) >= 43 for v in versions.keys())
+        new_count += is_new
+        if new_only and not is_new:
+            continue
+        dlds = int(e['downloads'])
+        index = new_count if new_only else i
         highlight = e['creator'] == 'Deminder'
+        if highlight:
+            annotations.append([f'{e["name"]} ({index})', [index, dlds]])
+        downloads_dist.append(dlds)
         if highlight or re.match('.*(Shutdown|OSD).*', e['name'] + " " + e['description'], re.IGNORECASE | re.DOTALL):
-            print(i, ('*' if highlight else '' ) + e['creator'], e['uuid'],
-                  '[old]' if '43' not in e['shell_version_map'] else '')
-    print(len(extensions), '[last]')
+            print(index, ('*' if highlight else '') + e['creator'], e['uuid'],
+                  '' if is_new else '[old]', dlds)
+    print(new_count if new_only else len(extensions), '[last]')
+    import numpy as np
+    import matplotlib.pyplot as plt
+    d = np.array(downloads_dist)
+    # plt.plot(d[(d < 10 ** 6) * (d > 1000)])
+    plt.plot(d)
+    plt.title('Extension Downloads')
+    plt.yscale('log')
+    for i, (s, xy) in enumerate(annotations):
+        sign = 1 if i%2 == 0 else -3
+        plt.annotate(s, xy=xy, xytext=(sign*20, sign*20), textcoords='offset points',  arrowprops=dict(arrowstyle='->'))
+    plt.grid(True)
+    plt.show()
