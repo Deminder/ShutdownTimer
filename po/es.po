@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-19 14:51+0100\n"
+"POT-Creation-Date: 2023-04-29 18:21+0200\n"
 "PO-Revision-Date: 2022-04-07 22:06+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: Jesús Ignacio García <jesusignazio@gmail.com>\n"
@@ -49,14 +49,14 @@ msgctxt "StartSchedulePopup"
 msgid "%s in %s"
 msgstr "%s en %s"
 
-#: src/extension.js:360 src/lib/Convenience.js:68 src/lib/MenuItem.js:387
+#: src/extension.js:360 src/lib/Convenience.js:68 src/lib/MenuItem.js:401
 #, javascript-format
 msgid "%s hour"
 msgid_plural "%s hours"
 msgstr[0] "%s hora"
 msgstr[1] "%s horas"
 
-#: src/extension.js:361 src/lib/MenuItem.js:388
+#: src/extension.js:361 src/lib/MenuItem.js:402
 #, javascript-format
 msgid "%s minute"
 msgid_plural "%s minutes"
@@ -102,7 +102,7 @@ msgid_plural "%s secs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/lib/Convenience.js:74 src/lib/MenuItem.js:363
+#: src/lib/Convenience.js:74 src/lib/MenuItem.js:362
 #, javascript-format
 msgid "%s min"
 msgid_plural "%s mins"
@@ -129,11 +129,11 @@ msgstr ""
 msgid "uninstall"
 msgstr ""
 
-#: src/lib/MenuItem.js:80 src/lib/MenuItem.js:81 src/lib/MenuItem.js:302
+#: src/lib/MenuItem.js:80 src/lib/MenuItem.js:302
 msgid "Shutdown Timer"
 msgstr "Apagar con temporizador."
 
-#: src/lib/MenuItem.js:128
+#: src/lib/MenuItem.js:126
 msgid "Settings"
 msgstr ""
 
@@ -146,30 +146,30 @@ msgstr ""
 msgid "Check %s for %s"
 msgstr ""
 
-#: src/lib/MenuItem.js:359 src/lib/MenuItem.js:384
+#: src/lib/MenuItem.js:358 src/lib/MenuItem.js:398
 msgctxt "absolute time notation"
 msgid "%a, %R"
 msgstr ""
 
-#: src/lib/MenuItem.js:362
+#: src/lib/MenuItem.js:361
 #, javascript-format
 msgid "%s hr"
 msgid_plural "%s hrs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/lib/MenuItem.js:366
+#: src/lib/MenuItem.js:368
 #, javascript-format
 msgid "%s (protect)"
 msgstr ""
 
-#: src/lib/MenuItem.js:379
+#: src/lib/MenuItem.js:393
 #, javascript-format
 msgctxt "WakeButtonText"
 msgid "%s at %s"
 msgstr ""
 
-#: src/lib/MenuItem.js:380
+#: src/lib/MenuItem.js:394
 #, javascript-format
 msgctxt "WakeButtonText"
 msgid "%s after %s"
@@ -187,30 +187,35 @@ msgstr ""
 msgid "Privileged script installation required!"
 msgstr ""
 
-#: src/lib/ScheduleInfo.js:48
+#: src/lib/ScheduleInfo.js:49
 msgid "suspend"
 msgstr ""
 
-#: src/lib/ScheduleInfo.js:49
+#: src/lib/ScheduleInfo.js:50
 msgid "shutdown"
 msgstr "apagado."
 
-#: src/lib/ScheduleInfo.js:50
+#: src/lib/ScheduleInfo.js:51
 msgid "reboot"
 msgstr ""
 
-#: src/lib/ScheduleInfo.js:51
+#: src/lib/ScheduleInfo.js:52
 msgid "wakeup"
 msgstr ""
 
-#: src/lib/ScheduleInfo.js:59
+#: src/lib/ScheduleInfo.js:60
 #, javascript-format
 msgid "%s until %s"
 msgstr "%s para el %s"
 
-#: src/lib/ScheduleInfo.js:64
+#: src/lib/ScheduleInfo.js:65
 #, javascript-format
 msgid "%s (sys)"
+msgstr ""
+
+#: src/lib/ScheduleInfo.js:74
+msgctxt "absolute schedule notation"
+msgid "%a, %T"
 msgstr ""
 
 #: src/tool/installer.sh:66
