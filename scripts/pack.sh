@@ -29,10 +29,10 @@ done
 cd "$( cd "$( dirname "$0" )" && pwd )/.."
 
 function setDebugMode() {
-    [[ "$1" = "true" ]] && negation="false" || negation="true"
-    file=src/lib/Convenience.js
-    mtime=$(stat -c %y "$file")
-    sed -i "s/let debugMode = $negation;/let debugMode = $1;/g" "$file"
+    [[ "$1" = "true" ]] && local negation="false" || local negation="true"
+    local file=src/modules/util.js
+    local mtime=$(stat -c %y "$file")
+    sed -i "s/const debugMode = $negation;/const debugMode = $1;/g" "$file"
     touch -d "$mtime" "$file"
 }
 
@@ -47,7 +47,7 @@ gnome-extensions pack src \
     --force \
     --podir="../po" \
     --extra-source="bin" \
-    --extra-source="lib" \
+    --extra-source="modules" \
     --extra-source="icons" \
     --extra-source="ui" \
     --extra-source="tool" \

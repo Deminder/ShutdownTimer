@@ -1,18 +1,15 @@
 // SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-/* exported shutdown, shutdownCancel, wake, wakeCancel, installScript, uninstallScript */
-const Me = imports.misc.extensionUtils.getCurrentExtension();
-const logDebug = Me.imports.lib.Convenience.logDebug;
+import GLib from 'gi://GLib';
+import Gio from 'gi://Gio';
+import { gettext as _ } from './translation.js';
 
-const { Gio, GLib } = imports.gi;
+import { logDebug } from './util.js';
 
-const Gettext = imports.gettext.domain('ShutdownTimer');
-const _ = Gettext.gettext;
-
-function readLine(stream) {
+function readLine(stream, cancellable) {
   return new Promise((resolve, reject) => {
-    stream.read_line_async(0, null, (s, res) => {
+    stream.read_line_async(0, cancellable, (s, res) => {
       try {
         const line = s.read_line_finish_utf8(res)[0];
 
@@ -43,7 +40,7 @@ function quoteEscape(str) {
  * @param logFunc
  * @returns {Promise<void>} - The process success
  */
-function execCheck(
+export function execCheck(
   argv,
   cancellable = null,
   shell = true,
@@ -82,8 +79,10 @@ function execCheck(
   }
   let stdoutStream = null;
   let stderrStream = null;
+  let readLineCancellable = null;
 
   if (logFunc !== undefined) {
+    readLineCancellable = new Gio.Cancellable();
     stdoutStream = new Gio.DataInputStream({
       base_stream: proc.get_stdout_pipe(),
       close_base_stream: true,
@@ -95,11 +94,21 @@ function execCheck(
     });
     const readNextLine = async (stream, prefix) => {
       try {
-        const line = await readLine(stream);
+        const line = await readLine(stream, readLineCancellable);
         logFunc(prefix + line);
         logDebug(line);
         await readNextLine(stream, prefix);
-      } catch {}
+      } catch {
+        if (!stream.is_closed()) {
+          stream.close_async(0, null, (s, sRes) => {
+            try {
+              s.close_finish(sRes);
+            } catch (e) {
+              logDebug(`[StreamCloseError] ${e}`);
+            }
+          });
+        }
+      }
     };
     // read stdout and stderr asynchronously
     readNextLine(stdoutStream, '');
@@ -123,27 +132,15 @@ function execCheck(
       } catch (e) {
         reject(e);
       } finally {
-        for (const stream of [stdoutStream, stderrStream]) {
-          if (stream !== null && !stream.is_closed()) {
-            stream.close_async(0, null, (s, sRes) => {
-              try {
-                s.close_finish(sRes);
-              } catch (e) {
-                logDebug(`[StreamCloseError] ${e}`);
-              }
-            });
-          }
-        }
+        if (readLineCancellable) readLineCancellable.cancel();
+        readLineCancellable = null;
         if (cancelId > 0) cancellable.disconnect(cancelId);
       }
     });
   });
 }
 
-/**
- *
- */
-function installedScriptPath() {
+export function installedScriptPath() {
   for (const name of [
     'shutdowntimerctl',
     `shutdowntimerctl-${GLib.get_user_name()}`,
@@ -163,55 +160,6 @@ function installedScriptPath() {
   return null;
 }
 
-/**
- *
- * @param action
- * @param cancellable
- * @param logFunc
- */
-function _runInstaller(action, cancellable, logFunc) {
-  const user = GLib.get_user_name();
-  logDebug(`? installer.sh --tool-user ${user} ${action}`);
-  return execCheck(
-    [
-      'pkexec',
-      Me.dir.get_child('tool').get_child('installer.sh').get_path(),
-      '--tool-user',
-      user,
-      action,
-    ],
-    cancellable,
-    false,
-    logFunc
-  );
-}
-
-/**
- *
- * @param cancellable
- * @param logFunc
- */
-async function installScript(cancellable, logFunc) {
-  // install for user if installed in the /home directory
-  await _runInstaller('install', cancellable, logFunc);
-  return true;
-}
-
-/**
- *
- * @param cancellable
- * @param logFunc
- */
-async function uninstallScript(cancellable, logFunc) {
-  await _runInstaller('uninstall', cancellable, logFunc);
-  return true;
-}
-
-/**
- *
- * @param args
- * @param noScriptArgs
- */
 function runWithScript(args, noScriptArgs) {
   const installedScript = installedScriptPath();
   if (installedScript !== null) {
@@ -223,36 +171,34 @@ function runWithScript(args, noScriptArgs) {
   return execCheck(noScriptArgs, null, false);
 }
 
-/**
- *
- * @param minutes
- * @param reboot
- */
 function shutdown(minutes, reboot = false) {
+  logDebug(`[root-shutdown] ${minutes} minutes, reboot: ${reboot}`);
   return runWithScript(
     [reboot ? 'reboot' : 'shutdown', `${minutes}`],
     ['shutdown', reboot ? '-r' : '-P', `${minutes}`]
   );
 }
 
-/**
- *
- */
 function shutdownCancel() {
+  logDebug('[root-shutdown] cancel');
   return runWithScript(['shutdown-cancel'], ['shutdown', '-c']);
 }
 
-/**
- *
- * @param minutes
- */
-function wake(minutes) {
+export function wake(minutes) {
   return runWithScript(['wake', `${minutes}`]);
 }
 
-/**
- *
- */
-function wakeCancel() {
+export function wakeCancel() {
   return runWithScript(['wake-cancel']);
+}
+
+export async function stopRootModeProtection(info) {
+  if (['poweroff', 'reboot'].includes(info.mode)) {
+    await shutdownCancel();
+  }
+}
+export async function startRootModeProtection(info) {
+  if (['poweroff', 'reboot'].includes(info.mode)) {
+    await shutdown(Math.max(0, info.minutes) + 1, info.mode === 'reboot');
+  }
 }

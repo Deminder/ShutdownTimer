@@ -1,17 +1,12 @@
 // SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-/* exported ScheduleInfo */
-const Me = imports.misc.extensionUtils.getCurrentExtension();
-const { durationString } = Me.imports.lib.Convenience;
+import GLib from 'gi://GLib';
+import { gettext as _, pgettext as C_ } from './translation.js';
 
-const { GLib } = imports.gi;
+import { durationString } from './util.js';
 
-const Gettext = imports.gettext.domain('ShutdownTimer');
-const _ = Gettext.gettext;
-const C_ = Gettext.pgettext;
-
-var ScheduleInfo = class {
+export class ScheduleInfo {
   constructor({ mode = '?', deadline = -1, external = false }) {
     this._v = { mode, deadline, external };
   }
@@ -83,4 +78,45 @@ var ScheduleInfo = class {
           otherInfo.deadline)
     );
   }
-};
+}
+
+export function getShutdownScheduleFromSettings(settings) {
+  return new ScheduleInfo({
+    mode: settings.get_string('shutdown-mode-value'),
+    deadline: settings.get_int('shutdown-timestamp-value'),
+  });
+}
+
+export function getSliderMinutesFromSettings(settings, prefix) {
+  const sliderValue = settings.get_double(`${prefix}-slider-value`) / 100.0;
+  const rampUp = settings.get_double(`nonlinear-${prefix}-slider-value`);
+  const ramp = x => Math.expm1(rampUp * x) / Math.expm1(rampUp);
+  let minutes = Math.floor(
+    (rampUp === 0 ? sliderValue : ramp(sliderValue)) *
+      settings.get_int(`${prefix}-max-timer-value`)
+  );
+
+  const refstr = settings.get_string(`${prefix}-ref-timer-value`);
+  // default: 'now'
+  const MS = 1000 * 60;
+  if (refstr.includes(':')) {
+    const mh = refstr
+      .split(':')
+      .map(s => Number.parseInt(s))
+      .filter(n => !Number.isNaN(n) && n >= 0);
+    if (mh.length >= 2) {
+      const d = new Date();
+      const nowTime = d.getTime();
+      d.setHours(mh[0]);
+      d.setMinutes(mh[1]);
+
+      if (d.getTime() + MS * minutes < nowTime) {
+        d.setDate(d.getDate() + 1);
+      }
+      minutes += Math.floor(new Date(d.getTime() - nowTime).getTime() / MS);
+    }
+  } else if (prefix !== 'shutdown' && refstr === 'shutdown') {
+    minutes += getSliderMinutesFromSettings(settings, 'shutdown');
+  }
+  return minutes;
+}

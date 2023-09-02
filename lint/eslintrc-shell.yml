@@ -17,4 +17,6 @@ rules:
     - error
     - always
   prefer-arrow-callback: error
+parserOptions:
+  sourceType: module
 

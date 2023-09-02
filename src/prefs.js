@@ -1,69 +1,185 @@
 // SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-/* exported init, fillPreferencesWindow */
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
+import Gtk from 'gi://Gtk';
+import Gio from 'gi://Gio';
 
-const { Install, Convenience } = Me.imports.lib;
-const { logDebug } = Convenience;
-const { enableGuiIdle, disableGuiIdle, guiIdle, modeLabel, MODES } =
-  Convenience;
+import { ExtensionPreferences } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-const { GLib, Gtk, Gio } = imports.gi;
+import { Install } from './modules/install.js';
+import { logDebug, Idle, modeLabel, MODES } from './modules/util.js';
 
-function init() {
-  ExtensionUtils.initTranslations();
-}
+export default class ShutdownTimerPreferences extends ExtensionPreferences {
+  templateComponents = {
+    shutdown: {
+      'shutdown-mode': 'combo',
+      'root-mode': 'switch',
+      'show-end-session-dialog': 'switch',
+      'shutdown-max-timer': 'adjustment',
+      'shutdown-ref-timer': 'buffer',
+      'shutdown-slider': 'adjustment',
+      'nonlinear-shutdown-slider': 'adjustment',
+    },
+    wake: {
+      'auto-wake': 'switch',
+      'wake-max-timer': 'adjustment',
+      'wake-ref-timer': 'buffer',
+      'wake-slider': 'adjustment',
+      'nonlinear-wake-slider': 'adjustment',
+    },
+    display: {
+      'show-settings': 'switch',
+      'show-shutdown-mode': 'buffer',
+      'show-shutdown-slider': 'switch',
+      'show-shutdown-indicator': 'switch',
+      'show-shutdown-absolute-timer': 'switch',
+      'show-textboxes': 'switch',
+      'show-wake-slider': 'switch',
+      'show-wake-items': 'switch',
+      'show-wake-absolute-timer': 'switch',
+    },
+    check: {
+      'check-command': 'textbuffer',
+      'enable-check-command': 'switch',
+    },
+  };
 
-const templateComponents = {
-  shutdown: {
-    'shutdown-mode': 'combo',
-    'root-mode': 'switch',
-    'show-end-session-dialog': 'switch',
-    'shutdown-max-timer': 'adjustment',
-    'shutdown-ref-timer': 'buffer',
-    'shutdown-slider': 'adjustment',
-    'nonlinear-shutdown-slider': 'adjustment',
-  },
-  wake: {
-    'auto-wake': 'switch',
-    'wake-max-timer': 'adjustment',
-    'wake-ref-timer': 'buffer',
-    'wake-slider': 'adjustment',
-    'nonlinear-wake-slider': 'adjustment',
-  },
-  display: {
-    'show-settings': 'switch',
-    'show-shutdown-mode': 'buffer',
-    'show-shutdown-slider': 'switch',
-    'show-shutdown-indicator': 'switch',
-    'show-shutdown-absolute-timer': 'switch',
-    'show-textboxes': 'switch',
-    'show-wake-slider': 'switch',
-    'show-wake-items': 'switch',
-    'show-wake-absolute-timer': 'switch',
-  },
-  check: {
-    'check-command': 'textbuffer',
-    'enable-check-command': 'switch',
-  },
-};
+  /**
+   * Fill the preferences window with preferences.
+   *
+   * The default implementation adds the widget
+   * returned by getPreferencesWidget().
+   *
+   * @param {Adw.PreferencesWindow} window - the preferences window
+   */
+  fillPreferencesWindow(window) {
+    this._idle = new Idle();
+    this._install = new Install();
+    const builder = Gtk.Builder.new();
+    builder.add_from_file(
+      this.dir.get_child('ui').get_child('prefs.ui').get_path()
+    );
 
-/**
- *
- * @param pageId
- * @param builder
- * @param settings
- */
-function initPage(pageId, builder, settings) {
-  const page = builder.get_object(pageId);
-  const pageName = pageId.split('_').at(-1);
-  if (!page) {
-    throw new Error(`${pageId} not found!`);
+    const settings = this.getSettings();
+    const handlers = [];
+    const pageNames = ['install', 'shutdown', 'wake', 'display', 'check'].map(
+      n => `shutdowntimer-prefs-${n}`
+    );
+    for (const name of pageNames) {
+      const pageId = name.replaceAll('-', '_');
+      const page = builder.get_object(pageId);
+      const pageName = pageId.split('_').at(-1);
+      if (!page) {
+        throw new Error(`${pageId} not found!`);
+      }
+      if (pageName === 'check') {
+        this.initCheckPage(builder);
+      } else if (pageName === 'install') {
+        this.initInstallPage(
+          builder,
+          this.dir.get_child('tool').get_child('installer.sh').get_path()
+        );
+      }
+      this.initPage(pageName, builder, settings);
+      window.add(page);
+    }
+    const selPageName =
+      pageNames[settings.get_int('preferences-selected-page-value')];
+    if (selPageName) {
+      window.set_visible_page_name(selPageName);
+    }
+    const pageVisHandlerId = window.connect('notify::visible-page-name', () => {
+      logDebug(window.get_visible_page_name());
+      settings.set_int(
+        'preferences-selected-page-value',
+        pageNames.indexOf(window.get_visible_page_name())
+      );
+    });
+    handlers.push([window, pageVisHandlerId]);
+
+    window.connect('destroy', () => {
+      handlers.forEach(([comp, handlerId]) => {
+        comp.disconnect(handlerId);
+      });
+      this._idle.destroy();
+      this._install.destroy();
+    });
   }
 
-  if (pageName === 'check') {
+  initPage(pageName, builder, settings) {
+    if (pageName in this.templateComponents) {
+      for (const [baseName, component] of Object.entries(
+        this.templateComponents[pageName]
+      )) {
+        const baseId = baseName.replaceAll('-', '_');
+        const settingsName = `${baseName}-value`;
+        const compId = `${baseId}_${component}`;
+        const comp = builder.get_object(compId);
+        if (!comp) {
+          throw new Error(`Component not found in template: ${compId}`);
+        }
+        if (compId === 'shutdown_mode_combo') {
+          const model = new Gtk.StringList();
+          for (const mode of Object.values(MODES)) {
+            model.append(modeLabel(mode));
+          }
+          comp.model = model;
+          const updateComboRow = () => {
+            const index = MODES.indexOf(
+              settings.get_string('shutdown-mode-value')
+            );
+            if (index >= 0 && index !== comp.selected) comp.selected = index;
+          };
+          comp.connect('notify::selected', () => {
+            const mode = MODES[comp.selected];
+            if (mode) settings.set_string('shutdown-mode-value', mode);
+          });
+          const comboHandlerId = settings.connect(
+            'changed::shutdown-mode-value',
+            () => updateComboRow()
+          );
+          comp.connect('destroy', () => settings.disconnect(comboHandlerId));
+          updateComboRow();
+        } else {
+          settings.bind(
+            settingsName,
+            comp,
+            {
+              adjustment: 'value',
+              switch: 'active',
+              textbuffer: 'text',
+              buffer: 'text',
+            }[component],
+            Gio.SettingsBindFlags.DEFAULT
+          );
+        }
+
+        if (
+          [
+            'show_wake_slider_switch',
+            'show_wake_absolute_timer_switch',
+          ].includes(compId)
+        )
+          this.switchDependsOnSetting(comp, settings, 'show-wake-items-value');
+      }
+    }
+  }
+
+  switchDependsOnSetting(comp, settings, settingsName) {
+    const update = () => {
+      const active = settings.get_boolean(settingsName);
+      comp.sensitive = active;
+      const row = comp.get_parent().get_parent();
+      row.sensitive = active;
+    };
+    const handlerId = settings.connect(`changed::${settingsName}`, () =>
+      update()
+    );
+    comp.connect('destroy', () => settings.disconnect(handlerId));
+    update();
+  }
+
+  initCheckPage(builder) {
     // Check command textbuffer
     const checkCommandBuffer = builder.get_object('check_command_textbuffer');
     const commentTag = new Gtk.TextTag({ foreground: 'grey' });
@@ -89,7 +205,9 @@ function initPage(pageId, builder, settings) {
         anchor.forward_char();
       }
     });
-  } else if (pageName === 'install') {
+  }
+
+  initInstallPage(builder, installerScriptPath) {
     // install log textbuffer updates
     const logTextBuffer = builder.get_object('install_log_textbuffer');
     const scrollAdj = builder.get_object('installer_scrollbar_adjustment');
@@ -100,147 +218,34 @@ function initPage(pageId, builder, settings) {
     table.add(successTag);
 
     const installSwitch = builder.get_object('install_policy_switch');
-    installSwitch.set_active(Install.checkInstalled());
+    installSwitch.set_active(this._install.checkInstalled());
     installSwitch.connect('notify::active', () =>
-      Install.installAction(
+      this._install.installAction(
+        installerScriptPath,
         installSwitch.get_active() ? 'install' : 'uninstall',
-        message =>
-          guiIdle(() =>
-            // Format log lines
-            message.split('\n').forEach(line => {
-              line = ['[', '#'].includes(line[0]) ? line : ` ${line}`;
-              const b = logTextBuffer;
-              b.insert(b.get_end_iter(), `${line}\n`, -1);
-              const end = b.get_end_iter();
-              const start = end.copy();
-              if (start.backward_line()) {
-                if (line.startsWith('# ')) {
-                  b.apply_tag(errorTag, start, end);
-                } else if (line.endsWith('🟢')) {
-                  b.apply_tag(successTag, start, end);
-                }
+        async message => {
+          await this._idle.guiIdle();
+          // Format log lines
+          message.split('\n').forEach(line => {
+            line = ['[', '#'].includes(line[0]) ? line : ` ${line}`;
+            const b = logTextBuffer;
+            b.insert(b.get_end_iter(), `${line}\n`, -1);
+            const end = b.get_end_iter();
+            const start = end.copy();
+            if (start.backward_line()) {
+              if (line.startsWith('# ')) {
+                b.apply_tag(errorTag, start, end);
+              } else if (line.endsWith('🟢')) {
+                b.apply_tag(successTag, start, end);
               }
-              guiIdle(() => scrollAdj.set_value(1000000));
-            })
-          )
-      )
-    );
-    // clear log
-    guiIdle(() => logTextBuffer.set_text('', -1));
-  }
-  if (pageName in templateComponents) {
-    for (const [baseName, component] of Object.entries(
-      templateComponents[pageName]
-    )) {
-      const baseId = baseName.replaceAll('-', '_');
-      const settingsName = `${baseName}-value`;
-      const compId = `${baseId}_${component}`;
-      const comp = builder.get_object(compId);
-      if (!comp) {
-        throw new Error(`Component not found in template: ${compId}`);
-      }
-      if (compId === 'shutdown_mode_combo') {
-        const model = new Gtk.StringList();
-        for (const mode of Object.values(MODES)) {
-          model.append(modeLabel(mode));
+            }
+          });
+          await this._idle.guiIdle();
+          scrollAdj.set_value(1000000);
         }
-        comp.model = model;
-        const updateComboRow = () => {
-          const index = MODES.indexOf(
-            settings.get_string('shutdown-mode-value')
-          );
-          if (index >= 0 && index !== comp.selected) comp.selected = index;
-        };
-        comp.connect('notify::selected', () => {
-          const mode = MODES[comp.selected];
-          if (mode) settings.set_string('shutdown-mode-value', mode);
-        });
-        const comboHandlerId = settings.connect(
-          'changed::shutdown-mode-value',
-          () => updateComboRow()
-        );
-        comp.connect('destroy', () => settings.disconnect(comboHandlerId));
-        updateComboRow();
-      } else {
-        settings.bind(
-          settingsName,
-          comp,
-          {
-            adjustment: 'value',
-            switch: 'active',
-            textbuffer: 'text',
-            buffer: 'text',
-          }[component],
-          Gio.SettingsBindFlags.DEFAULT
-        );
-      }
-
-      if (
-        ['show_wake_slider_switch', 'show_wake_absolute_timer_switch'].includes(
-          compId
-        )
       )
-        switchDependsOnSetting(comp, settings, 'show-wake-items-value');
-    }
-  }
-
-  return page;
-}
-
-function switchDependsOnSetting(comp, settings, settingsName) {
-  const update = () => {
-    const active = settings.get_boolean(settingsName);
-    comp.sensitive = active;
-    const row = comp.get_parent().get_parent();
-    row.sensitive = active;
-  };
-  const handlerId = settings.connect(`changed::${settingsName}`, () =>
-    update()
-  );
-  comp.connect('destroy', () => settings.disconnect(handlerId));
-  update();
-}
-
-/**
- *
- * @param window
- */
-function fillPreferencesWindow(window) {
-  const builder = Gtk.Builder.new();
-  builder.add_from_file(
-    Me.dir.get_child('ui').get_child('prefs.ui').get_path()
-  );
-
-  const settings = ExtensionUtils.getSettings();
-  const handlers = [];
-  const pageNames = ['install', 'shutdown', 'wake', 'display', 'check'].map(
-    n => `shutdowntimer-prefs-${n}`
-  );
-  enableGuiIdle();
-  for (const page of pageNames.map(name =>
-    initPage(name.replaceAll('-', '_'), builder, settings, handlers)
-  )) {
-    window.add(page);
-  }
-  const selPageName =
-    pageNames[settings.get_int('preferences-selected-page-value')];
-  if (selPageName) {
-    window.set_visible_page_name(selPageName);
-  }
-  const pageVisHandlerId = window.connect('notify::visible-page-name', () => {
-    logDebug(window.get_visible_page_name());
-    settings.set_int(
-      'preferences-selected-page-value',
-      pageNames.indexOf(window.get_visible_page_name())
     );
-  });
-  handlers.push([window, pageVisHandlerId]);
-  // release all resources on destroy
-  window.connect('destroy', () => {
-    disableGuiIdle();
-    handlers.forEach(([comp, handlerId]) => {
-      comp.disconnect(handlerId);
-    });
-    Install.reset();
-  });
+    // Clear install log
+    logTextBuffer.set_text('', -1);
+  }
 }
