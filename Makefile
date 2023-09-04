@@ -29,6 +29,9 @@ lint:
 	npm run lint
 	npm run prettier
 
+test:
+	@./tests/test.sh
+
 define INSTALL_EXTENSION
 .PHONY: $(1)
 $(1): $(2)
@@ -45,4 +48,4 @@ clean:
 	-rm -f $(OUTPUTS) 
 	-rm -rf src/locale
 
-.PHONY: clean lint zip debug-zip
+.PHONY: test clean lint zip debug-zip

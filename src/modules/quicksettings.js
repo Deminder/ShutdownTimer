@@ -4,7 +4,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
  * Add an external indicator after an existing indicator and above an existing indicator item.
  */
 export function addExternalIndicator(
-  manager,
+  tracker,
   indicator,
   after = '_system',
   above = '_backgroundApps',

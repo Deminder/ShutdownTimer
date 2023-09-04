@@ -12,8 +12,16 @@ const debugMode = false;
  * @param {...any} args log arguments
  */
 export function logDebug(...args) {
-  if (debugMode) {
+  if ('logDebug' in globalThis) {
+    globalThis.logDebug(...args);
+  } else if (debugMode) {
     console.log('[SDT]', ...args);
+  }
+}
+
+export function logTest(...args) {
+  if ('testLog' in globalThis) {
+    globalThis.testLog(...args);
   }
 }
 

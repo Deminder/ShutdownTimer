@@ -1,15 +1,16 @@
 // SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>, D. Neumann <neumann89@gmail.com>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import { Extension, InjectionManager } from 'resource:///org/gnome/shell/extensions/extension.js';
+import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
+
 import { currentSessionMode } from './modules/session-mode-aware.js';
 import { ShutdownTimerIndicator } from './modules/menu-item.js';
 import { Timer } from './modules/timer.js';
 import { logDebug } from './modules/util.js';
 import { addExternalIndicator } from './modules/quicksettings.js';
+import { InjectionTracker } from './modules/injection.js';
 
 export default class ShutdownTimer extends Extension {
-  _injectionManager = new InjectionManager();
   timerDestructionDelayMillis = 100;
   timerDestructionTimeoutId = 0;
   disableTimestamp = 0;
@@ -61,7 +62,8 @@ export default class ShutdownTimer extends Extension {
     );
 
     // Add ShutdownTimer indicator to quicksettings menu
-    addExternalIndicator(this._injectionManager, indicator);
+    this._tracker = new InjectionTracker();
+    addExternalIndicator(this._tracker, indicator);
 
     this._settings = settings;
     this._indicator = indicator;
@@ -76,7 +78,9 @@ export default class ShutdownTimer extends Extension {
     // Moreover, since root-mode and check-command must not be interrupted,
     // the timer will only be destroyed if the extension is disabled for longer than 100ms.
     logDebug(`[DISABLE] '${currentSessionMode()}'`);
-    this._injectionManager.clear();
+    this._tracker.clearAll();
+    this._tracker = null;
+
     this._indicator.destroy();
     this._indicator = null;
 
