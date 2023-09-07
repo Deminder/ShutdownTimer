@@ -26,6 +26,7 @@ zip: $(DEFAULT_ZIP)
 debug-zip: $(DEBUG_ZIP)
 
 lint:
+	reuse lint
 	npm run lint
 	npm run prettier
 
