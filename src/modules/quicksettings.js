@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 /**
@@ -16,26 +19,30 @@ export function addExternalIndicator(
   if (aboveIndicator === undefined) {
     if ('_addItems' in qs) {
       // 45.beta.1: _setupIndicators is not done
-      manager.overrideMethod(qs, '_addItems', originalMethod => (items, col) => {
-        if (Object.is(items, qs[above].quickSettingsItems)) {
-          manager.restoreMethod(qs, '_addItems');
-          // Insert after: insert_child_above(a,b): inserts 'a' after 'b'
-          qs._indicators.insert_child_above(indicator, qs[after]);
-          // Insert above
-          originalMethod.call(qs, indicatorItems, colSpan);
+      const injection = tracker.injectProperty(
+        qs,
+        '_addItems',
+        (items, col) => {
+          if (Object.is(items, qs[above].quickSettingsItems)) {
+            injection.clear();
+            // Insert after: insert_child_above(a,b): inserts 'a' after 'b'
+            qs._indicators.insert_child_above(indicator, qs[after]);
+            // Insert above
+            injection.original.call(qs, indicatorItems, colSpan);
+          }
+          injection.previous.call(qs, items, col);
         }
-        originalMethod.call(qs, items, col);
-      });
+      );
     } else {
       // 45.rc: _setupIndicators is not done
       const qsm = qs.menu;
-      manager.overrideMethod(
+      const injection = tracker.injectProperty(
         qsm,
         '_completeAddItem',
-        originalMethod => (item, col) => {
+        (item, col) => {
           const firstAboveItem = qs[above]?.quickSettingsItems.at(-1);
           if (Object.is(firstAboveItem, item)) {
-            manager.restoreMethod(qsm, '_completeAddItem');
+            injection.clear();
             // Insert after: insert_child_above(a,b): inserts 'a' after 'b'
             qs._indicators.insert_child_above(indicator, qs[after]);
             // Insert above
@@ -43,7 +50,7 @@ export function addExternalIndicator(
               qsm.insertItemBefore(newItem, item, colSpan)
             );
           }
-          originalMethod.call(qsm, item, col);
+          injection.previous.call(qsm, item, col);
         }
       );
     }
@@ -56,10 +63,7 @@ export function addExternalIndicator(
     const firstAboveItem = aboveIndicator.quickSettingsItems.at(-1);
     indicatorItems.forEach(item => {
       qs.menu._grid.remove_child(item);
-      qs.menu._grid.insert_child_below(
-        item,
-        firstAboveItem
-      );
+      qs.menu._grid.insert_child_below(item, firstAboveItem);
     });
   } else {
     // 45.rc: _setupIndicators is done
