@@ -20,7 +20,7 @@ jobs:
         run: |
           npm install
           sudo apt-get update
-          sudo apt-get install -y gnome-shell-extensions gettext
+          sudo apt-get install -y reuse gnome-shell-extensions gettext
       
       - name: Run linter
         run: make lint

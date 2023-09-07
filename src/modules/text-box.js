@@ -1,28 +1,43 @@
 // SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-/* exported OsdTextbox */
-const Main = imports.ui.main;
-const { St, Clutter } = imports.gi;
-const { EventEmitter } = imports.misc.signals;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-const { Convenience } = Me.imports.lib;
-const { logDebug, throttleTimeout } = Convenience;
+import St from 'gi://St';
+import Clutter from 'gi://Clutter';
 
-var OsdTextbox = class extends EventEmitter {
-  constructor() {
-    super();
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import { throttleTimeout, logDebug } from './util.js';
+import {
+  foregroundActive,
+  observeForegroundActive,
+  unobserveForegroundActive,
+} from './session-mode-aware.js';
+
+export class Textbox {
+  textboxes = [];
+  constructor({ settings }) {
+    this.settings = settings;
     [this.syncThrottled, this.syncThrottledCancel] = throttleTimeout(
       this.sync.bind(this),
       50
     );
-    this._settings = ExtensionUtils.getSettings();
-    this._showSettingId = this._settings.connect(
+    this.showSettingsId = settings.connect(
       'changed::show-textboxes-value',
       this.sync.bind(this)
     );
-    this.textboxes = [];
+    observeForegroundActive(this, fgActive => {
+      if (!fgActive) {
+        this.hideAll();
+      }
+    });
+  }
+
+  destroy() {
+    if (this.showSettingsId) {
+      unobserveForegroundActive(this);
+      this.hideAll();
+      this.settings.disconnect(this.showSettingsId);
+      this.showSettingsId = null;
+    }
   }
 
   sync() {
@@ -57,7 +72,7 @@ var OsdTextbox = class extends EventEmitter {
           });
         }, 3000);
       }
-      textbox.visible = this._settings.get_boolean('show-textboxes-value');
+      textbox.visible = this.settings.get_boolean('show-textboxes-value');
       if (!textbox.visible) return;
 
       if (i === 0) {
@@ -88,31 +103,28 @@ var OsdTextbox = class extends EventEmitter {
     this.sync();
   }
 
-  destroy() {
-    this.hideAll();
-    if (this._showSettingId) this._settings.disconnect(this._showSettingId);
-  }
-
   /**
-   * Show a textbox message on the screen
+   * Show a textbox message on the primary monitor
    *
    * @param textmsg
    */
   showTextbox(textmsg) {
-    for (const t of this.textboxes) {
-      // replace old textbox if it has the same text
-      if (t.text === textmsg) {
-        t['_hidden'] = 1;
+    if (textmsg && foregroundActive()) {
+      for (const t of this.textboxes) {
+        // replace old textbox if it has the same text
+        if (t.text === textmsg) {
+          t['_hidden'] = 1;
+        }
       }
+      logDebug(`show textbox: ${textmsg}`);
+      const textbox = new St.Label({
+        style_class: 'textbox-label',
+        text: textmsg,
+        opacity: 0,
+      });
+      Main.uiGroup.add_actor(textbox);
+      this.textboxes.unshift(textbox);
+      this.syncThrottled();
     }
-    logDebug(`show textbox: ${textmsg}`);
-    const textbox = new St.Label({
-      style_class: 'textbox-label',
-      text: textmsg,
-      opacity: 0,
-    });
-    Main.uiGroup.add_actor(textbox);
-    this.textboxes.unshift(textbox);
-    this.syncThrottled();
   }
-};
+}

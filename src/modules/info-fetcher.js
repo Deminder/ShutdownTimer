@@ -1,15 +1,13 @@
 // SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-/* exported InfoFetcher */
-const { Gio, GLib, GObject } = imports.gi;
-const Me = imports.misc.extensionUtils.getCurrentExtension();
-const { Convenience } = Me.imports.lib;
-const { EventEmitter } = imports.misc.signals;
-const { logDebug, throttleTimeout } = Convenience;
-const ByteArray = imports.byteArray;
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
+import * as Signals from 'resource:///org/gnome/shell/misc/signals.js';
 
-var InfoFetcher = class extends EventEmitter {
+import { throttleTimeout, logDebug } from './util.js';
+
+export class InfoFetcher extends Signals.EventEmitter {
   constructor() {
     super();
     this._intervalId = null;
@@ -61,8 +59,8 @@ var InfoFetcher = class extends EventEmitter {
         file.load_contents_async(this._cancellable, (f, res) => {
           try {
             const [, contents] = f.load_contents_finish(res);
-            resolve(ByteArray.toString(contents));
-            GLib.free(contents);
+            const decoder = new TextDecoder('utf-8');
+            resolve(decoder.decode(contents));
           } catch (err) {
             reject(err);
           }
@@ -79,10 +77,9 @@ var InfoFetcher = class extends EventEmitter {
   }
 
   async _fetchWakeInfo(rtc) {
-    let content = '';
-    try {
-      content = await this._readFile(`/sys/class/rtc/${rtc}/wakealarm`);
-    } catch {}
+    const content = await this._readFile(
+      `/sys/class/rtc/${rtc}/wakealarm`
+    ).catch(() => '');
     let timestamp = content !== '' ? parseInt(content) : -1;
     if (timestamp > -1 && (await this._isWakeInfoLocal())) {
       const dt = GLib.DateTime.new_from_unix_local(timestamp);
@@ -93,17 +90,18 @@ var InfoFetcher = class extends EventEmitter {
   }
 
   async _fetchShutdownInfo() {
-    try {
-      const content = await this._readFile('/run/systemd/shutdown/scheduled');
-      // content: schedule unix-timestamp (micro-seconds), warn-all, shutdown-mode
-      const [usec, _, mode] = content.split('\n').map(l => l.split('=')[1]);
-      return {
-        mode,
-        deadline: parseInt(usec) / 1000000,
-      };
-    } catch {
+    const content = await this._readFile(
+      '/run/systemd/shutdown/scheduled'
+    ).catch(() => '');
+    if (content === '') {
       return { deadline: -1 };
     }
+    // content: schedule unix-timestamp (micro-seconds), warn-all, shutdown-mode
+    const [usec, _, mode] = content.split('\n').map(l => l.split('=')[1]);
+    return {
+      mode,
+      deadline: parseInt(usec) / 1000000,
+    };
   }
 
   get shutdownInfo() {
@@ -122,4 +120,4 @@ var InfoFetcher = class extends EventEmitter {
       this._cancellable = null;
     }
   }
-};
+}

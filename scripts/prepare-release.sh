@@ -11,8 +11,7 @@ set -e
 # cd to the repo root
 cd "$( cd "$( dirname "$0" )" && pwd )/.."
 
-reuse lint
-npm run format
+make lint
 
 VPATTERN='^ *?\"version\": *?'
 METADATA_FILE=src/metadata.json
