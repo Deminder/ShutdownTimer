@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-29 18:21+0200\n"
+"POT-Creation-Date: 2023-09-07 20:02+0200\n"
 "PO-Revision-Date: 2022-12-28 18:38+0100\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: GERMAN Jonatan Zeidler <jonatan_zeidler@gmx.de>\n"
@@ -20,18 +20,162 @@ msgstr ""
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: src/extension.js:235
+#: src/modules/install.js:32
+msgid "START"
+msgstr "START"
+
+#: src/modules/install.js:42
+msgid "END"
+msgstr "ENDE"
+
+#: src/modules/install.js:44
+msgid "FAIL"
+msgstr "FEHLER"
+
+#: src/modules/install.js:62
+msgid "install"
+msgstr "Installieren"
+
+#: src/modules/install.js:62
+msgid "uninstall"
+msgstr "Deinstallieren"
+
+#: src/modules/menu-item.js:69 src/modules/menu-item.js:265
+msgid "Shutdown Timer"
+msgstr "Ausschaltuhr"
+
+#: src/modules/menu-item.js:92
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: src/modules/menu-item.js:252
+msgid "now"
+msgstr "jetzt"
+
+#: src/modules/menu-item.js:268
+#, javascript-format
+msgid "Check %s for %s"
+msgstr "Prüfe %s seit %s"
+
+#: src/modules/menu-item.js:323 src/modules/menu-item.js:362
+msgctxt "absolute time notation"
+msgid "%a, %R"
+msgstr ""
+
+#: src/modules/menu-item.js:326
+#, javascript-format
+msgid "%s hr"
+msgid_plural "%s hrs"
+msgstr[0] "%s Std."
+msgstr[1] "%s Stdn."
+
+#: src/modules/menu-item.js:327 src/modules/util.js:74
+#, javascript-format
+msgid "%s min"
+msgid_plural "%s mins"
+msgstr[0] "%s Min."
+msgstr[1] "%s Min."
+
+#: src/modules/menu-item.js:333
+#, javascript-format
+msgid "%s (protect)"
+msgstr "%s (sicher)"
+
+#: src/modules/menu-item.js:357
+#, javascript-format
+msgctxt "WakeButtonText"
+msgid "%s at %s"
+msgstr "%s am %s"
+
+#: src/modules/menu-item.js:358
+#, javascript-format
+msgctxt "WakeButtonText"
+msgid "%s after %s"
+msgstr "%s in %s"
+
+#: src/modules/menu-item.js:365 src/modules/timer.js:123 src/modules/util.js:68
+#, javascript-format
+msgid "%s hour"
+msgid_plural "%s hours"
+msgstr[0] "%s Std."
+msgstr[1] "%s Stdn."
+
+#: src/modules/menu-item.js:366 src/modules/timer.js:124
+#, javascript-format
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] "%s Minute"
+msgstr[1] "%s Minuten"
+
+#: src/modules/root-mode.js:72
+msgid "Can not cancel root process!"
+msgstr "Root-Prozess kann nicht abgebrochen werden."
+
+#: src/modules/root-mode.js:74
+msgid "CANCEL"
+msgstr "ABBRUCH"
+
+#: src/modules/root-mode.js:169
+msgid "Privileged script installation required!"
+msgstr "Installation des privilegierten Skriptes erforderlich!"
+
+#: src/modules/schedule-info.js:44
+msgid "suspend"
+msgstr "Ruhezustand"
+
+#: src/modules/schedule-info.js:45
+msgid "shutdown"
+msgstr "Abschalten"
+
+#: src/modules/schedule-info.js:46
+msgid "reboot"
+msgstr "Neustart"
+
+#: src/modules/schedule-info.js:47
+msgid "wakeup"
+msgstr "Wecken"
+
+#: src/modules/schedule-info.js:55
+#, javascript-format
+msgid "%s until %s"
+msgstr "%s bis z. %s"
+
+#: src/modules/schedule-info.js:60
+#, javascript-format
+msgid "%s (sys)"
+msgstr ""
+
+#: src/modules/schedule-info.js:69
+msgctxt "absolute schedule notation"
+msgid "%a, %T"
+msgstr ""
+
+#: src/modules/timer.js:119
+#, javascript-format
+msgctxt "StartSchedulePopup"
+msgid "%s in %s"
+msgstr "%s in %s"
+
+#: src/modules/timer.js:159
+msgid "Confirmation canceled"
+msgstr "Prüfung abgebrochen"
+
+#: src/modules/timer.js:159
+msgid "Shutdown Timer stopped"
+msgstr "Ausschaltuhr gestoppt"
+
+#: src/modules/timer.js:178
 #, javascript-format
 msgid "Waiting for %s confirmation"
 msgstr "Warte auf Bestätigung für %s"
 
-#: src/extension.js:292
+#: src/modules/timer.js:212
 #, javascript-format
 msgctxt "CheckCommand"
 msgid "%s aborted (Code: %s)"
 msgstr "%s abgebrochen (Code: %s)"
 
-#: src/extension.js:316 src/extension.js:437
+#: src/modules/timer.js:253 src/modules/timer.js:297
 #, javascript-format
 msgctxt "Error"
 msgid ""
@@ -39,184 +183,40 @@ msgid ""
 "%s"
 msgstr ""
 
-#: src/extension.js:316
+#: src/modules/timer.js:253
 msgid "Wake action failed!"
 msgstr "Wecker-Befehl fehlgeschlagen!"
 
-#: src/extension.js:356
-#, javascript-format
-msgctxt "StartSchedulePopup"
-msgid "%s in %s"
-msgstr "%s in %s"
-
-#: src/extension.js:360 src/lib/Convenience.js:68 src/lib/MenuItem.js:401
-#, javascript-format
-msgid "%s hour"
-msgid_plural "%s hours"
-msgstr[0] "%s Std."
-msgstr[1] "%s Stdn."
-
-#: src/extension.js:361 src/lib/MenuItem.js:402
-#, javascript-format
-msgid "%s minute"
-msgid_plural "%s minutes"
-msgstr[0] "%s Minute"
-msgstr[1] "%s Minuten"
-
-#: src/extension.js:370
-msgid "Confirmation canceled"
-msgstr "Prüfung abgebrochen"
-
-#: src/extension.js:370
-msgid "Shutdown Timer stopped"
-msgstr "Ausschaltuhr gestoppt"
-
-#: src/extension.js:437
+#: src/modules/timer.js:297
 msgid "Root mode protection failed!"
 msgstr "Root-Modus-Absicherung fehlgeschlagen!"
 
-#: src/lib/Convenience.js:31
+#: src/modules/util.js:37
 msgid "Suspend"
 msgstr "Ruhezustand"
 
-#: src/lib/Convenience.js:32
+#: src/modules/util.js:38
 msgid "Power Off"
 msgstr "Ausschalten"
 
-#: src/lib/Convenience.js:33
+#: src/modules/util.js:39
 msgid "Restart"
 msgstr "Neustart"
 
-#: src/lib/Convenience.js:34 src/ui/prefs.ui:239 src/ui/prefs.ui:442
+#: src/modules/util.js:40 src/ui/prefs.ui:239 src/ui/prefs.ui:442
 msgid "Wake"
 msgstr "Wecker"
 
-#: src/lib/Convenience.js:35
+#: src/modules/util.js:41
 msgid "No Wake"
 msgstr "Kein Wecken"
 
-#: src/lib/Convenience.js:70
+#: src/modules/util.js:70
 #, javascript-format
 msgid "%s sec"
 msgid_plural "%s secs"
 msgstr[0] "%s Sek."
 msgstr[1] "%s Sekn."
-
-#: src/lib/Convenience.js:74 src/lib/MenuItem.js:362
-#, javascript-format
-msgid "%s min"
-msgid_plural "%s mins"
-msgstr[0] "%s Min."
-msgstr[1] "%s Min."
-
-#: src/lib/Install.js:53
-msgid "START"
-msgstr "START"
-
-#: src/lib/Install.js:60
-msgid "END"
-msgstr "ENDE"
-
-#: src/lib/Install.js:62
-msgid "FAIL"
-msgstr "FEHLER"
-
-#: src/lib/Install.js:72
-msgid "install"
-msgstr "Installieren"
-
-#: src/lib/Install.js:72
-msgid "uninstall"
-msgstr "Deinstallieren"
-
-#: src/lib/MenuItem.js:80 src/lib/MenuItem.js:302
-msgid "Shutdown Timer"
-msgstr "Ausschaltuhr"
-
-#: src/lib/MenuItem.js:126
-msgid "Settings"
-msgstr "Einstellungen"
-
-#: src/lib/MenuItem.js:289
-msgid "now"
-msgstr "jetzt"
-
-#: src/lib/MenuItem.js:305
-#, javascript-format
-msgid "Check %s for %s"
-msgstr "Prüfe %s seit %s"
-
-#: src/lib/MenuItem.js:358 src/lib/MenuItem.js:398
-msgctxt "absolute time notation"
-msgid "%a, %R"
-msgstr ""
-
-#: src/lib/MenuItem.js:361
-#, javascript-format
-msgid "%s hr"
-msgid_plural "%s hrs"
-msgstr[0] "%s Std."
-msgstr[1] "%s Stdn."
-
-#: src/lib/MenuItem.js:368
-#, javascript-format
-msgid "%s (protect)"
-msgstr "%s (sicher)"
-
-#: src/lib/MenuItem.js:393
-#, javascript-format
-msgctxt "WakeButtonText"
-msgid "%s at %s"
-msgstr "%s am %s"
-
-#: src/lib/MenuItem.js:394
-#, javascript-format
-msgctxt "WakeButtonText"
-msgid "%s after %s"
-msgstr "%s in %s"
-
-#: src/lib/RootMode.js:75
-msgid "Can not cancel root process!"
-msgstr "Root-Prozess kann nicht abgebrochen werden."
-
-#: src/lib/RootMode.js:77
-msgid "CANCEL"
-msgstr "ABBRUCH"
-
-#: src/lib/RootMode.js:221
-msgid "Privileged script installation required!"
-msgstr "Installation des privilegierten Skriptes erforderlich!"
-
-#: src/lib/ScheduleInfo.js:49
-msgid "suspend"
-msgstr "Ruhezustand"
-
-#: src/lib/ScheduleInfo.js:50
-msgid "shutdown"
-msgstr "Abschalten"
-
-#: src/lib/ScheduleInfo.js:51
-msgid "reboot"
-msgstr "Neustart"
-
-#: src/lib/ScheduleInfo.js:52
-msgid "wakeup"
-msgstr "Wecken"
-
-#: src/lib/ScheduleInfo.js:60
-#, javascript-format
-msgid "%s until %s"
-msgstr "%s bis z. %s"
-
-#: src/lib/ScheduleInfo.js:65
-#, javascript-format
-msgid "%s (sys)"
-msgstr ""
-
-#: src/lib/ScheduleInfo.js:74
-msgctxt "absolute schedule notation"
-msgid "%a, %T"
-msgstr ""
 
 #: src/tool/installer.sh:66
 msgid "Failed"

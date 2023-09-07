@@ -19,7 +19,7 @@ xgettext \
     --keyword="_n:1,2" \
     --keyword="C_:1c,2" \
     --output="po/main.pot" \
-    src/*.js src/lib/*.js src/**/*.sh src/ui/prefs.ui src/schemas/*.xml
+    src/*.js src/modules/*.js src/**/*.sh src/ui/prefs.ui src/schemas/*.xml
 
 for file in po/*.po
 do
