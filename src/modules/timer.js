@@ -7,7 +7,8 @@ import { gettext as _, ngettext as _n, pgettext as C_ } from './translation.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as Signals from 'resource:///org/gnome/shell/misc/signals.js';
 
-import { longDurationString, modeLabel, logDebug } from './util.js';
+import { logDebug } from './util.js';
+import { longDurationString, modeLabel } from './schedule-info.js';
 import * as RootMode from './root-mode.js';
 import * as SessionModeAware from './session-mode-aware.js';
 import { Textbox } from './text-box.js';

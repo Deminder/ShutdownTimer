@@ -10,7 +10,7 @@ target/
 *.zip
 *.png
 *.mo
-*.env
+debug-guest.sh
 
 node_modules
 package-lock.json

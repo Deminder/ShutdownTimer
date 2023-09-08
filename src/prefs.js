@@ -7,7 +7,8 @@ import Gio from 'gi://Gio';
 import { ExtensionPreferences } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import { Install } from './modules/install.js';
-import { logDebug, Idle, modeLabel, MODES } from './modules/util.js';
+import { modeLabel, MODES } from './modules/schedule-info.js';
+import { logDebug, Idle } from './modules/util.js';
 
 export default class ShutdownTimerPreferences extends ExtensionPreferences {
   templateComponents = {

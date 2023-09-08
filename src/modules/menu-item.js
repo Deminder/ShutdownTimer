@@ -10,8 +10,6 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import * as Slider from 'resource:///org/gnome/shell/ui/slider.js';
 import * as QuickSettings from 'resource:///org/gnome/shell/ui/quickSettings.js';
 
-import { getSliderMinutesFromSettings } from './schedule-info.js';
-
 import {
   foregroundActive,
   observeForegroundActive,
@@ -24,7 +22,8 @@ import {
   durationString,
   longDurationString,
   absoluteTimeString,
-} from './util.js';
+  getSliderMinutesFromSettings,
+} from './schedule-info.js';
 
 /**
  * The ShutdownTimerItem controls wake/shutdown action time and mode.
