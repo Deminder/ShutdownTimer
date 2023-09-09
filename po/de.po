@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-07 20:02+0200\n"
+"POT-Creation-Date: 2023-09-09 22:09+0200\n"
 "PO-Revision-Date: 2022-12-28 18:38+0100\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: GERMAN Jonatan Zeidler <jonatan_zeidler@gmx.de>\n"
@@ -19,435 +19,6 @@ msgstr ""
 "X-Poedit-KeywordsList: _\n"
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: .\n"
-
-#: src/modules/install.js:32
-msgid "START"
-msgstr "START"
-
-#: src/modules/install.js:42
-msgid "END"
-msgstr "ENDE"
-
-#: src/modules/install.js:44
-msgid "FAIL"
-msgstr "FEHLER"
-
-#: src/modules/install.js:62
-msgid "install"
-msgstr "Installieren"
-
-#: src/modules/install.js:62
-msgid "uninstall"
-msgstr "Deinstallieren"
-
-#: src/modules/menu-item.js:69 src/modules/menu-item.js:265
-msgid "Shutdown Timer"
-msgstr "Ausschaltuhr"
-
-#: src/modules/menu-item.js:92
-msgid "Settings"
-msgstr "Einstellungen"
-
-#: src/modules/menu-item.js:252
-msgid "now"
-msgstr "jetzt"
-
-#: src/modules/menu-item.js:268
-#, javascript-format
-msgid "Check %s for %s"
-msgstr "Prüfe %s seit %s"
-
-#: src/modules/menu-item.js:323 src/modules/menu-item.js:362
-msgctxt "absolute time notation"
-msgid "%a, %R"
-msgstr ""
-
-#: src/modules/menu-item.js:326
-#, javascript-format
-msgid "%s hr"
-msgid_plural "%s hrs"
-msgstr[0] "%s Std."
-msgstr[1] "%s Stdn."
-
-#: src/modules/menu-item.js:327 src/modules/util.js:74
-#, javascript-format
-msgid "%s min"
-msgid_plural "%s mins"
-msgstr[0] "%s Min."
-msgstr[1] "%s Min."
-
-#: src/modules/menu-item.js:333
-#, javascript-format
-msgid "%s (protect)"
-msgstr "%s (sicher)"
-
-#: src/modules/menu-item.js:357
-#, javascript-format
-msgctxt "WakeButtonText"
-msgid "%s at %s"
-msgstr "%s am %s"
-
-#: src/modules/menu-item.js:358
-#, javascript-format
-msgctxt "WakeButtonText"
-msgid "%s after %s"
-msgstr "%s in %s"
-
-#: src/modules/menu-item.js:365 src/modules/timer.js:123 src/modules/util.js:68
-#, javascript-format
-msgid "%s hour"
-msgid_plural "%s hours"
-msgstr[0] "%s Std."
-msgstr[1] "%s Stdn."
-
-#: src/modules/menu-item.js:366 src/modules/timer.js:124
-#, javascript-format
-msgid "%s minute"
-msgid_plural "%s minutes"
-msgstr[0] "%s Minute"
-msgstr[1] "%s Minuten"
-
-#: src/modules/root-mode.js:72
-msgid "Can not cancel root process!"
-msgstr "Root-Prozess kann nicht abgebrochen werden."
-
-#: src/modules/root-mode.js:74
-msgid "CANCEL"
-msgstr "ABBRUCH"
-
-#: src/modules/root-mode.js:169
-msgid "Privileged script installation required!"
-msgstr "Installation des privilegierten Skriptes erforderlich!"
-
-#: src/modules/schedule-info.js:44
-msgid "suspend"
-msgstr "Ruhezustand"
-
-#: src/modules/schedule-info.js:45
-msgid "shutdown"
-msgstr "Abschalten"
-
-#: src/modules/schedule-info.js:46
-msgid "reboot"
-msgstr "Neustart"
-
-#: src/modules/schedule-info.js:47
-msgid "wakeup"
-msgstr "Wecken"
-
-#: src/modules/schedule-info.js:55
-#, javascript-format
-msgid "%s until %s"
-msgstr "%s bis z. %s"
-
-#: src/modules/schedule-info.js:60
-#, javascript-format
-msgid "%s (sys)"
-msgstr ""
-
-#: src/modules/schedule-info.js:69
-msgctxt "absolute schedule notation"
-msgid "%a, %T"
-msgstr ""
-
-#: src/modules/timer.js:119
-#, javascript-format
-msgctxt "StartSchedulePopup"
-msgid "%s in %s"
-msgstr "%s in %s"
-
-#: src/modules/timer.js:159
-msgid "Confirmation canceled"
-msgstr "Prüfung abgebrochen"
-
-#: src/modules/timer.js:159
-msgid "Shutdown Timer stopped"
-msgstr "Ausschaltuhr gestoppt"
-
-#: src/modules/timer.js:178
-#, javascript-format
-msgid "Waiting for %s confirmation"
-msgstr "Warte auf Bestätigung für %s"
-
-#: src/modules/timer.js:212
-#, javascript-format
-msgctxt "CheckCommand"
-msgid "%s aborted (Code: %s)"
-msgstr "%s abgebrochen (Code: %s)"
-
-#: src/modules/timer.js:253 src/modules/timer.js:297
-#, javascript-format
-msgctxt "Error"
-msgid ""
-"%s\n"
-"%s"
-msgstr ""
-
-#: src/modules/timer.js:253
-msgid "Wake action failed!"
-msgstr "Wecker-Befehl fehlgeschlagen!"
-
-#: src/modules/timer.js:297
-msgid "Root mode protection failed!"
-msgstr "Root-Modus-Absicherung fehlgeschlagen!"
-
-#: src/modules/util.js:37
-msgid "Suspend"
-msgstr "Ruhezustand"
-
-#: src/modules/util.js:38
-msgid "Power Off"
-msgstr "Ausschalten"
-
-#: src/modules/util.js:39
-msgid "Restart"
-msgstr "Neustart"
-
-#: src/modules/util.js:40 src/ui/prefs.ui:239 src/ui/prefs.ui:442
-msgid "Wake"
-msgstr "Wecker"
-
-#: src/modules/util.js:41
-msgid "No Wake"
-msgstr "Kein Wecken"
-
-#: src/modules/util.js:70
-#, javascript-format
-msgid "%s sec"
-msgid_plural "%s secs"
-msgstr[0] "%s Sek."
-msgstr[1] "%s Sekn."
-
-#: src/tool/installer.sh:66
-msgid "Failed"
-msgstr "Fehlgeschlagen"
-
-#: src/tool/installer.sh:68
-msgid "Success"
-msgstr "Erfolg"
-
-#: src/tool/installer.sh:192 src/tool/installer.sh:199
-#: src/tool/installer.sh:204
-msgid "Installing"
-msgstr "Installiere"
-
-#: src/tool/installer.sh:192 src/tool/installer.sh:226
-#: src/tool/installer.sh:244 src/tool/installer.sh:249
-msgid "tool"
-msgstr "Werkzeug"
-
-#: src/tool/installer.sh:198
-msgid "Using legacy policykit install"
-msgstr "Verwende PolicyKit-Installation für alte PolicyKit-Version"
-
-#: src/tool/installer.sh:199 src/tool/installer.sh:233
-msgid "policykit action"
-msgstr "PolicyKit-Aktion"
-
-#: src/tool/installer.sh:204 src/tool/installer.sh:240
-#: src/tool/installer.sh:252
-msgid "policykit rule"
-msgstr "PolicyKit-Regel"
-
-#: src/tool/installer.sh:226 src/tool/installer.sh:233
-#: src/tool/installer.sh:240 src/tool/installer.sh:244
-#: src/tool/installer.sh:252
-msgid "Uninstalling"
-msgstr "Deinstalliere"
-
-#: src/tool/installer.sh:227 src/tool/installer.sh:234
-#: src/tool/installer.sh:241 src/tool/installer.sh:247
-#: src/tool/installer.sh:255
-msgid "cannot remove"
-msgstr "entfernen nicht möglich"
-
-#: src/tool/installer.sh:249 src/tool/installer.sh:257
-msgid "not installed at"
-msgstr "nicht installiert in"
-
-#: src/tool/installer.sh:257
-msgid "policy rule"
-msgstr "Policy-Regel"
-
-#: src/ui/prefs.ui:63
-msgid "Install"
-msgstr "Installieren"
-
-#: src/ui/prefs.ui:70
-msgid "Install/Uninstall privileges for this user"
-msgstr "Installiere/Deinstalliere privilegiertes Skript für den Benutzer"
-
-#: src/ui/prefs.ui:71
-msgid "Setup a privileged script and give user access via polkit"
-msgstr ""
-"Konfiguriere ein privilegiertes Skript und gebe Benutzer Zugriff via Polkit"
-
-#: src/ui/prefs.ui:82
-msgid "Install output"
-msgstr "Ausgabe der Installation"
-
-#: src/ui/prefs.ui:109 src/ui/prefs.ui:386
-msgid "Shutdown"
-msgstr "Abschalten"
-
-#: src/ui/prefs.ui:113 src/ui/prefs.ui:243
-msgid "Timer Action"
-msgstr "Timer Aktion"
-
-#: src/ui/prefs.ui:116
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:133
-msgid "Use mode"
-msgstr "Verwende Option"
-
-#: src/ui/prefs.ui:117
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:134
-msgid "Mode to use for timer action"
-msgstr "Verwendete Ausschaltoption der Stoppuhr"
-
-#: src/ui/prefs.ui:122
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:121
-msgid "Show end-session dialog"
-msgstr "Zeige Sitzungsende-Dialog"
-
-#: src/ui/prefs.ui:123
-msgid "Shown for reboot and shutdown if screensaver is inactive"
-msgstr ""
-"Angezeigt beim Neustarten und Herunterfahren, wenn Bildschirm inaktiv ist"
-
-#: src/ui/prefs.ui:134
-msgid "Toggle root shutdown with shutdown timer"
-msgstr "Schalte die Root-Absicherung zusammen mit der Ausschaltuhr"
-
-#: src/ui/prefs.ui:135
-msgid "Runs extra 'shutdown -P/-r' command for shutdown or reboot"
-msgstr ""
-"Führt extra 'shutdown -P/-r' Befehl beim Neustarten oder Herunterfahren aus"
-
-#: src/ui/prefs.ui:148 src/ui/prefs.ui:261
-msgid "Timer Input"
-msgstr "Timer Eingabe"
-
-#: src/ui/prefs.ui:151 src/ui/prefs.ui:264
-msgid "Reference start time"
-msgstr "Bezugsstartzeit"
-
-#: src/ui/prefs.ui:152
-msgid "Options: now, HH:MM"
-msgstr "Optionen: now, HH:MM (now:jetzt, HH: Stunde, MM: Minute)"
-
-#: src/ui/prefs.ui:165 src/ui/prefs.ui:183
-msgid "Shutdown slider position (in &#37;)"
-msgstr "Standardposition des Ausschalt-Schiebereglers (in %)"
-
-#: src/ui/prefs.ui:199 src/ui/prefs.ui:312
-msgid "Non-linear scaling or 0 to disable"
-msgstr "Nicht-lineare Skalierung oder 0 für linear"
-
-#: src/ui/prefs.ui:218
-msgid "Maximum shutdown timer value (in minutes)"
-msgstr "Maximaler Ausschalt-Uhrenwert (in Minuten)"
-
-#: src/ui/prefs.ui:247
-msgid "Toggle wake with timer action"
-msgstr "Schalte den Wecker zusammen mit der Ausschaltuhr"
-
-#: src/ui/prefs.ui:265
-msgid "Options: now, shutdown, HH:MM"
-msgstr ""
-"Optionen: now, shutdown, HH:MM (now:jetzt, shutdown:Ausschaltzeit, HH: "
-"Stunde, MM: Minute)"
-
-#: src/ui/prefs.ui:278 src/ui/prefs.ui:296
-msgid "Wake slider position (in &#37;)"
-msgstr "Standardposition des Wecker-Schiebereglers (in %)"
-
-#: src/ui/prefs.ui:331
-msgid "Maximum wake timer value (in minutes)"
-msgstr "Maximaler Wecker-Uhrenwert (in Minuten)"
-
-#: src/ui/prefs.ui:352
-msgid "Display"
-msgstr "Anzeige"
-
-#: src/ui/prefs.ui:356
-msgid "General"
-msgstr "Allgemein"
-
-#: src/ui/prefs.ui:360
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:85
-msgid "Show settings button"
-msgstr "Zeige Einstellungsbutton"
-
-#: src/ui/prefs.ui:372
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:109
-msgid "Show notification text boxes"
-msgstr "Zeige Textbox-Notifikationen"
-
-#: src/ui/prefs.ui:389
-msgid "Show shutdown items"
-msgstr "Zeige Ausschaltoptionen"
-
-#: src/ui/prefs.ui:390
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:128
-msgid ""
-"Comma-separated shutdown modes which are shown in the popup menu (p: "
-"poweroff, s: suspend, r: reboot)"
-msgstr ""
-"Kommagetrennte Ausschaltoptionen, die im Menü erscheinen (p: Herunterfahren, "
-"s: Ruhezustand, r: Neustart)"
-
-#: src/ui/prefs.ui:404
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:91
-msgid "Show shutdown slider"
-msgstr "Zeige Ausschalt-Schieber"
-
-#: src/ui/prefs.ui:416
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:139
-msgid "Show shutdown indicator"
-msgstr "Zeige Ausschalt-Indikator"
-
-#: src/ui/prefs.ui:417
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:140
-msgid "Shows the remaining time until shutdown action"
-msgstr "Zeigt die verbleibende Zeit bis zum Ausschalt-Befehl"
-
-#: src/ui/prefs.ui:429
-msgid "Absolute shutdown time selection"
-msgstr "Absolute Ausschalt-Zeit-Auswahl"
-
-#: src/ui/prefs.ui:446
-msgid "Show wake items"
-msgstr "Zeige Wecker-Optionen"
-
-#: src/ui/prefs.ui:458
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:97
-msgid "Show wake slider"
-msgstr "Zeige Wecker-Schieber"
-
-#: src/ui/prefs.ui:470
-msgid "Absolute wake time selection"
-msgstr "Absolute Weck-Zeit-Auswahl"
-
-#: src/ui/prefs.ui:484
-msgid "Check"
-msgstr "Prüfung"
-
-#: src/ui/prefs.ui:491
-msgid "Enable check"
-msgstr "Verwende Prüfbefehl(e)"
-
-#: src/ui/prefs.ui:492
-msgid ""
-"Script is run in a bash user shell after timer activates. Timer action "
-"proceeds if check terminates successfully."
-msgstr ""
-"Das Skript läuft in einer Bash-Benutzer-Shell nach dem Ablauf der "
-"Ausschaltuhr. Die Ausschaltaktion wird nur fortgesetzt wenn dieses Skript "
-"erfolgreich terminiert."
-
-#: src/ui/prefs.ui:503
-msgid "Check script"
-msgstr "Prüfskript"
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:13
 msgid "Maximum shutdown time (in minutes)"
@@ -569,13 +140,28 @@ msgid "Exponential ramp-up for shutdown time slider"
 msgstr ""
 "Exponentielle Steigung des nicht-linearen Wertes des Ausschalt-Schieberegler"
 
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:85
+#: src/ui/prefs.ui:360
+msgid "Show settings button"
+msgstr "Zeige Einstellungsbutton"
+
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:86
 msgid "Show/hide settings button in widget."
 msgstr "Zeige/verberge Einstellungsbutton im Widget."
 
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:91
+#: src/ui/prefs.ui:404
+msgid "Show shutdown slider"
+msgstr "Zeige Ausschalt-Schieber"
+
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:92
 msgid "Show/hide shutdown slider in widget."
 msgstr "Zeige/verberge Ausschalt-Minuten-Schieber im Widget."
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:97
+#: src/ui/prefs.ui:458
+msgid "Show wake slider"
+msgstr "Zeige Wecker-Schieber"
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:98
 msgid "Show/hide wake slider in widget."
@@ -588,6 +174,11 @@ msgstr "Zeige Wecker-Optionen"
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:104
 msgid "Show/hide all wake items in widget."
 msgstr "Zeige/verberge Wecker-Minuten-Schieber im Widget."
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:109
+#: src/ui/prefs.ui:372
+msgid "Show notification text boxes"
+msgstr "Zeige Textbox-Notifikationen"
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:110
 msgid "Show/hide notification text boxes on screen."
@@ -605,6 +196,11 @@ msgstr ""
 "Schalte Root-Modus an/aus. Im Root-Modus wird das Ausschalten per 'pkexec' "
 "und 'shutdown' Terminal-Kommando ausgeführt."
 
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:121
+#: src/ui/prefs.ui:122
+msgid "Show end-session dialog"
+msgstr "Zeige Sitzungsende-Dialog"
+
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:122
 msgid ""
 "Show the end-session dialog for reboot and shutdown if screensaver is "
@@ -616,6 +212,35 @@ msgstr ""
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:127
 msgid "Shown shutdown modes"
 msgstr "Angezeigte Auschaltoptionen"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:128
+#: src/ui/prefs.ui:390
+msgid ""
+"Comma-separated shutdown modes which are shown in the popup menu (p: "
+"poweroff, s: suspend, r: reboot)"
+msgstr ""
+"Kommagetrennte Ausschaltoptionen, die im Menü erscheinen (p: Herunterfahren, "
+"s: Ruhezustand, r: Neustart)"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:133
+#: src/ui/prefs.ui:116
+msgid "Use mode"
+msgstr "Verwende Option"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:134
+#: src/ui/prefs.ui:117
+msgid "Mode to use for timer action"
+msgstr "Verwendete Ausschaltoption der Stoppuhr"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:139
+#: src/ui/prefs.ui:416
+msgid "Show shutdown indicator"
+msgstr "Zeige Ausschalt-Indikator"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:140
+#: src/ui/prefs.ui:417
+msgid "Shows the remaining time until shutdown action"
+msgstr "Zeigt die verbleibende Zeit bis zum Ausschalt-Befehl"
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:157
 msgid "Check command(s)"
@@ -641,6 +266,382 @@ msgstr "Prüfbefehl wird übersprungen, wenn er deaktiviert ist."
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:170
 msgid "Last selected page in the preferences."
 msgstr "Zuletzt ausgewählte Einstellungsseite."
+
+#: src/ui/prefs.ui:63
+msgid "Install"
+msgstr "Installieren"
+
+#: src/ui/prefs.ui:70
+msgid "Install/Uninstall privileges for this user"
+msgstr "Installiere/Deinstalliere privilegiertes Skript für den Benutzer"
+
+#: src/ui/prefs.ui:71
+msgid "Setup a privileged script and give user access via polkit"
+msgstr ""
+"Konfiguriere ein privilegiertes Skript und gebe Benutzer Zugriff via Polkit"
+
+#: src/ui/prefs.ui:82
+msgid "Install output"
+msgstr "Ausgabe der Installation"
+
+#: src/ui/prefs.ui:109 src/ui/prefs.ui:386
+msgid "Shutdown"
+msgstr "Abschalten"
+
+#: src/ui/prefs.ui:113 src/ui/prefs.ui:243
+msgid "Timer Action"
+msgstr "Timer Aktion"
+
+#: src/ui/prefs.ui:123
+msgid "Shown for reboot and shutdown if screensaver is inactive"
+msgstr ""
+"Angezeigt beim Neustarten und Herunterfahren, wenn Bildschirm inaktiv ist"
+
+#: src/ui/prefs.ui:134
+msgid "Toggle root shutdown with shutdown timer"
+msgstr "Schalte die Root-Absicherung zusammen mit der Ausschaltuhr"
+
+#: src/ui/prefs.ui:135
+msgid "Runs extra 'shutdown -P/-r' command for shutdown or reboot"
+msgstr ""
+"Führt extra 'shutdown -P/-r' Befehl beim Neustarten oder Herunterfahren aus"
+
+#: src/ui/prefs.ui:148 src/ui/prefs.ui:261
+msgid "Timer Input"
+msgstr "Timer Eingabe"
+
+#: src/ui/prefs.ui:151 src/ui/prefs.ui:264
+msgid "Reference start time"
+msgstr "Bezugsstartzeit"
+
+#: src/ui/prefs.ui:152
+msgid "Options: now, HH:MM"
+msgstr "Optionen: now, HH:MM (now:jetzt, HH: Stunde, MM: Minute)"
+
+#: src/ui/prefs.ui:165 src/ui/prefs.ui:183
+msgid "Shutdown slider position (in &#37;)"
+msgstr "Standardposition des Ausschalt-Schiebereglers (in %)"
+
+#: src/ui/prefs.ui:199 src/ui/prefs.ui:312
+msgid "Non-linear scaling or 0 to disable"
+msgstr "Nicht-lineare Skalierung oder 0 für linear"
+
+#: src/ui/prefs.ui:218
+msgid "Maximum shutdown timer value (in minutes)"
+msgstr "Maximaler Ausschalt-Uhrenwert (in Minuten)"
+
+#: src/ui/prefs.ui:239 src/ui/prefs.ui:442 src/modules/schedule-info.js:134
+msgid "Wake"
+msgstr "Wecker"
+
+#: src/ui/prefs.ui:247
+msgid "Toggle wake with timer action"
+msgstr "Schalte den Wecker zusammen mit der Ausschaltuhr"
+
+#: src/ui/prefs.ui:265
+msgid "Options: now, shutdown, HH:MM"
+msgstr ""
+"Optionen: now, shutdown, HH:MM (now:jetzt, shutdown:Ausschaltzeit, HH: "
+"Stunde, MM: Minute)"
+
+#: src/ui/prefs.ui:278 src/ui/prefs.ui:296
+msgid "Wake slider position (in &#37;)"
+msgstr "Standardposition des Wecker-Schiebereglers (in %)"
+
+#: src/ui/prefs.ui:331
+msgid "Maximum wake timer value (in minutes)"
+msgstr "Maximaler Wecker-Uhrenwert (in Minuten)"
+
+#: src/ui/prefs.ui:352
+msgid "Display"
+msgstr "Anzeige"
+
+#: src/ui/prefs.ui:356
+msgid "General"
+msgstr "Allgemein"
+
+#: src/ui/prefs.ui:389
+msgid "Show shutdown items"
+msgstr "Zeige Ausschaltoptionen"
+
+#: src/ui/prefs.ui:429
+msgid "Absolute shutdown time selection"
+msgstr "Absolute Ausschalt-Zeit-Auswahl"
+
+#: src/ui/prefs.ui:446
+msgid "Show wake items"
+msgstr "Zeige Wecker-Optionen"
+
+#: src/ui/prefs.ui:470
+msgid "Absolute wake time selection"
+msgstr "Absolute Weck-Zeit-Auswahl"
+
+#: src/ui/prefs.ui:484
+msgid "Check"
+msgstr "Prüfung"
+
+#: src/ui/prefs.ui:491
+msgid "Enable check"
+msgstr "Verwende Prüfbefehl(e)"
+
+#: src/ui/prefs.ui:492
+msgid ""
+"Script is run in a bash user shell after timer activates. Timer action "
+"proceeds if check terminates successfully."
+msgstr ""
+"Das Skript läuft in einer Bash-Benutzer-Shell nach dem Ablauf der "
+"Ausschaltuhr. Die Ausschaltaktion wird nur fortgesetzt wenn dieses Skript "
+"erfolgreich terminiert."
+
+#: src/ui/prefs.ui:503
+msgid "Check script"
+msgstr "Prüfskript"
+
+#: src/tool/installer.sh:66
+msgid "Failed"
+msgstr "Fehlgeschlagen"
+
+#: src/tool/installer.sh:68
+msgid "Success"
+msgstr "Erfolg"
+
+#: src/tool/installer.sh:192 src/tool/installer.sh:199
+#: src/tool/installer.sh:204
+msgid "Installing"
+msgstr "Installiere"
+
+#: src/tool/installer.sh:192 src/tool/installer.sh:226
+#: src/tool/installer.sh:244 src/tool/installer.sh:249
+msgid "tool"
+msgstr "Werkzeug"
+
+#: src/tool/installer.sh:198
+msgid "Using legacy policykit install"
+msgstr "Verwende PolicyKit-Installation für alte PolicyKit-Version"
+
+#: src/tool/installer.sh:199 src/tool/installer.sh:233
+msgid "policykit action"
+msgstr "PolicyKit-Aktion"
+
+#: src/tool/installer.sh:204 src/tool/installer.sh:240
+#: src/tool/installer.sh:252
+msgid "policykit rule"
+msgstr "PolicyKit-Regel"
+
+#: src/tool/installer.sh:226 src/tool/installer.sh:233
+#: src/tool/installer.sh:240 src/tool/installer.sh:244
+#: src/tool/installer.sh:252
+msgid "Uninstalling"
+msgstr "Deinstalliere"
+
+#: src/tool/installer.sh:227 src/tool/installer.sh:234
+#: src/tool/installer.sh:241 src/tool/installer.sh:247
+#: src/tool/installer.sh:255
+msgid "cannot remove"
+msgstr "entfernen nicht möglich"
+
+#: src/tool/installer.sh:249 src/tool/installer.sh:257
+msgid "not installed at"
+msgstr "nicht installiert in"
+
+#: src/tool/installer.sh:257
+msgid "policy rule"
+msgstr "Policy-Regel"
+
+#: src/modules/install.js:32
+msgid "START"
+msgstr "START"
+
+#: src/modules/install.js:42
+msgid "END"
+msgstr "ENDE"
+
+#: src/modules/install.js:44
+msgid "FAIL"
+msgstr "FEHLER"
+
+#: src/modules/install.js:62
+msgid "install"
+msgstr "Installieren"
+
+#: src/modules/install.js:62
+msgid "uninstall"
+msgstr "Deinstallieren"
+
+#: src/modules/menu-item.js:68 src/modules/menu-item.js:264
+msgid "Shutdown Timer"
+msgstr "Ausschaltuhr"
+
+#: src/modules/menu-item.js:91
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: src/modules/menu-item.js:251
+msgid "now"
+msgstr "jetzt"
+
+#: src/modules/menu-item.js:267
+#, javascript-format
+msgid "Check %s for %s"
+msgstr "Prüfe %s seit %s"
+
+#: src/modules/menu-item.js:322 src/modules/menu-item.js:361
+msgctxt "absolute time notation"
+msgid "%a, %R"
+msgstr ""
+
+#: src/modules/menu-item.js:325
+#, javascript-format
+msgid "%s hr"
+msgid_plural "%s hrs"
+msgstr[0] "%s Std."
+msgstr[1] "%s Stdn."
+
+#: src/modules/menu-item.js:326 src/modules/schedule-info.js:156
+#, javascript-format
+msgid "%s min"
+msgid_plural "%s mins"
+msgstr[0] "%s Min."
+msgstr[1] "%s Min."
+
+#: src/modules/menu-item.js:332
+#, javascript-format
+msgid "%s (protect)"
+msgstr "%s (sicher)"
+
+#: src/modules/menu-item.js:356
+#, javascript-format
+msgctxt "WakeButtonText"
+msgid "%s at %s"
+msgstr "%s am %s"
+
+#: src/modules/menu-item.js:357
+#, javascript-format
+msgctxt "WakeButtonText"
+msgid "%s after %s"
+msgstr "%s in %s"
+
+#: src/modules/menu-item.js:364 src/modules/schedule-info.js:150
+#: src/modules/timer.js:124
+#, javascript-format
+msgid "%s hour"
+msgid_plural "%s hours"
+msgstr[0] "%s Std."
+msgstr[1] "%s Stdn."
+
+#: src/modules/menu-item.js:365 src/modules/timer.js:125
+#, javascript-format
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] "%s Minute"
+msgstr[1] "%s Minuten"
+
+#: src/modules/root-mode.js:72
+msgid "Can not cancel root process!"
+msgstr "Root-Prozess kann nicht abgebrochen werden."
+
+#: src/modules/root-mode.js:74
+msgid "CANCEL"
+msgstr "ABBRUCH"
+
+#: src/modules/root-mode.js:169
+msgid "Privileged script installation required!"
+msgstr "Installation des privilegierten Skriptes erforderlich!"
+
+#: src/modules/schedule-info.js:42
+msgid "suspend"
+msgstr "Ruhezustand"
+
+#: src/modules/schedule-info.js:43
+msgid "shutdown"
+msgstr "Abschalten"
+
+#: src/modules/schedule-info.js:44
+msgid "reboot"
+msgstr "Neustart"
+
+#: src/modules/schedule-info.js:45
+msgid "wakeup"
+msgstr "Wecken"
+
+#: src/modules/schedule-info.js:53
+#, javascript-format
+msgid "%s until %s"
+msgstr "%s bis z. %s"
+
+#: src/modules/schedule-info.js:58
+#, javascript-format
+msgid "%s (sys)"
+msgstr ""
+
+#: src/modules/schedule-info.js:67
+msgctxt "absolute schedule notation"
+msgid "%a, %T"
+msgstr ""
+
+#: src/modules/schedule-info.js:131
+msgid "Suspend"
+msgstr "Ruhezustand"
+
+#: src/modules/schedule-info.js:132
+msgid "Power Off"
+msgstr "Ausschalten"
+
+#: src/modules/schedule-info.js:133
+msgid "Restart"
+msgstr "Neustart"
+
+#: src/modules/schedule-info.js:135
+msgid "No Wake"
+msgstr "Kein Wecken"
+
+#: src/modules/schedule-info.js:152
+#, javascript-format
+msgid "%s sec"
+msgid_plural "%s secs"
+msgstr[0] "%s Sek."
+msgstr[1] "%s Sekn."
+
+#: src/modules/timer.js:120
+#, javascript-format
+msgctxt "StartSchedulePopup"
+msgid "%s in %s"
+msgstr "%s in %s"
+
+#: src/modules/timer.js:160
+msgid "Confirmation canceled"
+msgstr "Prüfung abgebrochen"
+
+#: src/modules/timer.js:160
+msgid "Shutdown Timer stopped"
+msgstr "Ausschaltuhr gestoppt"
+
+#: src/modules/timer.js:179
+#, javascript-format
+msgid "Waiting for %s confirmation"
+msgstr "Warte auf Bestätigung für %s"
+
+#: src/modules/timer.js:213
+#, javascript-format
+msgctxt "CheckCommand"
+msgid "%s aborted (Code: %s)"
+msgstr "%s abgebrochen (Code: %s)"
+
+#: src/modules/timer.js:254 src/modules/timer.js:298
+#, javascript-format
+msgctxt "Error"
+msgid ""
+"%s\n"
+"%s"
+msgstr ""
+
+#: src/modules/timer.js:254
+msgid "Wake action failed!"
+msgstr "Wecker-Befehl fehlgeschlagen!"
+
+#: src/modules/timer.js:298
+msgid "Root mode protection failed!"
+msgstr "Root-Modus-Absicherung fehlgeschlagen!"
 
 #~ msgid "Wake after"
 #~ msgstr "Wecke nach"
