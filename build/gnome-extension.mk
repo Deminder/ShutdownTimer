@@ -8,8 +8,6 @@ endif
 setVersion = $(shell sed -Ei "s/(^ *?\"version\": *?)([0-9]+)(.*)/\1$(1)\3/" $(METADATA_FILE))
 getMeta = $(shell grep "$(1)" $(METADATA_FILE) | cut -d\" -f 4)
 
-setConst = $(let mtime,$(shell stat -c %y "$(1)"),\
-					 $(shell sed -Ei "s/^((export )?const $(2) = ).*?;/\1$(3);/" "$(1)" && touch -d "$(mtime)" "$(1)"))
 
 PACKAGE_NAME := $(call getMeta,name)
 UUID := $(call getMeta,uuid)
@@ -34,18 +32,26 @@ DEBUG_ZIP := $(call target-zip,debug)
 all: $(DEFAULT_ZIP) $(DEBUG_ZIP)
 
 
+.SILENT .NOTPARALLEL .ONESHELL: $(DEFAULT_ZIP) $(DEBUG_ZIP)
 $(DEFAULT_ZIP) $(DEBUG_ZIP): $(SOURCE_FILES) $(MO_FILES) $(GSCHEMAS) $(GSCHEMAS_COMPILED)
-	$(info Packing $(ZIP_FILE) version $(VERSION))
-	@mkdir -p $(@D)
+	set -e
+	mkdir -p $(@D)
+	function setConst() {
+		local mtime=$$(stat -c %y "$$1")
+		sed -Ei "s/^((export )?const $$2 = ).*?;/\1$$3;/" "$$1"
+		touch -d "$$mtime" "$$1"
+		echo $$1: "$$(grep -E 'const '$$2 $$1)"
+	}
 ifneq ($(strip $(TRANSLATION_MODULE)),)
-	$(call setConst,$(TRANSLATION_MODULE),domain,\'$(GETTEXTDOMAIN)\')
-	@echo $(TRANSLATION_MODULE): "$(shell grep -E 'const domain' $(TRANSLATION_MODULE))"
+	setConst $(TRANSLATION_MODULE) domain \'$(GETTEXTDOMAIN)\'
 endif
-	$(call setConst,$(DEBUGMODE_MODULE),debugMode,$(shell [ $(@D) = $(TARGET_DIR)/debug ] && echo "true" || echo "false"))
-	@echo $(DEBUGMODE_MODULE): "$(shell grep -E 'export const debugMode' $(DEBUGMODE_MODULE))"
+	trap "setConst $(DEBUGMODE_MODULE) debugMode false" EXIT
+	setConst $(DEBUGMODE_MODULE) debugMode $(shell [ $(@D) = $(TARGET_DIR)/debug ] && echo "true" || echo "false")
 
-	@(cd $(SRC_DIR) && zip -r - . 2>/dev/null) > "$@"
-	@zip -r "$@" LICENSES 2>&1 >/dev/null
+	echo -n "Packing $(ZIP_FILE) version $(VERSION) ... "
+	(cd $(SRC_DIR) && zip -r - . 2>/dev/null) > "$@"
+	zip -r "$@" LICENSES 2>&1 >/dev/null
+	echo [OK]
 
 zip: $(DEFAULT_ZIP)
 debug-zip: $(DEBUG_ZIP)
@@ -61,7 +67,7 @@ $(POT_MAIN): $(TRANSLATABLE_FILES)
 			--keyword="_n:1,2" \
 			--keyword="C_:1c,2" \
 			--output="$@" \
-			$^
+			$(sort $^)
 
 $(PO_FILES): $(POT_MAIN)
 	@echo -n $(patsubst %.po,%,$(notdir $@))
@@ -119,7 +125,6 @@ debug-guest: $(DEBUG_ZIP)
 	@$(GUEST_SSHCMD) "$(GUEST_SSHADDR)" "gnome-extensions install --force ~/Downloads/$(notdir $<) && killall -SIGQUIT gnome-shell"
 
 clean:
-	$(call setConst,$(DEBUGMODE_MODULE),debugMode,false)
 	-rm -rf $(LOCALE_DIR)
 	-rm -rf $(TARGET_DIR)
 	-rm -f $(GSCHEMAS_COMPILED)
