@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-09 22:09+0200\n"
+"POT-Creation-Date: 2023-09-11 17:19+0200\n"
 "PO-Revision-Date: 2022-04-07 22:08+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: \n"
@@ -19,6 +19,205 @@ msgstr ""
 "X-Poedit-KeywordsList: _\n"
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: .\n"
+
+#: src/modules/install.js:32
+msgid "START"
+msgstr ""
+
+#: src/modules/install.js:42
+msgid "END"
+msgstr ""
+
+#: src/modules/install.js:44
+msgid "FAIL"
+msgstr ""
+
+#: src/modules/install.js:62
+msgid "install"
+msgstr ""
+
+#: src/modules/install.js:62
+msgid "uninstall"
+msgstr ""
+
+#: src/modules/menu-item.js:68 src/modules/menu-item.js:264
+msgid "Shutdown Timer"
+msgstr "Αυτόματη Απενεργοποίηση "
+
+#: src/modules/menu-item.js:91
+msgid "Settings"
+msgstr "Ρυθμίσεις"
+
+#: src/modules/menu-item.js:251
+msgid "now"
+msgstr ""
+
+#: src/modules/menu-item.js:267
+#, javascript-format
+msgid "Check %s for %s"
+msgstr ""
+
+#: src/modules/menu-item.js:322 src/modules/menu-item.js:361
+msgctxt "absolute time notation"
+msgid "%a, %R"
+msgstr ""
+
+#: src/modules/menu-item.js:325
+#, javascript-format
+msgid "%s hr"
+msgid_plural "%s hrs"
+msgstr[0] "%s ώρα"
+msgstr[1] "%s ώρες"
+
+#: src/modules/menu-item.js:326 src/modules/schedule-info.js:156
+#, javascript-format
+msgid "%s min"
+msgid_plural "%s mins"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/modules/menu-item.js:332
+#, javascript-format
+msgid "%s (protect)"
+msgstr ""
+
+#: src/modules/menu-item.js:356
+#, javascript-format
+msgctxt "WakeButtonText"
+msgid "%s at %s"
+msgstr ""
+
+#: src/modules/menu-item.js:357
+#, javascript-format
+msgctxt "WakeButtonText"
+msgid "%s after %s"
+msgstr ""
+
+#: src/modules/menu-item.js:364 src/modules/schedule-info.js:150
+#: src/modules/timer.js:124
+#, javascript-format
+msgid "%s hour"
+msgid_plural "%s hours"
+msgstr[0] "%s ώρα"
+msgstr[1] "%s ώρες"
+
+#: src/modules/menu-item.js:365 src/modules/timer.js:125
+#, javascript-format
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] "%s λεπτό"
+msgstr[1] "%s λεπτά"
+
+#: src/modules/root-mode.js:72
+msgid "Can not cancel root process!"
+msgstr ""
+
+#: src/modules/root-mode.js:74
+msgid "CANCEL"
+msgstr ""
+
+#: src/modules/root-mode.js:169
+msgid "Privileged script installation required!"
+msgstr ""
+
+#: src/modules/schedule-info.js:42
+msgid "suspend"
+msgstr ""
+
+#: src/modules/schedule-info.js:43
+msgid "shutdown"
+msgstr "απενεργοποίηση"
+
+#: src/modules/schedule-info.js:44
+msgid "reboot"
+msgstr ""
+
+#: src/modules/schedule-info.js:45
+msgid "wakeup"
+msgstr ""
+
+#: src/modules/schedule-info.js:53
+#, javascript-format
+msgid "%s until %s"
+msgstr "%s μέχρι την %s"
+
+#: src/modules/schedule-info.js:58
+#, javascript-format
+msgid "%s (sys)"
+msgstr ""
+
+#: src/modules/schedule-info.js:67
+msgctxt "absolute schedule notation"
+msgid "%a, %T"
+msgstr ""
+
+#: src/modules/schedule-info.js:131
+msgid "Suspend"
+msgstr ""
+
+#: src/modules/schedule-info.js:132
+msgid "Power Off"
+msgstr ""
+
+#: src/modules/schedule-info.js:133
+msgid "Restart"
+msgstr ""
+
+#: src/modules/schedule-info.js:134 src/ui/prefs.ui:239 src/ui/prefs.ui:442
+msgid "Wake"
+msgstr ""
+
+#: src/modules/schedule-info.js:135
+msgid "No Wake"
+msgstr ""
+
+#: src/modules/schedule-info.js:152
+#, javascript-format
+msgid "%s sec"
+msgid_plural "%s secs"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/modules/timer.js:120
+#, javascript-format
+msgctxt "StartSchedulePopup"
+msgid "%s in %s"
+msgstr "%s σε %s"
+
+#: src/modules/timer.js:160
+msgid "Confirmation canceled"
+msgstr ""
+
+#: src/modules/timer.js:160
+msgid "Shutdown Timer stopped"
+msgstr "Η Αυτόματη Απενεργοποίηση σταμάτησε"
+
+#: src/modules/timer.js:179
+#, javascript-format
+msgid "Waiting for %s confirmation"
+msgstr ""
+
+#: src/modules/timer.js:213
+#, javascript-format
+msgctxt "CheckCommand"
+msgid "%s aborted (Code: %s)"
+msgstr ""
+
+#: src/modules/timer.js:254 src/modules/timer.js:298
+#, javascript-format
+msgctxt "Error"
+msgid ""
+"%s\n"
+"%s"
+msgstr ""
+
+#: src/modules/timer.js:254
+msgid "Wake action failed!"
+msgstr ""
+
+#: src/modules/timer.js:298
+msgid "Root mode protection failed!"
+msgstr ""
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:13
 msgid "Maximum shutdown time (in minutes)"
@@ -247,6 +446,57 @@ msgstr ""
 msgid "Last selected page in the preferences."
 msgstr ""
 
+#: src/tool/installer.sh:66
+msgid "Failed"
+msgstr ""
+
+#: src/tool/installer.sh:68
+msgid "Success"
+msgstr ""
+
+#: src/tool/installer.sh:192 src/tool/installer.sh:199
+#: src/tool/installer.sh:204
+msgid "Installing"
+msgstr ""
+
+#: src/tool/installer.sh:192 src/tool/installer.sh:226
+#: src/tool/installer.sh:244 src/tool/installer.sh:249
+msgid "tool"
+msgstr ""
+
+#: src/tool/installer.sh:198
+msgid "Using legacy policykit install"
+msgstr ""
+
+#: src/tool/installer.sh:199 src/tool/installer.sh:233
+msgid "policykit action"
+msgstr ""
+
+#: src/tool/installer.sh:204 src/tool/installer.sh:240
+#: src/tool/installer.sh:252
+msgid "policykit rule"
+msgstr ""
+
+#: src/tool/installer.sh:226 src/tool/installer.sh:233
+#: src/tool/installer.sh:240 src/tool/installer.sh:244
+#: src/tool/installer.sh:252
+msgid "Uninstalling"
+msgstr ""
+
+#: src/tool/installer.sh:227 src/tool/installer.sh:234
+#: src/tool/installer.sh:241 src/tool/installer.sh:247
+#: src/tool/installer.sh:255
+msgid "cannot remove"
+msgstr ""
+
+#: src/tool/installer.sh:249 src/tool/installer.sh:257
+msgid "not installed at"
+msgstr ""
+
+#: src/tool/installer.sh:257
+msgid "policy rule"
+msgstr ""
+
 #: src/ui/prefs.ui:63
 msgid "Install"
 msgstr ""
@@ -307,10 +557,6 @@ msgstr ""
 msgid "Maximum shutdown timer value (in minutes)"
 msgstr "Μέγιστος χρόνος αναμονής (σε λεπτά)"
 
-#: src/ui/prefs.ui:239 src/ui/prefs.ui:442 src/modules/schedule-info.js:134
-msgid "Wake"
-msgstr ""
-
 #: src/ui/prefs.ui:247
 msgid "Toggle wake with timer action"
 msgstr ""
@@ -367,252 +613,6 @@ msgstr ""
 
 #: src/ui/prefs.ui:503
 msgid "Check script"
-msgstr ""
-
-#: src/tool/installer.sh:66
-msgid "Failed"
-msgstr ""
-
-#: src/tool/installer.sh:68
-msgid "Success"
-msgstr ""
-
-#: src/tool/installer.sh:192 src/tool/installer.sh:199
-#: src/tool/installer.sh:204
-msgid "Installing"
-msgstr ""
-
-#: src/tool/installer.sh:192 src/tool/installer.sh:226
-#: src/tool/installer.sh:244 src/tool/installer.sh:249
-msgid "tool"
-msgstr ""
-
-#: src/tool/installer.sh:198
-msgid "Using legacy policykit install"
-msgstr ""
-
-#: src/tool/installer.sh:199 src/tool/installer.sh:233
-msgid "policykit action"
-msgstr ""
-
-#: src/tool/installer.sh:204 src/tool/installer.sh:240
-#: src/tool/installer.sh:252
-msgid "policykit rule"
-msgstr ""
-
-#: src/tool/installer.sh:226 src/tool/installer.sh:233
-#: src/tool/installer.sh:240 src/tool/installer.sh:244
-#: src/tool/installer.sh:252
-msgid "Uninstalling"
-msgstr ""
-
-#: src/tool/installer.sh:227 src/tool/installer.sh:234
-#: src/tool/installer.sh:241 src/tool/installer.sh:247
-#: src/tool/installer.sh:255
-msgid "cannot remove"
-msgstr ""
-
-#: src/tool/installer.sh:249 src/tool/installer.sh:257
-msgid "not installed at"
-msgstr ""
-
-#: src/tool/installer.sh:257
-msgid "policy rule"
-msgstr ""
-
-#: src/modules/install.js:32
-msgid "START"
-msgstr ""
-
-#: src/modules/install.js:42
-msgid "END"
-msgstr ""
-
-#: src/modules/install.js:44
-msgid "FAIL"
-msgstr ""
-
-#: src/modules/install.js:62
-msgid "install"
-msgstr ""
-
-#: src/modules/install.js:62
-msgid "uninstall"
-msgstr ""
-
-#: src/modules/menu-item.js:68 src/modules/menu-item.js:264
-msgid "Shutdown Timer"
-msgstr "Αυτόματη Απενεργοποίηση "
-
-#: src/modules/menu-item.js:91
-msgid "Settings"
-msgstr "Ρυθμίσεις"
-
-#: src/modules/menu-item.js:251
-msgid "now"
-msgstr ""
-
-#: src/modules/menu-item.js:267
-#, javascript-format
-msgid "Check %s for %s"
-msgstr ""
-
-#: src/modules/menu-item.js:322 src/modules/menu-item.js:361
-msgctxt "absolute time notation"
-msgid "%a, %R"
-msgstr ""
-
-#: src/modules/menu-item.js:325
-#, javascript-format
-msgid "%s hr"
-msgid_plural "%s hrs"
-msgstr[0] "%s ώρα"
-msgstr[1] "%s ώρες"
-
-#: src/modules/menu-item.js:326 src/modules/schedule-info.js:156
-#, javascript-format
-msgid "%s min"
-msgid_plural "%s mins"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/modules/menu-item.js:332
-#, javascript-format
-msgid "%s (protect)"
-msgstr ""
-
-#: src/modules/menu-item.js:356
-#, javascript-format
-msgctxt "WakeButtonText"
-msgid "%s at %s"
-msgstr ""
-
-#: src/modules/menu-item.js:357
-#, javascript-format
-msgctxt "WakeButtonText"
-msgid "%s after %s"
-msgstr ""
-
-#: src/modules/menu-item.js:364 src/modules/schedule-info.js:150
-#: src/modules/timer.js:124
-#, javascript-format
-msgid "%s hour"
-msgid_plural "%s hours"
-msgstr[0] "%s ώρα"
-msgstr[1] "%s ώρες"
-
-#: src/modules/menu-item.js:365 src/modules/timer.js:125
-#, javascript-format
-msgid "%s minute"
-msgid_plural "%s minutes"
-msgstr[0] "%s λεπτό"
-msgstr[1] "%s λεπτά"
-
-#: src/modules/root-mode.js:72
-msgid "Can not cancel root process!"
-msgstr ""
-
-#: src/modules/root-mode.js:74
-msgid "CANCEL"
-msgstr ""
-
-#: src/modules/root-mode.js:169
-msgid "Privileged script installation required!"
-msgstr ""
-
-#: src/modules/schedule-info.js:42
-msgid "suspend"
-msgstr ""
-
-#: src/modules/schedule-info.js:43
-msgid "shutdown"
-msgstr "απενεργοποίηση"
-
-#: src/modules/schedule-info.js:44
-msgid "reboot"
-msgstr ""
-
-#: src/modules/schedule-info.js:45
-msgid "wakeup"
-msgstr ""
-
-#: src/modules/schedule-info.js:53
-#, javascript-format
-msgid "%s until %s"
-msgstr "%s μέχρι την %s"
-
-#: src/modules/schedule-info.js:58
-#, javascript-format
-msgid "%s (sys)"
-msgstr ""
-
-#: src/modules/schedule-info.js:67
-msgctxt "absolute schedule notation"
-msgid "%a, %T"
-msgstr ""
-
-#: src/modules/schedule-info.js:131
-msgid "Suspend"
-msgstr ""
-
-#: src/modules/schedule-info.js:132
-msgid "Power Off"
-msgstr ""
-
-#: src/modules/schedule-info.js:133
-msgid "Restart"
-msgstr ""
-
-#: src/modules/schedule-info.js:135
-msgid "No Wake"
-msgstr ""
-
-#: src/modules/schedule-info.js:152
-#, javascript-format
-msgid "%s sec"
-msgid_plural "%s secs"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/modules/timer.js:120
-#, javascript-format
-msgctxt "StartSchedulePopup"
-msgid "%s in %s"
-msgstr "%s σε %s"
-
-#: src/modules/timer.js:160
-msgid "Confirmation canceled"
-msgstr ""
-
-#: src/modules/timer.js:160
-msgid "Shutdown Timer stopped"
-msgstr "Η Αυτόματη Απενεργοποίηση σταμάτησε"
-
-#: src/modules/timer.js:179
-#, javascript-format
-msgid "Waiting for %s confirmation"
-msgstr ""
-
-#: src/modules/timer.js:213
-#, javascript-format
-msgctxt "CheckCommand"
-msgid "%s aborted (Code: %s)"
-msgstr ""
-
-#: src/modules/timer.js:254 src/modules/timer.js:298
-#, javascript-format
-msgctxt "Error"
-msgid ""
-"%s\n"
-"%s"
-msgstr ""
-
-#: src/modules/timer.js:254
-msgid "Wake action failed!"
-msgstr ""
-
-#: src/modules/timer.js:298
-msgid "Root mode protection failed!"
 msgstr ""
 
 #, javascript-format
