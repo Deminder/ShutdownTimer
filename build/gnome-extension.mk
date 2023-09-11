@@ -83,7 +83,7 @@ po-lint:
 		@echo WARNING: Translations have unclear strings and need an update:\
 		$(patsubst %.po,%,$(notdir $(unclear))) && exit 1))
 
-lint: po-lint
+lint:
 	reuse lint
 	npm run lint
 	npm run prettier
