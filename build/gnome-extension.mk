@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+SHELL := /bin/bash
+
 METADATA_FILE := $(SRC_DIR)/metadata.json
 ifeq ($(wildcard $(METADATA_FILE)),)
 	$(error No extension metadata file found: $(METADATA_FILE)!)
