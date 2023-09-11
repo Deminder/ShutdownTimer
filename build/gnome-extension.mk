@@ -106,8 +106,33 @@ $(1): $(2)
 		echo "Extension is installed$(3). Now restart the GNOME Shell." || (echo "ERROR: Could not install the extension!" && exit 1)
 endef
 
-$(eval $(call INSTALL_EXTENSION,install,$(DEFAULT_ZIP),))
+$(eval $(call INSTALL_EXTENSION,default-install,$(DEFAULT_ZIP),))
 $(eval $(call INSTALL_EXTENSION,debug-install,$(DEBUG_ZIP), with debug enabled))
+
+.ONESHELL .SILENT .PHONY: install
+install:
+	set -e
+	function hasVersionSupport() {
+		python -c 'import json; import sys; any(sys.argv[1].startswith(v) for v in json.load(sys.stdin)["shell-version"]) or exit(1)' "$$1"
+	}
+	GNOME_VERSION=$$(gnome-shell --version | cut -d' ' -f3)
+	if cat $(SRC_DIR)/metadata.json | hasVersionSupport "$$GNOME_VERSION"
+	then
+		make default-install
+	fi
+	for version in {$(VERSION)..15}
+	do
+		tag=$$(git tag -l | grep -E "^(r|v)$$version$$" | head -n 1)
+		if git show $${tag}:$(SRC_DIR)/metadata.json 2>/dev/null | hasVersionSupport "$$GNOME_VERSION"
+		then
+			git checkout "$$tag" || ( echo -e "\n\nFAILED install: could not checkout $${tag}!\n" && exit 1 )
+			echo -e "\n\nInstalling $$tag for GNOME shell $$GNOME_VERSION"
+			make install
+			exit 0
+		fi
+	done
+	echo "FAILED: No support for GNOME shell $$GNOME_VERSION" && exit 1
+
 
 NEXT_VERSION = $(shell echo 1 + $(VERSION) | bc)
 release: $(DEFAULT_ZIP) | lint
@@ -129,4 +154,4 @@ clean:
 	-rm -rf $(TARGET_DIR)
 	-rm -f $(GSCHEMAS_COMPILED)
 
-.PHONY: release clean lint po-lint zip debug-zip
+.PHONY: release clean lint po-lint zip debug-zip install
