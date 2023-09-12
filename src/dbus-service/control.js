@@ -3,9 +3,9 @@
 
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
-import { gettext as _ } from './translation.js';
+import { gettext as _ } from '../modules/translation.js';
 
-import { logDebug } from './util.js';
+import { logDebug } from '../modules/util.js';
 
 function readLine(stream, cancellable) {
   return new Promise((resolve, reject) => {
@@ -160,7 +160,7 @@ export function installedScriptPath() {
   return null;
 }
 
-function runWithScript(args, noScriptArgs) {
+function execControlScript(args, noScriptArgs) {
   const installedScript = installedScriptPath();
   if (installedScript !== null) {
     return execCheck(['pkexec', installedScript].concat(args), null, false);
@@ -171,9 +171,9 @@ function runWithScript(args, noScriptArgs) {
   return execCheck(noScriptArgs, null, false);
 }
 
-function shutdown(minutes, reboot = false) {
+export function shutdown(minutes, reboot = false) {
   logDebug(`[root-shutdown] ${minutes} minutes, reboot: ${reboot}`);
-  return runWithScript(
+  return execControlScript(
     [reboot ? 'reboot' : 'shutdown', `${minutes}`],
     ['shutdown', reboot ? '-r' : '-P', `${minutes}`]
   );
@@ -181,24 +181,24 @@ function shutdown(minutes, reboot = false) {
 
 function shutdownCancel() {
   logDebug('[root-shutdown] cancel');
-  return runWithScript(['shutdown-cancel'], ['shutdown', '-c']);
+  return execControlScript(['shutdown-cancel'], ['shutdown', '-c']);
 }
 
 export function wake(minutes) {
-  return runWithScript(['wake', `${minutes}`]);
+  return execControlScript(['wake', `${minutes}`]);
 }
 
 export function wakeCancel() {
-  return runWithScript(['wake-cancel']);
+  return execControlScript(['wake-cancel']);
 }
 
 export async function stopRootModeProtection(info) {
-  if (['poweroff', 'reboot'].includes(info.mode)) {
+  if (['PowerOff', 'Reboot'].includes(info.mode)) {
     await shutdownCancel();
   }
 }
 export async function startRootModeProtection(info) {
-  if (['poweroff', 'reboot'].includes(info.mode)) {
-    await shutdown(Math.max(0, info.minutes) + 1, info.mode === 'reboot');
+  if (['PowerOff', 'Reboot'].includes(info.mode)) {
+    await shutdown(Math.max(0, info.minutes) + 1, info.mode === 'Reboot');
   }
 }

@@ -7,7 +7,11 @@ import Gio from 'gi://Gio';
 import { ExtensionPreferences } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import { Install } from './modules/install.js';
-import { modeLabel, MODES } from './modules/schedule-info.js';
+import {
+  actionLabel,
+  ACTIONS,
+  mapLegacyAction,
+} from './dbus-service/action.js';
 import { logDebug, Idle } from './modules/util.js';
 
 export default class ShutdownTimerPreferences extends ExtensionPreferences {
@@ -121,19 +125,19 @@ export default class ShutdownTimerPreferences extends ExtensionPreferences {
         }
         if (compId === 'shutdown_mode_combo') {
           const model = new Gtk.StringList();
-          for (const mode of Object.values(MODES)) {
-            model.append(modeLabel(mode));
+          for (const action of Object.keys(ACTIONS)) {
+            model.append(actionLabel(action));
           }
           comp.model = model;
           const updateComboRow = () => {
-            const index = MODES.indexOf(
-              settings.get_string('shutdown-mode-value')
-            );
+            const index = ACTIONS[
+              mapLegacyAction(settings.get_string('shutdown-mode-value'))
+            ];
             if (index >= 0 && index !== comp.selected) comp.selected = index;
           };
           comp.connect('notify::selected', () => {
-            const mode = MODES[comp.selected];
-            if (mode) settings.set_string('shutdown-mode-value', mode);
+            const action = Object.entries(ACTIONS).find(([_, id]) => id === comp.selected)[0];
+            if (action) settings.set_string('shutdown-mode-value', action);
           });
           const comboHandlerId = settings.connect(
             'changed::shutdown-mode-value',

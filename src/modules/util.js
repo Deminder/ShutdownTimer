@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import GLib from 'gi://GLib';
+import Gio from 'gi://Gio';
 
 export const debugMode = false;
 
@@ -18,16 +19,39 @@ export function logDebug(...args) {
   }
 }
 
-export function proxyPromise(ProxyType, session, dest, objectPath) {
-  return new Promise((resolve, reject) => {
-    new ProxyType(session, dest, objectPath, (proxy, error) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(proxy);
-      }
-    });
+export async function proxyPromise(
+  ProxyTypeOrName,
+  session,
+  dest,
+  objectPath,
+  cancellable = null
+) {
+  if (typeof ProxyTypeOrName === 'string') {
+    try {
+      ProxyTypeOrName = Gio.DBusProxy.makeProxyWrapper(
+        await loadInterfaceXML(ProxyTypeOrName, cancellable)
+      );
+    } catch (err) {
+      console.error('[proxyPromise]', err);
+      return null;
+    }
+  }
+  const p = await new Promise((resolve, reject) => {
+    new ProxyTypeOrName(
+      session,
+      dest,
+      objectPath,
+      (proxy, error) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(proxy);
+        }
+      },
+      cancellable
+    );
   });
+  return p;
 }
 
 export class Idle {
@@ -92,4 +116,96 @@ export function throttleTimeout(timeoutFunc, delayMillis) {
       }
     },
   ];
+}
+
+export function extensionDirectory() {
+  const utilModulePath = /(.*)@file:\/\/(.*):\d+:\d+$/.exec(
+    new Error().stack.split('\n')[1]
+  )[2];
+  const extOrModuleDir = GLib.path_get_dirname(
+    GLib.path_get_dirname(utilModulePath)
+  );
+  // This file is either at /modules/util.js or /modules/sdt/util.js
+  return GLib.path_get_basename(extOrModuleDir) === 'modules'
+    ? GLib.path_get_dirname(extOrModuleDir)
+    : extOrModuleDir;
+}
+
+export function readFileAsync(pathOrFile, cancellable = null) {
+  return new Promise((resolve, reject) => {
+    try {
+      const file =
+        typeof pathOrFile === 'string'
+          ? Gio.File.new_for_path(pathOrFile)
+          : pathOrFile;
+      file.load_contents_async(cancellable, (f, res) => {
+        try {
+          const [, contents] = f.load_contents_finish(res);
+          const decoder = new TextDecoder('utf-8');
+          resolve(decoder.decode(contents));
+        } catch (err) {
+          reject(err);
+        }
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+export function getDBusServiceFile(iface) {
+  return Gio.File.new_for_path(
+    `${GLib.get_home_dir()}/.local/share/dbus-1/services/${iface}.service`
+  );
+}
+
+export function writeFileAsync(pathOrFile, text, cancellable = null) {
+  return new Promise((resolve, reject) => {
+    const file =
+      typeof pathOrFile === 'string'
+        ? Gio.File.new_for_path(pathOrFile)
+        : pathOrFile;
+    const encoder = new TextEncoder('utf-8');
+    try {
+      file.get_parent().make_directory_with_parents(cancellable);
+    } catch {}
+    file.replace_contents_async(
+      encoder.encode(text),
+      null,
+      false,
+      Gio.FileCreateFlags.REPLACE_DESTINATION,
+      cancellable,
+      (f, res) => {
+        try {
+          f.replace_contents_finish(res);
+          resolve();
+        } catch (err) {
+          reject(err);
+        }
+      }
+    );
+  });
+}
+
+export async function loadInterfaceXML(iface, cancellable = null) {
+  const readPromises = [
+    Gio.File.new_for_uri(
+      `resource:///org/gnome/Extensions/dbus-interfaces/${iface}.xml`
+    ),
+    Gio.File.new_for_path(
+      `${extensionDirectory()}/dbus-interfaces/${iface}.xml`
+    ),
+  ].map(async file => {
+    try {
+      return await readFileAsync(file, cancellable);
+    } catch (err) {
+      if (cancellable && cancellable.is_cancelled()) {
+        throw err;
+      }
+      return '';
+    }
+  });
+  for await (const xml of readPromises) {
+    if (xml) return xml;
+  }
+  throw new Error(`Failed to load D-Bus interface ${iface}'`);
 }

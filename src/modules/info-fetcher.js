@@ -5,7 +5,7 @@ import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import * as Signals from 'resource:///org/gnome/shell/misc/signals.js';
 
-import { throttleTimeout, logDebug } from './util.js';
+import { throttleTimeout, logDebug, readFileAsync } from './util.js';
 
 export class InfoFetcher extends Signals.EventEmitter {
   constructor() {
@@ -53,22 +53,7 @@ export class InfoFetcher extends Signals.EventEmitter {
   }
 
   _readFile(path) {
-    return new Promise((resolve, reject) => {
-      try {
-        const file = Gio.File.new_for_path(path);
-        file.load_contents_async(this._cancellable, (f, res) => {
-          try {
-            const [, contents] = f.load_contents_finish(res);
-            const decoder = new TextDecoder('utf-8');
-            resolve(decoder.decode(contents));
-          } catch (err) {
-            reject(err);
-          }
-        });
-      } catch (err) {
-        reject(err);
-      }
-    });
+    return readFileAsync(path, this._cancellable);
   }
 
   async _isWakeInfoLocal() {
@@ -113,6 +98,7 @@ export class InfoFetcher extends Signals.EventEmitter {
   }
 
   destroy() {
+    this.disconnectAll();
     this._refreshCancel();
     this._clearInterval();
     if (this._cancellable !== null) {
