@@ -7,7 +7,6 @@ METADATA_FILE := $(SRC_DIR)/metadata.json
 ifeq ($(wildcard $(METADATA_FILE)),)
 	$(error No extension metadata file found: $(METADATA_FILE)!)
 endif
-setVersion = $(shell sed -Ei "s/(^ *?\"version\": *?)([0-9]+)(.*)/\1$(1)\3/" $(METADATA_FILE))
 getMeta = $(shell grep "$(1)" $(METADATA_FILE) | cut -d\" -f 4)
 
 
@@ -141,8 +140,10 @@ translations: $(MO_FILES) | po-lint
 
 NEXT_VERSION = $(shell echo 1 + $(VERSION) | bc)
 release: $(DEFAULT_ZIP) | translations lint
-	$(info Release version $(NEXT_VERSION))
-	$(call setVersion,$(NEXT_VERSION))
+	set -e
+	echo "Release version $(NEXT_VERSION)"
+	# Set version in metadata file
+	sed -Ei "s/(^ *?\"version\": *?)([0-9]+)(.*)/\1$(NEXT_VERSION)\3/" $(METADATA_FILE)
 	@git add $(PO_DIR) $(METADATA_FILE)
 	@git commit -am "Bump version to $(NEXT_VERSION)"
 	@git tag -a "v$(NEXT_VERSION)" -m "Release version $(NEXT_VERSION)"
