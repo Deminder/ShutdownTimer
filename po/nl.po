@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-11 17:19+0200\n"
+"POT-Creation-Date: 2023-09-16 21:58+0200\n"
 "PO-Revision-Date: 2022-11-01 23:29+0100\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch\n"
@@ -20,190 +20,195 @@ msgstr ""
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: src/modules/install.js:32
+#: src/dbus-service/action.js:133
+msgid "Suspend then Hibernate"
+msgstr ""
+
+#: src/dbus-service/action.js:134
+msgid "Hybrid Sleep"
+msgstr ""
+
+#: src/dbus-service/action.js:135
+msgid "Hibernate"
+msgstr ""
+
+#: src/dbus-service/action.js:136
+msgid "Halt"
+msgstr ""
+
+#: src/dbus-service/action.js:137
+msgid "Suspend"
+msgstr "Pauzestand"
+
+#: src/dbus-service/action.js:138
+msgid "Power Off"
+msgstr ""
+
+#: src/dbus-service/action.js:139
+msgid "Restart"
+msgstr ""
+
+#: src/dbus-service/action.js:140 src/ui/prefs.ui:239 src/ui/prefs.ui:442
+msgid "Wake"
+msgstr ""
+
+#: src/dbus-service/action.js:141
+msgid "No Wake"
+msgstr ""
+
+#: src/dbus-service/action.js:147
+msgctxt "checktext"
+msgid "suspend then hibernate"
+msgstr ""
+
+#: src/dbus-service/action.js:148
+msgctxt "checktext"
+msgid "hybrid sleep"
+msgstr ""
+
+#: src/dbus-service/action.js:149
+msgctxt "checktext"
+msgid "hibernate"
+msgstr ""
+
+#: src/dbus-service/action.js:150
+msgctxt "checktext"
+msgid "halt"
+msgstr ""
+
+#: src/dbus-service/action.js:151
+msgctxt "checktext"
+msgid "suspend"
+msgstr "Pauzestand"
+
+#: src/dbus-service/action.js:152
+msgctxt "checktext"
+msgid "shutdown"
+msgstr "afsluiten"
+
+#: src/dbus-service/action.js:153
+msgctxt "checktext"
+msgid "reboot"
+msgstr ""
+
+#: src/dbus-service/action.js:154
+msgctxt "checktext"
+msgid "wakeup"
+msgstr ""
+
+#: src/dbus-service/action.js:160
+msgctxt "untiltext"
+msgid "suspend and hibernate"
+msgstr ""
+
+#: src/dbus-service/action.js:161
+msgctxt "untiltext"
+msgid "hybrid sleep"
+msgstr ""
+
+#: src/dbus-service/action.js:162
+msgctxt "untiltext"
+msgid "hibernate"
+msgstr ""
+
+#: src/dbus-service/action.js:163
+msgctxt "untiltext"
+msgid "halt"
+msgstr ""
+
+#: src/dbus-service/action.js:164
+msgctxt "untiltext"
+msgid "suspend"
+msgstr "Pauzestand"
+
+#: src/dbus-service/action.js:165
+msgctxt "untiltext"
+msgid "shutdown"
+msgstr "afsluiten"
+
+#: src/dbus-service/action.js:166
+msgctxt "untiltext"
+msgid "reboot"
+msgstr ""
+
+#: src/dbus-service/action.js:167
+msgctxt "untiltext"
+msgid "wakeup"
+msgstr ""
+
+#: src/dbus-service/control.js:72
+msgid "Can not cancel root process!"
+msgstr ""
+
+#: src/dbus-service/control.js:74
+msgid "CANCEL"
+msgstr ""
+
+#: src/dbus-service/control.js:169
+msgid "Privileged script installation required!"
+msgstr ""
+
+#: src/dbus-service/install.js:32 src/modules/install.js:32
 msgid "START"
 msgstr ""
 
-#: src/modules/install.js:42
+#: src/dbus-service/install.js:42 src/modules/install.js:42
 msgid "END"
 msgstr ""
 
-#: src/modules/install.js:44
+#: src/dbus-service/install.js:44 src/modules/install.js:44
 msgid "FAIL"
 msgstr ""
 
-#: src/modules/install.js:62
+#: src/dbus-service/install.js:62 src/modules/install.js:62
 msgid "install"
 msgstr ""
 
-#: src/modules/install.js:62
+#: src/dbus-service/install.js:62 src/modules/install.js:62
 msgid "uninstall"
 msgstr ""
 
-#: src/modules/menu-item.js:68 src/modules/menu-item.js:264
-msgid "Shutdown Timer"
-msgstr "Afsluitklok"
-
-#: src/modules/menu-item.js:91
-msgid "Settings"
-msgstr "Voorkeuren"
-
-#: src/modules/menu-item.js:251
-msgid "now"
-msgstr ""
-
-#: src/modules/menu-item.js:267
+#: src/dbus-service/timer.js:108
 #, javascript-format
-msgid "Check %s for %s"
-msgstr ""
+msgctxt "StartSchedulePopup"
+msgid "%s in %s"
+msgstr "%s over %s"
 
-#: src/modules/menu-item.js:322 src/modules/menu-item.js:361
-msgctxt "absolute time notation"
-msgid "%a, %R"
-msgstr ""
-
-#: src/modules/menu-item.js:325
-#, javascript-format
-msgid "%s hr"
-msgid_plural "%s hrs"
-msgstr[0] "%s uur"
-msgstr[1] "%s uren"
-
-#: src/modules/menu-item.js:326 src/modules/schedule-info.js:156
-#, javascript-format
-msgid "%s min"
-msgid_plural "%s mins"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/modules/menu-item.js:332
-#, javascript-format
-msgid "%s (protect)"
-msgstr ""
-
-#: src/modules/menu-item.js:356
-#, javascript-format
-msgctxt "WakeButtonText"
-msgid "%s at %s"
-msgstr ""
-
-#: src/modules/menu-item.js:357
-#, javascript-format
-msgctxt "WakeButtonText"
-msgid "%s after %s"
-msgstr ""
-
-#: src/modules/menu-item.js:364 src/modules/schedule-info.js:150
-#: src/modules/timer.js:124
+#: src/dbus-service/timer.js:112 src/modules/menu-item.js:400
+#: src/modules/schedule-info.js:123
 #, javascript-format
 msgid "%s hour"
 msgid_plural "%s hours"
 msgstr[0] "%s uur"
 msgstr[1] "%s uren"
 
-#: src/modules/menu-item.js:365 src/modules/timer.js:125
+#: src/dbus-service/timer.js:113 src/modules/menu-item.js:401
 #, javascript-format
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s minuut"
 msgstr[1] "%s minuten"
 
-#: src/modules/root-mode.js:72
-msgid "Can not cancel root process!"
-msgstr ""
-
-#: src/modules/root-mode.js:74
-msgid "CANCEL"
-msgstr ""
-
-#: src/modules/root-mode.js:169
-msgid "Privileged script installation required!"
-msgstr ""
-
-#: src/modules/schedule-info.js:42
-msgid "suspend"
-msgstr "Pauzestand"
-
-#: src/modules/schedule-info.js:43
-msgid "shutdown"
-msgstr "afsluiten"
-
-#: src/modules/schedule-info.js:44
-msgid "reboot"
-msgstr ""
-
-#: src/modules/schedule-info.js:45
-msgid "wakeup"
-msgstr ""
-
-#: src/modules/schedule-info.js:53
-#, javascript-format
-msgid "%s until %s"
-msgstr "%s tot %s"
-
-#: src/modules/schedule-info.js:58
-#, javascript-format
-msgid "%s (sys)"
-msgstr ""
-
-#: src/modules/schedule-info.js:67
-msgctxt "absolute schedule notation"
-msgid "%a, %T"
-msgstr ""
-
-#: src/modules/schedule-info.js:131
-msgid "Suspend"
-msgstr "Pauzestand"
-
-#: src/modules/schedule-info.js:132
-msgid "Power Off"
-msgstr ""
-
-#: src/modules/schedule-info.js:133
-msgid "Restart"
-msgstr ""
-
-#: src/modules/schedule-info.js:134 src/ui/prefs.ui:239 src/ui/prefs.ui:442
-msgid "Wake"
-msgstr ""
-
-#: src/modules/schedule-info.js:135
-msgid "No Wake"
-msgstr ""
-
-#: src/modules/schedule-info.js:152
-#, javascript-format
-msgid "%s sec"
-msgid_plural "%s secs"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/modules/timer.js:120
-#, javascript-format
-msgctxt "StartSchedulePopup"
-msgid "%s in %s"
-msgstr "%s over %s"
-
-#: src/modules/timer.js:160
+#: src/dbus-service/timer.js:139
 msgid "Confirmation canceled"
 msgstr ""
 
-#: src/modules/timer.js:160
+#: src/dbus-service/timer.js:139
 msgid "Shutdown Timer stopped"
 msgstr "Afsluitklok is gestopt"
 
-#: src/modules/timer.js:179
+#: src/dbus-service/timer.js:160
 #, javascript-format
 msgid "Waiting for %s confirmation"
 msgstr ""
 
-#: src/modules/timer.js:213
+#: src/dbus-service/timer.js:210
 #, javascript-format
 msgctxt "CheckCommand"
 msgid "%s aborted (Code: %s)"
 msgstr ""
 
-#: src/modules/timer.js:254 src/modules/timer.js:298
+#: src/dbus-service/timer.js:252 src/dbus-service/timer.js:310
 #, javascript-format
 msgctxt "Error"
 msgid ""
@@ -211,13 +216,85 @@ msgid ""
 "%s"
 msgstr ""
 
-#: src/modules/timer.js:254
+#: src/dbus-service/timer.js:252
 msgid "Wake action failed!"
 msgstr ""
 
-#: src/modules/timer.js:298
+#: src/dbus-service/timer.js:310
 msgid "Root mode protection failed!"
 msgstr ""
+
+#: src/modules/menu-item.js:92 src/modules/menu-item.js:298
+msgid "Shutdown Timer"
+msgstr "Afsluitklok"
+
+#: src/modules/menu-item.js:124
+msgid "Settings"
+msgstr "Voorkeuren"
+
+#: src/modules/menu-item.js:278
+msgid "now"
+msgstr ""
+
+#: src/modules/menu-item.js:301
+msgid "Check {checktext} for {durationString}"
+msgstr ""
+
+#: src/modules/menu-item.js:358 src/modules/menu-item.js:397
+msgctxt "absolute time notation"
+msgid "%a, %R"
+msgstr ""
+
+#: src/modules/menu-item.js:361
+#, javascript-format
+msgid "%s hr"
+msgid_plural "%s hrs"
+msgstr[0] "%s uur"
+msgstr[1] "%s uren"
+
+#: src/modules/menu-item.js:362 src/modules/schedule-info.js:129
+#, javascript-format
+msgid "%s min"
+msgid_plural "%s mins"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/modules/menu-item.js:368
+#, javascript-format
+msgid "%s (protect)"
+msgstr ""
+
+#: src/modules/menu-item.js:392
+#, javascript-format
+msgctxt "WakeButtonText"
+msgid "%s at %s"
+msgstr ""
+
+#: src/modules/menu-item.js:393
+#, javascript-format
+msgctxt "WakeButtonText"
+msgid "%s after %s"
+msgstr ""
+
+#: src/modules/schedule-info.js:44
+msgid "{durationString} until {untiltext}"
+msgstr "{durationString} tot {untiltext}"
+
+#: src/modules/schedule-info.js:48
+msgid "{label} (sys)"
+msgstr ""
+
+#: src/modules/schedule-info.js:57
+msgctxt "absolute schedule notation"
+msgid "%a, %T"
+msgstr ""
+
+#: src/modules/schedule-info.js:125
+#, javascript-format
+msgid "%s sec"
+msgid_plural "%s secs"
+msgstr[0] ""
+msgstr[1] ""
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:13
 msgid "Maximum shutdown time (in minutes)"
@@ -364,7 +441,6 @@ msgid "Show all wake items"
 msgstr ""
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:104
-#, fuzzy
 msgid "Show/hide all wake items in widget."
 msgstr "Toon/Verberg de wakkerbalk op de widget."
 
@@ -401,9 +477,8 @@ msgid ""
 msgstr ""
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:127
-#, fuzzy
 msgid "Shown shutdown modes"
-msgstr "Afsluitklok"
+msgstr ""
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:128
 #: src/ui/prefs.ui:390
@@ -469,7 +544,7 @@ msgid "Installing"
 msgstr ""
 
 #: src/tool/installer.sh:192 src/tool/installer.sh:226
-#: src/tool/installer.sh:244 src/tool/installer.sh:249
+#: src/tool/installer.sh:254
 msgid "tool"
 msgstr ""
 
@@ -482,28 +557,22 @@ msgid "policykit action"
 msgstr ""
 
 #: src/tool/installer.sh:204 src/tool/installer.sh:240
-#: src/tool/installer.sh:252
+#: src/tool/installer.sh:255
 msgid "policykit rule"
 msgstr ""
 
 #: src/tool/installer.sh:226 src/tool/installer.sh:233
-#: src/tool/installer.sh:240 src/tool/installer.sh:244
-#: src/tool/installer.sh:252
+#: src/tool/installer.sh:240 src/tool/installer.sh:245
 msgid "Uninstalling"
 msgstr ""
 
 #: src/tool/installer.sh:227 src/tool/installer.sh:234
-#: src/tool/installer.sh:241 src/tool/installer.sh:247
-#: src/tool/installer.sh:255
+#: src/tool/installer.sh:241 src/tool/installer.sh:248
 msgid "cannot remove"
 msgstr ""
 
-#: src/tool/installer.sh:249 src/tool/installer.sh:257
+#: src/tool/installer.sh:250
 msgid "not installed at"
-msgstr ""
-
-#: src/tool/installer.sh:257
-msgid "policy rule"
 msgstr ""
 
 #: src/ui/prefs.ui:63
@@ -576,7 +645,7 @@ msgstr ""
 
 #: src/ui/prefs.ui:278 src/ui/prefs.ui:296
 msgid "Wake slider position (in &#37;)"
-msgstr "Schuifbalkpositie"
+msgstr "Wakkerbalkpositie"
 
 #: src/ui/prefs.ui:331
 msgid "Maximum wake timer value (in minutes)"
@@ -623,12 +692,6 @@ msgstr ""
 #: src/ui/prefs.ui:503
 msgid "Check script"
 msgstr ""
-
-#~ msgid "Wake slider position"
-#~ msgstr "Wakkerbalkpositie"
-
-#~ msgid "Shutdown slider position"
-#~ msgstr "Schuifbalkpositie"
 
 #, javascript-format
 #~ msgctxt "StartSchedulePopup"

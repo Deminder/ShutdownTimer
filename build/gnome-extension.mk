@@ -68,7 +68,7 @@ $(POT_MAIN): $(TRANSLATABLE_FILES)
 			--keyword="gtxt" \
 			--keyword="_n:1,2" \
 			--keyword="C_:1c,2" \
-			--output="$(POT_MAIN)" \
+			--output="$@" \
 			$(sort $^)
 
 $(PO_FILES): $(POT_MAIN)
