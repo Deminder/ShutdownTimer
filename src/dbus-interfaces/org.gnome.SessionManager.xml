@@ -1,0 +1,27 @@
+<!--
+	SPDX-FileCopyrightText: 2023 GNOME 45
+	SPDX-License-Identifier: GPL-3.0-or-later
+-->
+<node>
+ <interface name="org.gnome.SessionManager">
+  <method name="Shutdown"/>
+  <method name="Reboot"/>
+  <method name="CanShutdown">
+   <arg type="b" name="is_available" direction="out"/>
+  </method>
+  <method name="SetRebootToFirmwareSetup">
+   <arg type="b" name="enable" direction="in"/>
+  </method>
+  <method name="CanRebootToFirmwareSetup">
+   <arg type="b" name="is_available" direction="out"/>
+  </method>
+  <method name="Logout">
+   <arg type="u" name="mode" direction="in"/>
+  </method>
+  <method name="IsSessionRunning">
+   <arg type="b" name="running" direction="out"/>
+  </method>
+  <signal name="SessionRunning"/>
+  <signal name="SessionOver"/>
+ </interface>
+</node>

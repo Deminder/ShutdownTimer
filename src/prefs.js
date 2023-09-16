@@ -7,44 +7,48 @@ import Gio from 'gi://Gio';
 import { ExtensionPreferences } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import { Install } from './modules/install.js';
-import { modeLabel, MODES } from './modules/schedule-info.js';
+import {
+  actionLabel,
+  ACTIONS,
+  mapLegacyAction,
+} from './dbus-service/action.js';
 import { logDebug, Idle } from './modules/util.js';
 
-export default class ShutdownTimerPreferences extends ExtensionPreferences {
-  templateComponents = {
-    shutdown: {
-      'shutdown-mode': 'combo',
-      'root-mode': 'switch',
-      'show-end-session-dialog': 'switch',
-      'shutdown-max-timer': 'adjustment',
-      'shutdown-ref-timer': 'buffer',
-      'shutdown-slider': 'adjustment',
-      'nonlinear-shutdown-slider': 'adjustment',
-    },
-    wake: {
-      'auto-wake': 'switch',
-      'wake-max-timer': 'adjustment',
-      'wake-ref-timer': 'buffer',
-      'wake-slider': 'adjustment',
-      'nonlinear-wake-slider': 'adjustment',
-    },
-    display: {
-      'show-settings': 'switch',
-      'show-shutdown-mode': 'buffer',
-      'show-shutdown-slider': 'switch',
-      'show-shutdown-indicator': 'switch',
-      'show-shutdown-absolute-timer': 'switch',
-      'show-textboxes': 'switch',
-      'show-wake-slider': 'switch',
-      'show-wake-items': 'switch',
-      'show-wake-absolute-timer': 'switch',
-    },
-    check: {
-      'check-command': 'textbuffer',
-      'enable-check-command': 'switch',
-    },
-  };
+const templateComponents = {
+  shutdown: {
+    'shutdown-mode': 'combo',
+    'root-mode': 'switch',
+    'show-end-session-dialog': 'switch',
+    'shutdown-max-timer': 'adjustment',
+    'shutdown-ref-timer': 'buffer',
+    'shutdown-slider': 'adjustment',
+    'nonlinear-shutdown-slider': 'adjustment',
+  },
+  wake: {
+    'auto-wake': 'switch',
+    'wake-max-timer': 'adjustment',
+    'wake-ref-timer': 'buffer',
+    'wake-slider': 'adjustment',
+    'nonlinear-wake-slider': 'adjustment',
+  },
+  display: {
+    'show-settings': 'switch',
+    'show-shutdown-mode': 'buffer',
+    'show-shutdown-slider': 'switch',
+    'show-shutdown-indicator': 'switch',
+    'show-shutdown-absolute-timer': 'switch',
+    'show-textboxes': 'switch',
+    'show-wake-slider': 'switch',
+    'show-wake-items': 'switch',
+    'show-wake-absolute-timer': 'switch',
+  },
+  check: {
+    'check-command': 'textbuffer',
+    'enable-check-command': 'switch',
+  },
+};
 
+export default class ShutdownTimerPreferences extends ExtensionPreferences {
   /**
    * Fill the preferences window with preferences.
    *
@@ -54,8 +58,6 @@ export default class ShutdownTimerPreferences extends ExtensionPreferences {
    * @param {Adw.PreferencesWindow} window - the preferences window
    */
   fillPreferencesWindow(window) {
-    this._idle = new Idle();
-    this._install = new Install();
     const builder = Gtk.Builder.new();
     builder.add_from_file(
       this.dir.get_child('ui').get_child('prefs.ui').get_path()
@@ -76,10 +78,18 @@ export default class ShutdownTimerPreferences extends ExtensionPreferences {
       if (pageName === 'check') {
         this.initCheckPage(builder);
       } else if (pageName === 'install') {
+        const idle = new Idle();
+        const install = new Install();
         this.initInstallPage(
           builder,
-          this.dir.get_child('tool').get_child('installer.sh').get_path()
+          this.dir.get_child('tool').get_child('installer.sh').get_path(),
+          install,
+          idle
         );
+        window.connect('destroy', () => {
+          idle.destroy();
+          install.destroy();
+        });
       }
       this.initPage(pageName, builder, settings);
       window.add(page);
@@ -102,15 +112,13 @@ export default class ShutdownTimerPreferences extends ExtensionPreferences {
       handlers.forEach(([comp, handlerId]) => {
         comp.disconnect(handlerId);
       });
-      this._idle.destroy();
-      this._install.destroy();
     });
   }
 
   initPage(pageName, builder, settings) {
-    if (pageName in this.templateComponents) {
+    if (pageName in templateComponents) {
       for (const [baseName, component] of Object.entries(
-        this.templateComponents[pageName]
+        templateComponents[pageName]
       )) {
         const baseId = baseName.replaceAll('-', '_');
         const settingsName = `${baseName}-value`;
@@ -121,19 +129,22 @@ export default class ShutdownTimerPreferences extends ExtensionPreferences {
         }
         if (compId === 'shutdown_mode_combo') {
           const model = new Gtk.StringList();
-          for (const mode of Object.values(MODES)) {
-            model.append(modeLabel(mode));
+          for (const action of Object.keys(ACTIONS)) {
+            model.append(actionLabel(action));
           }
           comp.model = model;
           const updateComboRow = () => {
-            const index = MODES.indexOf(
-              settings.get_string('shutdown-mode-value')
-            );
+            const index =
+              ACTIONS[
+                mapLegacyAction(settings.get_string('shutdown-mode-value'))
+              ];
             if (index >= 0 && index !== comp.selected) comp.selected = index;
           };
           comp.connect('notify::selected', () => {
-            const mode = MODES[comp.selected];
-            if (mode) settings.set_string('shutdown-mode-value', mode);
+            const action = Object.entries(ACTIONS).find(
+              ([_, id]) => id === comp.selected
+            )[0];
+            if (action) settings.set_string('shutdown-mode-value', action);
           });
           const comboHandlerId = settings.connect(
             'changed::shutdown-mode-value',
@@ -208,7 +219,7 @@ export default class ShutdownTimerPreferences extends ExtensionPreferences {
     });
   }
 
-  initInstallPage(builder, installerScriptPath) {
+  initInstallPage(builder, installerScriptPath, install, idle) {
     // install log textbuffer updates
     const logTextBuffer = builder.get_object('install_log_textbuffer');
     const scrollAdj = builder.get_object('installer_scrollbar_adjustment');
@@ -219,13 +230,13 @@ export default class ShutdownTimerPreferences extends ExtensionPreferences {
     table.add(successTag);
 
     const installSwitch = builder.get_object('install_policy_switch');
-    installSwitch.set_active(this._install.checkInstalled());
+    installSwitch.set_active(install.checkInstalled());
     installSwitch.connect('notify::active', () =>
-      this._install.installAction(
+      install.installAction(
         installerScriptPath,
         installSwitch.get_active() ? 'install' : 'uninstall',
         async message => {
-          await this._idle.guiIdle();
+          await idle.guiIdle();
           // Format log lines
           message.split('\n').forEach(line => {
             line = ['[', '#'].includes(line[0]) ? line : ` ${line}`;
@@ -241,7 +252,7 @@ export default class ShutdownTimerPreferences extends ExtensionPreferences {
               }
             }
           });
-          await this._idle.guiIdle();
+          await idle.guiIdle();
           scrollAdj.set_value(1000000);
         }
       )

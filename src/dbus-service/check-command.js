@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import Gio from 'gi://Gio';
-import { gettext as _ } from './translation.js';
-import * as Signals from 'resource:///org/gnome/shell/misc/signals.js';
+import { gettext as _ } from '../modules/translation.js';
 
-import { logDebug } from './util.js';
-import * as RootMode from './root-mode.js';
+import { logDebug } from '../modules/util.js';
+import * as Control from './control.js';
 
-export class CheckCommand extends Signals.EventEmitter {
+const Signals = imports.signals;
+
+export class CheckCommand {
   #checkCancel = null;
 
   /**
@@ -36,7 +37,7 @@ export class CheckCommand extends Signals.EventEmitter {
   async #check(checkCmd, onCommandLogLine) {
     logDebug('[check] start');
     try {
-      await RootMode.execCheck(
+      await Control.execCheck(
         checkCmd,
         this.#checkCancel,
         true,
@@ -60,10 +61,10 @@ export class CheckCommand extends Signals.EventEmitter {
     try {
       await tickAsync();
     } catch (err) {
-      logError('[check-tick]', err);
+      console.error('[check-tick]', err);
     }
     try {
-      await RootMode.execCheck(['sleep', '30'], this.#checkCancel, false);
+      await Control.execCheck(['sleep', '30'], this.#checkCancel, false);
       await this.continueTick(tickAsync);
     } catch {
       logDebug('[check-tick] Done');
@@ -83,6 +84,11 @@ export class CheckCommand extends Signals.EventEmitter {
     return doCancel;
   }
 
+  destroy() {
+    this.disconnectAll();
+    this.cancel();
+  }
+
   checkCommandString(settings) {
     return settings.get_boolean('enable-check-command-value')
       ? settings
@@ -93,3 +99,4 @@ export class CheckCommand extends Signals.EventEmitter {
       : '';
   }
 }
+Signals.addSignalMethods(CheckCommand.prototype);

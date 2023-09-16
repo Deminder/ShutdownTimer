@@ -35,7 +35,7 @@ all: $(DEFAULT_ZIP) $(DEBUG_ZIP)
 
 
 .SILENT .NOTPARALLEL .ONESHELL: $(DEFAULT_ZIP) $(DEBUG_ZIP)
-$(DEFAULT_ZIP) $(DEBUG_ZIP): $(SOURCE_FILES) $(MO_FILES) $(GSCHEMAS) $(GSCHEMAS_COMPILED)
+$(DEFAULT_ZIP) $(DEBUG_ZIP): $(SOURCE_FILES) $(GSCHEMAS) $(GSCHEMAS_COMPILED)
 	set -e
 	mkdir -p $(@D)
 	function setConst() {
@@ -137,9 +137,10 @@ install:
 	done
 	echo "FAILED: No support for GNOME shell $$GNOME_VERSION" && exit 1
 
+translations: $(MO_FILES) | po-lint
 
 NEXT_VERSION = $(shell echo 1 + $(VERSION) | bc)
-release: $(DEFAULT_ZIP) | lint
+release: $(DEFAULT_ZIP) | translations lint
 	$(info Release version $(NEXT_VERSION))
 	$(call setVersion,$(NEXT_VERSION))
 	@git add $(PO_DIR) $(METADATA_FILE)
@@ -158,4 +159,4 @@ clean:
 	-rm -rf $(TARGET_DIR)
 	-rm -f $(GSCHEMAS_COMPILED)
 
-.PHONY: release clean lint po-lint zip debug-zip install
+.PHONY: release clean translations lint po-lint zip debug-zip install

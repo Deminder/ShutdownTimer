@@ -241,21 +241,18 @@ then
         rm "${LEG_RULE_OUT}" || fail " - $(gtxt 'cannot remove') ${LEG_RULE_OUT}" && success
     fi
 
-    echo -n "$(gtxt 'Uninstalling') ${TOOL_NAME} $(gtxt 'tool')... "
-    if [ -f "${TOOL_OUT}" ]
-    then
-        rm "${TOOL_OUT}" || fail " - $(gtxt 'cannot remove') ${TOOL_OUT}" && success
-    else
-        echo "$(gtxt 'tool') $(gtxt 'not installed at') ${TOOL_OUT}"
-    fi
+    function uninstallFile() {
+        echo -n "$(gtxt 'Uninstalling') $2... "
+        if [ -f "$1" ]
+        then
+            rm "$1" || fail " - $(gtxt 'cannot remove') $1" && success
+        else
+            echo "$2 $(gtxt 'not installed at') $1"
+        fi
+    }
 
-    echo -n "$(gtxt 'Uninstalling') $(gtxt 'policykit rule')... "
-    if [ -f "${RULE_OUT}" ]
-    then
-        rm "${RULE_OUT}" || fail " - $(gtxt 'cannot remove') ${RULE_OUT}" && success
-    else
-        echo "$(gtxt 'policy rule') $(gtxt 'not installed at') ${RULE_OUT}"
-    fi
+    uninstallFile "${TOOL_OUT}" "${TOOL_NAME} $(gtxt 'tool')"
+    uninstallFile "${RULE_OUT}" "$(gtxt 'policykit rule')"
 
     exit ${EXIT_SUCCESS}
 fi

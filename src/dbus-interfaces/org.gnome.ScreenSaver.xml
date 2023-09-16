@@ -1,0 +1,22 @@
+<!--
+	SPDX-FileCopyrightText: 2023 GNOME 45
+	SPDX-License-Identifier: GPL-3.0-or-later
+-->
+<node>
+ <interface name="org.gnome.ScreenSaver">
+  <method name="Lock"/>
+  <method name="GetActive">
+   <arg type="b" name="active" direction="out"/>
+  </method>
+  <method name="SetActive">
+   <arg type="b" name="value" direction="in"/>
+  </method>
+  <method name="GetActiveTime">
+   <arg type="u" name="value" direction="out"/>
+  </method>
+  <signal name="ActiveChanged">
+   <arg type="b" name="new_value"/>
+  </signal>
+  <signal name="WakeUpScreen"/>
+  </interface>
+</node>
