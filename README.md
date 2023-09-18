@@ -33,7 +33,7 @@ Requires `gnome-shell-extensions` and `gettext`:
 make install
 ```
 
-Before install it will switch the last supported version. Then a new login is required to restart gnome-shell.
+Automatically switches to the last supported release version before install.
 
 ### Tool installation
 
