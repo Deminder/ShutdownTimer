@@ -8,6 +8,7 @@ import { ShutdownTimerSystemIndicator } from './modules/menu-item.js';
 import { logDebug } from './modules/util.js';
 import { addExternalIndicator } from './modules/quicksettings.js';
 import { InjectionTracker } from './modules/injection.js';
+import { ShutdownTimerDBus } from './dbus-service/shutdown-timer-dbus.js';
 
 export default class ShutdownTimer extends Extension {
   disableTimestamp = 0;
@@ -20,6 +21,11 @@ export default class ShutdownTimer extends Extension {
       logDebug('[enable] clear shutdown schedule');
       settings.set_int('shutdown-timestamp-value', -1);
     }
+
+    this._sdt = new ShutdownTimerDBus({
+      settings: this._settings,
+    });
+
     const indicator = new ShutdownTimerSystemIndicator({
       path: this.path,
       settings,
@@ -30,14 +36,13 @@ export default class ShutdownTimer extends Extension {
     this._tracker = new InjectionTracker();
     addExternalIndicator(this._tracker, indicator);
 
-    this._settings = settings;
     this._indicator = indicator;
 
     logDebug(`[ENABLE-DONE] '${currentSessionMode()}'`);
   }
 
   disable() {
-    // Extension should re-enable in unlock-dialog`:
+    // Extension should not be disabled during unlock-dialog`:
     // When the `unlock-dialog` is active, the quicksettings indicator and item
     // should remain visible.
     logDebug(`[DISABLE] '${currentSessionMode()}'`);
@@ -46,6 +51,9 @@ export default class ShutdownTimer extends Extension {
 
     this._indicator.destroy();
     this._indicator = null;
+
+    this._sdt.destroy();
+    this._sdt = null;
 
     this._settings = null;
     this.disableTimestamp = Date.now();

@@ -152,47 +152,14 @@ export function readFileAsync(pathOrFile, cancellable = null) {
     }
   });
 }
-export function getDBusServiceFile(iface) {
-  return Gio.File.new_for_path(
-    `${GLib.get_home_dir()}/.local/share/dbus-1/services/${iface}.service`
-  );
-}
-
-export function writeFileAsync(pathOrFile, text, cancellable = null) {
-  return new Promise((resolve, reject) => {
-    const file =
-      typeof pathOrFile === 'string'
-        ? Gio.File.new_for_path(pathOrFile)
-        : pathOrFile;
-    const encoder = new TextEncoder('utf-8');
-    try {
-      file.get_parent().make_directory_with_parents(cancellable);
-    } catch {}
-    file.replace_contents_async(
-      encoder.encode(text),
-      null,
-      false,
-      Gio.FileCreateFlags.REPLACE_DESTINATION,
-      cancellable,
-      (f, res) => {
-        try {
-          f.replace_contents_finish(res);
-          resolve();
-        } catch (err) {
-          reject(err);
-        }
-      }
-    );
-  });
-}
 
 export async function loadInterfaceXML(iface, cancellable = null) {
   const readPromises = [
-    Gio.File.new_for_uri(
-      `resource:///org/gnome/Extensions/dbus-interfaces/${iface}.xml`
-    ),
     Gio.File.new_for_path(
       `${extensionDirectory()}/dbus-interfaces/${iface}.xml`
+    ),
+    Gio.File.new_for_uri(
+      `resource:///org/gnome/shell/dbus-interfaces/${iface}.xml`
     ),
   ].map(async file => {
     try {

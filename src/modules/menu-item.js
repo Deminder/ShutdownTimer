@@ -16,7 +16,6 @@ import { gettext as _, ngettext as _n, pgettext as C_ } from './translation.js';
 import * as SessionModeAware from './session-mode-aware.js';
 import { getShutdownScheduleFromSettings } from './schedule-info.js';
 import {
-  ShutdownTimerDBus,
   ShutdownTimerName,
   ShutdownTimerObjectPath,
 } from '../dbus-service/shutdown-timer-dbus.js';
@@ -34,13 +33,7 @@ import {
   ScheduleInfo,
 } from './schedule-info.js';
 
-import {
-  logDebug,
-  proxyPromise,
-  writeFileAsync,
-  extensionDirectory,
-  getDBusServiceFile,
-} from './util.js';
+import { logDebug, proxyPromise } from './util.js';
 import {
   WAKE_ACTIONS,
   checkText,
@@ -448,7 +441,6 @@ export const ShutdownTimerSystemIndicator = GObject.registerClass(
       const item = new ShutdownTimerQuickMenuToggle({ path, settings });
       const infoFetcher = new InfoFetcher();
       const proxyCancel = new Gio.Cancellable();
-      this._sdt = null;
       this._sdtProxy = null;
       this._initProxy(item, this._textbox, infoFetcher, proxyCancel).catch(
         err => console.error('[sdt-proxy]', err)
@@ -514,11 +506,6 @@ export const ShutdownTimerSystemIndicator = GObject.registerClass(
           this._sdtProxy = null;
         }
         this._settings = null;
-        if (this._sdt !== null) {
-          this._sdt.unregister();
-          this._sdt.destroy();
-          this._sdt = null;
-        }
       });
       item.connect('destroy', () => {
         // Mitigate already destroyed error when logging out
@@ -528,7 +515,13 @@ export const ShutdownTimerSystemIndicator = GObject.registerClass(
     }
 
     async _initProxy(item, textbox, infoFetcher, cancellable) {
-      const proxy = await this._shutdownTimerProxy(cancellable);
+      const proxy = await proxyPromise(
+        ShutdownTimerName,
+        Gio.DBus.session,
+        'org.gnome.Shell',
+        ShutdownTimerObjectPath,
+        cancellable
+      );
       if (cancellable?.is_cancelled()) return;
       item.connect('shutdown', (__, shutdown, action) => {
         logDebug('[menu-item] shutdown', shutdown, 'action', action);
@@ -564,62 +557,6 @@ export const ShutdownTimerSystemIndicator = GObject.registerClass(
       if (cancellable?.is_cancelled()) return;
       logDebug('[sdt-proxy] state', this._state);
       this._syncShutdownInfo();
-    }
-
-    async _shutdownTimerProxy(cancellable) {
-      logDebug(`[sdt-proxy] Setup dbus service: ${ShutdownTimerName}`);
-      try {
-        await writeFileAsync(
-          getDBusServiceFile(ShutdownTimerName),
-          `[D-BUS Service]\n` +
-            `Name=${ShutdownTimerName}\n` +
-            `Exec=/usr/bin/gjs -m ${extensionDirectory()}/dbus-service/main.js\n`,
-          cancellable
-        );
-        // Use auto-starting dbus service
-        const sdtProxy = await proxyPromise(
-          ShutdownTimerName,
-          Gio.DBus.session,
-          ShutdownTimerName,
-          ShutdownTimerObjectPath,
-          cancellable
-        );
-
-        // Wait for auto-start
-        let retries = 10;
-        while (
-          // eslint-disable-next-line no-await-in-loop
-          (await sdtProxy.GetStateAsync().catch(__ => 'err')) === 'err' &&
-          retries-- !== 0
-        ) {
-          // eslint-disable-next-line no-await-in-loop
-          await new Promise(resolve => setTimeout(resolve, 100));
-          if (cancellable?.is_cancelled()) return null;
-          logDebug('[sdt-proxy] waiting for startup...', retries);
-        }
-        if (retries !== -1) {
-          return sdtProxy;
-        }
-      } catch (err) {
-        console.error('[sdt-proxy]', err);
-      }
-      if (cancellable?.is_cancelled()) return null;
-      // Alternatively, start new service in this shell process
-      console.error(
-        `[sdt-proxy] Failed to auto-start dbus service: ${ShutdownTimerName}. Starting in shell...`
-      );
-      this._sdt = new ShutdownTimerDBus({
-        settings: this._settings,
-      });
-      this._sdt.register();
-      const proxy = await proxyPromise(
-        ShutdownTimerName,
-        Gio.DBus.session,
-        'org.gnome.Shell',
-        ShutdownTimerObjectPath,
-        cancellable
-      );
-      return proxy;
     }
 
     _syncShutdownInfo() {
