@@ -4,7 +4,7 @@
 import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import { currentSessionMode } from './modules/session-mode-aware.js';
-import { ShutdownTimerIndicator } from './modules/menu-item.js';
+import { ShutdownTimerSystemIndicator } from './modules/menu-item.js';
 import { logDebug } from './modules/util.js';
 import { addExternalIndicator } from './modules/quicksettings.js';
 import { InjectionTracker } from './modules/injection.js';
@@ -20,7 +20,7 @@ export default class ShutdownTimer extends Extension {
       logDebug('[enable] clear shutdown schedule');
       settings.set_int('shutdown-timestamp-value', -1);
     }
-    const indicator = new ShutdownTimerIndicator({
+    const indicator = new ShutdownTimerSystemIndicator({
       path: this.path,
       settings,
     });
