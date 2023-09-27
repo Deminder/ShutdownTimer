@@ -254,28 +254,13 @@ const ShutdownTimerItem = GObject.registerClass(
           showIndicator &&
           (this.info.internalShutdown.scheduled ||
             this.info.externalShutdown.scheduled)
-            ? this.info.checkCommandRunning
-              ? 'go-bottom-symbolic'
-              : 'go-down-symbolic'
+            ? 'go-down-symbolic'
             : '',
       });
       this.menu.setHeader(
         this.shutdownTimerIcon,
         _('Shutdown Timer'),
-        [
-          this.info.internalShutdown.scheduled && this.info.checkCommandRunning
-            ? _('Check %s for %s').format(
-                this.info.internalShutdown.modeText,
-                durationString(
-                  // Show seconds which passed since check started
-                  Math.max(0, -this.info.internalShutdown.secondsLeft)
-                )
-              )
-            : info.label,
-          this.info.externalWake.label,
-        ]
-          .filter(v => !!v)
-          .join('\n')
+        [info.label, this.info.externalWake.label].filter(v => !!v).join('\n')
       );
       if (this._settings.get_boolean('show-shutdown-absolute-timer-value')) {
         this._updateSwitchLabel();

@@ -11,8 +11,6 @@ import { addExternalIndicator } from './modules/quicksettings.js';
 import { InjectionTracker } from './modules/injection.js';
 
 export default class ShutdownTimer extends Extension {
-  timerDestructionDelayMillis = 100;
-  timerDestructionTimeoutId = 0;
   disableTimestamp = 0;
 
   enable() {
@@ -23,16 +21,7 @@ export default class ShutdownTimer extends Extension {
     );
     const settings = this.getSettings();
 
-    if (this.timerDestructionTimeoutId) {
-      logDebug('[enable] save timer from destruction');
-      clearTimeout(this.timerDestructionTimeoutId);
-      this.timerDestructionTimeoutId = 0;
-    }
-
-    if (
-      !this.disableTimestamp ||
-      Date.now() > this.disableTimestamp + this.timerDestructionDelayMillis
-    ) {
+    if (!this.disableTimestamp || Date.now() > this.disableTimestamp + 100) {
       logDebug('[enable] clear shutdown schedule');
       settings.set_int('shutdown-timestamp-value', -1);
     }
@@ -75,8 +64,6 @@ export default class ShutdownTimer extends Extension {
     // Extension should reenable in unlock-dialog`:
     // When the `unlock-dialog` is active, the quicksettings indicator and item
     // should remain visible.
-    // Moreover, since root-mode and check-command must not be interrupted,
-    // the timer will only be destroyed if the extension is disabled for longer than 100ms.
     logDebug(`[DISABLE] '${currentSessionMode()}'`);
     this._tracker.clearAll();
     this._tracker = null;
@@ -86,18 +73,11 @@ export default class ShutdownTimer extends Extension {
 
     this._settings = null;
 
-    if (!this.timerDestructionTimeoutId) {
-      logDebug('[disable] delay timer destruction');
-      this.timerDestructionTimeoutId = setTimeout(() => {
-        this.timerDestructionTimeoutId = 0;
-        this._timer.destroy();
-        this._timer = null;
-        logDebug('[DISABLE-DONE] timer destroyed');
-      }, this.timerDestructionDelayMillis);
-    }
+    this._timer.destroy();
+    this._timer = null;
     this.disableTimestamp = Date.now();
     logDebug(
-      `[DISABLE-PARTIAL] '${currentSessionMode()}' (now: ${new Date(
+      `[DISABLE-DONE] '${currentSessionMode()}' (now: ${new Date(
         this.disableTimestamp
       )})`
     );

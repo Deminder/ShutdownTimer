@@ -13,7 +13,6 @@ import * as RootMode from './root-mode.js';
 import * as SessionModeAware from './session-mode-aware.js';
 import { Textbox } from './text-box.js';
 import { ESDAware } from './end-session-dialog-aware.js';
-import { CheckCommand } from './check-command.js';
 import { InfoFetcher } from './info-fetcher.js';
 import {
   ScheduleInfo,
@@ -34,11 +33,9 @@ export class Timer extends Signals.EventEmitter {
         mode: 'wake',
       }),
       internalShutdown: new ScheduleInfo({ mode: 'shutdown' }),
-      checkCommandRunning: false,
     };
     this._actionCancellable = null;
     this._textbox = new Textbox({ settings });
-    this._checkCommand = new CheckCommand();
     this._esdAware = new ESDAware();
     this._infoFetcher = new InfoFetcher();
 
@@ -66,28 +63,17 @@ export class Timer extends Signals.EventEmitter {
       this.emit('info-change');
     });
 
-    // React to changes of the check command
-    this._checkCommand.connect('change', () => {
-      this.info.checkCommandRunning = this._checkCommand.isChecking();
-      this.emit('info-change');
-    });
     this.updateSchedule();
   }
 
-  async destroy() {
+  destroy() {
     // Disconnect settings
     this._settingsIds.forEach(id => this._settings.disconnect(id));
     this._settingsIds = [];
     this._settings = null;
 
-    // Cancel check-command
-    this._checkCommand.cancel();
-    this._checkCommand = null;
-
     // Cancel internal timer
-    // Note that root commands (e.g. 'shutdown' and 'wake') are not canceled
     if (this._actionCancellable !== null) this._actionCancellable.cancel();
-    if (this._actionPromise !== null) await this._actionPromise;
 
     this._infoFetcher.destroy();
     this._infoFetcher = null;
@@ -95,6 +81,7 @@ export class Timer extends Signals.EventEmitter {
     this._esdAware = null;
     this._textbox.destroy();
     this._textbox = null;
+    // Note that root commands (e.g. 'shutdown' and 'wake') are not canceled
   }
 
   updateSchedule() {
@@ -108,14 +95,10 @@ export class Timer extends Signals.EventEmitter {
       internal.deadline !== oldInternal.deadline
     ) {
       this.emit('internal-info');
-      const canceled = this._checkCommand.cancel();
       if (internal.scheduled) {
         if (internal.secondsLeft > 0) {
           if (internal.minutes > 0) {
             // Show schedule info
-            this.#textboxShow(
-              this._checkCommand.checkCommandString(this._settings)
-            );
             this.#textboxShow(
               C_('StartSchedulePopup', '%s in %s').format(
                 modeLabel(internal.mode),
@@ -156,15 +139,13 @@ export class Timer extends Signals.EventEmitter {
           this._actionCancellable = null;
         }
         if (oldInternal.scheduled) {
-          this.#textboxShow(
-            canceled ? _('Confirmation canceled') : _('Shutdown Timer stopped')
-          );
+          this.#textboxShow(_('Shutdown Timer stopped'));
         }
       }
     }
   }
 
-  async executeAction(cancellable) {
+  async executeAction() {
     const internal = this.info.internalShutdown;
     if (!internal.scheduled) {
       logDebug(`Refusing to exectute non scheduled action! '${internal.mode}'`);
@@ -172,24 +153,6 @@ export class Timer extends Signals.EventEmitter {
     }
     logDebug(`Running '${internal.mode}' timer action...`);
     try {
-      const checkCmd = this._checkCommand.checkCommandString(this._settings);
-      if (checkCmd !== '') {
-        this.#textboxShow(checkCmd);
-        this.#textboxShow(
-          _('Waiting for %s confirmation').format(modeLabel(internal.mode))
-        );
-        await this._checkCommand.doCheck(
-          checkCmd,
-          () => this._updateRootModeProtection(),
-          line => {
-            if (!line.startsWith('[')) {
-              this.#textboxShow(`'${line}'`);
-            }
-          },
-          cancellable
-        );
-      }
-      // Check succeeded: do shutdown
       if (SessionModeAware.foregroundActive()) Main.overview.hide();
       this.#textboxHideAll();
       Action.shutdownAction(
@@ -201,20 +164,7 @@ export class Timer extends Signals.EventEmitter {
       // Refresh root mode protection
       await this._updateRootModeProtection();
     } catch (err) {
-      // Check failed: log error
-      let code = '?';
-      if ('code' in err) {
-        code = `${err.code}`;
-      } else {
-        console.error(err, 'CheckError');
-      }
-      logDebug(`[executeAction] abort ${internal.mode}. Code: ${code}`, err);
-      this.#textboxShow(
-        C_('CheckCommand', '%s aborted (Code: %s)').format(
-          modeLabel(internal.mode),
-          code
-        )
-      );
+      logDebug(`[executeAction] abort ${internal.mode}`, err);
       this.toggleShutdown(false);
     }
   }
@@ -239,7 +189,7 @@ export class Timer extends Signals.EventEmitter {
         return;
       }
     }
-    await this.executeAction(cancellable);
+    await this.executeAction();
   }
 
   async toggleWake(wake) {
