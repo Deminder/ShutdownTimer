@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-11 17:19+0200\n"
+"POT-Creation-Date: 2023-09-27 18:26+0200\n"
 "PO-Revision-Date: 2022-04-07 22:08+0200\n"
 "Last-Translator: 绿色圣光 <lishaohui.qd@163.com>\n"
 "Language-Team: Chinese (Simplified) <>\n"
@@ -40,7 +40,7 @@ msgstr ""
 msgid "uninstall"
 msgstr ""
 
-#: src/modules/menu-item.js:68 src/modules/menu-item.js:264
+#: src/modules/menu-item.js:68 src/modules/menu-item.js:262
 msgid "Shutdown Timer"
 msgstr "定时关机"
 
@@ -52,53 +52,48 @@ msgstr "设置"
 msgid "now"
 msgstr ""
 
-#: src/modules/menu-item.js:267
-#, javascript-format
-msgid "Check %s for %s"
-msgstr ""
-
-#: src/modules/menu-item.js:322 src/modules/menu-item.js:361
+#: src/modules/menu-item.js:307 src/modules/menu-item.js:346
 msgctxt "absolute time notation"
 msgid "%a, %R"
 msgstr ""
 
-#: src/modules/menu-item.js:325
+#: src/modules/menu-item.js:310
 #, javascript-format
 msgid "%s hr"
 msgid_plural "%s hrs"
 msgstr[0] "%s時"
 
-#: src/modules/menu-item.js:326 src/modules/schedule-info.js:156
+#: src/modules/menu-item.js:311 src/modules/schedule-info.js:156
 #, javascript-format
 msgid "%s min"
 msgid_plural "%s mins"
 msgstr[0] "%s分"
 
-#: src/modules/menu-item.js:332
+#: src/modules/menu-item.js:317
 #, javascript-format
 msgid "%s (protect)"
 msgstr ""
 
-#: src/modules/menu-item.js:356
+#: src/modules/menu-item.js:341
 #, javascript-format
 msgctxt "WakeButtonText"
 msgid "%s at %s"
 msgstr ""
 
-#: src/modules/menu-item.js:357
+#: src/modules/menu-item.js:342
 #, javascript-format
 msgctxt "WakeButtonText"
 msgid "%s after %s"
 msgstr ""
 
-#: src/modules/menu-item.js:364 src/modules/schedule-info.js:150
-#: src/modules/timer.js:124
+#: src/modules/menu-item.js:349 src/modules/schedule-info.js:150
+#: src/modules/timer.js:107
 #, javascript-format
 msgid "%s hour"
 msgid_plural "%s hours"
 msgstr[0] "%s時"
 
-#: src/modules/menu-item.js:365 src/modules/timer.js:125
+#: src/modules/menu-item.js:350 src/modules/timer.js:108
 #, javascript-format
 msgid "%s minute"
 msgid_plural "%s minutes"
@@ -173,32 +168,17 @@ msgid "%s sec"
 msgid_plural "%s secs"
 msgstr[0] "%s秒"
 
-#: src/modules/timer.js:120
+#: src/modules/timer.js:103
 #, javascript-format
 msgctxt "StartSchedulePopup"
 msgid "%s in %s"
 msgstr ""
 
-#: src/modules/timer.js:160
-msgid "Confirmation canceled"
-msgstr ""
-
-#: src/modules/timer.js:160
+#: src/modules/timer.js:142
 msgid "Shutdown Timer stopped"
 msgstr "已取消定时关机"
 
-#: src/modules/timer.js:179
-#, javascript-format
-msgid "Waiting for %s confirmation"
-msgstr ""
-
-#: src/modules/timer.js:213
-#, javascript-format
-msgctxt "CheckCommand"
-msgid "%s aborted (Code: %s)"
-msgstr ""
-
-#: src/modules/timer.js:254 src/modules/timer.js:298
+#: src/modules/timer.js:204 src/modules/timer.js:248
 #, javascript-format
 msgctxt "Error"
 msgid ""
@@ -206,11 +186,11 @@ msgid ""
 "%s"
 msgstr ""
 
-#: src/modules/timer.js:254
+#: src/modules/timer.js:204
 msgid "Wake action failed!"
 msgstr ""
 
-#: src/modules/timer.js:298
+#: src/modules/timer.js:248
 msgid "Root mode protection failed!"
 msgstr ""
 
@@ -284,7 +264,6 @@ msgid "Unix time in seconds of scheduled shutdown or -1 if disabled."
 msgstr ""
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:61
-#, fuzzy
 msgid "Wake slider position (in percent)"
 msgstr "滑块位置（从 0 到 100 的百分比）"
 
@@ -303,7 +282,6 @@ msgid "Exponential ramp-up for wake time slider"
 msgstr ""
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:73
-#, fuzzy
 msgid "Shutdown slider position (in percent)"
 msgstr "滑块位置（从 0 到 100 的百分比）"
 
@@ -387,9 +365,8 @@ msgid ""
 msgstr ""
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:127
-#, fuzzy
 msgid "Shown shutdown modes"
-msgstr "定时关机"
+msgstr ""
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:128
 #: src/ui/prefs.ui:390
@@ -418,26 +395,8 @@ msgstr ""
 msgid "Shows the remaining time until shutdown action"
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:157
-msgid "Check command(s)"
-msgstr ""
-
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:158
-msgid ""
-"Run command(s) before shutdown command. Proceed with shutdown only if check "
-"command succeeds."
-msgstr ""
-
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:163
-msgid "Enable check command"
-msgstr ""
-
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:164
-msgid "Check command is skipped if disabled."
-msgstr ""
-
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:169
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:170
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:145
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:146
 msgid "Last selected page in the preferences."
 msgstr ""
 
@@ -455,7 +414,7 @@ msgid "Installing"
 msgstr ""
 
 #: src/tool/installer.sh:192 src/tool/installer.sh:226
-#: src/tool/installer.sh:244 src/tool/installer.sh:249
+#: src/tool/installer.sh:254
 msgid "tool"
 msgstr ""
 
@@ -468,28 +427,22 @@ msgid "policykit action"
 msgstr ""
 
 #: src/tool/installer.sh:204 src/tool/installer.sh:240
-#: src/tool/installer.sh:252
+#: src/tool/installer.sh:255
 msgid "policykit rule"
 msgstr ""
 
 #: src/tool/installer.sh:226 src/tool/installer.sh:233
-#: src/tool/installer.sh:240 src/tool/installer.sh:244
-#: src/tool/installer.sh:252
+#: src/tool/installer.sh:240 src/tool/installer.sh:245
 msgid "Uninstalling"
 msgstr ""
 
 #: src/tool/installer.sh:227 src/tool/installer.sh:234
-#: src/tool/installer.sh:241 src/tool/installer.sh:247
-#: src/tool/installer.sh:255
+#: src/tool/installer.sh:241 src/tool/installer.sh:248
 msgid "cannot remove"
 msgstr ""
 
-#: src/tool/installer.sh:249 src/tool/installer.sh:257
+#: src/tool/installer.sh:250
 msgid "not installed at"
-msgstr ""
-
-#: src/tool/installer.sh:257
-msgid "policy rule"
 msgstr ""
 
 #: src/ui/prefs.ui:63
@@ -590,24 +543,6 @@ msgstr ""
 
 #: src/ui/prefs.ui:470
 msgid "Absolute wake time selection"
-msgstr ""
-
-#: src/ui/prefs.ui:484
-msgid "Check"
-msgstr ""
-
-#: src/ui/prefs.ui:491
-msgid "Enable check"
-msgstr ""
-
-#: src/ui/prefs.ui:492
-msgid ""
-"Script is run in a bash user shell after timer activates. Timer action "
-"proceeds if check terminates successfully."
-msgstr ""
-
-#: src/ui/prefs.ui:503
-msgid "Check script"
 msgstr ""
 
 #, javascript-format
