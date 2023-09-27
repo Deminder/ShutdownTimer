@@ -7,11 +7,7 @@ import Gio from 'gi://Gio';
 import { ExtensionPreferences } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import { Install } from './modules/install.js';
-import {
-  actionLabel,
-  ACTIONS,
-  mapLegacyAction,
-} from './dbus-service/action.js';
+import { modeLabel, MODES } from './modules/schedule-info.js';
 import { logDebug, Idle } from './modules/util.js';
 
 const templateComponents = {
@@ -42,10 +38,6 @@ const templateComponents = {
     'show-wake-items': 'switch',
     'show-wake-absolute-timer': 'switch',
   },
-  check: {
-    'check-command': 'textbuffer',
-    'enable-check-command': 'switch',
-  },
 };
 
 export default class ShutdownTimerPreferences extends ExtensionPreferences {
@@ -65,7 +57,7 @@ export default class ShutdownTimerPreferences extends ExtensionPreferences {
 
     const settings = this.getSettings();
     const handlers = [];
-    const pageNames = ['install', 'shutdown', 'wake', 'display', 'check'].map(
+    const pageNames = ['install', 'shutdown', 'wake', 'display'].map(
       n => `shutdowntimer-prefs-${n}`
     );
     for (const name of pageNames) {
@@ -75,9 +67,7 @@ export default class ShutdownTimerPreferences extends ExtensionPreferences {
       if (!page) {
         throw new Error(`${pageId} not found!`);
       }
-      if (pageName === 'check') {
-        this.initCheckPage(builder);
-      } else if (pageName === 'install') {
+      if (pageName === 'install') {
         const idle = new Idle();
         const install = new Install();
         this.initInstallPage(
@@ -129,22 +119,19 @@ export default class ShutdownTimerPreferences extends ExtensionPreferences {
         }
         if (compId === 'shutdown_mode_combo') {
           const model = new Gtk.StringList();
-          for (const action of Object.keys(ACTIONS)) {
-            model.append(actionLabel(action));
+          for (const mode of Object.values(MODES)) {
+            model.append(modeLabel(mode));
           }
           comp.model = model;
           const updateComboRow = () => {
-            const index =
-              ACTIONS[
-                mapLegacyAction(settings.get_string('shutdown-mode-value'))
-              ];
+            const index = MODES.indexOf(
+              settings.get_string('shutdown-mode-value')
+            );
             if (index >= 0 && index !== comp.selected) comp.selected = index;
           };
           comp.connect('notify::selected', () => {
-            const action = Object.entries(ACTIONS).find(
-              ([_, id]) => id === comp.selected
-            )[0];
-            if (action) settings.set_string('shutdown-mode-value', action);
+            const mode = MODES[comp.selected];
+            if (mode) settings.set_string('shutdown-mode-value', mode);
           });
           const comboHandlerId = settings.connect(
             'changed::shutdown-mode-value',
@@ -189,34 +176,6 @@ export default class ShutdownTimerPreferences extends ExtensionPreferences {
     );
     comp.connect('destroy', () => settings.disconnect(handlerId));
     update();
-  }
-
-  initCheckPage(builder) {
-    // Check command textbuffer
-    const checkCommandBuffer = builder.get_object('check_command_textbuffer');
-    const commentTag = new Gtk.TextTag({ foreground: 'grey' });
-    checkCommandBuffer.get_tag_table().add(commentTag);
-    checkCommandBuffer.connect('changed', () => {
-      const b = checkCommandBuffer;
-      b.remove_all_tags(b.get_start_iter(), b.get_end_iter());
-      let anchor = b.get_start_iter();
-      while (!anchor.is_end()) {
-        const [ok, start] = anchor.forward_search(
-          '#',
-          Gtk.TextSearchFlags.TEXT_ONLY,
-          null
-        );
-        if (!ok) break;
-        anchor = start.copy();
-        const m = anchor.copy();
-        if (!m.starts_line() && m.backward_char() && m.get_char() === '\\') {
-          anchor.forward_char();
-          continue;
-        } else anchor.forward_to_line_end();
-        b.apply_tag(commentTag, start, anchor);
-        anchor.forward_char();
-      }
-    });
   }
 
   initInstallPage(builder, installerScriptPath, install, idle) {

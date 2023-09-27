@@ -140,30 +140,6 @@ SPDX-License-Identifier: GPL-3.0-or-later
       <description>Shows the remaining time until shutdown action</description>
     </key>
 
-    <key type="s" name="check-command-value">
-      <default>"# Examples ...
-
-# Run a pre-shutdown script (e.g. updates or backups)
-# ~/.local/scripts/pre-shutdown.sh
-
-# Wait for a process to exit
-# tail -f --pid=$PID
-
-# Activate the screen saver
-# gdbus call --session \\
-#     --dest org.gnome.ScreenSaver \\
-#     --object-path /org/gnome/ScreenSaver \\
-#     --method org.gnome.ScreenSaver.SetActive true >/dev/null"</default>
-      <summary>Check command(s)</summary>
-      <description>Run command(s) before shutdown command. Proceed with shutdown only if check command succeeds.</description>
-    </key>
-
-    <key type="b" name="enable-check-command-value">
-      <default>true</default>
-      <summary>Enable check command</summary>
-      <description>Check command is skipped if disabled.</description>
-    </key>
-
     <key type="i" name="preferences-selected-page-value">
       <default>0</default>
       <summary>Last selected page in the preferences.</summary>
