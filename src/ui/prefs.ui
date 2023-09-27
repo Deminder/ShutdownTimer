@@ -479,45 +479,4 @@ DONE test</property>
       </object>
     </child>
   </object>
-  <object class="AdwPreferencesPage" id="shutdowntimer_prefs_check">
-    <property name="name">shutdowntimer-prefs-check</property>
-    <property name="title" translatable="yes">Check</property>
-    <property name="icon-name">emblem-ok-symbolic</property>
-    <child>
-      <object class="AdwPreferencesGroup">
-        <child>
-          <object class="AdwActionRow">
-            <property name="focusable">1</property>
-            <property name="title" translatable="yes">Enable check</property>
-            <property name="subtitle" translatable="yes">Script is run in a bash user shell after timer activates. Timer action proceeds if check terminates successfully.</property>
-            <property name="activatable-widget">enable_check_command_switch</property>
-            <child>
-              <object class="GtkSwitch" id="enable_check_command_switch">
-                <property name="valign">center</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="AdwPreferencesRow">
-            <property name="title" translatable="yes">Check script</property>
-            <child>
-              <object class="GtkScrolledWindow">
-                <property name="focusable">1</property>
-                <property name="min-content-height">350</property>
-                <child>
-                  <object class="GtkTextView">
-                    <property name="focusable">1</property>
-                    <property name="top-margin">5</property>
-                    <property name="buffer">check_command_textbuffer</property>
-                    <property name="monospace">1</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </child>
-  </object>
 </interface>

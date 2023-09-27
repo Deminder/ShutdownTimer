@@ -36,7 +36,6 @@ import {
 import { logDebug, proxyPromise } from './util.js';
 import {
   WAKE_ACTIONS,
-  checkText,
   actionLabel,
   ACTIONS,
   mapLegacyAction,
@@ -256,7 +255,6 @@ const ShutdownTimerItem = GObject.registerClass(
         ? externalSchedule
         : schedule;
       const active = schedule.scheduled || this.info.state !== 'inactive';
-      const checking = this.info.state === 'check';
       const showIndicator = this._settings.get_boolean(
         'show-shutdown-indicator-value'
       );
@@ -271,10 +269,10 @@ const ShutdownTimerItem = GObject.registerClass(
               : _('now')
             : '',
         indicatorIconName:
-          showIndicator && (schedule.scheduled || externalSchedule.scheduled)
-            ? checking
-              ? 'go-bottom-symbolic'
-              : 'go-down-symbolic'
+          showIndicator &&
+          (this.info.internalShutdown.scheduled ||
+            this.info.externalShutdown.scheduled)
+            ? 'go-down-symbolic'
             : '',
       });
       this.modeItems.forEach(([mode, item]) => {
@@ -289,22 +287,7 @@ const ShutdownTimerItem = GObject.registerClass(
       this.menu.setHeader(
         this.shutdownTimerIcon,
         _('Shutdown Timer'),
-        [
-          schedule.scheduled && checking
-            ? _('Check {checktext} for {durationString}')
-                .replace('{checktext}', checkText(schedule.mode))
-                .replace(
-                  '{durationString}',
-                  durationString(
-                    // Show seconds which passed since check started
-                    Math.max(0, -schedule.secondsLeft)
-                  )
-                )
-            : schedule.label,
-          externalWake.label,
-        ]
-          .filter(v => !!v)
-          .join('\n')
+        [schedule.label, externalWake.label].filter(v => !!v).join('\n')
       );
       if (this._settings.get_boolean('show-shutdown-absolute-timer-value')) {
         this._updateSwitchLabel();

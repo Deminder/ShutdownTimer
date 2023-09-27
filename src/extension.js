@@ -2,8 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
-import * as Utils from 'resource:///org/gnome/shell/misc/extensionUtils.js';
-import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import { currentSessionMode } from './modules/session-mode-aware.js';
 import { ShutdownTimerIndicator } from './modules/menu-item.js';
@@ -14,17 +12,18 @@ import { ShutdownTimerDBus } from './dbus-service/shutdown-timer-dbus.js';
 
 export default class ShutdownTimer extends Extension {
   #sdt = null;
+  #disableTimestamp = 0;
 
   enable() {
     const settings = this.getSettings();
 
-    if (this.#sdt === null) {
-      logDebug(`[ENABLE] '${currentSessionMode()}'`);
+    if (!this.#disableTimestamp || Date.now() > this.#disableTimestamp + 100) {
+      logDebug('[ENABLE] Clear shutdown schedule');
       settings.set_int('shutdown-timestamp-value', -1);
-      this.#sdt = new ShutdownTimerDBus({ settings });
-    } else {
-      logDebug(`[ENABLE-PARTIAL] '${currentSessionMode()}'`);
     }
+
+    logDebug(`[ENABLE] '${currentSessionMode()}'`);
+    this.#sdt = new ShutdownTimerDBus({ settings });
 
     const indicator = new ShutdownTimerIndicator({
       path: this.path,
@@ -52,14 +51,8 @@ export default class ShutdownTimer extends Extension {
     this._indicator.destroy();
     this._indicator = null;
 
-    const state = Main.extensionManager.lookup(this.uuid).state;
-    if (state === Utils.ExtensionState.DISABLING) {
-      this.#sdt.destroy();
-      this.#sdt = null;
-      logDebug(`[DISABLE-DONE] '${currentSessionMode()}' state: ${state}`);
-    } else {
-      // Only unpatch while rebasing extensions
-      logDebug(`[DISABLE-PARTIAL] '${currentSessionMode()}' state: ${state}`);
-    }
+    this.#sdt.destroy();
+    this.#sdt = null;
+    this.#disableTimestamp = Date.now();
   }
 }

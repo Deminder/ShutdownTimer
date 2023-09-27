@@ -22,7 +22,6 @@ SPDX-License-Identifier: GPL-3.0-or-later
 ![externalScheduleMenu](data/img/externalScheduleFeature.png)
 - Unlock-dialog does *not* interrupt the timer
 - Control `rtcwake` and `shutdown` as user by installing a privileged control script `shutdowntimerctl` from the extension settings window
-- Option to run a *checking* shell command to confirm shutdown
 - Option for ensuring system shutdown with additional `shutdown ${REQUESTED_MINUTES + 1}` (for _Poweroff_ and _Reboot_). *Note*: non-root users will be blocked from logging in
 
 ## Manual Installation

@@ -161,19 +161,6 @@ export function actionLabel(action) {
   }[action];
 }
 
-export function checkText(action) {
-  return {
-    SuspendThenHibernate: C_('checktext', 'suspend then hibernate'),
-    HybridSleep: C_('checktext', 'hybrid sleep'),
-    Hibernate: C_('checktext', 'hibernate'),
-    Halt: C_('checktext', 'halt'),
-    Suspend: C_('checktext', 'suspend'),
-    PowerOff: C_('checktext', 'shutdown'),
-    Reboot: C_('checktext', 'reboot'),
-    wake: C_('checktext', 'wakeup'),
-  }[action];
-}
-
 export function untilText(action) {
   return {
     SuspendThenHibernate: C_('untiltext', 'suspend and hibernate'),

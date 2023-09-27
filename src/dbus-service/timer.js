@@ -11,7 +11,6 @@ import {
 
 import { logDebug } from '../modules/util.js';
 import * as Control from './control.js';
-import { CheckCommand } from './check-command.js';
 import {
   longDurationString,
   ScheduleInfo,
@@ -30,7 +29,6 @@ const Signals = imports.signals;
 export class Timer {
   _ignoreScheduleUpdate = false;
   _timerCancellable = null;
-  _checkCommand = new CheckCommand();
   _action = new Action();
   info = {
     externalShutdown: new ScheduleInfo({
@@ -58,10 +56,6 @@ export class Timer {
       ),
     ];
 
-    // React to changes of the check command
-    this._checkCommand.connect('change', () => {
-      this.emit('change');
-    });
     this.updateSchedule();
   }
 
@@ -80,9 +74,6 @@ export class Timer {
       this._timerCancellable = null;
     }
 
-    // Cancel check-command
-    this._checkCommand.destroy();
-    this._checkCommand = null;
     // External schedules (for 'shutdown' and 'wake') are not stopped
   }
 
@@ -100,14 +91,9 @@ export class Timer {
       internal.deadline !== oldInternal.deadline
     ) {
       this.emit('change');
-      const canceled = this._checkCommand.cancel();
       if (internal.scheduled) {
         if (internal.minutes > 0) {
           // Show schedule info
-          this.emit(
-            'message',
-            this._checkCommand.checkCommandString(this._settings)
-          );
           this.emit(
             'message',
             C_('StartSchedulePopup', '%s in %s').format(
@@ -139,10 +125,7 @@ export class Timer {
           this._timerCancellable = null;
         }
         if (oldInternal.scheduled) {
-          this.emit(
-            'message',
-            canceled ? _('Confirmation canceled') : _('Shutdown Timer stopped')
-          );
+          this.emit('message', _('Shutdown Timer stopped'));
         }
       }
     }
@@ -155,31 +138,12 @@ export class Timer {
       return;
     }
     logDebug(`Running '${internal.mode}' timer action...`);
-    let checkCompleted = false;
     try {
-      const checkCmd = this._checkCommand.checkCommandString(this._settings);
-      if (checkCmd !== '') {
-        this.emit('message', checkCmd);
-        this.emit(
-          'message',
-          _('Waiting for %s confirmation').format(actionLabel(internal.mode))
-        );
-        await this._checkCommand.doCheck(
-          checkCmd,
-          () => this._updateRootModeProtection(),
-          line => {
-            if (!line.startsWith('[')) {
-              this.emit('message', `'${line}'`);
-            }
-          }
-        );
-      }
-      checkCompleted = true;
       this.emit('change');
       // Refresh root mode protection
       await Promise.all([
         this._updateRootModeProtection(),
-        // Check succeeded: do shutdown
+        // Do shutdown
         this._action.shutdownAction(
           internal.mode,
           this._settings.get_boolean('show-end-session-dialog-value')
@@ -189,35 +153,12 @@ export class Timer {
       if (/* destroyed */ this._settings === null) {
         throw err;
       }
-      logDebug(
-        `[executeAction] canceled (checkCompleted: ${checkCompleted})`,
-        err
-      );
       const newInternal = this.info.internalShutdown;
       if (newInternal.scheduled && newInternal.secondsLeft > 0) {
         logDebug('[timer] Replaced by new schedule.');
         return;
       }
-      if (!checkCompleted) {
-        // Check failed: log error
-        let code = '?';
-        if ('code' in err) {
-          code = `${err.code}`;
-        } else {
-          console.error(err, 'CheckError');
-        }
-        logDebug(
-          `[executeAction] check canceled ${internal.mode}. Code: ${code}`,
-          err
-        );
-        this.emit(
-          'message',
-          C_('CheckCommand', '%s aborted (Code: %s)').format(
-            actionLabel(internal.mode),
-            code
-          )
-        );
-      } else if (err instanceof UnsupportedActionError) {
+      if (err instanceof UnsupportedActionError) {
         this.emit(
           'message',
           _('%s is not supported!').format(actionLabel(internal.mode))
@@ -288,9 +229,7 @@ export class Timer {
   }
 
   get state() {
-    if (this._checkCommand.isChecking()) {
-      return 'check';
-    } else if (this.info.internalShutdown.scheduled) {
+    if (this.info.internalShutdown.scheduled) {
       return this.info.internalShutdown.secondsLeft > 0 ? 'active' : 'action';
     } else {
       return 'inactive';
