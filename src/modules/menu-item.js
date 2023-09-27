@@ -334,7 +334,7 @@ const ShutdownTimerItem = GObject.registerClass(
     }
 
     _updateWakeModeItem() {
-      const minutes = Math.abs(this.wake_minutes);
+      const minutes = getSliderMinutesFromSettings(this._settings, 'wake');
       const abs = this._settings.get_boolean('show-wake-absolute-timer-value');
       this.wakeModeItem.label.text = (
         abs
