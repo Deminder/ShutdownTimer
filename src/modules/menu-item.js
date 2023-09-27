@@ -5,21 +5,10 @@ import GObject from 'gi://GObject';
 import St from 'gi://St';
 import Gio from 'gi://Gio';
 import Clutter from 'gi://Clutter';
-import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import { gettext as _, ngettext as _n, pgettext as C_ } from './translation.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import * as Slider from 'resource:///org/gnome/shell/ui/slider.js';
 import * as QuickSettings from 'resource:///org/gnome/shell/ui/quickSettings.js';
-
-import { InfoFetcher } from './info-fetcher.js';
-import { Textbox } from './text-box.js';
-import { gettext as _, ngettext as _n, pgettext as C_ } from './translation.js';
-import * as SessionModeAware from './session-mode-aware.js';
-import { getShutdownScheduleFromSettings } from './schedule-info.js';
-import {
-  ShutdownTimerDBus,
-  ShutdownTimerName,
-  ShutdownTimerObjectPath,
-} from '../dbus-service/shutdown-timer-dbus.js';
 
 import {
   foregroundActive,
@@ -27,27 +16,14 @@ import {
   unobserveForegroundActive,
 } from './session-mode-aware.js';
 import {
+  modeLabel,
+  MODES,
+  WAKE_MODES,
   durationString,
   longDurationString,
   absoluteTimeString,
   getSliderMinutesFromSettings,
-  ScheduleInfo,
 } from './schedule-info.js';
-
-import {
-  logDebug,
-  proxyPromise,
-  writeFileAsync,
-  extensionDirectory,
-  getDBusServiceFile,
-} from './util.js';
-import {
-  WAKE_ACTIONS,
-  checkText,
-  actionLabel,
-  ACTIONS,
-  mapLegacyAction,
-} from '../dbus-service/action.js';
 
 /**
  * The ShutdownTimerItem controls wake/shutdown action time and mode.
@@ -77,7 +53,7 @@ const ShutdownTimerItem = GObject.registerClass(
     Signals: {
       'open-preferences': {},
       shutdown: {
-        param_types: [GObject.TYPE_BOOLEAN, GObject.TYPE_STRING],
+        param_types: [GObject.TYPE_BOOLEAN],
       },
       wake: {
         param_types: [GObject.TYPE_BOOLEAN],
@@ -85,17 +61,12 @@ const ShutdownTimerItem = GObject.registerClass(
     },
   },
   class ShutdownTimerItem extends QuickSettings.QuickMenuToggle {
-    _init({ path, settings }) {
+    _init({ path, settings, info }) {
       const gicon = Gio.icon_new_for_string(
         `${path}/icons/shutdown-timer-symbolic.svg`
       );
       super._init({ gicon, accessible_name: _('Shutdown Timer') });
-      this.info = {
-        internalShutdown: getShutdownScheduleFromSettings(settings),
-        externalShutdown: new ScheduleInfo({ external: true }),
-        externalWake: new ScheduleInfo({ mode: 'wake' }),
-        state: 'inactive',
-      };
+      this.info = info;
       this._settings = settings;
       this.shutdownTimerIcon = gicon;
 
@@ -111,11 +82,7 @@ const ShutdownTimerItem = GObject.registerClass(
       this.switcher = new PopupMenu.PopupSwitchMenuItem('', false);
       // start/stop shutdown timer
       this.switcher.connect('toggled', () =>
-        this.emit(
-          'shutdown',
-          this.switcher.state,
-          this.info.internalShutdown.mode
-        )
+        this.emit('shutdown', this.switcher.state)
       );
       this.switcherSettingsButton = new St.Button({
         reactive: true,
@@ -142,25 +109,26 @@ const ShutdownTimerItem = GObject.registerClass(
       };
       this.menu.addMenuItem(this.sliderItems['shutdown']);
 
-      this.modeItems = Object.keys(ACTIONS).map(action => {
-        const modeItem = new PopupMenu.PopupMenuItem(actionLabel(action));
+      this.modeItems = MODES.map(mode => {
+        const modeItem = new PopupMenu.PopupMenuItem(modeLabel(mode));
         modeItem.connect('activate', () => {
-          this.emit('shutdown', true, action);
+          this._settings.set_string('shutdown-mode-value', mode);
+          this.emit('shutdown', true);
         });
         this.menu.addMenuItem(modeItem);
-        return [action, modeItem];
+        return [mode, modeItem];
       });
 
       this.wakeItems = [
         new PopupMenu.PopupSeparatorMenuItem(),
         this.sliderItems['wake'],
-        ...Object.keys(WAKE_ACTIONS).map(action => {
-          const modeItem = new PopupMenu.PopupMenuItem(actionLabel(action));
-          if (action === 'wake') {
+        ...WAKE_MODES.map(mode => {
+          const modeItem = new PopupMenu.PopupMenuItem(modeLabel(mode));
+          if (mode === 'wake') {
             this.wakeModeItem = modeItem;
           }
           modeItem.connect('activate', () =>
-            this.emit('wake', action === 'wake')
+            this.emit('wake', mode === 'wake')
           );
           return modeItem;
         }),
@@ -204,6 +172,8 @@ const ShutdownTimerItem = GObject.registerClass(
             'show-wake-slider-value',
             'show-shutdown-indicator-value',
             'show-settings-value',
+            'shutdown-mode-value',
+            'shutdown-timestamp-value',
           ],
           () => this._sync(),
         ],
@@ -233,82 +203,76 @@ const ShutdownTimerItem = GObject.registerClass(
       this._onShowSliderChanged('wake');
 
       // Update shutdown mode items
-      const activeActions = this._settings
+      const activeModes = this._settings
         .get_string('show-shutdown-mode-value')
         .split(',')
-        .map(s => mapLegacyAction(s.trim()))
-        .filter(action => action in ACTIONS);
-      logDebug('[menu-item]', activeActions);
-      this.modeItems.forEach(([action, item]) => {
-        const position = activeActions.indexOf(action);
+        .map(s => MODES.find(m => m[0] === s.trim().toLowerCase()[0]))
+        .filter(mode => !!mode);
+      this.modeItems.forEach(([mode, item]) => {
+        const position = activeModes.indexOf(mode);
         if (position > -1) {
           this.menu.moveMenuItem(item, position + 2);
         }
         item.visible = position > -1;
       });
+      const info = this.info.internalShutdown;
+      this.modeItems.forEach(([mode, item]) => {
+        item.setOrnament(
+          mode === info.mode ? PopupMenu.Ornament.DOT : PopupMenu.Ornament.NONE
+        );
+      });
+      this.title = modeLabel(info.mode);
 
       this._onShowSliderChanged('shutdown');
 
+      // Update switcher
+      this.switcher.setToggleState(info.scheduled);
+      this.updateShutdownInfo();
       this.switcherSettingsButton.visible =
         foregroundActive() && this._settings.get_boolean('show-settings-value');
-
-      this.updateShutdownInfo();
     }
 
     updateShutdownInfo() {
-      const schedule = this.info.internalShutdown;
-      const externalSchedule = this.info.externalShutdown;
-      const externalWake = this.info.externalWake;
-      const urgendSchedule = externalSchedule.isMoreUrgendThan(schedule)
-        ? externalSchedule
-        : schedule;
-      const active = schedule.scheduled || this.info.state !== 'inactive';
-      const checking = this.info.state === 'check';
       const showIndicator = this._settings.get_boolean(
         'show-shutdown-indicator-value'
       );
+      const info = this.info.externalShutdown.isMoreUrgendThan(
+        this.info.internalShutdown
+      )
+        ? this.info.externalShutdown
+        : this.info.internalShutdown;
 
-      // Update Item
       this.set({
-        checked: active,
+        checked: this.info.internalShutdown.scheduled,
         shutdownText:
-          urgendSchedule.scheduled && showIndicator
-            ? urgendSchedule.secondsLeft > 0
-              ? durationString(urgendSchedule.secondsLeft)
+          info.scheduled && showIndicator
+            ? info.secondsLeft > 0
+              ? durationString(info.secondsLeft)
               : _('now')
             : '',
         indicatorIconName:
-          showIndicator && (schedule.scheduled || externalSchedule.scheduled)
-            ? checking
+          showIndicator &&
+          (this.info.internalShutdown.scheduled ||
+            this.info.externalShutdown.scheduled)
+            ? this.info.checkCommandRunning
               ? 'go-bottom-symbolic'
               : 'go-down-symbolic'
             : '',
       });
-      this.modeItems.forEach(([mode, item]) => {
-        item.setOrnament(
-          mode === schedule.mode
-            ? PopupMenu.Ornament.DOT
-            : PopupMenu.Ornament.NONE
-        );
-      });
-      this.title = actionLabel(schedule.mode);
-      this.switcher.setToggleState(active);
       this.menu.setHeader(
         this.shutdownTimerIcon,
         _('Shutdown Timer'),
         [
-          schedule.scheduled && checking
-            ? _('Check {checktext} for {durationString}')
-                .replace('{checktext}', checkText(schedule.mode))
-                .replace(
-                  '{durationString}',
-                  durationString(
-                    // Show seconds which passed since check started
-                    Math.max(0, -schedule.secondsLeft)
-                  )
+          this.info.internalShutdown.scheduled && this.info.checkCommandRunning
+            ? _('Check %s for %s').format(
+                this.info.internalShutdown.modeText,
+                durationString(
+                  // Show seconds which passed since check started
+                  Math.max(0, -this.info.internalShutdown.secondsLeft)
                 )
-            : schedule.label,
-          externalWake.label,
+              )
+            : info.label,
+          this.info.externalWake.label,
         ]
           .filter(v => !!v)
           .join('\n')
@@ -385,14 +349,14 @@ const ShutdownTimerItem = GObject.registerClass(
     }
 
     _updateWakeModeItem() {
-      const minutes = getSliderMinutesFromSettings(this._settings, 'wake');
+      const minutes = Math.abs(this.wake_minutes);
       const abs = this._settings.get_boolean('show-wake-absolute-timer-value');
       this.wakeModeItem.label.text = (
         abs
           ? C_('WakeButtonText', '%s at %s')
           : C_('WakeButtonText', '%s after %s')
       ).format(
-        actionLabel('wake'),
+        modeLabel('wake'),
         abs
           ? absoluteTimeString(minutes, C_('absolute time notation', '%a, %R'))
           : longDurationString(
@@ -433,7 +397,7 @@ export const ShutdownTimerIndicator = GObject.registerClass(
     Signals: {
       'open-preferences': {},
       shutdown: {
-        param_types: [GObject.TYPE_BOOLEAN, GObject.TYPE_STRING],
+        param_types: [GObject.TYPE_BOOLEAN],
       },
       wake: {
         param_types: [GObject.TYPE_BOOLEAN],
@@ -441,25 +405,13 @@ export const ShutdownTimerIndicator = GObject.registerClass(
     },
   },
   class ShutdownTimerIndicator extends QuickSettings.SystemIndicator {
-    _init({ path, settings }) {
+    _init({ path, settings, info }) {
       super._init();
-      this._settings = settings;
-      this._textbox = new Textbox({ settings });
-      const item = new ShutdownTimerItem({ path, settings });
-      const infoFetcher = new InfoFetcher();
-      const proxyCancel = new Gio.Cancellable();
-      this._sdt = null;
-      this._sdtProxy = null;
-      this._initProxy(item, this._textbox, infoFetcher, proxyCancel).catch(
-        err => console.error('[sdt-proxy]', err)
-      );
-      // React to changes in external shutdown and wake schedule
-      infoFetcher.connect('changed', () => this._syncShutdownInfo());
-      this._infoFetcher = infoFetcher;
+      const item = new ShutdownTimerItem({ path, settings, info });
       this._shutdownTimerItem = item;
 
-      item.connect('shutdown', (__, shutdown, action) =>
-        this.emit('shutdown', shutdown, action)
+      item.connect('shutdown', (__, shutdown) =>
+        this.emit('shutdown', shutdown)
       );
       item.connect('wake', (__, wake) => this.emit('wake', wake));
       item.connect('open-preferences', () => this.emit('open-preferences'));
@@ -492,33 +444,9 @@ export const ShutdownTimerIndicator = GObject.registerClass(
       updateLabel();
       updateIcon();
 
-      const settingsIds = [
-        'shutdown-mode-value',
-        'shutdown-timestamp-value',
-      ].map(n =>
-        settings.connect(`changed::${n}`, () => this._syncShutdownInfo())
-      );
-
       this.quickSettingsItems.push(item);
       this.connect('destroy', () => {
-        settingsIds.forEach(settingsId => settings.disconnect(settingsId));
-        proxyCancel.cancel();
-        infoFetcher.destroy();
-        this._infoFetcher = null;
-        this._textbox.destroy();
         this.quickSettingsItems.forEach(i => i.destroy());
-        this.quickSettingsItems = [];
-        this._shutdownTimerItem = null;
-        if (this._sdtProxy !== null) {
-          this._sdtProxy.destroy();
-          this._sdtProxy = null;
-        }
-        this._settings = null;
-        if (this._sdt !== null) {
-          this._sdt.unregister();
-          this._sdt.destroy();
-          this._sdt = null;
-        }
       });
       item.connect('destroy', () => {
         // Mitigate already destroyed error when logging out
@@ -527,118 +455,9 @@ export const ShutdownTimerIndicator = GObject.registerClass(
       });
     }
 
-    async _initProxy(item, textbox, infoFetcher, cancellable) {
-      const proxy = await this._shutdownTimerProxy(cancellable);
-      if (cancellable?.is_cancelled()) return;
-      item.connect('shutdown', (__, shutdown, action) => {
-        logDebug('[menu-item] shutdown', shutdown, 'action', action);
-        proxy
-          .ScheduleShutdownAsync(shutdown, action)
-          .catch(err => console.error('[shutdown]', err));
-      });
-      item.connect('wake', (__, wake) => {
-        proxy
-          .ScheduleWakeAsync(wake)
-          .catch(err => console.error('[wake]', err));
-      });
-
-      const signalIds = [
-        proxy.connectSignal('OnMessage', (__, ___, [msg]) => {
-          textbox.showTextbox(msg);
-        }),
-        proxy.connectSignal('OnStateChange', (__, ___, [state]) => {
-          logDebug('[menu-item] state:', state);
-          this._state = state;
-          this._syncShutdownInfo();
-        }),
-        proxy.connectSignal('OnExternalChange', () => {
-          infoFetcher.refresh();
-        }),
-      ];
-      proxy.destroy = function () {
-        signalIds.forEach(signalId => this.disconnectSignal(signalId));
-      };
-
-      this._sdtProxy = proxy;
-      [this._state] = await this._sdtProxy.GetStateAsync();
-      if (cancellable?.is_cancelled()) return;
-      logDebug('[sdt-proxy] state', this._state);
-      this._syncShutdownInfo();
-    }
-
-    async _shutdownTimerProxy(cancellable) {
-      logDebug(`[sdt-proxy] Setup dbus service: ${ShutdownTimerName}`);
-      try {
-        await writeFileAsync(
-          getDBusServiceFile(ShutdownTimerName),
-          `[D-BUS Service]\n` +
-            `Name=${ShutdownTimerName}\n` +
-            `Exec=/usr/bin/gjs -m ${extensionDirectory()}/dbus-service/main.js\n`,
-          cancellable
-        );
-        // Use auto-starting dbus service
-        const sdtProxy = await proxyPromise(
-          ShutdownTimerName,
-          Gio.DBus.session,
-          ShutdownTimerName,
-          ShutdownTimerObjectPath,
-          cancellable
-        );
-
-        // Wait for auto-start
-        let retries = 10;
-        while (
-          // eslint-disable-next-line no-await-in-loop
-          (await sdtProxy.GetStateAsync().catch(__ => 'err')) === 'err' &&
-          retries-- !== 0
-        ) {
-          // eslint-disable-next-line no-await-in-loop
-          await new Promise(resolve => setTimeout(resolve, 100));
-          if (cancellable?.is_cancelled()) return null;
-          logDebug('[sdt-proxy] waiting for startup...', retries);
-        }
-        if (retries !== -1) {
-          return sdtProxy;
-        }
-      } catch (err) {
-        console.error('[sdt-proxy]', err);
-      }
-      if (cancellable?.is_cancelled()) return null;
-      // Alternatively, start new service in this shell process
-      console.error(
-        `[sdt-proxy] Failed to auto-start dbus service: ${ShutdownTimerName}. Starting in shell...`
-      );
-      this._sdt = new ShutdownTimerDBus({
-        settings: this._settings,
-      });
-      this._sdt.register();
-      const proxy = await proxyPromise(
-        ShutdownTimerName,
-        Gio.DBus.session,
-        'org.gnome.Shell',
-        ShutdownTimerObjectPath,
-        cancellable
-      );
-      return proxy;
-    }
-
-    _syncShutdownInfo() {
-      const item = this._shutdownTimerItem;
-      if (this._state === 'action') {
-        if (SessionModeAware.foregroundActive()) Main.overview.hide();
-        this._textbox.hideAll();
-      }
-      item.info = {
-        internalShutdown: getShutdownScheduleFromSettings(this._settings),
-        externalShutdown: item.info.externalShutdown.copy({
-          ...this._infoFetcher.shutdownInfo,
-        }),
-        externalWake: item.info.externalWake.copy({
-          ...this._infoFetcher.wakeInfo,
-        }),
-        state: this._state,
-      };
-      item.updateShutdownInfo();
+    setInfo(info) {
+      this._shutdownTimerItem.info = info;
+      this._shutdownTimerItem.updateShutdownInfo();
     }
   }
 );

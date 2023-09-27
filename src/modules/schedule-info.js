@@ -3,11 +3,10 @@
 
 import GLib from 'gi://GLib';
 import { gettext as _, ngettext as _n, pgettext as C_ } from './translation.js';
-import { mapLegacyAction, untilText } from '../dbus-service/action.js';
 
 export class ScheduleInfo {
   constructor({ mode = '?', deadline = -1, external = false }) {
-    this._v = { mode: mapLegacyAction(mode), deadline, external };
+    this._v = { mode, deadline, external };
   }
 
   copy(vals) {
@@ -38,14 +37,25 @@ export class ScheduleInfo {
     return Math.floor(this.secondsLeft / 60);
   }
 
+  get modeText() {
+    const texts = {
+      suspend: _('suspend'),
+      poweroff: _('shutdown'),
+      reboot: _('reboot'),
+      wake: _('wakeup'),
+    };
+    return this.mode in texts ? texts[this.mode] : texts['poweroff'];
+  }
+
   get label() {
     let label = '';
     if (this.scheduled) {
-      label = _('{durationString} until {untiltext}')
-        .replace('{durationString}', durationString(this.secondsLeft))
-        .replace('{untiltext}', untilText(this.mode));
+      label = _('%s until %s').format(
+        durationString(this.secondsLeft),
+        this.modeText
+      );
       if (this.external) {
-        label = _('{label} (sys)').replace('{label}', label);
+        label = _('%s (sys)').format(label);
       }
     }
     return label;
@@ -107,6 +117,23 @@ export function getSliderMinutesFromSettings(settings, prefix) {
     minutes += getSliderMinutesFromSettings(settings, 'shutdown');
   }
   return minutes;
+}
+
+export const MODES = ['suspend', 'poweroff', 'reboot'];
+export const WAKE_MODES = ['wake', 'no-wake'];
+/**
+ * Get the translated mode label
+ *
+ * @param mode
+ */
+export function modeLabel(mode) {
+  return {
+    suspend: _('Suspend'),
+    poweroff: _('Power Off'),
+    reboot: _('Restart'),
+    wake: _('Wake'),
+    'no-wake': _('No Wake'),
+  }[mode];
 }
 
 /**

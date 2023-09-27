@@ -5,7 +5,7 @@ import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 import { gettext as _ } from './translation.js';
 
-import { execCheck, installedScriptPath } from '../dbus-service/control.js';
+import { execCheck, installedScriptPath } from './root-mode.js';
 import { logDebug } from './util.js';
 
 export class Install {
@@ -51,11 +51,11 @@ export class Install {
 
   checkInstalled() {
     const scriptPath = installedScriptPath();
-    const isScriptInstalled = scriptPath !== null;
-    if (isScriptInstalled) {
+    const isInstalled = scriptPath !== null;
+    if (isInstalled) {
       logDebug(`Existing installation at: ${scriptPath}`);
     }
-    return isScriptInstalled;
+    return isInstalled;
   }
 
   actionLabel(action) {
