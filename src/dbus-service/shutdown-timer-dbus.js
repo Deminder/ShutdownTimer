@@ -12,14 +12,13 @@ export const ShutdownTimerObjectPath =
   '/org/gnome/Shell/Extensions/ShutdownTimer';
 export const ShutdownTimerIface = await loadInterfaceXML(ShutdownTimerName);
 
-const Signals = imports.signals;
-
 export class ShutdownTimerDBus {
-  constructor({ settings, daemon }) {
+  constructor({ settings }) {
     this._dbusImpl = Gio.DBusExportedObject.wrapJSObject(
       ShutdownTimerIface,
       this
     );
+    this._dbusImpl.export(Gio.DBus.session, ShutdownTimerObjectPath);
 
     this._timer = new Timer({ settings });
     this._timer.connect('message', (_, msg) => {
@@ -36,31 +35,6 @@ export class ShutdownTimerDBus {
     this._timer.connect('change-external', () => {
       this._dbusImpl.emit_signal('OnExternalChange', null);
     });
-    if (daemon) {
-      Gio.DBus.session.own_name(
-        ShutdownTimerName,
-        Gio.BusNameOwnerFlags.NONE,
-        () => {
-          logDebug(`[sdt-dbus] bus aquired`);
-          this.register();
-        },
-        () => {
-          logDebug('[sdt-dbus] name aquired');
-        },
-        () => {
-          logDebug('[sdt-dbus] name lost');
-          this.destroy();
-        }
-      );
-    }
-  }
-
-  register() {
-    this._dbusImpl.export(Gio.DBus.session, ShutdownTimerObjectPath);
-  }
-
-  unregister() {
-    this._dbusImpl.unexport();
   }
 
   async ScheduleShutdownAsync(parameters, invocation) {
@@ -90,11 +64,9 @@ export class ShutdownTimerDBus {
 
   destroy() {
     logDebug('[sdt-dbus] destroy');
-    if (this._timer !== null) {
-      this._timer.destroy();
-      this._timer = null;
-    }
-    this.emit('destroy');
+    this._dbusImpl.unexport();
+    this._dbusImpl = null;
+    this._timer.destroy();
+    this._timer = null;
   }
 }
-Signals.addSignalMethods(ShutdownTimerDBus.prototype);
