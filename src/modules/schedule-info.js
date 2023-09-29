@@ -133,7 +133,7 @@ export function modeLabel(mode) {
     reboot: _('Restart'),
     wake: _('Wake'),
     'no-wake': _('No Wake'),
-  }[mode];
+  }[mode] || '?';
 }
 
 /**

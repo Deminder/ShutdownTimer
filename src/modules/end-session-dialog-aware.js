@@ -5,16 +5,15 @@ import Gio from 'gi://Gio';
 import * as FileUtils from 'resource:///org/gnome/shell/misc/fileUtils.js';
 import { proxyPromise } from './util.js';
 
-const EndSessionDialogInf = FileUtils.loadInterfaceXML(
-  'org.gnome.SessionManager.EndSessionDialog'
-);
-const EndSessionDialogProxy =
-  Gio.DBusProxy.makeProxyWrapper(EndSessionDialogInf);
-
 export class ESDAware {
   resolve = null;
 
   constructor() {
+    const EndSessionDialogInf = FileUtils.loadInterfaceXML(
+      'org.gnome.SessionManager.EndSessionDialog'
+    );
+    const EndSessionDialogProxy =
+      Gio.DBusProxy.makeProxyWrapper(EndSessionDialogInf);
     this.proxy = undefined;
     proxyPromise(
       EndSessionDialogProxy,
