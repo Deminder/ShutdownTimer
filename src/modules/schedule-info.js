@@ -127,13 +127,15 @@ export const WAKE_MODES = ['wake', 'no-wake'];
  * @param mode
  */
 export function modeLabel(mode) {
-  return {
-    suspend: _('Suspend'),
-    poweroff: _('Power Off'),
-    reboot: _('Restart'),
-    wake: _('Wake'),
-    'no-wake': _('No Wake'),
-  }[mode] || '?';
+  return (
+    {
+      suspend: _('Suspend'),
+      poweroff: _('Power Off'),
+      reboot: _('Restart'),
+      wake: _('Wake'),
+      'no-wake': _('No Wake'),
+    }[mode] || '?'
+  );
 }
 
 /**

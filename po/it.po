@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-27 18:26+0200\n"
+"POT-Creation-Date: 2023-10-08 17:33+0200\n"
 "PO-Revision-Date: 2022-11-01 23:29+0100\n"
 "Last-Translator: Gianni Lerro <squall77it@gmail.com>\n"
 "Language-Team: Italiano <>\n"
@@ -65,7 +65,7 @@ msgid_plural "%s hrs"
 msgstr[0] "%s ora"
 msgstr[1] "%s ore"
 
-#: src/modules/menu-item.js:311 src/modules/schedule-info.js:156
+#: src/modules/menu-item.js:311 src/modules/schedule-info.js:158
 #, javascript-format
 msgid "%s min"
 msgid_plural "%s mins"
@@ -89,7 +89,7 @@ msgctxt "WakeButtonText"
 msgid "%s after %s"
 msgstr ""
 
-#: src/modules/menu-item.js:349 src/modules/schedule-info.js:150
+#: src/modules/menu-item.js:349 src/modules/schedule-info.js:152
 #: src/modules/timer.js:107
 #, javascript-format
 msgid "%s hour"
@@ -147,27 +147,27 @@ msgctxt "absolute schedule notation"
 msgid "%a, %T"
 msgstr ""
 
-#: src/modules/schedule-info.js:131
+#: src/modules/schedule-info.js:132
 msgid "Suspend"
 msgstr ""
 
-#: src/modules/schedule-info.js:132
+#: src/modules/schedule-info.js:133
 msgid "Power Off"
 msgstr ""
 
-#: src/modules/schedule-info.js:133
+#: src/modules/schedule-info.js:134
 msgid "Restart"
 msgstr ""
 
-#: src/modules/schedule-info.js:134 src/ui/prefs.ui:239 src/ui/prefs.ui:442
+#: src/modules/schedule-info.js:135 src/ui/prefs.ui:239 src/ui/prefs.ui:442
 msgid "Wake"
 msgstr ""
 
-#: src/modules/schedule-info.js:135
+#: src/modules/schedule-info.js:136
 msgid "No Wake"
 msgstr ""
 
-#: src/modules/schedule-info.js:152
+#: src/modules/schedule-info.js:154
 #, javascript-format
 msgid "%s sec"
 msgid_plural "%s secs"
