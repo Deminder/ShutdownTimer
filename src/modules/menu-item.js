@@ -443,7 +443,9 @@ export const ShutdownTimerSystemIndicator = GObject.registerClass(
       const proxyCancel = new Gio.Cancellable();
       this._sdtProxy = null;
       this._initProxy(item, this._textbox, infoFetcher, proxyCancel).catch(
-        err => console.error('[sdt-proxy]', err)
+        err => {
+          if (!proxyCancel.is_cancelled()) console.error('[sdt-proxy]', err);
+        }
       );
       // React to changes in external shutdown and wake schedule
       infoFetcher.connect('changed', () => this._syncShutdownInfo());

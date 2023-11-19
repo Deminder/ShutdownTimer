@@ -32,8 +32,7 @@ export async function proxyPromise(
         await loadInterfaceXML(ProxyTypeOrName, cancellable)
       );
     } catch (err) {
-      console.error('[proxyPromise]', err);
-      return null;
+      throw new Error('Failed to load proxy interface!', { cause: err });
     }
   }
   const p = await new Promise((resolve, reject) => {
@@ -165,14 +164,15 @@ export async function loadInterfaceXML(iface, cancellable = null) {
     try {
       return await readFileAsync(file, cancellable);
     } catch (err) {
-      if (cancellable && cancellable.is_cancelled()) {
-        throw err;
-      }
       return '';
     }
   });
   for await (const xml of readPromises) {
     if (xml) return xml;
   }
-  throw new Error(`Failed to load D-Bus interface ${iface}'`);
+  throw new Error(
+    `Failed to load D-Bus interface '${iface}'${
+      cancellable && cancellable.is_cancelled() ? ' (canceled)' : ''
+    }`
+  );
 }
