@@ -3,7 +3,7 @@
 	SPDX-License-Identifier: GPL-3.0-or-later
 -->
 <node>
- <interface name="org.gnome.shell.Extensions.ShutdownTimer">
+ <interface name="org.gnome.shell.Extensions.ShutdownTimer.Local">
   <method name="ScheduleShutdown">
    <arg type="b" direction="in" name="shutdown"/>
    <arg type="s" direction="in" name="action"/>
