@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-30 21:57+0100\n"
+"POT-Creation-Date: 2023-12-30 23:22+0100\n"
 "PO-Revision-Date: 2022-04-07 22:06+0200\n"
 "Last-Translator: Daniel Neumann\n"
 "Language-Team: Jesús Ignacio García <jesusignazio@gmail.com>\n"
@@ -57,81 +57,41 @@ msgid "No Wake"
 msgstr ""
 
 #: src/dbus-service/action.js:166
-msgctxt "checktext"
-msgid "suspend then hibernate"
-msgstr ""
-
-#: src/dbus-service/action.js:167
-msgctxt "checktext"
-msgid "hybrid sleep"
-msgstr ""
-
-#: src/dbus-service/action.js:168
-msgctxt "checktext"
-msgid "hibernate"
-msgstr ""
-
-#: src/dbus-service/action.js:169
-msgctxt "checktext"
-msgid "halt"
-msgstr ""
-
-#: src/dbus-service/action.js:170
-msgctxt "checktext"
-msgid "suspend"
-msgstr ""
-
-#: src/dbus-service/action.js:171
-msgctxt "checktext"
-msgid "shutdown"
-msgstr "apagado."
-
-#: src/dbus-service/action.js:172
-msgctxt "checktext"
-msgid "reboot"
-msgstr ""
-
-#: src/dbus-service/action.js:173
-msgctxt "checktext"
-msgid "wakeup"
-msgstr ""
-
-#: src/dbus-service/action.js:179
 msgctxt "untiltext"
 msgid "suspend and hibernate"
 msgstr ""
 
-#: src/dbus-service/action.js:180
+#: src/dbus-service/action.js:167
 msgctxt "untiltext"
 msgid "hybrid sleep"
 msgstr ""
 
-#: src/dbus-service/action.js:181
+#: src/dbus-service/action.js:168
 msgctxt "untiltext"
 msgid "hibernate"
 msgstr ""
 
-#: src/dbus-service/action.js:182
+#: src/dbus-service/action.js:169
 msgctxt "untiltext"
 msgid "halt"
 msgstr ""
 
-#: src/dbus-service/action.js:183
+#: src/dbus-service/action.js:170
 msgctxt "untiltext"
 msgid "suspend"
 msgstr ""
 
-#: src/dbus-service/action.js:184
+#: src/dbus-service/action.js:171
 msgctxt "untiltext"
 msgid "shutdown"
 msgstr "apagado."
 
-#: src/dbus-service/action.js:185
+#: src/dbus-service/action.js:172
 msgctxt "untiltext"
 msgid "reboot"
 msgstr ""
 
-#: src/dbus-service/action.js:186
+#: src/dbus-service/action.js:173
 msgctxt "untiltext"
 msgid "wakeup"
 msgstr ""
@@ -148,13 +108,13 @@ msgstr ""
 msgid "Privileged script installation required!"
 msgstr ""
 
-#: src/dbus-service/timer.js:113
+#: src/dbus-service/timer.js:99
 #, javascript-format
 msgctxt "StartSchedulePopup"
 msgid "%s in %s"
 msgstr "%s en %s"
 
-#: src/dbus-service/timer.js:117 src/modules/menu-item.js:393
+#: src/dbus-service/timer.js:103 src/modules/menu-item.js:376
 #: src/modules/schedule-info.js:123
 #, javascript-format
 msgid "%s hour"
@@ -162,38 +122,23 @@ msgid_plural "%s hours"
 msgstr[0] "%s hora"
 msgstr[1] "%s horas"
 
-#: src/dbus-service/timer.js:118 src/modules/menu-item.js:394
+#: src/dbus-service/timer.js:104 src/modules/menu-item.js:377
 #, javascript-format
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s minuto"
 msgstr[1] "%s minutos"
 
-#: src/dbus-service/timer.js:144
-msgid "Confirmation canceled"
-msgstr ""
-
-#: src/dbus-service/timer.js:144
+#: src/dbus-service/timer.js:128
 msgid "Shutdown Timer stopped"
 msgstr "Temporizador apagado."
 
-#: src/dbus-service/timer.js:165
-#, javascript-format
-msgid "Waiting for %s confirmation"
-msgstr ""
-
-#: src/dbus-service/timer.js:215
-#, javascript-format
-msgctxt "CheckCommand"
-msgid "%s aborted (Code: %s)"
-msgstr ""
-
-#: src/dbus-service/timer.js:223
+#: src/dbus-service/timer.js:164
 #, javascript-format
 msgid "%s is not supported!"
 msgstr ""
 
-#: src/dbus-service/timer.js:262 src/dbus-service/timer.js:320
+#: src/dbus-service/timer.js:203 src/dbus-service/timer.js:259
 #, javascript-format
 msgctxt "Error"
 msgid ""
@@ -201,11 +146,11 @@ msgid ""
 "%s"
 msgstr ""
 
-#: src/dbus-service/timer.js:262
+#: src/dbus-service/timer.js:203
 msgid "Wake action failed!"
 msgstr ""
 
-#: src/dbus-service/timer.js:320
+#: src/dbus-service/timer.js:259
 msgid "Root mode protection failed!"
 msgstr ""
 
@@ -229,53 +174,49 @@ msgstr ""
 msgid "uninstall"
 msgstr ""
 
-#: src/modules/menu-item.js:85 src/modules/menu-item.js:291
+#: src/modules/menu-item.js:84 src/modules/menu-item.js:289
 msgid "Shutdown Timer"
 msgstr "Apagar con temporizador."
 
-#: src/modules/menu-item.js:117
+#: src/modules/menu-item.js:116
 msgid "Settings"
 msgstr ""
 
-#: src/modules/menu-item.js:271
+#: src/modules/menu-item.js:269
 msgid "now"
 msgstr ""
 
-#: src/modules/menu-item.js:294
-msgid "Check {checktext} for {durationString}"
-msgstr ""
-
-#: src/modules/menu-item.js:351 src/modules/menu-item.js:390
+#: src/modules/menu-item.js:334 src/modules/menu-item.js:373
 msgctxt "absolute time notation"
 msgid "%a, %R"
 msgstr ""
 
-#: src/modules/menu-item.js:354
+#: src/modules/menu-item.js:337
 #, javascript-format
 msgid "%s hr"
 msgid_plural "%s hrs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/modules/menu-item.js:355 src/modules/schedule-info.js:129
+#: src/modules/menu-item.js:338 src/modules/schedule-info.js:129
 #, javascript-format
 msgid "%s min"
 msgid_plural "%s mins"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/modules/menu-item.js:361
+#: src/modules/menu-item.js:344
 #, javascript-format
 msgid "%s (protect)"
 msgstr ""
 
-#: src/modules/menu-item.js:385
+#: src/modules/menu-item.js:368
 #, javascript-format
 msgctxt "WakeButtonText"
 msgid "%s at %s"
 msgstr ""
 
-#: src/modules/menu-item.js:386
+#: src/modules/menu-item.js:369
 #, javascript-format
 msgctxt "WakeButtonText"
 msgid "%s after %s"
@@ -502,26 +443,8 @@ msgstr ""
 msgid "Shows the remaining time until shutdown action"
 msgstr ""
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:157
-msgid "Check command(s)"
-msgstr ""
-
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:158
-msgid ""
-"Run command(s) before shutdown command. Proceed with shutdown only if check "
-"command succeeds."
-msgstr ""
-
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:163
-msgid "Enable check command"
-msgstr ""
-
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:164
-msgid "Check command is skipped if disabled."
-msgstr ""
-
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:169
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:170
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:145
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:146
 msgid "Last selected page in the preferences."
 msgstr ""
 
@@ -670,23 +593,9 @@ msgstr ""
 msgid "Absolute wake time selection"
 msgstr ""
 
-#: src/ui/prefs.ui:484
-msgid "Check"
-msgstr ""
-
-#: src/ui/prefs.ui:491
-msgid "Enable check"
-msgstr ""
-
-#: src/ui/prefs.ui:492
-msgid ""
-"Script is run in a bash user shell after timer activates. Timer action "
-"proceeds if check terminates successfully."
-msgstr ""
-
-#: src/ui/prefs.ui:503
-msgid "Check script"
-msgstr ""
+#~ msgctxt "checktext"
+#~ msgid "shutdown"
+#~ msgstr "apagado."
 
 #, javascript-format
 #~ msgctxt "StartSchedulePopup"
