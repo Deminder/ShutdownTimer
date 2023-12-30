@@ -18,7 +18,12 @@ import {
   getShutdownScheduleFromSettings,
   getSliderMinutesFromSettings,
 } from '../modules/schedule-info.js';
-import { actionLabel, Action, mapLegacyAction } from './action.js';
+import {
+  actionLabel,
+  Action,
+  mapLegacyAction,
+  UnsupportedActionError,
+} from './action.js';
 
 const Signals = imports.signals;
 
@@ -176,7 +181,7 @@ export class Timer {
         this._updateRootModeProtection(),
         // Check succeeded: do shutdown
         this._action.shutdownAction(
-          this.info.internalShutdown.mode,
+          internal.mode,
           this._settings.get_boolean('show-end-session-dialog-value')
         ),
       ]);
@@ -211,6 +216,11 @@ export class Timer {
             actionLabel(internal.mode),
             code
           )
+        );
+      } else if (err instanceof UnsupportedActionError) {
+        this.emit(
+          'message',
+          _('%s is not supported!').format(actionLabel(internal.mode))
         );
       }
       await this.toggleShutdown(false);

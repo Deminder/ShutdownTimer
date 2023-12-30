@@ -19,6 +19,26 @@ export const ACTIONS = {
 
 export const WAKE_ACTIONS = { wake: 100, 'no-wake': 101 };
 
+/**
+ * Get supported actions.
+ * In order to show an error when shutdown or reboot are not supported
+ * they are always included here. */
+export async function* supportedActions() {
+  const actionDbus = new Action();
+  for await (const action of Object.keys(ACTIONS).map(async a =>
+    ['PowerOff', 'Reboot'].includes(a) ||
+    (await actionDbus.canShutdownAction(a))
+      ? a
+      : null
+  )) {
+    if (action) {
+      yield action;
+    }
+  }
+}
+
+export class UnsupportedActionError extends Error {}
+
 export class Action {
   #cancellable = new Gio.Cancellable();
   #loginProxy = proxyPromise(
@@ -84,13 +104,12 @@ export class Action {
       }
     } else {
       const loginProxy = await this.#loginProxy;
-      if (
-        this.#poweroffOrReboot(action) &&
-        !(await this.canShutdownAction(action))
-      ) {
+      if (await this.canShutdownAction(action)) {
+        await loginProxy[`${action}Async`](true);
+      } else if (this.#poweroffOrReboot(action)) {
         await Control.shutdown('now', ACTIONS[action] === ACTIONS.Reboot);
       } else {
-        await loginProxy[`${action}Async`](true);
+        throw new UnsupportedActionError();
       }
     }
   }

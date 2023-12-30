@@ -7,7 +7,8 @@ import GLib from 'gi://GLib';
 import { loadInterfaceXML, logDebug } from '../modules/util.js';
 import { Timer } from './timer.js';
 
-export const ShutdownTimerName = 'org.gnome.Shell.Extensions.ShutdownTimer.Local';
+export const ShutdownTimerName =
+  'org.gnome.Shell.Extensions.ShutdownTimer.Local';
 export const ShutdownTimerObjectPath =
   '/org/gnome/Shell/Extensions/ShutdownTimer';
 export const ShutdownTimerIface = await loadInterfaceXML(ShutdownTimerName);
