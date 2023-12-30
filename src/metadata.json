@@ -1,6 +1,6 @@
 {
   "shell-version": ["45"],
-  "uuid": "ShutdownTimer@Deminder.github.com",
+  "uuid": "ShutdownTimer@deminder",
   "name": "Shutdown Timer",
   "gettext-domain": "ShutdownTimer",
   "settings-schema": "org.gnome.shell.extensions.shutdowntimer-deminder",
