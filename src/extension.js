@@ -6,7 +6,7 @@ import * as Utils from 'resource:///org/gnome/shell/misc/extensionUtils.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import { currentSessionMode } from './modules/session-mode-aware.js';
-import { ShutdownTimerSystemIndicator } from './modules/menu-item.js';
+import { ShutdownTimerIndicator } from './modules/menu-item.js';
 import { logDebug } from './modules/util.js';
 import { addExternalIndicator } from './modules/quicksettings.js';
 import { InjectionTracker } from './modules/injection.js';
@@ -26,7 +26,7 @@ export default class ShutdownTimer extends Extension {
       logDebug(`[ENABLE-PARTIAL] '${currentSessionMode()}'`);
     }
 
-    const indicator = new ShutdownTimerSystemIndicator({
+    const indicator = new ShutdownTimerIndicator({
       path: this.path,
       settings,
     });

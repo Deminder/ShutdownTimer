@@ -43,13 +43,13 @@ import {
 } from '../dbus-service/action.js';
 
 /**
- * The ShutdownTimerQuickMenuToggle controls wake/shutdown action time and mode.
+ * The ShutdownTimerItem controls wake/shutdown action time and mode.
  * Additionally, it shows wake and external/internal shutdown schedules.
  *
  * The external schedule of the `shutdown` command is fetched by the InfoFetcher.
  * Note that there is no external schedule for `suspend`.
  */
-const ShutdownTimerQuickMenuToggle = GObject.registerClass(
+const ShutdownTimerItem = GObject.registerClass(
   {
     Properties: {
       'shutdown-text': GObject.ParamSpec.string(
@@ -77,7 +77,7 @@ const ShutdownTimerQuickMenuToggle = GObject.registerClass(
       },
     },
   },
-  class ShutdownTimerQuickMenuToggle extends QuickSettings.QuickMenuToggle {
+  class ShutdownTimerItem extends QuickSettings.QuickMenuToggle {
     _init({ path, settings }) {
       const gicon = Gio.icon_new_for_string(
         `${path}/icons/shutdown-timer-symbolic.svg`
@@ -405,7 +405,7 @@ const ShutdownTimerQuickMenuToggle = GObject.registerClass(
   }
 );
 
-export const ShutdownTimerSystemIndicator = GObject.registerClass(
+export const ShutdownTimerIndicator = GObject.registerClass(
   {
     Properties: {
       'wake-minutes': GObject.ParamSpec.int(
@@ -433,12 +433,12 @@ export const ShutdownTimerSystemIndicator = GObject.registerClass(
       },
     },
   },
-  class ShutdownTimerSystemIndicator extends QuickSettings.SystemIndicator {
+  class ShutdownTimerIndicator extends QuickSettings.SystemIndicator {
     _init({ path, settings }) {
       super._init();
       this._settings = settings;
       this._textbox = new Textbox({ settings });
-      const item = new ShutdownTimerQuickMenuToggle({ path, settings });
+      const item = new ShutdownTimerItem({ path, settings });
       const infoFetcher = new InfoFetcher();
       const proxyCancel = new Gio.Cancellable();
       this._sdtProxy = null;
