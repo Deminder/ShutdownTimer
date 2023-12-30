@@ -11,6 +11,7 @@ import {
   actionLabel,
   ACTIONS,
   mapLegacyAction,
+  supportedActions,
 } from './dbus-service/action.js';
 import { logDebug, Idle } from './modules/util.js';
 
@@ -115,6 +116,39 @@ export default class ShutdownTimerPreferences extends ExtensionPreferences {
     });
   }
 
+  async initShutdownModeCombo(settings, comp) {
+    const model = new Gtk.StringList();
+    const actionIds = [];
+    try {
+      for await (const action of supportedActions()) {
+        model.append(actionLabel(action));
+        actionIds.push(ACTIONS[action]);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+    comp.model = model;
+    const updateComboRow = () => {
+      const actionId =
+        ACTIONS[mapLegacyAction(settings.get_string('shutdown-mode-value'))];
+      const index = actionIds.indexOf(actionId);
+      if (index >= 0) comp.selected = index;
+    };
+    comp.connect('notify::selected', () => {
+      const actionId = actionIds[comp.selected];
+      const action = Object.entries(ACTIONS).find(
+        ([_, id]) => id === actionId
+      )[0];
+      if (action) settings.set_string('shutdown-mode-value', action);
+    });
+    const comboHandlerId = settings.connect(
+      'changed::shutdown-mode-value',
+      () => updateComboRow()
+    );
+    comp.connect('destroy', () => settings.disconnect(comboHandlerId));
+    updateComboRow();
+  }
+
   initPage(pageName, builder, settings) {
     if (pageName in templateComponents) {
       for (const [baseName, component] of Object.entries(
@@ -128,30 +162,7 @@ export default class ShutdownTimerPreferences extends ExtensionPreferences {
           throw new Error(`Component not found in template: ${compId}`);
         }
         if (compId === 'shutdown_mode_combo') {
-          const model = new Gtk.StringList();
-          for (const action of Object.keys(ACTIONS)) {
-            model.append(actionLabel(action));
-          }
-          comp.model = model;
-          const updateComboRow = () => {
-            const index =
-              ACTIONS[
-                mapLegacyAction(settings.get_string('shutdown-mode-value'))
-              ];
-            if (index >= 0 && index !== comp.selected) comp.selected = index;
-          };
-          comp.connect('notify::selected', () => {
-            const action = Object.entries(ACTIONS).find(
-              ([_, id]) => id === comp.selected
-            )[0];
-            if (action) settings.set_string('shutdown-mode-value', action);
-          });
-          const comboHandlerId = settings.connect(
-            'changed::shutdown-mode-value',
-            () => updateComboRow()
-          );
-          comp.connect('destroy', () => settings.disconnect(comboHandlerId));
-          updateComboRow();
+          this.initShutdownModeCombo(settings, comp);
         } else {
           settings.bind(
             settingsName,
