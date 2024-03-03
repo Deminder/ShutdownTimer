@@ -332,7 +332,7 @@ const ShutdownTimerQuickMenuToggle = GObject.registerClass(
             : 'system-shutdown-symbolic',
         style_class: 'popup-menu-icon',
       });
-      item.add(sliderIcon);
+      item.add_child(sliderIcon);
       const slider = new Slider.Slider(sliderValue);
       slider.connect('notify::value', () => {
         const v = slider.value * 100;
@@ -477,7 +477,7 @@ export const ShutdownTimerSystemIndicator = GObject.registerClass(
         this._syncIndicatorsVisible();
       };
 
-      this.add_actor(icon);
+      this.add_child(icon);
       this.add_child(scheduleLabel);
 
       item.connect('notify::indicator-icon-name', () => updateIcon());

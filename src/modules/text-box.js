@@ -122,7 +122,7 @@ export class Textbox {
         text: textmsg,
         opacity: 0,
       });
-      Main.uiGroup.add_actor(textbox);
+      Main.uiGroup.add_child(textbox);
       this.textboxes.unshift(textbox);
       this.syncThrottled();
     }
