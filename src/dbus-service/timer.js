@@ -126,7 +126,7 @@ export class Timer {
           this._timerCancellable.cancel();
           this._timerCancellable = null;
         }
-        this._actionPromise = this.executeActionDelayed()
+        this.executeActionDelayed()
           .then(() => {
             logDebug('[executeActionDelayed] done');
           })
