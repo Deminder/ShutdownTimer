@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Deminder <tremminder@gmail.com>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 import { gettext as _ } from '../modules/translation.js';
 
@@ -64,8 +65,11 @@ export class CheckCommand {
       console.error('[check-tick]', err);
     }
     try {
-      await Control.execCheck(['sleep', '30'], this.#checkCancel, false);
-      await this.continueTick(tickAsync);
+      await Control.sleepUntilDeadline(
+        GLib.DateTime.new_now_utc().to_unix() + 30,
+        this.#checkCancel
+      );
+      await this.#continueTick(tickAsync);
     } catch {
       logDebug('[check-tick] Done');
     }
