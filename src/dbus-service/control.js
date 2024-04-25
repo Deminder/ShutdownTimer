@@ -140,6 +140,37 @@ export function execCheck(
   });
 }
 
+export function sleepUntilDeadline(deadlineSeconds, cancellable) {
+  return new Promise((resolve, reject) => {
+    const secondsLeft = () =>
+      deadlineSeconds - GLib.DateTime.new_now_utc().to_unix();
+
+    let timeoutId = 0;
+    let handlerId = cancellable.connect(() => {
+      handlerId = 0;
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      reject(new Error('Sleep until deadline cancelled!'));
+    });
+
+    const continueSleep = () => {
+      timeoutId = setTimeout(() => {
+        timeoutId = 0;
+        if (secondsLeft() > 0) {
+          continueSleep();
+        } else {
+          if (handlerId) {
+            cancellable.disconnect(handlerId);
+          }
+          resolve();
+        }
+      }, 1000);
+    };
+    continueSleep();
+  });
+}
+
 export function installedScriptPath() {
   for (const name of [
     'shutdowntimerctl',
