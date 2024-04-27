@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-30 23:22+0100\n"
+"POT-Creation-Date: 2024-04-27 11:49+0200\n"
 "PO-Revision-Date: 2022-04-07 22:08+0200\n"
 "Last-Translator: 绿色圣光 <lishaohui.qd@163.com>\n"
 "Language-Team: Chinese (Simplified) <>\n"
@@ -20,78 +20,78 @@ msgstr ""
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: src/dbus-service/action.js:152
+#: src/dbus-service/action.js:175
 msgid "Suspend then Hibernate"
 msgstr ""
 
-#: src/dbus-service/action.js:153
+#: src/dbus-service/action.js:176
 msgid "Hybrid Sleep"
 msgstr ""
 
-#: src/dbus-service/action.js:154
+#: src/dbus-service/action.js:177
 msgid "Hibernate"
 msgstr ""
 
-#: src/dbus-service/action.js:155
+#: src/dbus-service/action.js:178
 msgid "Halt"
 msgstr ""
 
-#: src/dbus-service/action.js:156
+#: src/dbus-service/action.js:179
 msgid "Suspend"
 msgstr ""
 
-#: src/dbus-service/action.js:157
+#: src/dbus-service/action.js:180
 msgid "Power Off"
 msgstr ""
 
-#: src/dbus-service/action.js:158
+#: src/dbus-service/action.js:181
 msgid "Restart"
 msgstr ""
 
-#: src/dbus-service/action.js:159 src/ui/prefs.ui:239 src/ui/prefs.ui:442
+#: src/dbus-service/action.js:182 src/ui/prefs.ui:239 src/ui/prefs.ui:442
 msgid "Wake"
 msgstr ""
 
-#: src/dbus-service/action.js:160
+#: src/dbus-service/action.js:183
 msgid "No Wake"
 msgstr ""
 
-#: src/dbus-service/action.js:166
+#: src/dbus-service/action.js:189
 msgctxt "untiltext"
 msgid "suspend and hibernate"
 msgstr ""
 
-#: src/dbus-service/action.js:167
+#: src/dbus-service/action.js:190
 msgctxt "untiltext"
 msgid "hybrid sleep"
 msgstr ""
 
-#: src/dbus-service/action.js:168
+#: src/dbus-service/action.js:191
 msgctxt "untiltext"
 msgid "hibernate"
 msgstr ""
 
-#: src/dbus-service/action.js:169
+#: src/dbus-service/action.js:192
 msgctxt "untiltext"
 msgid "halt"
 msgstr ""
 
-#: src/dbus-service/action.js:170
+#: src/dbus-service/action.js:193
 msgctxt "untiltext"
 msgid "suspend"
 msgstr ""
 
-#: src/dbus-service/action.js:171
+#: src/dbus-service/action.js:194
 msgctxt "untiltext"
 msgid "shutdown"
 msgstr "关机"
 
-#: src/dbus-service/action.js:172
+#: src/dbus-service/action.js:195
 msgctxt "untiltext"
 msgid "reboot"
 msgstr ""
 
-#: src/dbus-service/action.js:173
+#: src/dbus-service/action.js:196
 msgctxt "untiltext"
 msgid "wakeup"
 msgstr ""
@@ -104,7 +104,7 @@ msgstr ""
 msgid "CANCEL"
 msgstr ""
 
-#: src/dbus-service/control.js:169
+#: src/dbus-service/control.js:200
 msgid "Privileged script installation required!"
 msgstr ""
 
@@ -136,7 +136,7 @@ msgstr "已取消定时关机"
 msgid "%s is not supported!"
 msgstr ""
 
-#: src/dbus-service/timer.js:203 src/dbus-service/timer.js:259
+#: src/dbus-service/timer.js:202 src/dbus-service/timer.js:263
 #, javascript-format
 msgctxt "Error"
 msgid ""
@@ -144,11 +144,11 @@ msgid ""
 "%s"
 msgstr ""
 
-#: src/dbus-service/timer.js:203
+#: src/dbus-service/timer.js:202
 msgid "Wake action failed!"
 msgstr ""
 
-#: src/dbus-service/timer.js:259
+#: src/dbus-service/timer.js:263
 msgid "Root mode protection failed!"
 msgstr ""
 

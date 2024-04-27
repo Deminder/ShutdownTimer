@@ -11,6 +11,7 @@ target/
 *.png
 *.mo
 debug-guest.sh
+guest-ssh.env
 
 node_modules
 package-lock.json
