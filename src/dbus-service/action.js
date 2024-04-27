@@ -41,6 +41,8 @@ export class UnsupportedActionError extends Error {}
 
 export class Action {
   #cancellable = new Gio.Cancellable();
+  #cookie = null;
+
   #loginProxy = proxyPromise(
     'org.freedesktop.login1.Manager',
     Gio.DBus.system,
@@ -138,6 +140,27 @@ export class Action {
       await Control.wake(minutes);
     } else {
       await Control.wakeCancel();
+    }
+  }
+
+  async inhibitSuspend() {
+    if (this.#cookie === null) {
+      const sessionProxy = await this.#sessionProxy;
+      const [cookie] = await sessionProxy.InhibitAsync(
+        'user',
+        0,
+        'Inhibit by Shutdown Timer (GNOME-Shell extension)',
+        /* Suspend flag */ 4
+      );
+      this.#cookie = cookie;
+    }
+  }
+
+  async uninhibitSuspend() {
+    if (this.#cookie !== null) {
+      const sessionProxy = await this.#sessionProxy;
+      await sessionProxy.UninhibitAsync(this.#cookie);
+      this.#cookie = null;
     }
   }
 }

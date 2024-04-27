@@ -164,8 +164,8 @@ export class Timer {
           _('%s is not supported!').format(actionLabel(internal.mode))
         );
       }
-      await this.toggleShutdown(false);
     }
+    await this.toggleShutdown(false);
   }
 
   async executeActionDelayed() {
@@ -175,10 +175,9 @@ export class Timer {
       logDebug(`Started delayed action: ${internal.minutes}min remaining`);
       try {
         this._timerCancellable = new Gio.Cancellable();
-        await Control.execCheck(
-          ['sleep', `${secs}`],
-          this._timerCancellable,
-          false
+        await Control.sleepUntilDeadline(
+          internal.deadline,
+          this._timerCancellable
         );
         this._timerCancellable = null;
       } catch {
@@ -223,6 +222,11 @@ export class Timer {
             )
         : -1
     );
+    if (shutdown) {
+      await this._action.inhibitSuspend();
+    } else {
+      await this._action.uninhibitSuspend();
+    }
     if (this._settings.get_boolean('auto-wake-value')) {
       await this.toggleWake(shutdown);
     }
