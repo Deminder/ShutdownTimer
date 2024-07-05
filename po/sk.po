@@ -1,0 +1,720 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Shutdown Timer
+# This file is distributed under the same license as the Shutdown Timer package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: ShutdownTimer v45\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-12-30 21:57+0100\n"
+"PO-Revision-Date: 2024-07-05 21:52+0200\n"
+"Last-Translator: Jozef Gaal <preklady@mayday.sk>\n"
+"Language-Team: Jozef Gaál <preklady@mayday.sk>\n"
+"Language: sk_SK\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n>=2 && n<=4 ? 1 : 2);\n"
+"X-Generator: Poedit 3.4.2\n"
+
+#: src/dbus-service/action.js:152
+msgid "Suspend then Hibernate"
+msgstr "Uspať a potom hibernovať"
+
+#: src/dbus-service/action.js:153
+msgid "Hybrid Sleep"
+msgstr "Hybridný spánok"
+
+#: src/dbus-service/action.js:154
+msgid "Hibernate"
+msgstr "Hibernovať"
+
+#: src/dbus-service/action.js:155
+msgid "Halt"
+msgstr "Zastavenie"
+
+#: src/dbus-service/action.js:156
+msgid "Suspend"
+msgstr "Uspať"
+
+#: src/dbus-service/action.js:157
+msgid "Power Off"
+msgstr "Vypnúť"
+
+#: src/dbus-service/action.js:158
+msgid "Restart"
+msgstr "Reštartovať"
+
+#: src/dbus-service/action.js:159 src/ui/prefs.ui:239 src/ui/prefs.ui:442
+msgid "Wake"
+msgstr "Prebudenie"
+
+#: src/dbus-service/action.js:160
+msgid "No Wake"
+msgstr "Neprebudiť"
+
+#: src/dbus-service/action.js:166
+msgctxt "checktext"
+msgid "suspend then hibernate"
+msgstr "uspanie a potom hibernovať"
+
+#: src/dbus-service/action.js:167
+msgctxt "checktext"
+msgid "hybrid sleep"
+msgstr "hybridný spánok"
+
+#: src/dbus-service/action.js:168
+msgctxt "checktext"
+msgid "hibernate"
+msgstr "hibernovanie"
+
+#: src/dbus-service/action.js:169
+msgctxt "checktext"
+msgid "halt"
+msgstr "zastavenie"
+
+#: src/dbus-service/action.js:170
+msgctxt "checktext"
+msgid "suspend"
+msgstr "uspanie"
+
+#: src/dbus-service/action.js:171
+msgctxt "checktext"
+msgid "shutdown"
+msgstr "vypnutie"
+
+#: src/dbus-service/action.js:172
+msgctxt "checktext"
+msgid "reboot"
+msgstr "reštartovanie"
+
+#: src/dbus-service/action.js:173
+msgctxt "checktext"
+msgid "wakeup"
+msgstr "prebudenie"
+
+#: src/dbus-service/action.js:179
+msgctxt "untiltext"
+msgid "suspend and hibernate"
+msgstr "uspania a potom hibernácie"
+
+#: src/dbus-service/action.js:180
+msgctxt "untiltext"
+msgid "hybrid sleep"
+msgstr "režimu hybridného spánku"
+
+#: src/dbus-service/action.js:181
+msgctxt "untiltext"
+msgid "hibernate"
+msgstr "hibernovania"
+
+#: src/dbus-service/action.js:182
+msgctxt "untiltext"
+msgid "halt"
+msgstr "zastavenia"
+
+#: src/dbus-service/action.js:183
+msgctxt "untiltext"
+msgid "suspend"
+msgstr "uspania"
+
+#: src/dbus-service/action.js:184
+msgctxt "untiltext"
+msgid "shutdown"
+msgstr "vypnutia"
+
+#: src/dbus-service/action.js:185
+msgctxt "untiltext"
+msgid "reboot"
+msgstr "reštartovania"
+
+#: src/dbus-service/action.js:186
+msgctxt "untiltext"
+msgid "wakeup"
+msgstr "prebudenia"
+
+#: src/dbus-service/control.js:72
+msgid "Can not cancel root process!"
+msgstr "Nie je možné zrušiť proces root!"
+
+#: src/dbus-service/control.js:74
+msgid "CANCEL"
+msgstr "ZRUŠIŤ"
+
+#: src/dbus-service/control.js:169
+msgid "Privileged script installation required!"
+msgstr "Vyžaduje sa inštalácia skriptu s oprávnením!"
+
+# Správa na obrazoke: napr. Uspať o 1 hodinu
+#: src/dbus-service/timer.js:113
+#, javascript-format
+msgctxt "StartSchedulePopup"
+msgid "%s in %s"
+msgstr "%s o %s"
+
+#: src/dbus-service/timer.js:117 src/modules/menu-item.js:393
+#: src/modules/schedule-info.js:123
+#, javascript-format
+msgid "%s hour"
+msgid_plural "%s hours"
+msgstr[0] "%s hodinu"
+msgstr[1] "%s hodiny"
+msgstr[2] "%s hodín"
+
+#: src/dbus-service/timer.js:118 src/modules/menu-item.js:394
+#, javascript-format
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] "%s minútu"
+msgstr[1] "%s minúty"
+msgstr[2] "%s minút"
+
+#: src/dbus-service/timer.js:144
+msgid "Confirmation canceled"
+msgstr "Potvrdenie zrušené"
+
+#: src/dbus-service/timer.js:144
+msgid "Shutdown Timer stopped"
+msgstr "Časovač vypnutia zastavený"
+
+#: src/dbus-service/timer.js:165
+#, javascript-format
+msgid "Waiting for %s confirmation"
+msgstr "Čaká sa na potvrdenie %s"
+
+#: src/dbus-service/timer.js:215
+#, javascript-format
+msgctxt "CheckCommand"
+msgid "%s aborted (Code: %s)"
+msgstr "%s prerušené (Kód: %s)"
+
+#: src/dbus-service/timer.js:223
+#, javascript-format
+msgid "%s is not supported!"
+msgstr "%s nie je podporovaný!"
+
+#: src/dbus-service/timer.js:262 src/dbus-service/timer.js:320
+#, javascript-format
+msgctxt "Error"
+msgid ""
+"%s\n"
+"%s"
+msgstr ""
+"%s\n"
+"%s"
+
+#: src/dbus-service/timer.js:262
+msgid "Wake action failed!"
+msgstr "Akcia prebudenia zlyhala!"
+
+#: src/dbus-service/timer.js:320
+msgid "Root mode protection failed!"
+msgstr "Ochrana v režime root zlyhala!"
+
+#: src/modules/install.js:32
+msgid "START"
+msgstr "ZAČIATOK"
+
+#: src/modules/install.js:42
+msgid "END"
+msgstr "KONIEC"
+
+#: src/modules/install.js:44
+msgid "FAIL"
+msgstr "ZLYHANIE"
+
+#: src/modules/install.js:62
+msgid "install"
+msgstr "inštalácie"
+
+#: src/modules/install.js:62
+msgid "uninstall"
+msgstr "odinštalovania"
+
+#: src/modules/menu-item.js:85 src/modules/menu-item.js:291
+msgid "Shutdown Timer"
+msgstr "Časovač vypnutia"
+
+#: src/modules/menu-item.js:117
+msgid "Settings"
+msgstr "Nastavenia"
+
+#: src/modules/menu-item.js:271
+msgid "now"
+msgstr "teraz"
+
+#: src/modules/menu-item.js:294
+msgid "Check {checktext} for {durationString}"
+msgstr "Skontrolovať {checktext} pre {durationString}"
+
+#: src/modules/menu-item.js:351 src/modules/menu-item.js:390
+msgctxt "absolute time notation"
+msgid "%a, %R"
+msgstr "%R, %A"
+
+#: src/modules/menu-item.js:354
+#, javascript-format
+msgid "%s hr"
+msgid_plural "%s hrs"
+msgstr[0] "%s h"
+msgstr[1] "%s h"
+msgstr[2] "%s h"
+
+#: src/modules/menu-item.js:355 src/modules/schedule-info.js:129
+#, javascript-format
+msgid "%s min"
+msgid_plural "%s mins"
+msgstr[0] "%s min"
+msgstr[1] "%s min"
+msgstr[2] "%s min"
+
+#: src/modules/menu-item.js:361
+#, javascript-format
+msgid "%s (protect)"
+msgstr "%s (chránené)"
+
+# Tlačidlo: Prebudenie o 12:00, Sobota
+#: src/modules/menu-item.js:385
+#, javascript-format
+msgctxt "WakeButtonText"
+msgid "%s at %s"
+msgstr "%s o %s"
+
+# Napr: Prebudenie o 4 hodiny a 3 minúty
+#: src/modules/menu-item.js:386
+#, javascript-format
+msgctxt "WakeButtonText"
+msgid "%s after %s"
+msgstr "%s o %s"
+
+#: src/modules/schedule-info.js:44
+msgid "{durationString} until {untiltext}"
+msgstr "{durationString} do {untiltext}"
+
+#: src/modules/schedule-info.js:48
+msgid "{label} (sys)"
+msgstr "{label} (sys)"
+
+#: src/modules/schedule-info.js:57
+msgctxt "absolute schedule notation"
+msgid "%a, %T"
+msgstr "%T, %A"
+
+#: src/modules/schedule-info.js:125
+#, javascript-format
+msgid "%s sec"
+msgid_plural "%s secs"
+msgstr[0] "%s sek"
+msgstr[1] "%s sek"
+msgstr[2] "%s sek"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:13
+msgid "Maximum shutdown time (in minutes)"
+msgstr "Maximálny čas vypnutia (v minútach)"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:14
+msgid ""
+"Set maximum selectable shutdown time of the slider (in minutes). Use only "
+"values greater zero."
+msgstr ""
+"Nastavte maximálny zvoliteľný čas vypnutia posuvníka (v minútach). "
+"Používajte len hodnoty väčšie ako nula."
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:19
+msgid "Maximum wake time (in minutes)"
+msgstr "Maximálna čas prebudenia (v minútach)"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:20
+msgid ""
+"Set maximum selectable wake time of the slider (in minutes). Use only values "
+"greater zero."
+msgstr ""
+"Nastavte maximálny zvoliteľný čas prebudenia posuvníka (v minútach). "
+"Používajte len hodnoty väčšie ako nula."
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:25
+msgid "Reference start time for shutdown"
+msgstr "Referenčný čas začiatku pre vypnutie"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:26
+msgid "Reference start time for shutdown either now or HH:MM"
+msgstr "Referenčný čas začiatku pre vypnutie, buď teraz alebo HH:MM"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:31
+msgid "Display shutdown time as absolute timestamp"
+msgstr "Zobraziť čas vypnutia ako absolútnu časovú značku"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:32
+msgid "Display shutdown time as absolute timestamp \"HH:MM\""
+msgstr "Zobraziť čas vypnutia ako absolútnu časovú značku\"HH:MM\""
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:37
+msgid "Reference start time for wake"
+msgstr "Referenčný čas začiatku pre prebudenia"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:38
+msgid "Reference start time for wake either now, shutdown, or HH:MM"
+msgstr ""
+"Referenčný čas začiatku pre prebudenia, buď teraz, vypnutie alebo HH:MM"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:43
+msgid "Display wake time as absolute timestamp"
+msgstr "Zobraziť čas prebudenia ako absolútnu časovú značku"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:44
+msgid "Display wake time as absolute timestamp \"HH:MM\""
+msgstr "Zobraziť čas prebudenia ako absolútnu časovú značku \"HH:MM\""
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:49
+msgid "Automatically start and stop wake on shutdown timer toggle"
+msgstr "Automaticky spustiť a zastaviť budenie pri prepnutí časovača vypnutia"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:50
+msgid ""
+"Enable/Disable the wake alarm when the shutdown timer is started/stopped."
+msgstr "Zapnúť/vypnúť alarm budenia pri spustení/zastavení časovača vypnutia."
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:55
+msgid "Scheduled shutdown timestamp."
+msgstr "Časová značka plánovaného vypnutia."
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:56
+msgid "Unix time in seconds of scheduled shutdown or -1 if disabled."
+msgstr ""
+"Unixový čas v sekundách plánovaného vypnutia alebo -1, ak je to zakázané."
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:61
+msgid "Wake slider position (in percent)"
+msgstr "Pozícia posuvníka prebudenia (v percentách)"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:62
+msgid ""
+"Set wake slider position as percent of the maximum time. Must be in range 0 "
+"and 100."
+msgstr ""
+"Nastavte polohu posuvníka prebudenia ako percento maximálneho času. Musí byť "
+"v rozsahu 0 a 100."
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:67
+msgid "Ramp-up of non-linear wake slider value"
+msgstr "Zvýšiť nelineárnu hodnotu posuvníka budenia"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:68
+msgid "Exponential ramp-up for wake time slider"
+msgstr "Exponenciálne zvýšiť posuvník času prebudenia"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:73
+msgid "Shutdown slider position (in percent)"
+msgstr "Poloha posuvníka vypnutia (v percentách)"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:74
+msgid ""
+"Set shutdown slider position as percent of the maximum time. Must be in "
+"range 0 and 100."
+msgstr ""
+"Nastavte polohu posuvníka vypnutia ako percento maximálneho času. Musí byť v "
+"rozsahu 0 a 100."
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:79
+msgid "Ramp-up of non-linear shutdown slider value"
+msgstr "Zvýšiť nelineárnu hodnotu posuvníka vypnutia"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:80
+msgid "Exponential ramp-up for shutdown time slider"
+msgstr "Exponenciálne zvýšiť nelineárnu hodnotu posuvníka vypnutia"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:85
+#: src/ui/prefs.ui:360
+msgid "Show settings button"
+msgstr "Zobraziť tlačidlo nastavenia"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:86
+msgid "Show/hide settings button in widget."
+msgstr "Zobraziť/skryť tlačidlo nastavenia vo widgete."
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:91
+#: src/ui/prefs.ui:404
+msgid "Show shutdown slider"
+msgstr "Zobraziť posuvník vypnutia"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:92
+msgid "Show/hide shutdown slider in widget."
+msgstr "Zobraziť/skryť posuvník vypnutia vo widgete."
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:97
+#: src/ui/prefs.ui:458
+msgid "Show wake slider"
+msgstr "Zobraziť posuvník zobúdzania"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:98
+msgid "Show/hide wake slider in widget."
+msgstr "Zobraziť/skryť posuvník prebudenia vo widgete."
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:103
+msgid "Show all wake items"
+msgstr "Zobraziť všetky položky prebudenia"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:104
+msgid "Show/hide all wake items in widget."
+msgstr "Zobraziť/skryť všetky položky prebudenia vo widgete."
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:109
+#: src/ui/prefs.ui:372
+msgid "Show notification text boxes"
+msgstr "Zobraziť textové polia s upozorneniami"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:110
+msgid "Show/hide notification text boxes on screen."
+msgstr "Zobraziť/skryť textové polia s upozorneniami na obrazovke."
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:115
+msgid "Root mode"
+msgstr "Režim root"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:116
+msgid ""
+"Set root mode on/off. In root mode powering off is done via 'pkexec' and "
+"'shutdown' terminal command."
+msgstr ""
+"Nastaviť zapnutie/vypnutie režimu root. V režime root sa vypnutie vykonáva "
+"pomocou terminálového príkazu 'pkexec' a 'shutdown'."
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:121
+#: src/ui/prefs.ui:122
+msgid "Show end-session dialog"
+msgstr "Zobraziť dialógové okno ukončenia relácie"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:122
+msgid ""
+"Show the end-session dialog for reboot and shutdown if screensaver is "
+"inactive."
+msgstr ""
+"Zobraziť dialógové okno ukončenia relácie pre reštart a vypnutie, ak nie je "
+"šetrič obrazovky aktívny."
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:127
+msgid "Shown shutdown modes"
+msgstr "Zobraziť režimy vypnutia"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:128
+#: src/ui/prefs.ui:390
+msgid ""
+"Comma-separated shutdown modes which are shown in the popup menu (p: "
+"poweroff, s: suspend, r: reboot)"
+msgstr ""
+"Režimy vypnutia oddelené čiarkou, ktoré sa zobrazujú vo vyskakovacej ponuke "
+"(p: vypnutie, s: uspanie, r: reštart)"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:133
+#: src/ui/prefs.ui:116
+msgid "Use mode"
+msgstr "Režim použitia"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:134
+#: src/ui/prefs.ui:117
+msgid "Mode to use for timer action"
+msgstr "Režim, ktorý sa má použiť pre akciu časovača"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:139
+#: src/ui/prefs.ui:416
+msgid "Show shutdown indicator"
+msgstr "Zobraziť indikátor vypnutia"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:140
+#: src/ui/prefs.ui:417
+msgid "Shows the remaining time until shutdown action"
+msgstr "Zobrazuje zostávajúci čas do vypnutia"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:157
+msgid "Check command(s)"
+msgstr "Kontrolný príkaz(y)"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:158
+msgid ""
+"Run command(s) before shutdown command. Proceed with shutdown only if check "
+"command succeeds."
+msgstr ""
+"Spustiť príkaz(y) pred príkazom na vypnutie. Pokračovať vo vypínaní len "
+"vtedy, ak kontrolný príkaz uspeje."
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:163
+msgid "Enable check command"
+msgstr "Zapnúť kontrolný príkaz"
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:164
+msgid "Check command is skipped if disabled."
+msgstr "Kontrolný príkaz sa vynechá, ak je zakázané."
+
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:169
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:170
+msgid "Last selected page in the preferences."
+msgstr "Posledná vybraná stránka v nastaveniach."
+
+#: src/tool/installer.sh:66
+msgid "Failed"
+msgstr "Zlyhalo"
+
+#: src/tool/installer.sh:68
+msgid "Success"
+msgstr "Hotovo"
+
+#: src/tool/installer.sh:192 src/tool/installer.sh:199
+#: src/tool/installer.sh:204
+msgid "Installing"
+msgstr "Inštaluje sa"
+
+#: src/tool/installer.sh:192 src/tool/installer.sh:226
+#: src/tool/installer.sh:254
+msgid "tool"
+msgstr "nástroja"
+
+#: src/tool/installer.sh:198
+msgid "Using legacy policykit install"
+msgstr "Používanie staršej inštalácie policykit"
+
+#: src/tool/installer.sh:199 src/tool/installer.sh:233
+msgid "policykit action"
+msgstr "akcia policykit"
+
+#: src/tool/installer.sh:204 src/tool/installer.sh:240
+#: src/tool/installer.sh:255
+msgid "policykit rule"
+msgstr "pravidla policykit"
+
+#: src/tool/installer.sh:226 src/tool/installer.sh:233
+#: src/tool/installer.sh:240 src/tool/installer.sh:245
+msgid "Uninstalling"
+msgstr "Odinštalovanie"
+
+#: src/tool/installer.sh:227 src/tool/installer.sh:234
+#: src/tool/installer.sh:241 src/tool/installer.sh:248
+msgid "cannot remove"
+msgstr "nie je možné odstrániť"
+
+#: src/tool/installer.sh:250
+msgid "not installed at"
+msgstr "nie je nainštalované v"
+
+#: src/ui/prefs.ui:63
+msgid "Install"
+msgstr "Inštalácia"
+
+#: src/ui/prefs.ui:70
+msgid "Install/Uninstall privileges for this user"
+msgstr "Inštalovať/Odinštalovať oprávnenia pre tohto používateľa"
+
+#: src/ui/prefs.ui:71
+msgid "Setup a privileged script and give user access via polkit"
+msgstr ""
+"Nastaviť privilegovaný skript a udeliť používateľovi prístup cez polkit"
+
+#: src/ui/prefs.ui:82
+msgid "Install output"
+msgstr "Výstup inštalácie"
+
+#: src/ui/prefs.ui:109 src/ui/prefs.ui:386
+msgid "Shutdown"
+msgstr "Vypnutie"
+
+#: src/ui/prefs.ui:113 src/ui/prefs.ui:243
+msgid "Timer Action"
+msgstr "Akcia časovača"
+
+#: src/ui/prefs.ui:123
+msgid "Shown for reboot and shutdown if screensaver is inactive"
+msgstr ""
+"Zobrazuje sa pri reštarte a vypnutí, ak šetrič obrazovky nie je aktívny"
+
+#: src/ui/prefs.ui:134
+msgid "Toggle root shutdown with shutdown timer"
+msgstr "Prepínať vypnutie v režime root s časovačom vypnutia"
+
+#: src/ui/prefs.ui:135
+msgid "Runs extra 'shutdown -P/-r' command for shutdown or reboot"
+msgstr "Spustí dodatočný príkaz 'shutdown -P/-r' na vypnutie alebo reštart"
+
+#: src/ui/prefs.ui:148 src/ui/prefs.ui:261
+msgid "Timer Input"
+msgstr "Vstup časovača"
+
+#: src/ui/prefs.ui:151 src/ui/prefs.ui:264
+msgid "Reference start time"
+msgstr "Referenčný čas začiatku"
+
+#: src/ui/prefs.ui:152
+msgid "Options: now, HH:MM"
+msgstr "Možnosti: now, HH:MM (now - teraz, HH - hodiny, MM - minúty)"
+
+#: src/ui/prefs.ui:165 src/ui/prefs.ui:183
+msgid "Shutdown slider position (in &#37;)"
+msgstr "Poloha posuvníka vypnutia (v &#37;)"
+
+#: src/ui/prefs.ui:199 src/ui/prefs.ui:312
+msgid "Non-linear scaling or 0 to disable"
+msgstr "Nelineárne škálovanie alebo 0 pre zakázanie"
+
+#: src/ui/prefs.ui:218
+msgid "Maximum shutdown timer value (in minutes)"
+msgstr "Maximálna hodnota časovača vypnutia (v minútach)"
+
+#: src/ui/prefs.ui:247
+msgid "Toggle wake with timer action"
+msgstr "Prepínanie prebudenia pomocou akcie časovača"
+
+#: src/ui/prefs.ui:265
+msgid "Options: now, shutdown, HH:MM"
+msgstr "Možnosti: teraz, shutdown, HH:MM (now - teraz, shutdown - vypnúť)"
+
+#: src/ui/prefs.ui:278 src/ui/prefs.ui:296
+msgid "Wake slider position (in &#37;)"
+msgstr "Pozícia posuvníka prebudenia (v &#37;)"
+
+#: src/ui/prefs.ui:331
+msgid "Maximum wake timer value (in minutes)"
+msgstr "Maximálna hodnota časovača prebudenia (v minútach)"
+
+#: src/ui/prefs.ui:352
+msgid "Display"
+msgstr "Vzhľad"
+
+#: src/ui/prefs.ui:356
+msgid "General"
+msgstr "Všeobecné"
+
+#: src/ui/prefs.ui:389
+msgid "Show shutdown items"
+msgstr "Zobraziť položky vypnutia"
+
+#: src/ui/prefs.ui:429
+msgid "Absolute shutdown time selection"
+msgstr "Výber absolútneho času vypnutia"
+
+#: src/ui/prefs.ui:446
+msgid "Show wake items"
+msgstr "Zobraziť položky zobúdzania"
+
+#: src/ui/prefs.ui:470
+msgid "Absolute wake time selection"
+msgstr "Výber absolútneho času prebudenia"
+
+#: src/ui/prefs.ui:484
+msgid "Check"
+msgstr "Skontrolovať"
+
+#: src/ui/prefs.ui:491
+msgid "Enable check"
+msgstr "Zapnúť kontrolu"
+
+#: src/ui/prefs.ui:492
+msgid ""
+"Script is run in a bash user shell after timer activates. Timer action "
+"proceeds if check terminates successfully."
+msgstr ""
+"Skript sa spustí v používateľskom prostredí bash po aktivácii časovača. "
+"Akcia časovača prebehne, ak sa kontrola úspešne ukončí."
+
+#: src/ui/prefs.ui:503
+msgid "Check script"
+msgstr "Kontrolný skript"
