@@ -9,7 +9,7 @@ import {
   pgettext as C_,
 } from '../modules/translation.js';
 
-import { logDebug } from '../modules/util.js';
+import { logDebug, throttleTimeout } from '../modules/util.js';
 import * as Control from './control.js';
 import { CheckCommand } from './check-command.js';
 import {
@@ -28,8 +28,8 @@ import {
 const Signals = imports.signals;
 
 export class Timer {
-  _ignoreScheduleUpdate = false;
   _timerCancellable = null;
+  _updateScheduleCancel = null;
   _checkCommand = new CheckCommand();
   _action = new Action();
   info = {
@@ -46,17 +46,18 @@ export class Timer {
   constructor({ settings }) {
     this._settings = settings;
 
+    const [updateScheduleThrottled, updateScheduleCancel] = throttleTimeout(
+      () => this.updateSchedule(),
+      20
+    );
+    this._updateScheduleCancel = updateScheduleCancel;
     this._settingsIds = [
-      settings.connect('changed::root-mode-value', () =>
-        this._updateRootModeProtection()
-      ),
-      settings.connect('changed::shutdown-timestamp-value', () =>
-        this.updateSchedule()
-      ),
-      settings.connect('changed::shutdown-mode-value', () =>
-        this.updateSchedule()
-      ),
-    ];
+      'root-mode-value',
+      'shutdown-timestamp-value',
+      'shutdown-mode-value',
+    ].map(settingName =>
+      settings.connect(`changed::${settingName}`, updateScheduleThrottled)
+    );
 
     // React to changes of the check command
     this._checkCommand.connect('change', () => {
@@ -73,6 +74,12 @@ export class Timer {
     this._settingsIds.forEach(id => this._settings.disconnect(id));
     this._settingsIds = [];
     this._settings = null;
+
+    // Cancel schedule updates
+    if (this._updateScheduleCancel !== null) {
+      this._updateScheduleCancel();
+      this._updateScheduleCancel = null;
+    }
 
     // Cancel internal timer
     if (this._timerCancellable !== null) {
@@ -91,10 +98,9 @@ export class Timer {
     const internal = getShutdownScheduleFromSettings(this._settings);
     this.info.internalShutdown = internal;
     logDebug(
-      `[updateSchedule] internal schedule: ${internal.label} (ignore: ${this._ignoreScheduleUpdate})`
+      `[updateSchedule] internal schedule: ${internal.label} (old internal schedule: ${oldInternal.label})`
     );
     this._updateRootModeProtection(oldInternal);
-    if (this._ignoreScheduleUpdate) return;
     if (
       internal.mode !== oldInternal.mode ||
       internal.deadline !== oldInternal.deadline
@@ -267,9 +273,7 @@ export class Timer {
   async toggleShutdown(shutdown, action) {
     logDebug('[toggleShutdown] shutdown', shutdown, 'action', action);
     if (action) {
-      this._ignoreScheduleUpdate = true;
       this._settings.set_string('shutdown-mode-value', mapLegacyAction(action));
-      this._ignoreScheduleUpdate = false;
     }
     this._settings.set_int(
       'shutdown-timestamp-value',
