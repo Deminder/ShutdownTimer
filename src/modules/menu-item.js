@@ -469,16 +469,8 @@ export const ShutdownTimerIndicator = GObject.registerClass(
       updateLabel();
       updateIcon();
 
-      const settingsIds = [
-        'shutdown-mode-value',
-        'shutdown-timestamp-value',
-      ].map(n =>
-        settings.connect(`changed::${n}`, () => this._syncShutdownInfo())
-      );
-
       this.quickSettingsItems.push(item);
       this.connect('destroy', () => {
-        settingsIds.forEach(settingsId => settings.disconnect(settingsId));
         proxyCancel.cancel();
         infoFetcher.destroy();
         this._infoFetcher = null;
@@ -509,7 +501,12 @@ export const ShutdownTimerIndicator = GObject.registerClass(
       );
       if (cancellable?.is_cancelled()) return;
       item.connect('shutdown', (__, shutdown, action) => {
-        logDebug('[menu-item] shutdown', shutdown, 'action', action);
+        logDebug(
+          '[menu-item] [shutdown-signal] shutdown: ',
+          shutdown,
+          'action:',
+          action
+        );
         proxy
           .ScheduleShutdownAsync(shutdown, action)
           .catch(err => console.error('[shutdown]', err));
@@ -525,7 +522,7 @@ export const ShutdownTimerIndicator = GObject.registerClass(
           textbox.showTextbox(msg);
         }),
         proxy.connectSignal('OnStateChange', (__, ___, [state]) => {
-          logDebug('[menu-item] state:', state);
+          logDebug('[menu-item] [OnStateChange-signal] state:', state);
           this._state = state;
           this._syncShutdownInfo();
         }),
