@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ShutdownTimer v45\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-12 23:42+0200\n"
+"POT-Creation-Date: 2024-09-29 21:23+0200\n"
 "PO-Revision-Date: 2024-07-05 21:52+0200\n"
 "Last-Translator: Jozef Gaal <preklady@mayday.sk>\n"
 "Language-Team: Jozef Gaál <preklady@mayday.sk>\n"
@@ -107,13 +107,13 @@ msgid "Privileged script installation required!"
 msgstr "Vyžaduje sa inštalácia skriptu s oprávnením!"
 
 # Správa na obrazoke: napr. Uspať o 1 hodinu
-#: src/dbus-service/timer.js:99
+#: src/dbus-service/timer.js:105
 #, javascript-format
 msgctxt "StartSchedulePopup"
 msgid "%s in %s"
 msgstr "%s o %s"
 
-#: src/dbus-service/timer.js:103 src/modules/menu-item.js:376
+#: src/dbus-service/timer.js:109 src/modules/menu-item.js:376
 #: src/modules/schedule-info.js:123
 #, javascript-format
 msgid "%s hour"
@@ -122,7 +122,7 @@ msgstr[0] "%s hodinu"
 msgstr[1] "%s hodiny"
 msgstr[2] "%s hodín"
 
-#: src/dbus-service/timer.js:104 src/modules/menu-item.js:377
+#: src/dbus-service/timer.js:110 src/modules/menu-item.js:377
 #, javascript-format
 msgid "%s minute"
 msgid_plural "%s minutes"
@@ -130,16 +130,16 @@ msgstr[0] "%s minútu"
 msgstr[1] "%s minúty"
 msgstr[2] "%s minút"
 
-#: src/dbus-service/timer.js:128
+#: src/dbus-service/timer.js:134
 msgid "Shutdown Timer stopped"
 msgstr "Časovač vypnutia zastavený"
 
-#: src/dbus-service/timer.js:164
+#: src/dbus-service/timer.js:170
 #, javascript-format
 msgid "%s is not supported!"
 msgstr "%s nie je podporovaný!"
 
-#: src/dbus-service/timer.js:202 src/dbus-service/timer.js:263
+#: src/dbus-service/timer.js:208 src/dbus-service/timer.js:267
 #, javascript-format
 msgctxt "Error"
 msgid ""
@@ -149,11 +149,11 @@ msgstr ""
 "%s\n"
 "%s"
 
-#: src/dbus-service/timer.js:202
+#: src/dbus-service/timer.js:208
 msgid "Wake action failed!"
 msgstr "Akcia prebudenia zlyhala!"
 
-#: src/dbus-service/timer.js:263
+#: src/dbus-service/timer.js:267
 msgid "Root mode protection failed!"
 msgstr "Ochrana v režime root zlyhala!"
 

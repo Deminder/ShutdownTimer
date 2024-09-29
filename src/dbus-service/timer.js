@@ -238,7 +238,7 @@ export class Timer {
 
   get state() {
     return this.info.internalShutdown.scheduled
-        ? this.info.internalShutdown.secondsLeft > 0
+      ? this.info.internalShutdown.secondsLeft > 0
         ? 'active'
         : 'action'
       : 'inactive';
