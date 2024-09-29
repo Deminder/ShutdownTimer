@@ -296,13 +296,13 @@ export class Timer {
   }
 
   get state() {
-    if (this._checkCommand.isChecking()) {
-      return 'check';
-    } else if (this.info.internalShutdown.scheduled) {
-      return this.info.internalShutdown.secondsLeft > 0 ? 'active' : 'action';
-    } else {
-      return 'inactive';
-    }
+    return this.info.internalShutdown.scheduled
+      ? this._checkCommand.isChecking()
+        ? 'check'
+        : this.info.internalShutdown.secondsLeft > 0
+        ? 'active'
+        : 'action'
+      : 'inactive';
   }
 
   /**
