@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Shutdown Timer 46\n"
+"Project-Id-Version: Shutdown Timer 48\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-29 21:23+0200\n"
+"POT-Creation-Date: 2025-03-30 00:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -112,7 +112,7 @@ msgctxt "StartSchedulePopup"
 msgid "%s in %s"
 msgstr ""
 
-#: src/dbus-service/timer.js:109 src/modules/menu-item.js:376
+#: src/dbus-service/timer.js:109 src/modules/menu-item.js:375
 #: src/modules/schedule-info.js:123
 #, javascript-format
 msgid "%s hour"
@@ -120,7 +120,7 @@ msgid_plural "%s hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/dbus-service/timer.js:110 src/modules/menu-item.js:377
+#: src/dbus-service/timer.js:110 src/modules/menu-item.js:376
 #, javascript-format
 msgid "%s minute"
 msgid_plural "%s minutes"
@@ -172,7 +172,7 @@ msgstr ""
 msgid "uninstall"
 msgstr ""
 
-#: src/modules/menu-item.js:84 src/modules/menu-item.js:289
+#: src/modules/menu-item.js:84 src/modules/menu-item.js:288
 msgid "Shutdown Timer"
 msgstr ""
 
@@ -180,41 +180,41 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: src/modules/menu-item.js:269
+#: src/modules/menu-item.js:268
 msgid "now"
 msgstr ""
 
-#: src/modules/menu-item.js:334 src/modules/menu-item.js:373
+#: src/modules/menu-item.js:333 src/modules/menu-item.js:372
 msgctxt "absolute time notation"
 msgid "%a, %R"
 msgstr ""
 
-#: src/modules/menu-item.js:337
+#: src/modules/menu-item.js:336
 #, javascript-format
 msgid "%s hr"
 msgid_plural "%s hrs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/modules/menu-item.js:338 src/modules/schedule-info.js:129
+#: src/modules/menu-item.js:337 src/modules/schedule-info.js:129
 #, javascript-format
 msgid "%s min"
 msgid_plural "%s mins"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/modules/menu-item.js:344
+#: src/modules/menu-item.js:343
 #, javascript-format
 msgid "%s (protect)"
 msgstr ""
 
-#: src/modules/menu-item.js:368
+#: src/modules/menu-item.js:367
 #, javascript-format
 msgctxt "WakeButtonText"
 msgid "%s at %s"
 msgstr ""
 
-#: src/modules/menu-item.js:369
+#: src/modules/menu-item.js:368
 #, javascript-format
 msgctxt "WakeButtonText"
 msgid "%s after %s"

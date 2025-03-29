@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-04 02:36+0100\n"
+"POT-Creation-Date: 2025-03-30 00:04+0100\n"
 "PO-Revision-Date: 2024-10-04 02:36+0100\n"
 "Last-Translator: Alper Okur\n"
 "Language-Team: TURKISH Alper Okur <alper.okur@ceng.ktu.edu.tr>\n"
@@ -15,118 +15,78 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/dbus-service/action.js:152
+#: src/dbus-service/action.js:175
 msgid "Suspend then Hibernate"
 msgstr "Önce Askıya Al, Sonra Hazırda Beklet"
 
-#: src/dbus-service/action.js:153
+#: src/dbus-service/action.js:176
 msgid "Hybrid Sleep"
 msgstr "Hibrit Uyku"
 
-#: src/dbus-service/action.js:154
+#: src/dbus-service/action.js:177
 msgid "Hibernate"
 msgstr "Hazırda Beklet"
 
-#: src/dbus-service/action.js:155
+#: src/dbus-service/action.js:178
 msgid "Halt"
 msgstr "Durdur"
 
-#: src/dbus-service/action.js:156
+#: src/dbus-service/action.js:179
 msgid "Suspend"
 msgstr "Askıya Al"
 
-#: src/dbus-service/action.js:157
+#: src/dbus-service/action.js:180
 msgid "Power Off"
 msgstr "Kapat"
 
-#: src/dbus-service/action.js:158
+#: src/dbus-service/action.js:181
 msgid "Restart"
 msgstr "Yeniden Başlat"
 
-#: src/dbus-service/action.js:159 src/ui/prefs.ui:239 src/ui/prefs.ui:442
+#: src/dbus-service/action.js:182 src/ui/prefs.ui:239 src/ui/prefs.ui:442
 msgid "Wake"
 msgstr "Uyandır"
 
-#: src/dbus-service/action.js:160
+#: src/dbus-service/action.js:183
 msgid "No Wake"
 msgstr "Uyandırma"
 
-#: src/dbus-service/action.js:166
-msgctxt "checktext"
-msgid "suspend then hibernate"
-msgstr "önce askıya al, sonra hazırda beklet"
-
-#: src/dbus-service/action.js:167
-msgctxt "checktext"
-msgid "hybrid sleep"
-msgstr "hibrit uyku"
-
-#: src/dbus-service/action.js:168
-msgctxt "checktext"
-msgid "hibernate"
-msgstr "hazırda beklet"
-
-#: src/dbus-service/action.js:169
-msgctxt "checktext"
-msgid "halt"
-msgstr "durdur"
-
-#: src/dbus-service/action.js:170
-msgctxt "checktext"
-msgid "suspend"
-msgstr "askıya al"
-
-#: src/dbus-service/action.js:171
-msgctxt "checktext"
-msgid "shutdown"
-msgstr "kapat"
-
-#: src/dbus-service/action.js:172
-msgctxt "checktext"
-msgid "reboot"
-msgstr "yeniden başlat"
-
-#: src/dbus-service/action.js:173
-msgctxt "checktext"
-msgid "wakeup"
-msgstr "uyandır"
-
-#: src/dbus-service/action.js:179
+#: src/dbus-service/action.js:189
 msgctxt "untiltext"
 msgid "suspend and hibernate"
 msgstr "askıya al ve hazırda beklet"
 
-#: src/dbus-service/action.js:180
+#: src/dbus-service/action.js:190
 msgctxt "untiltext"
 msgid "hybrid sleep"
 msgstr "hibrit uyku"
 
-#: src/dbus-service/action.js:181
+#: src/dbus-service/action.js:191
 msgctxt "untiltext"
 msgid "hibernate"
 msgstr "hazırda beklet"
 
-#: src/dbus-service/action.js:182
+#: src/dbus-service/action.js:192
 msgctxt "untiltext"
 msgid "halt"
 msgstr "durdur"
 
-#: src/dbus-service/action.js:183
+#: src/dbus-service/action.js:193
 msgctxt "untiltext"
 msgid "suspend"
 msgstr "askıya al"
 
-#: src/dbus-service/action.js:184
+#: src/dbus-service/action.js:194
 msgctxt "untiltext"
 msgid "shutdown"
 msgstr "kapat"
 
-#: src/dbus-service/action.js:185
+#: src/dbus-service/action.js:195
 msgctxt "untiltext"
 msgid "reboot"
 msgstr "yeniden başlat"
 
-#: src/dbus-service/action.js:186
+#: src/dbus-service/action.js:196
 msgctxt "untiltext"
 msgid "wakeup"
 msgstr "uyandır"
@@ -139,17 +99,17 @@ msgstr "Kök işlemi iptal edilemez!"
 msgid "CANCEL"
 msgstr "İPTAL"
 
-#: src/dbus-service/control.js:169
+#: src/dbus-service/control.js:200
 msgid "Privileged script installation required!"
 msgstr "Yetkili betik kurulumu gerekiyor!"
 
-#: src/dbus-service/timer.js:113
+#: src/dbus-service/timer.js:105
 #, javascript-format
 msgctxt "StartSchedulePopup"
 msgid "%s in %s"
 msgstr "%s içinde %s"
 
-#: src/dbus-service/timer.js:117 src/modules/menu-item.js:393
+#: src/dbus-service/timer.js:109 src/modules/menu-item.js:375
 #: src/modules/schedule-info.js:123
 #, javascript-format
 msgid "%s hour"
@@ -157,50 +117,37 @@ msgid_plural "%s hours"
 msgstr[0] "%s saat"
 msgstr[1] "%s saat"
 
-#: src/dbus-service/timer.js:118 src/modules/menu-item.js:394
+#: src/dbus-service/timer.js:110 src/modules/menu-item.js:376
 #, javascript-format
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s dakika"
 msgstr[1] "%s dakika"
 
-#: src/dbus-service/timer.js:144
-msgid "Confirmation canceled"
-msgstr "Onay iptal edildi"
-
-#: src/dbus-service/timer.js:144
+#: src/dbus-service/timer.js:134
 msgid "Shutdown Timer stopped"
 msgstr "Kapatma Zamanlayıcısı durduruldu"
 
-#: src/dbus-service/timer.js:165
-#, javascript-format
-msgid "Waiting for %s confirmation"
-msgstr "%s onayı bekleniyor"
-
-#: src/dbus-service/timer.js:215
-#, javascript-format
-msgctxt "CheckCommand"
-msgid "%s aborted (Code: %s)"
-msgstr "%s iptal edildi (Kod: %s)"
-
-#: src/dbus-service/timer.js:223
+#: src/dbus-service/timer.js:170
 #, javascript-format
 msgid "%s is not supported!"
 msgstr "%s desteklenmiyor!"
 
-#: src/dbus-service/timer.js:262 src/dbus-service/timer.js:320
+#: src/dbus-service/timer.js:208 src/dbus-service/timer.js:267
 #, javascript-format
 msgctxt "Error"
 msgid ""
 "%s\n"
 "%s"
-msgstr "%s\n%s"
+msgstr ""
+"%s\n"
+"%s"
 
-#: src/dbus-service/timer.js:262
+#: src/dbus-service/timer.js:208
 msgid "Wake action failed!"
 msgstr "Uyandırma işlemi başarısız oldu!"
 
-#: src/dbus-service/timer.js:320
+#: src/dbus-service/timer.js:267
 msgid "Root mode protection failed!"
 msgstr "Kök mod koruması başarısız oldu!"
 
@@ -224,53 +171,49 @@ msgstr "kur"
 msgid "uninstall"
 msgstr "kaldır"
 
-#: src/modules/menu-item.js:85 src/modules/menu-item.js:291
+#: src/modules/menu-item.js:84 src/modules/menu-item.js:288
 msgid "Shutdown Timer"
 msgstr "Kapatma Zamanlayıcısı"
 
-#: src/modules/menu-item.js:117
+#: src/modules/menu-item.js:116
 msgid "Settings"
 msgstr "Ayarlar"
 
-#: src/modules/menu-item.js:271
+#: src/modules/menu-item.js:268
 msgid "now"
 msgstr "şimdi"
 
-#: src/modules/menu-item.js:294
-msgid "Check {checktext} for {durationString}"
-msgstr "{durationString} boyunca {checktext} kontrol et"
-
-#: src/modules/menu-item.js:351 src/modules/menu-item.js:390
+#: src/modules/menu-item.js:333 src/modules/menu-item.js:372
 msgctxt "absolute time notation"
 msgid "%a, %R"
 msgstr "%a, %R"
 
-#: src/modules/menu-item.js:354
+#: src/modules/menu-item.js:336
 #, javascript-format
 msgid "%s hr"
 msgid_plural "%s hrs"
 msgstr[0] "%s sa"
 msgstr[1] "%s sa"
 
-#: src/modules/menu-item.js:355 src/modules/schedule-info.js:129
+#: src/modules/menu-item.js:337 src/modules/schedule-info.js:129
 #, javascript-format
 msgid "%s min"
 msgid_plural "%s mins"
 msgstr[0] "%s dk"
 msgstr[1] "%s dk"
 
-#: src/modules/menu-item.js:361
+#: src/modules/menu-item.js:343
 #, javascript-format
 msgid "%s (protect)"
 msgstr "%s (koruma)"
 
-#: src/modules/menu-item.js:385
+#: src/modules/menu-item.js:367
 #, javascript-format
 msgctxt "WakeButtonText"
 msgid "%s at %s"
 msgstr "%s %s'de"
 
-#: src/modules/menu-item.js:386
+#: src/modules/menu-item.js:368
 #, javascript-format
 msgctxt "WakeButtonText"
 msgid "%s after %s"
@@ -342,7 +285,8 @@ msgstr "Uyandırma için referans başlangıç zamanı"
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:38
 msgid "Reference start time for wake either now, shutdown, or HH:MM"
-msgstr "Uyandırma için referans başlangıç zamanı, ya şimdi, kapatma ya da SS:DD"
+msgstr ""
+"Uyandırma için referans başlangıç zamanı, ya şimdi, kapatma ya da SS:DD"
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:43
 msgid "Display wake time as absolute timestamp"
@@ -357,8 +301,11 @@ msgid "Automatically start and stop wake on shutdown timer toggle"
 msgstr "Kapatma zamanlayıcısı açıkken uyandırmayı otomatik başlat ve durdur"
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:50
-msgid "Enable/Disable the wake alarm when the shutdown timer is started/stopped."
-msgstr "Kapatma zamanlayıcısı başlatıldığında/durdurulduğunda uyandırma alarmını etkinleştir/devre dışı bırak."
+msgid ""
+"Enable/Disable the wake alarm when the shutdown timer is started/stopped."
+msgstr ""
+"Kapatma zamanlayıcısı başlatıldığında/durdurulduğunda uyandırma alarmını "
+"etkinleştir/devre dışı bırak."
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:55
 msgid "Scheduled shutdown timestamp."
@@ -366,15 +313,21 @@ msgstr "Zamanlanmış kapatma zaman damgası."
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:56
 msgid "Unix time in seconds of scheduled shutdown or -1 if disabled."
-msgstr "Zamanlanmış kapatmanın Unix zamanı (saniye cinsinden) ya da devre dışı ise -1."
+msgstr ""
+"Zamanlanmış kapatmanın Unix zamanı (saniye cinsinden) ya da devre dışı ise "
+"-1."
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:61
 msgid "Wake slider position (in percent)"
 msgstr "Uyandırma kaydırıcı pozisyonu (yüzde olarak)"
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:62
-msgid "Set wake slider position as percent of the maximum time. Must be in range 0 and 100."
-msgstr "Uyandırma kaydırıcı pozisyonunu maksimum zamanın yüzdesi olarak ayarla. 0 ile 100 arasında olmalıdır."
+msgid ""
+"Set wake slider position as percent of the maximum time. Must be in range 0 "
+"and 100."
+msgstr ""
+"Uyandırma kaydırıcı pozisyonunu maksimum zamanın yüzdesi olarak ayarla. 0 "
+"ile 100 arasında olmalıdır."
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:67
 msgid "Ramp-up of non-linear wake slider value"
@@ -389,8 +342,12 @@ msgid "Shutdown slider position (in percent)"
 msgstr "Kapatma kaydırıcı pozisyonu (yüzde olarak)"
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:74
-msgid "Set shutdown slider position as percent of the maximum time. Must be in range 0 and 100."
-msgstr "Kapatma kaydırıcı pozisyonunu maksimum zamanın yüzdesi olarak ayarla. 0 ile 100 arasında olmalıdır."
+msgid ""
+"Set shutdown slider position as percent of the maximum time. Must be in "
+"range 0 and 100."
+msgstr ""
+"Kapatma kaydırıcı pozisyonunu maksimum zamanın yüzdesi olarak ayarla. 0 ile "
+"100 arasında olmalıdır."
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:79
 msgid "Ramp-up of non-linear shutdown slider value"
@@ -449,8 +406,12 @@ msgid "Root mode"
 msgstr "Root modu"
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:116
-msgid "Set root mode on/off. In root mode powering off is done via 'pkexec' and 'shutdown' terminal command."
-msgstr "Root modunu aç/kapat. Root modunda kapatma işlemi 'pkexec' ve 'shutdown' terminal komutuyla yapılır."
+msgid ""
+"Set root mode on/off. In root mode powering off is done via 'pkexec' and "
+"'shutdown' terminal command."
+msgstr ""
+"Root modunu aç/kapat. Root modunda kapatma işlemi 'pkexec' ve 'shutdown' "
+"terminal komutuyla yapılır."
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:121
 #: src/ui/prefs.ui:122
@@ -458,8 +419,12 @@ msgid "Show end-session dialog"
 msgstr "Oturum sonu iletişim kutusunu göster"
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:122
-msgid "Show the end-session dialog for reboot and shutdown if screensaver is inactive."
-msgstr "Ekran koruyucu devre dışıyken yeniden başlatma ve kapatma için oturum sonu iletişim kutusunu göster."
+msgid ""
+"Show the end-session dialog for reboot and shutdown if screensaver is "
+"inactive."
+msgstr ""
+"Ekran koruyucu devre dışıyken yeniden başlatma ve kapatma için oturum sonu "
+"iletişim kutusunu göster."
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:127
 msgid "Shown shutdown modes"
@@ -470,7 +435,9 @@ msgstr "Gösterilen kapatma modları"
 msgid ""
 "Comma-separated shutdown modes which are shown in the popup menu (p: "
 "poweroff, s: suspend, r: reboot)"
-msgstr "Açılır menüde gösterilen virgülle ayrılmış kapatma modları (p: kapatma, s: askıya alma, r: yeniden başlatma)"
+msgstr ""
+"Açılır menüde gösterilen virgülle ayrılmış kapatma modları (p: kapatma, s: "
+"askıya alma, r: yeniden başlatma)"
 
 #: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:133
 #: src/ui/prefs.ui:116
@@ -492,26 +459,8 @@ msgstr "Kapatma göstergesini göster"
 msgid "Shows the remaining time until shutdown action"
 msgstr "Kapatma işlemine kadar kalan zamanı gösterir"
 
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:157
-msgid "Check command(s)"
-msgstr "Komut(lar)ı kontrol et"
-
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:158
-msgid ""
-"Run command(s) before shutdown command. Proceed with shutdown only if check "
-"command succeeds."
-msgstr "Kapatma komutundan önce komut(lar)ı çalıştır. Kontrol komutu başarılı olursa kapatma işlemine devam et."
-
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:163
-msgid "Enable check command"
-msgstr "Kontrol komutunu etkinleştir"
-
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:164
-msgid "Check command is skipped if disabled."
-msgstr "Kontrol komutu devre dışı bırakıldığında atlanır."
-
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:169
-#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:170
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:145
+#: src/schemas/org.gnome.shell.extensions.shutdowntimer-deminder.gschema.xml:146
 msgid "Last selected page in the preferences."
 msgstr "Tercihlerde en son seçilen sayfa."
 
@@ -570,7 +519,9 @@ msgstr "Bu kullanıcı için yükleme/kaldırma ayrıcalıkları"
 
 #: src/ui/prefs.ui:71
 msgid "Setup a privileged script and give user access via polkit"
-msgstr "Ayrıcalıklı bir betik ayarlayın ve kullanıcıya polkit aracılığıyla erişim verin"
+msgstr ""
+"Ayrıcalıklı bir betik ayarlayın ve kullanıcıya polkit aracılığıyla erişim "
+"verin"
 
 #: src/ui/prefs.ui:82
 msgid "Install output"
@@ -586,7 +537,8 @@ msgstr "Zamanlayıcı İşlemi"
 
 #: src/ui/prefs.ui:123
 msgid "Shown for reboot and shutdown if screensaver is inactive"
-msgstr "Ekran koruyucu devre dışıyken yeniden başlatma ve kapatma için gösterilir"
+msgstr ""
+"Ekran koruyucu devre dışıyken yeniden başlatma ve kapatma için gösterilir"
 
 #: src/ui/prefs.ui:134
 msgid "Toggle root shutdown with shutdown timer"
@@ -594,7 +546,9 @@ msgstr "Kapatma zamanlayıcısı ile root kapatmayı aç/kapat"
 
 #: src/ui/prefs.ui:135
 msgid "Runs extra 'shutdown -P/-r' command for shutdown or reboot"
-msgstr "Kapatma veya yeniden başlatma için ekstra 'shutdown -P/-r' komutunu çalıştırır"
+msgstr ""
+"Kapatma veya yeniden başlatma için ekstra 'shutdown -P/-r' komutunu "
+"çalıştırır"
 
 #: src/ui/prefs.ui:148 src/ui/prefs.ui:261
 msgid "Timer Input"
@@ -660,20 +614,81 @@ msgstr "Uyandırma öğelerini göster"
 msgid "Absolute wake time selection"
 msgstr "Mutlak uyandırma zamanı seçimi"
 
-#: src/ui/prefs.ui:484
-msgid "Check"
-msgstr "Kontrol"
+#~ msgctxt "checktext"
+#~ msgid "suspend then hibernate"
+#~ msgstr "önce askıya al, sonra hazırda beklet"
 
-#: src/ui/prefs.ui:491
-msgid "Enable check"
-msgstr "Kontrolü etkinleştir"
+#~ msgctxt "checktext"
+#~ msgid "hybrid sleep"
+#~ msgstr "hibrit uyku"
 
-#: src/ui/prefs.ui:492
-msgid ""
-"Script is run in a bash user shell after timer activates. Timer action "
-"proceeds if check terminates successfully."
-msgstr "Zamanlayıcı etkinleştikten sonra bir bash kullanıcı kabuğunda betik çalıştırılır. Kontrol başarılı olursa zamanlayıcı işlemi devam eder."
+#~ msgctxt "checktext"
+#~ msgid "hibernate"
+#~ msgstr "hazırda beklet"
 
-#: src/ui/prefs.ui:503
-msgid "Check script"
-msgstr "Betik kontrolü"
+#~ msgctxt "checktext"
+#~ msgid "halt"
+#~ msgstr "durdur"
+
+#~ msgctxt "checktext"
+#~ msgid "suspend"
+#~ msgstr "askıya al"
+
+#~ msgctxt "checktext"
+#~ msgid "shutdown"
+#~ msgstr "kapat"
+
+#~ msgctxt "checktext"
+#~ msgid "reboot"
+#~ msgstr "yeniden başlat"
+
+#~ msgctxt "checktext"
+#~ msgid "wakeup"
+#~ msgstr "uyandır"
+
+#~ msgid "Confirmation canceled"
+#~ msgstr "Onay iptal edildi"
+
+#, javascript-format
+#~ msgid "Waiting for %s confirmation"
+#~ msgstr "%s onayı bekleniyor"
+
+#, javascript-format
+#~ msgctxt "CheckCommand"
+#~ msgid "%s aborted (Code: %s)"
+#~ msgstr "%s iptal edildi (Kod: %s)"
+
+#~ msgid "Check {checktext} for {durationString}"
+#~ msgstr "{durationString} boyunca {checktext} kontrol et"
+
+#~ msgid "Check command(s)"
+#~ msgstr "Komut(lar)ı kontrol et"
+
+#~ msgid ""
+#~ "Run command(s) before shutdown command. Proceed with shutdown only if "
+#~ "check command succeeds."
+#~ msgstr ""
+#~ "Kapatma komutundan önce komut(lar)ı çalıştır. Kontrol komutu başarılı "
+#~ "olursa kapatma işlemine devam et."
+
+#~ msgid "Enable check command"
+#~ msgstr "Kontrol komutunu etkinleştir"
+
+#~ msgid "Check command is skipped if disabled."
+#~ msgstr "Kontrol komutu devre dışı bırakıldığında atlanır."
+
+#~ msgid "Check"
+#~ msgstr "Kontrol"
+
+#~ msgid "Enable check"
+#~ msgstr "Kontrolü etkinleştir"
+
+#~ msgid ""
+#~ "Script is run in a bash user shell after timer activates. Timer action "
+#~ "proceeds if check terminates successfully."
+#~ msgstr ""
+#~ "Zamanlayıcı etkinleştikten sonra bir bash kullanıcı kabuğunda betik "
+#~ "çalıştırılır. Kontrol başarılı olursa zamanlayıcı işlemi devam eder."
+
+#~ msgid "Check script"
+#~ msgstr "Betik kontrolü"

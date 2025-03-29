@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ShutdownTimer v45\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-29 21:23+0200\n"
+"POT-Creation-Date: 2025-03-30 00:04+0100\n"
 "PO-Revision-Date: 2024-07-05 21:52+0200\n"
 "Last-Translator: Jozef Gaal <preklady@mayday.sk>\n"
 "Language-Team: Jozef Gaál <preklady@mayday.sk>\n"
@@ -113,7 +113,7 @@ msgctxt "StartSchedulePopup"
 msgid "%s in %s"
 msgstr "%s o %s"
 
-#: src/dbus-service/timer.js:109 src/modules/menu-item.js:376
+#: src/dbus-service/timer.js:109 src/modules/menu-item.js:375
 #: src/modules/schedule-info.js:123
 #, javascript-format
 msgid "%s hour"
@@ -122,7 +122,7 @@ msgstr[0] "%s hodinu"
 msgstr[1] "%s hodiny"
 msgstr[2] "%s hodín"
 
-#: src/dbus-service/timer.js:110 src/modules/menu-item.js:377
+#: src/dbus-service/timer.js:110 src/modules/menu-item.js:376
 #, javascript-format
 msgid "%s minute"
 msgid_plural "%s minutes"
@@ -177,7 +177,7 @@ msgstr "inštalácie"
 msgid "uninstall"
 msgstr "odinštalovania"
 
-#: src/modules/menu-item.js:84 src/modules/menu-item.js:289
+#: src/modules/menu-item.js:84 src/modules/menu-item.js:288
 msgid "Shutdown Timer"
 msgstr "Časovač vypnutia"
 
@@ -185,16 +185,16 @@ msgstr "Časovač vypnutia"
 msgid "Settings"
 msgstr "Nastavenia"
 
-#: src/modules/menu-item.js:269
+#: src/modules/menu-item.js:268
 msgid "now"
 msgstr "teraz"
 
-#: src/modules/menu-item.js:334 src/modules/menu-item.js:373
+#: src/modules/menu-item.js:333 src/modules/menu-item.js:372
 msgctxt "absolute time notation"
 msgid "%a, %R"
 msgstr "%R, %A"
 
-#: src/modules/menu-item.js:337
+#: src/modules/menu-item.js:336
 #, javascript-format
 msgid "%s hr"
 msgid_plural "%s hrs"
@@ -202,7 +202,7 @@ msgstr[0] "%s h"
 msgstr[1] "%s h"
 msgstr[2] "%s h"
 
-#: src/modules/menu-item.js:338 src/modules/schedule-info.js:129
+#: src/modules/menu-item.js:337 src/modules/schedule-info.js:129
 #, javascript-format
 msgid "%s min"
 msgid_plural "%s mins"
@@ -210,20 +210,20 @@ msgstr[0] "%s min"
 msgstr[1] "%s min"
 msgstr[2] "%s min"
 
-#: src/modules/menu-item.js:344
+#: src/modules/menu-item.js:343
 #, javascript-format
 msgid "%s (protect)"
 msgstr "%s (chránené)"
 
 # Tlačidlo: Prebudenie o 12:00, Sobota
-#: src/modules/menu-item.js:368
+#: src/modules/menu-item.js:367
 #, javascript-format
 msgctxt "WakeButtonText"
 msgid "%s at %s"
 msgstr "%s o %s"
 
 # Napr: Prebudenie o 4 hodiny a 3 minúty
-#: src/modules/menu-item.js:369
+#: src/modules/menu-item.js:368
 #, javascript-format
 msgctxt "WakeButtonText"
 msgid "%s after %s"
