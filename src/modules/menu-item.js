@@ -114,11 +114,10 @@ const ShutdownTimerItem = GObject.registerClass(
         can_focus: true,
         track_hover: true,
         accessible_name: _('Settings'),
-        style_class: 'system-menu-action settings-button',
+        style_class: 'icon-button settings-button',
       });
       this.switcherSettingsButton.child = new St.Icon({
-        icon_name: 'emblem-system-symbolic',
-        style_class: 'popup-menu-icon',
+        icon_name: 'applications-system-symbolic',
       });
       this.switcherSettingsButton.connect('clicked', () =>
         this.emit('open-preferences')

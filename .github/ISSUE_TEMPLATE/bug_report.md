@@ -9,7 +9,7 @@ assignees: ''
 
 **Describe the bug**
 _A clear and concise description of what the bug is._
-- If applicable, show log appropriate output `journalctl -o cat /usr/bin/gnome-shell`
+- If applicable, show log appropriate output `journalctl -o short-iso /usr/bin/gnome-shell`
 - Does the bug only occur with an additional gnome shell extension enabled or with only the "Shutdown Timer" extension enabled?
 
 **To Reproduce**
