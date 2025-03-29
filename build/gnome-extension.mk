@@ -5,7 +5,7 @@ SHELL := /bin/bash
 
 METADATA_FILE := $(SRC_DIR)/metadata.json
 ifeq ($(wildcard $(METADATA_FILE)),)
-	$(error No extension metadata file found: $(METADATA_FILE)!)
+$(error No extension metadata file found: $(METADATA_FILE)!)
 endif
 getMeta = $(shell grep "$(1)" $(METADATA_FILE) | cut -d\" -f 4)
 
