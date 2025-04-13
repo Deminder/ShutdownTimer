@@ -418,6 +418,7 @@ export const ShutdownTimerIndicator = GObject.registerClass(
   class ShutdownTimerIndicator extends QuickSettings.SystemIndicator {
     _init({ path, settings }) {
       super._init();
+      this._state = 'inactive';
       this._settings = settings;
       this._textbox = new Textbox({ settings });
       const item = new ShutdownTimerItem({ path, settings });
@@ -538,6 +539,7 @@ export const ShutdownTimerIndicator = GObject.registerClass(
       if (cancellable?.is_cancelled()) return;
       logDebug('[sdt-proxy] state', this._state);
       this._syncShutdownInfo();
+      infoFetcher.refresh();
     }
 
     _syncShutdownInfo() {

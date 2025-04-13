@@ -91,6 +91,8 @@ export class Action {
       throw new Error(`Unknown shutdown action: ${action}`);
     logDebug('[shutdownAction]', action);
 
+    await this.uninhibitSuspend();
+
     const screenSaverProxy = await this.#screenSaverProxy;
     const [screenSaverActive] = await screenSaverProxy.GetActiveAsync();
     if (
