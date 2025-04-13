@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-30 00:04+0100\n"
+"POT-Creation-Date: 2025-04-13 23:03+0200\n"
 "PO-Revision-Date: 2024-10-04 02:36+0100\n"
 "Last-Translator: Alper Okur\n"
 "Language-Team: TURKISH Alper Okur <alper.okur@ceng.ktu.edu.tr>\n"
@@ -15,78 +15,78 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/dbus-service/action.js:175
+#: src/dbus-service/action.js:177
 msgid "Suspend then Hibernate"
 msgstr "Önce Askıya Al, Sonra Hazırda Beklet"
 
-#: src/dbus-service/action.js:176
+#: src/dbus-service/action.js:178
 msgid "Hybrid Sleep"
 msgstr "Hibrit Uyku"
 
-#: src/dbus-service/action.js:177
+#: src/dbus-service/action.js:179
 msgid "Hibernate"
 msgstr "Hazırda Beklet"
 
-#: src/dbus-service/action.js:178
+#: src/dbus-service/action.js:180
 msgid "Halt"
 msgstr "Durdur"
 
-#: src/dbus-service/action.js:179
+#: src/dbus-service/action.js:181
 msgid "Suspend"
 msgstr "Askıya Al"
 
-#: src/dbus-service/action.js:180
+#: src/dbus-service/action.js:182
 msgid "Power Off"
 msgstr "Kapat"
 
-#: src/dbus-service/action.js:181
+#: src/dbus-service/action.js:183
 msgid "Restart"
 msgstr "Yeniden Başlat"
 
-#: src/dbus-service/action.js:182 src/ui/prefs.ui:239 src/ui/prefs.ui:442
+#: src/dbus-service/action.js:184 src/ui/prefs.ui:239 src/ui/prefs.ui:442
 msgid "Wake"
 msgstr "Uyandır"
 
-#: src/dbus-service/action.js:183
+#: src/dbus-service/action.js:185
 msgid "No Wake"
 msgstr "Uyandırma"
 
-#: src/dbus-service/action.js:189
+#: src/dbus-service/action.js:191
 msgctxt "untiltext"
 msgid "suspend and hibernate"
 msgstr "askıya al ve hazırda beklet"
 
-#: src/dbus-service/action.js:190
+#: src/dbus-service/action.js:192
 msgctxt "untiltext"
 msgid "hybrid sleep"
 msgstr "hibrit uyku"
 
-#: src/dbus-service/action.js:191
+#: src/dbus-service/action.js:193
 msgctxt "untiltext"
 msgid "hibernate"
 msgstr "hazırda beklet"
 
-#: src/dbus-service/action.js:192
+#: src/dbus-service/action.js:194
 msgctxt "untiltext"
 msgid "halt"
 msgstr "durdur"
 
-#: src/dbus-service/action.js:193
+#: src/dbus-service/action.js:195
 msgctxt "untiltext"
 msgid "suspend"
 msgstr "askıya al"
 
-#: src/dbus-service/action.js:194
+#: src/dbus-service/action.js:196
 msgctxt "untiltext"
 msgid "shutdown"
 msgstr "kapat"
 
-#: src/dbus-service/action.js:195
+#: src/dbus-service/action.js:197
 msgctxt "untiltext"
 msgid "reboot"
 msgstr "yeniden başlat"
 
-#: src/dbus-service/action.js:196
+#: src/dbus-service/action.js:198
 msgctxt "untiltext"
 msgid "wakeup"
 msgstr "uyandır"
