@@ -20,7 +20,6 @@ export class InfoFetcher extends Signals.EventEmitter {
       this._refresh.bind(this),
       300
     );
-    this.refresh();
   }
 
   _refresh() {
