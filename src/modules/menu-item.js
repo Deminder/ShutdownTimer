@@ -91,6 +91,7 @@ const ShutdownTimerQuickMenuToggle = GObject.registerClass(
       };
       this._settings = settings;
       this.shutdownTimerIcon = gicon;
+      this._updatingSwitcherState = false;
 
       // submenu in status area menu with slider and toggle button
       this.sliderItems = {};
@@ -103,13 +104,15 @@ const ShutdownTimerQuickMenuToggle = GObject.registerClass(
       });
       this.switcher = new PopupMenu.PopupSwitchMenuItem('', false);
       // start/stop shutdown timer
-      this.switcher.connect('toggled', () =>
-        this.emit(
-          'shutdown',
-          this.switcher.state,
-          this.info.internalShutdown.mode
-        )
-      );
+      this.switcher.connect('toggled', () => {
+        if (!this._updatingSwitcherState) {
+          this.emit(
+            'shutdown',
+            this.switcher.state,
+            this.info.internalShutdown.mode
+          );
+        }
+      });
       this.switcherSettingsButton = new St.Button({
         reactive: true,
         can_focus: true,
@@ -284,7 +287,11 @@ const ShutdownTimerQuickMenuToggle = GObject.registerClass(
         );
       });
       this.title = actionLabel(schedule.mode);
+
+      // Update toggle state of switcher
+      this._updatingSwitcherState = true;
       this.switcher.setToggleState(active);
+      this._updatingSwitcherState = false;
       this.menu.setHeader(
         this.shutdownTimerIcon,
         _('Shutdown Timer'),
