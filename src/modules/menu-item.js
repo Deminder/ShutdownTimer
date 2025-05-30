@@ -263,7 +263,7 @@ const ShutdownTimerQuickMenuToggle = GObject.registerClass(
         'show-shutdown-indicator-value'
       );
 
-      // Update Item
+      // Update Indicator
       this.set({
         checked: active,
         shutdownText:
@@ -279,6 +279,8 @@ const ShutdownTimerQuickMenuToggle = GObject.registerClass(
               : 'go-down-symbolic'
             : '',
       });
+
+      // Update selected shutdown mode
       this.modeItems.forEach(([mode, item]) => {
         item.setOrnament(
           mode === schedule.mode
@@ -286,12 +288,16 @@ const ShutdownTimerQuickMenuToggle = GObject.registerClass(
             : PopupMenu.Ornament.NONE
         );
       });
+
+      // Update title with scheduled action
       this.title = actionLabel(schedule.mode);
 
       // Update toggle state of switcher
       this._updatingSwitcherState = true;
       this.switcher.setToggleState(active);
       this._updatingSwitcherState = false;
+
+      // Update long status description in menu
       this.menu.setHeader(
         this.shutdownTimerIcon,
         _('Shutdown Timer'),
@@ -459,10 +465,6 @@ export const ShutdownTimerSystemIndicator = GObject.registerClass(
       this._infoFetcher = infoFetcher;
       this._shutdownTimerItem = item;
 
-      item.connect('shutdown', (__, shutdown, action) =>
-        this.emit('shutdown', shutdown, action)
-      );
-      item.connect('wake', (__, wake) => this.emit('wake', wake));
       item.connect('open-preferences', () => this.emit('open-preferences'));
 
       const icon = new St.Icon({ style_class: 'system-status-icon' });
