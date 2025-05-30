@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-13 23:03+0200\n"
+"POT-Creation-Date: 2025-05-30 19:43+0200\n"
 "PO-Revision-Date: 2024-10-04 02:36+0100\n"
 "Last-Translator: Alper Okur\n"
 "Language-Team: TURKISH Alper Okur <alper.okur@ceng.ktu.edu.tr>\n"
@@ -109,7 +109,7 @@ msgctxt "StartSchedulePopup"
 msgid "%s in %s"
 msgstr "%s içinde %s"
 
-#: src/dbus-service/timer.js:109 src/modules/menu-item.js:375
+#: src/dbus-service/timer.js:109 src/modules/menu-item.js:388
 #: src/modules/schedule-info.js:123
 #, javascript-format
 msgid "%s hour"
@@ -117,7 +117,7 @@ msgid_plural "%s hours"
 msgstr[0] "%s saat"
 msgstr[1] "%s saat"
 
-#: src/dbus-service/timer.js:110 src/modules/menu-item.js:376
+#: src/dbus-service/timer.js:110 src/modules/menu-item.js:389
 #, javascript-format
 msgid "%s minute"
 msgid_plural "%s minutes"
@@ -133,7 +133,7 @@ msgstr "Kapatma Zamanlayıcısı durduruldu"
 msgid "%s is not supported!"
 msgstr "%s desteklenmiyor!"
 
-#: src/dbus-service/timer.js:208 src/dbus-service/timer.js:267
+#: src/dbus-service/timer.js:208 src/dbus-service/timer.js:278
 #, javascript-format
 msgctxt "Error"
 msgid ""
@@ -147,7 +147,12 @@ msgstr ""
 msgid "Wake action failed!"
 msgstr "Uyandırma işlemi başarısız oldu!"
 
-#: src/dbus-service/timer.js:267
+#: src/dbus-service/timer.js:220
+#, javascript-format
+msgid "Unknown shutdown action: \"%s\"!"
+msgstr ""
+
+#: src/dbus-service/timer.js:278
 msgid "Root mode protection failed!"
 msgstr "Kök mod koruması başarısız oldu!"
 
@@ -171,49 +176,49 @@ msgstr "kur"
 msgid "uninstall"
 msgstr "kaldır"
 
-#: src/modules/menu-item.js:84 src/modules/menu-item.js:288
+#: src/modules/menu-item.js:84 src/modules/menu-item.js:301
 msgid "Shutdown Timer"
 msgstr "Kapatma Zamanlayıcısı"
 
-#: src/modules/menu-item.js:116
+#: src/modules/menu-item.js:119
 msgid "Settings"
 msgstr "Ayarlar"
 
-#: src/modules/menu-item.js:268
+#: src/modules/menu-item.js:271
 msgid "now"
 msgstr "şimdi"
 
-#: src/modules/menu-item.js:333 src/modules/menu-item.js:372
+#: src/modules/menu-item.js:346 src/modules/menu-item.js:385
 msgctxt "absolute time notation"
 msgid "%a, %R"
 msgstr "%a, %R"
 
-#: src/modules/menu-item.js:336
+#: src/modules/menu-item.js:349
 #, javascript-format
 msgid "%s hr"
 msgid_plural "%s hrs"
 msgstr[0] "%s sa"
 msgstr[1] "%s sa"
 
-#: src/modules/menu-item.js:337 src/modules/schedule-info.js:129
+#: src/modules/menu-item.js:350 src/modules/schedule-info.js:129
 #, javascript-format
 msgid "%s min"
 msgid_plural "%s mins"
 msgstr[0] "%s dk"
 msgstr[1] "%s dk"
 
-#: src/modules/menu-item.js:343
+#: src/modules/menu-item.js:356
 #, javascript-format
 msgid "%s (protect)"
 msgstr "%s (koruma)"
 
-#: src/modules/menu-item.js:367
+#: src/modules/menu-item.js:380
 #, javascript-format
 msgctxt "WakeButtonText"
 msgid "%s at %s"
 msgstr "%s %s'de"
 
-#: src/modules/menu-item.js:368
+#: src/modules/menu-item.js:381
 #, javascript-format
 msgctxt "WakeButtonText"
 msgid "%s after %s"

@@ -6,7 +6,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
 <schemalist gettext-domain="ShutdownTimer">
-  <schema path="/org/gnome/shell/extensions/shutdowntimer-deminder-local/" id="org.gnome.shell.extensions.shutdowntimer-deminder-local">
+  <schema path="/org/gnome/shell/extensions/shutdowntimer-deminder/" id="org.gnome.shell.extensions.shutdowntimer-deminder">
 
     <key type="i" name="shutdown-max-timer-value">
       <default>180</default>
