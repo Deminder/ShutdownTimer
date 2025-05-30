@@ -90,6 +90,7 @@ const ShutdownTimerItem = GObject.registerClass(
       };
       this._settings = settings;
       this.shutdownTimerIcon = gicon;
+      this._updatingSwitcherState = false;
 
       // submenu in status area menu with slider and toggle button
       this.sliderItems = {};
@@ -102,13 +103,15 @@ const ShutdownTimerItem = GObject.registerClass(
       });
       this.switcher = new PopupMenu.PopupSwitchMenuItem('', false);
       // start/stop shutdown timer
-      this.switcher.connect('toggled', () =>
-        this.emit(
-          'shutdown',
-          this.switcher.state,
-          this.info.internalShutdown.mode
-        )
-      );
+      this.switcher.connect('toggled', () => {
+        if (!this._updatingSwitcherState) {
+          this.emit(
+            'shutdown',
+            this.switcher.state,
+            this.info.internalShutdown.mode
+          );
+        }
+      });
       this.switcherSettingsButton = new St.Button({
         reactive: true,
         can_focus: true,
@@ -258,7 +261,7 @@ const ShutdownTimerItem = GObject.registerClass(
         'show-shutdown-indicator-value'
       );
 
-      // Update Item
+      // Update Indicator
       this.set({
         checked: active,
         shutdownText:
@@ -274,6 +277,8 @@ const ShutdownTimerItem = GObject.registerClass(
             ? 'go-down-symbolic'
             : '',
       });
+
+      // Update selected shutdown mode
       this.modeItems.forEach(([mode, item]) => {
         item.setOrnament(
           mode === schedule.mode
@@ -281,8 +286,16 @@ const ShutdownTimerItem = GObject.registerClass(
             : PopupMenu.Ornament.NONE
         );
       });
+
+      // Update title with scheduled action
       this.title = actionLabel(schedule.mode);
+
+      // Update toggle state of switcher
+      this._updatingSwitcherState = true;
       this.switcher.setToggleState(active);
+      this._updatingSwitcherState = false;
+
+      // Update long status description in menu
       this.menu.setHeader(
         this.shutdownTimerIcon,
         _('Shutdown Timer'),
@@ -435,10 +448,6 @@ export const ShutdownTimerIndicator = GObject.registerClass(
       this._infoFetcher = infoFetcher;
       this._shutdownTimerItem = item;
 
-      item.connect('shutdown', (__, shutdown, action) =>
-        this.emit('shutdown', shutdown, action)
-      );
-      item.connect('wake', (__, wake) => this.emit('wake', wake));
       item.connect('open-preferences', () => this.emit('open-preferences'));
 
       const icon = new St.Icon({ style_class: 'system-status-icon' });

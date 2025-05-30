@@ -211,11 +211,22 @@ export class Timer {
     }
   }
 
-  async toggleShutdown(shutdown, action) {
-    logDebug('[toggleShutdown] shutdown', shutdown, 'action', action);
-    if (action) {
-      this._settings.set_string('shutdown-mode-value', mapLegacyAction(action));
+  async toggleShutdown(shutdown, legacyAction) {
+    // Update shutdown action
+    const action = mapLegacyAction(legacyAction);
+    if (action === undefined) {
+      this.emit(
+        'message',
+        _('Unknown shutdown action: "%s"!').format(legacyAction)
+      );
+      return;
     }
+    logDebug('[toggleShutdown] shutdown', shutdown, 'action', action);
+    if (action !== '') {
+      this._settings.set_string('shutdown-mode-value', action);
+    }
+
+    // Update shutdown timestamp
     this._settings.set_int(
       'shutdown-timestamp-value',
       shutdown
