@@ -171,7 +171,7 @@ export class Timer {
         );
       }
     }
-    await this.toggleShutdown(false);
+    await this.toggleShutdown(false, '');
   }
 
   async executeActionDelayed() {
