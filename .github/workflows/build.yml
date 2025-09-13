@@ -1,29 +1,33 @@
 name: CI
 
-on:
-  # Triggers the workflow on push or pull request events but only for the master branch or ego-compatible
-  push:
-    branches: [ master, ego-compatible ]
-  pull_request:
-    branches: [ master, ego-compatible ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+on: push
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          submodules: 'recursive'
       - uses: actions/setup-node@v2.4.0
-      - name: Setup build dependencies
+      - name: Setup
         run: |
           npm install
           sudo apt-get update
           sudo apt-get install -y reuse gnome-shell-extensions gettext
-      
-      - name: Run linter
+
+      - name: Lint
         run: make lint
 
-      - name: Build debug and default zip
+      - name: Build
         run: make all
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref_type == 'tag'
+        with:
+          draft: true
+          generate_release_notes: true
+          files: |
+            target/default/ShutdownTimer@deminder.shell-extension.zip
