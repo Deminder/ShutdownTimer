@@ -41,24 +41,43 @@ function gtxt() {
     gettext "$1"
 }
 
-function recent_polkit() {
-    printf -v versions '%s\n%s' "$(pkaction --version | cut -d' ' -f3)" "0.106"
-    if [[ $versions != "$(sort -V <<< "$versions")" ]];then
-        echo "available"
-    else
-        echo "unavailable"
-    fi
+function polkit_version_greater_than() {
+    printf -v versions '%s\n%s' "$(pkaction --version | cut -d' ' -f3)" "$1"
+    [[ $versions != "$(sort -V <<< "$versions")" ]]
+}
+
+function polkit_action_lookup_program_gets_realpath() {
+    polkit_version_greater_than "126"
+}
+
+function polkit_supports_standalonerule() {
+    polkit_version_greater_than "0.106"
 }
 
 function check_support() {
-    RECENT_STR=", stand-alone polkit rules $(recent_polkit)"
+    local polkit_info=", stand-alone polkit rules"
+    if polkit_supports_standalonerule; then
+        polkit_info+=" available"
+        if polkit_action_lookup_program_gets_realpath; then
+            polkit_info+=", with realpath program lookup"
+        fi
+    else
+        polkit_info+=" not avaliable"
+    fi
     if which rtcwake >/dev/null 2>&1
     then
-        echo "rtcwake supported${RECENT_STR}"
+        echo "rtcwake supported${polkit_info}"
         exit ${EXIT_SUCCESS}
     else
-        echo "rtcwake unsupported${RECENT_STR}"
+        echo "rtcwake unsupported${polkit_info}"
         exit ${EXIT_FAILED}
+    fi
+}
+
+function require_root() {
+    if [ "${EUID}" -ne 0 ]; then
+        echo "This action must be run as root!"
+        exit ${EXIT_MUST_BE_ROOT}
     fi
 }
 
@@ -127,8 +146,9 @@ done
 CFC_DIR="/usr/local/bin"
 RULE_DIR="/etc/polkit-1/rules.d"
 
-RULE_IN="${DIR}/../${POLKIT_DIR}/10-$RULE_BASE.rules"
-if [[ "$(recent_polkit)" != "available" ]];then
+if polkit_supports_standalonerule; then
+    RULE_IN="${DIR}/../${POLKIT_DIR}/10-$RULE_BASE.rules"
+else
     RULE_IN="${RULE_IN}.legacy"
     ACTION_IN="${DIR}/../${POLKIT_DIR}/${ACTION_BASE}.policy.in"
 fi
@@ -149,7 +169,11 @@ function print_rules_javascript() {
     if [[ "$RULE_IN" == *.legacy ]]; then
         sed -e "s:{{RULE_BASE}}:${RULE_BASE}:g" "${RULE_IN}"
     else
-        sed -e "s:{{TOOL_OUT}}:${TOOL_OUT}:g" \
+        local tool_out=${TOOL_OUT}
+        if polkit_action_lookup_program_gets_realpath; then
+                tool_out="$(realpath "${TOOL_OUT}")"
+        fi
+        sed -e "s:{{TOOL_OUT}}:${tool_out}:g" \
             -e "s:{{TOOL_USER}}:${TOOL_USER}:g" "${RULE_IN}"
     fi
 
@@ -160,21 +184,38 @@ then
     check_support
 fi
 
+
 if [ "$ACTION" = "check" ]
 then
-    if ! print_rules_javascript | cmp --silent "${RULE_OUT}"
-    then
-        if [ -f "${ACTION_OUT}" ]
-        then
-            echo "Your $EXTENSION_NAME installation needs updating!"
-            exit ${EXIT_NEEDS_UPDATE}
-        else
-            echo "Not installed"
-            exit ${EXIT_NOT_INSTALLED}
-        fi
+    require_root
+    NOT_FOUND=0
+    NEEDS_UPDATE=0
+    function check_installed() {
+	if [ -f "$1" ]; then
+	    echo -n "Found: $1"
+	    if cmp --silent "$1" "$2"; then
+		echo " (OK)"
+	    else
+		echo " (needs update)"
+		NEEDS_UPDATE=1
+	    fi
+	else
+	    echo "Not found: $1"
+	    NOT_FOUND=1
+	fi
+    }
+    check_installed "${TOOL_OUT}" "${TOOL_IN}"
+    check_installed "${RULE_OUT}" <(print_rules_javascript)
+    if [ "$NEEDS_UPDATE" -gt 0 ]; then
+	echo "Your $EXTENSION_NAME installation needs updating!"
+	exit ${EXIT_NEEDS_UPDATE}
     fi
-    echo "Installed"
+    if [ "$NOT_FOUND" -gt 0 ]; then
+	echo "Not installed!"
+	exit ${EXIT_NOT_INSTALLED}
+    fi
 
+    echo "OK"
     exit ${EXIT_SUCCESS}
 fi
 
@@ -182,13 +223,7 @@ TOOL_NAME=$(basename ${TOOL_OUT})
 
 if [ "$ACTION" = "install" ]
 then
-    if [ "${EUID}" -ne 0 ]; then
-        echo "The install action must be run as root for security reasons!"
-        echo "Please have a look at https://github.com/martin31821/cpupower/issues/102"
-        echo "for further details."
-        exit ${EXIT_MUST_BE_ROOT}
-    fi
-
+    require_root
     echo -n "$(gtxt 'Installing') ${TOOL_NAME} $(gtxt 'tool')... "
     mkdir -p "${CFC_DIR}"
     install "${TOOL_IN}" "${TOOL_OUT}" || fail
@@ -211,6 +246,7 @@ fi
 
 if [ "$ACTION" = "update" ]
 then
+    require_root
     "${BASH_SOURCE[0]}" --tool-user "${TOOL_USER}" uninstall || exit $?
     "${BASH_SOURCE[0]}" --tool-user "${TOOL_USER}" install || exit $?
 
@@ -219,6 +255,7 @@ fi
 
 if [ "$ACTION" = "uninstall" ]
 then
+    require_root
     LEG_CFG_OUT="/usr/bin/shutdowntimerctl-$TOOL_USER"
     if [ -f "$LEG_CFG_OUT" ]
     then
