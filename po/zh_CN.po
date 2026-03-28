@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shutdown Timer GNOME Shell Extension\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-30 19:33+0200\n"
+"POT-Creation-Date: 2026-03-28 15:20+0100\n"
 "PO-Revision-Date: 2022-04-07 22:08+0200\n"
 "Last-Translator: 绿色圣光 <lishaohui.qd@163.com>\n"
 "Language-Team: Chinese (Simplified) <>\n"
@@ -448,48 +448,48 @@ msgstr ""
 msgid "Last selected page in the preferences."
 msgstr ""
 
-#: src/tool/installer.sh:66
+#: src/tool/installer.sh:85
 msgid "Failed"
 msgstr ""
 
-#: src/tool/installer.sh:68
+#: src/tool/installer.sh:87
 msgid "Success"
 msgstr ""
 
-#: src/tool/installer.sh:192 src/tool/installer.sh:199
-#: src/tool/installer.sh:204
+#: src/tool/installer.sh:227 src/tool/installer.sh:234
+#: src/tool/installer.sh:239
 msgid "Installing"
 msgstr ""
 
-#: src/tool/installer.sh:192 src/tool/installer.sh:226
-#: src/tool/installer.sh:254
+#: src/tool/installer.sh:227 src/tool/installer.sh:263
+#: src/tool/installer.sh:291
 msgid "tool"
 msgstr ""
 
-#: src/tool/installer.sh:198
+#: src/tool/installer.sh:233
 msgid "Using legacy policykit install"
 msgstr ""
 
-#: src/tool/installer.sh:199 src/tool/installer.sh:233
+#: src/tool/installer.sh:234 src/tool/installer.sh:270
 msgid "policykit action"
 msgstr ""
 
-#: src/tool/installer.sh:204 src/tool/installer.sh:240
-#: src/tool/installer.sh:255
+#: src/tool/installer.sh:239 src/tool/installer.sh:277
+#: src/tool/installer.sh:292
 msgid "policykit rule"
 msgstr ""
 
-#: src/tool/installer.sh:226 src/tool/installer.sh:233
-#: src/tool/installer.sh:240 src/tool/installer.sh:245
+#: src/tool/installer.sh:263 src/tool/installer.sh:270
+#: src/tool/installer.sh:277 src/tool/installer.sh:282
 msgid "Uninstalling"
 msgstr ""
 
-#: src/tool/installer.sh:227 src/tool/installer.sh:234
-#: src/tool/installer.sh:241 src/tool/installer.sh:248
+#: src/tool/installer.sh:264 src/tool/installer.sh:271
+#: src/tool/installer.sh:278 src/tool/installer.sh:285
 msgid "cannot remove"
 msgstr ""
 
-#: src/tool/installer.sh:250
+#: src/tool/installer.sh:287
 msgid "not installed at"
 msgstr ""
 
