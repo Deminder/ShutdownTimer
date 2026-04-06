@@ -109,7 +109,9 @@ export class Action {
     } else {
       const loginProxy = await this.#loginProxy;
       if (await this.canShutdownAction(action)) {
+        logDebug(`BEFORE ${action}Async`);
         await loginProxy[`${action}Async`](true);
+        logDebug(`AFTER ${action}Async`);
       } else if (this.#poweroffOrReboot(action)) {
         await Control.shutdown('now', ACTIONS[action] === ACTIONS.Reboot);
       } else {
@@ -161,7 +163,16 @@ export class Action {
   async uninhibitSuspend() {
     if (this.#cookie !== null) {
       const sessionProxy = await this.#sessionProxy;
+      const loginProxy = await this.#loginProxy;
+      logDebug(
+        'BEFORE sessionProxy.UninhibitAsync',
+        await loginProxy.CanSuspendAsync()
+      );
       await sessionProxy.UninhibitAsync(this.#cookie);
+      logDebug(
+        'AFTER sessionProxy.UninhibitAsync',
+        await loginProxy.CanSuspendAsync()
+      );
       this.#cookie = null;
     }
   }
