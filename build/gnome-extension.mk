@@ -22,7 +22,6 @@ VERSION := $(shell grep -oP '^ *?\"version\": *?\K(\d+)' $(SRC_DIR)/metadata.jso
 LOCALE_DIR := $(SRC_DIR)/locale
 MO_FILES := $(patsubst $(PO_DIR)/%.po,$(LOCALE_DIR)/%/LC_MESSAGES/$(GETTEXTDOMAIN).mo,$(PO_FILES))
 GSCHEMAS := $(wildcard $(SRC_DIR)/schemas/*.gschema.xml)
-GSCHEMAS_COMPILED := $(SRC_DIR)/schemas/gschemas.compiled
 
 ZIP_FILE := $(UUID).shell-extension.zip
 TARGET_DIR := target
@@ -34,7 +33,7 @@ all: $(DEFAULT_ZIP) $(DEBUG_ZIP)
 
 
 .SILENT .NOTPARALLEL .ONESHELL: $(DEFAULT_ZIP) $(DEBUG_ZIP)
-$(DEFAULT_ZIP) $(DEBUG_ZIP): $(SOURCE_FILES) $(MO_FILES) $(GSCHEMAS) $(GSCHEMAS_COMPILED)
+$(DEFAULT_ZIP) $(DEBUG_ZIP): $(SOURCE_FILES) $(MO_FILES) $(GSCHEMAS)
 	set -e
 	mkdir -p $(@D)
 	function setConst() {
@@ -80,8 +79,6 @@ $(MO_FILES): $(LOCALE_DIR)/%/LC_MESSAGES/$(GETTEXTDOMAIN).mo: $(PO_DIR)/%.po
 	@msgfmt $< --output-file="$@" && echo "$(basename $(notdir $<)) [OK]"
 	@touch $@
 
-$(GSCHEMAS_COMPILED): $(GSCHEMAS)
-	glib-compile-schemas --targetdir="$(@D)" $(SRC_DIR)/schemas
 
 po-lint:
 	$(let unclear,\
@@ -162,6 +159,5 @@ debug-guest: $(DEBUG_ZIP)
 clean:
 	-rm -rf $(LOCALE_DIR)
 	-rm -rf $(TARGET_DIR)
-	-rm -f $(GSCHEMAS_COMPILED)
 
 .PHONY: release clean translations lint po-lint zip debug-zip install
